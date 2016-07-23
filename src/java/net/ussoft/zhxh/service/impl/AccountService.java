@@ -21,7 +21,7 @@ public class AccountService implements IAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.ussoft.archive.service.IAccountService#getById(java.lang.String)
+	 * @see net.ussoft.zhxh.service.IAccountService#getById(java.lang.String)
 	 */
 	@Override
 	public Sys_account getById(String id) {

@@ -60,7 +60,13 @@ public class SystemFilter implements Filter {
 //        }
         
 //        String[] strs = ProsReader.getString("INDICATION_APP_NAME").split("\\|");
-        String[] strs = {"kaptcha","init","page","login","css","js","image","onRegist"};
+        
+        if (url.toString().equals(basePath)) {
+        	filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+        
+        String[] strs = {"kaptcha","init","page","login","css","js","image","pcMain","mobileMain"};
         if (strs != null && strs.length > 0) {  
             for (String str : strs) {
                 if (url.indexOf(str) >= 0) {
@@ -69,12 +75,6 @@ public class SystemFilter implements Filter {
                 }  
             }  
         }
-        
-        if (url.toString().equals(basePath)) {
-        	filterChain.doFilter(servletRequest, servletResponse);
-            return;
-        }
-        
         
 //        Object object = session.getAttribute(Constants.user_in_session);
         Object object = CommonUtils.getSessionAttribute(httpRequest, Constants.user_in_session);

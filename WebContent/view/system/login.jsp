@@ -26,7 +26,7 @@
 			function (){
 			  $('#kaptcha').click(
 				  function (){
-					$(this).attr('src', 'kaptcha.do?' + Math.floor(Math.random() * 100));
+					$(this).attr('src', 'kaptcha.html?' + Math.floor(Math.random() * 100));
 				  }
 			  );
 			}
@@ -87,7 +87,7 @@
 	                    <div class="form-group">
 	                        <div class="field">
 	                            <input type="text" class="input" name="kaptchafield" placeholder="填写右侧的验证码" data-validate="required:请填写右侧的验证码" />
-	                            <img  width="80" height="32" class="passcode kaptcha" style="cursor:pointer;" id="kaptcha" src="kaptcha.do"/>
+	                            <img  width="80" height="32" class="passcode kaptcha" style="cursor:pointer;" id="kaptcha" src="kaptcha.html"/>
 	                        </div>
 	                    </div>
 	                </div>

@@ -8,7 +8,7 @@
 	<!-- 判断用户session 是否过期，如果过期，让用户重新登录 -->
 	<filter>
 		<filter-name>SystemFilter</filter-name>
-		<filter-class>net.ussoft.archive.filter.SystemFilter</filter-class>
+		<filter-class>net.ussoft.zhxh.filter.SystemFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>SystemFilter</filter-name>
@@ -72,16 +72,16 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>springmvc</servlet-name>
-		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.html</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>springmvc</servlet-name>
 		<url-pattern>/index.jsp</url-pattern>
 	</servlet-mapping>
 	
-	<listener>
+	<!-- <listener>
 		<listener-class>net.ussoft.archive.filter.TimerListener</listener-class>
-	</listener> 
+	</listener>  -->
 
 	<!-- session超时时间 分钟 -->
 	<session-config>
