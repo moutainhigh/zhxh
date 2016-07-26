@@ -17,6 +17,7 @@ public class Public_user {
 	private String shidaiid;
 	private String shengdaiid;
 	private String tuijianid;
+	private String tuijianman;
 	private String tuijiansort;
 	private Integer setreturn;
 	private Integer isopen;
@@ -118,6 +119,12 @@ public class Public_user {
 	}
 	public void setOpenid2(String openid2) {
 		this.openid2 = openid2;
+	}
+	public String getTuijianman() {
+		return tuijianman;
+	}
+	public void setTuijianman(String tuijianman) {
+		this.tuijianman = tuijianman;
 	}
 	
 	

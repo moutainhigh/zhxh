@@ -51,7 +51,7 @@
 			margin-right: 0px;
 		}
 	</style>
-<title>${sysname }</title>
+<title>众恒信和综合管理平台</title>
 </head>
 <body>
 	<div class="container">
@@ -68,9 +68,9 @@
 	                </div> --%>
 	            </div>
 	            <br /><br /><br />
-	            <form action="onlogin.do" method="post">
+	            <form action="onlogin.html" method="post">
 	            <div class="panel">
-	                <div class="panel-head text-center"><strong>登录${sysname }</strong></div>
+	                <div class="panel-head text-center"><strong>登录众恒信和管理后台</strong></div>
 	                <div class="panel-body" style="padding:30px;">
 	                    <div class="form-group">
 	                        <div class="field field-icon-right">
@@ -98,6 +98,6 @@
 	        </div>
 	    </div>
 	</div>
-	<div class="container doc-footer xs6 xm4 xs3-move xm4-move text-small text-gray">版权所有 &copy; <a href="#"></a> All Rights Reserved.</div>
+	<div class="container doc-footer xs6 xm4 xs3-move xm4-move text-small text-gray">版权所有 亚普软件(北京)有限公司&copy; <a href="#"></a> All Rights Reserved.</div>
 </body>
 </html>

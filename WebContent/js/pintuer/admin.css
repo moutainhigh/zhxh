@@ -1,32 +1,164 @@
-body{background-color:#f2f9fd;}
-.panel{background:#fff;}
-form .form-group:last-child{padding-bottom:0;}
-.passcode{position:absolute;right:0;top:0;height:32px;margin:1px;border-left:solid 1px #ddd;text-align:center;line-height:32px;border-radius:0 4px 4px 0;}
 
-
-.lefter{position:relative;float:left;width:180px;margin-right:-180px;background:#e6f2fb;text-align:center;}
-.righter{float:right;width:100%;padding-top:15px;background:#e6f2fb;}
-.mainer{margin-left:180px;}
-
-.logo{border-bottom:solid 1px #b5cfd9;padding:13px 10px;}
-
-.admin-navbar{border-bottom:solid 5px #09c;padding:0 15px;}
-.admin-nav li{display:inline-block;}
-.admin-nav ul{display:none;}
-.admin-nav ul li{float:none;display:block;}
-.admin-nav ul ul li{list-style:circle;margin-left:15px;}
-.admin-nav .active a{background:#09c;color:#fff;border-radius:4px 4px 0 0;}
-.admin-nav .active ul{display:block;position:fixed;left:0;width:180px;margin-top:41px;}
-.admin-nav .active ul a{background:transparent;color:#333;border-radius:0;}
-.admin-nav .active .active a{background:#e6f2fb;border-top:solid 1px #b5cfd9;border-bottom:solid 1px #b5cfd9;}
-
-.admin-bread{background:#f2f9fd;border-left:solid 1px #b5cfd9;border-bottom:solid 1px #b5cfd9;line-height:20px;}
-.admin-bread .bread{margin-bottom:0;}
-.admin-bread span{float:right;font-size:12px;color:#666;line-height:36px;}
-
-.admin{padding:0px;background:#fff;position:fixed;border-left:solid 1px #b5cfd9;right:0;bottom:0;top:63px;left:0px; overflow:no;}
-.alert{margin-bottom:20px;}
-.admin-panel td{line-height:24px;}
-.admin-panel td .button{line-height:16px;}
-.admin-panel .pagination .active{background:#fff;}
-.pagination .active{background:#fff;}
+body {
+    background-color: #ffffff;
+}
+.panel {
+    background: #fff none repeat scroll 0 0;
+}
+form .form-group:last-child {
+    padding-bottom: 0;
+}
+.passcode {
+    border-left: 1px solid #ddd;
+    border-radius: 0 4px 4px 0;
+    height: 32px;
+    line-height: 32px;
+    margin: 1px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+}
+.logo {
+    border-bottom: 1px solid #b5cfd9;
+    padding: 23px 10px;
+}
+.admin {
+    background: #fff none repeat scroll 0 0;
+    bottom: 0;
+    overflow: auto;
+    padding: 10px;
+    right: 0;
+    top: 87px;
+    width: 100%;
+}
+.alert {
+    margin-bottom: 20px;
+}
+.admin-panel td {
+    line-height: 24px;
+}
+.admin-panel td .button {
+    line-height: 16px;
+}
+.admin-panel .pagination .active {
+    background: #2c7 none repeat scroll 0 0;
+    border: 1px solid #2c7;
+}
+.admin-panel .table th {
+    border-bottom: 2px solid #0ae;
+    padding: 8px;
+    text-align: left;
+    vertical-align: bottom;
+}
+.admin-panel .table-hover > tbody > tr:hover > td, .admin-panel .table-hover > tbody > tr:hover > th {
+    background-color: #efd;
+}
+a {
+    color: #333;
+    text-decoration: none;
+}
+a:focus, a:hover {
+    color: #2c7;
+}
+.text-main, a.text-main:link, a.text-main:visited, .button.border-main, blockquote.border-main strong, .pager.border-main a, .pager-prev.border-main, .pager-next.border-main, .nav a:hover, .nav-menu.nav-pills .active ul a:hover, .bg-inverse .nav-menu ul a:hover, .bg-inverse .nav.nav-menu.nav-tabs ul a:hover, .bg-inverse .nav.nav-menu.nav-tabs .active ul a:hover, .bg-inverse .nav.nav-menu.nav-pills ul a:hover, .bg-inverse .nav.nav-menu.nav-pills .active ul a:hover {
+    color: #2c7;
+}
+.text-sub, a.text-sub:link, a.text-sub:visited, .button.border-sub, blockquote.border-sub strong, .pager.border-sub a, .pager-prev.border-sub, .pager-next.border-sub {
+    color: #2c7;
+}
+.text-back, a.text-back:link, a.text-back:visited, .button.border-back, blockquote.border-back, .pager.border-back a, .pager-prev.border-back, .pager-next.border-back {
+    color: #b5cfd9;
+}
+.text-mix, a.text-mix:link, a.text-mix:visited, .button.border-mix, blockquote.border-mix, .pager.border-mix a, .pager-prev.border-mix, .pager-next.border-mix {
+    color: #5cd;
+}
+.text-dot, a.text-dot:link, a.text-dot:visited, .button.border-dot, blockquote.border-dot strong, .pager.border-dot a, .pager-prev.border-dot, .pager-next.border-dot {
+    color: #f60;
+}
+.bg-main, .border-main .button.active, .pointer.border-main .active, .nav-pills.border-main .active a, .nav-main.border-main .nav-head, .pagination.border-main .active {
+    background-color: #0a8;
+}
+.bg-sub, .border-sub .button.active, .pointer.border-sub .active, .nav-pills.border-sub .active a, .nav-main.border-sub .nav-head, .pagination.border-sub .active {
+    background-color: #2c7;
+}
+.bg-back, .border-back .button.active, .pointer.border-back .active, .nav-pills.border-back .active a, .nav-main.border-back .nav-head, .pagination.border-back .active {
+    background-color: #f2f9fd;
+}
+.bg-mix, .border-mix .button.active, .pointer.border-mix .active, .nav-pills.border-mix .active a, .pagination.border-mix .active {
+    background-color: #2c7;
+}
+.bg-dot, .border-dot .button.active, .pointer.border-dot .active, .nav-pills.border-dot .active a, .nav-main.border-dot .nav-head, .pagination.border-dot .active {
+    background-color: #f60;
+}
+.border-main, .border-main .button, .border-main .tab-nav li a, .border-main .tab-body, .button.bg-main, .selected.border-main, .pointer.border-main li, .nav.border-main .active a, .nav.nav-tabs.border-main, .nav-main.border-main a, .nav-main.border-main .nav-head, .pagination.border-main li, .pager.border-main a {
+    border-color: #2c7;
+}
+.border-sub, .border-sub .button, .border-sub .tab-nav li a, .border-sub .tab-body, .button.bg-sub, .selected.border-sub, .pointer.border-sub li, .nav.border-sub .active a, .nav.nav-tabs.border-sub, .nav-main.border-sub a, .nav-main.border-sub .nav-head, .pagination.border-sub li, .pager.border-sub a {
+    border-color: #2c7;
+}
+.border-back, .border-back .button, .border-back .tab-nav li a, .border-back .tab-body, .button.bg-back, .selected.border-back, .pointer.border-back li, .nav.border-back .active a, .nav.nav-tabs.border-back, .nav-main.border-back a, .nav-main.border-back .nav-head, .pagination.border-back li, .pager.border-back a {
+    border-color: #b5cfd9;
+}
+.border-mix, .border-mix .button, .border-mix .tab-nav li a, .border-mix .tab-body, .button.bg-mix, .selected.border-mix, .pointer.border-mix li, .nav.border-mix .active a, .nav.nav-tabs.border-mix, .nav-main.border-mix a, .nav-main.border-mix .nav-head, .pagination.border-mix li, .pager.border-mix a {
+    border-color: #0a8;
+}
+.border-dot, .border-dot .button, .border-dot .tab-nav li a, .border-dot .tab-body, .button.bg-dot, .selected.border-dot, .pointer.border-dot li, .nav.border-dot .active a, .nav.nav-tabs.border-dot, .nav-main.border-dot a, .nav-main.border-dot .nav-head, .pagination.border-dot li, .pager.border-dot a {
+    border-color: #f60;
+}
+.button.border-main:hover, .button.border-main:focus, .button.bg-main:hover, .button.bg-main:focus {
+    background-color: #2c7;
+    border-color: #2c7;
+    color: #fff;
+}
+.button.border-sub:hover, .button.border-sub:focus, .button.bg-sub:hover, .button.bg-sub:focus {
+    background-color: #b5cfd9;
+    border-color: #b5cfd9;
+    color: #fff;
+}
+.button.border-back:hover, .button.border-back:focus, .button.bg-back:hover, .button.bg-back:focus {
+    background-color: #def;
+    border-color: #def;
+    color: #333;
+}
+.button.border-mix:hover, .button.border-mix:focus, .button.bg-mix:hover, .button.bg-mix:focus {
+    background-color: #3bc;
+    border-color: #3bc;
+    color: #333;
+}
+.button.border-dot:hover, .button.border-dot:focus, .button.bg-dot:hover, .button.bg-dot:focus {
+    background-color: #f00;
+    border-color: #f00;
+    color: #fff;
+}
+.mobile-down {
+    animation: 2s ease 0.3s normal both infinite running fadeOutDown;
+}
+@keyframes fadeOutDown {
+0% {
+    opacity: 1;
+    transform: translateY(0px);
+}
+100% {
+    opacity: 0;
+    transform: translateY(20px);
+}
+}
+table.tablesorter thead tr .header {
+    background-image: url("../images/bg.gif");
+    background-position: right center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+table.tablesorter thead tr .headerSortUp {
+    background-image: url("../images/asc.gif");
+}
+table.tablesorter thead tr .headerSortDown {
+    background-image: url("../images/desc.gif");
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+    background-color: #0ae;
+}
+table.tablesorter tbody {
+    font-size: 8pt;
+}

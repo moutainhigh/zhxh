@@ -1730,7 +1730,12 @@ th {
 	content: "\f006";
 }
 
-.icon-user:before {
+/* .icon-user:before {
+	content: "\f007";
+} */
+
+/*20160726 wf 解决与mini冲突问题*/
+.icon-user-p:before {
 	content: "\f007";
 }
 

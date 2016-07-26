@@ -52,7 +52,7 @@ public class LoginController extends BaseConstroller {
 		String kaptchaCode = (String) CommonUtils.getSessionAttribute(request, com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
 		if (kaptchaCode == null || !kaptchaCode.equals(kaptchafield)) {
 			modelMap.put("result", "输入的验证码错误，请重新输入。");
-			return new ModelAndView("login",modelMap);
+			return new ModelAndView("view/system/login",modelMap);
 		}
 		
 		//登录时先判断session里是否有该账户,防止同一台机器有2个session登录
@@ -66,7 +66,7 @@ public class LoginController extends BaseConstroller {
 		if(!CommonUtils.isNotNullAndEmpty(account.getAccountcode(),account.getPassword())){
 			//帐号或密码为""或NULL
 			modelMap.put("result", "输入的帐户名 或密码错误，请重新输入。");
-			return new ModelAndView("login",modelMap);
+			return new ModelAndView("view/system/login",modelMap);
 		}
 		
 		Sys_account res = accountService.login(account);
@@ -84,7 +84,7 @@ public class LoginController extends BaseConstroller {
 			return new ModelAndView("/view/system/main", modelMap);
 		}else {
 			modelMap.put("result", "输入的帐户名 或密码错误，请重新输入。");
-			return new ModelAndView("login",modelMap);
+			return new ModelAndView("view/system/login",modelMap);
 		}
 	}
 	
@@ -92,7 +92,9 @@ public class LoginController extends BaseConstroller {
 	public String logout(HttpServletRequest request,ModelMap modelMap) {
 		request.getSession().removeAttribute(Constants.user_in_session);
 		request.getSession().invalidate();
-		return "login";
+//		return "login";
+		return "redirect:/login.html";
+//		return "view/system/login";
 	}
 	
 	@RequestMapping("/kaptcha")  
