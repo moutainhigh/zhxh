@@ -17,6 +17,9 @@ public class Public_product {
 	private String productpic;
 	private Integer isshow;
 	private String productmemo;
+	private String update;
+	private Integer ifdis;
+	
 	
 	
 	
@@ -76,7 +79,17 @@ public class Public_product {
 	public void setProductmemo(String productmemo) {
 		this.productmemo = productmemo;
 	}
-	
-	
+	public String getUpdate() {
+		return update;
+	}
+	public void setUpdate(String update) {
+		this.update = update;
+	}
+	public Integer getIfdis() {
+		return ifdis;
+	}
+	public void setIfdis(Integer ifdis) {
+		this.ifdis = ifdis;
+	}
 	
 }

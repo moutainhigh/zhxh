@@ -13,6 +13,7 @@ public class Public_user {
 	private String username;
 	private String phonenumber;
 	private String userid;
+	private String usermemo;
 	private String dianid;
 	private String shidaiid;
 	private String shengdaiid;
@@ -22,10 +23,7 @@ public class Public_user {
 	private Integer setreturn;
 	private Integer isopen;
 	private String password;
-	private String openid1;
-	private String openid2;
-	
-	
+	private String uid;
 	
 	
 	@Id
@@ -108,23 +106,23 @@ public class Public_user {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getOpenid1() {
-		return openid1;
+	public String getUid() {
+		return uid;
 	}
-	public void setOpenid1(String openid1) {
-		this.openid1 = openid1;
-	}
-	public String getOpenid2() {
-		return openid2;
-	}
-	public void setOpenid2(String openid2) {
-		this.openid2 = openid2;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 	public String getTuijianman() {
 		return tuijianman;
 	}
 	public void setTuijianman(String tuijianman) {
 		this.tuijianman = tuijianman;
+	}
+	public String getUsermemo() {
+		return usermemo;
+	}
+	public void setUsermemo(String usermemo) {
+		this.usermemo = usermemo;
 	}
 	
 	
