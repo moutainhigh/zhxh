@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import net.ussoft.zhxh.dao.PublicOrderReturnDao;
 import net.ussoft.zhxh.model.Public_order_return;
 
-@Repository("publicUserOpenidDao")
+@Repository("publicOrderReturnDao")
 public class PublicOrderReturnDaoImpl extends BaseDaoMysqlImpl<Public_order_return, String> implements PublicOrderReturnDao {
 
 	public PublicOrderReturnDaoImpl() {
