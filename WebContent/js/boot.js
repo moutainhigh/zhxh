@@ -27,9 +27,9 @@ var bootPATH = __CreateJSPath("boot.js");
 mini_debugger = false;   
 
 //miniui
-document.write('<script src="' + bootPATH + 'jquery-1.8.2.js" type="text/javascript"></sc' + 'ript>');
+document.write('<script src="' + bootPATH + 'jquery-1.11.0.js" type="text/javascript"></sc' + 'ript>');
 document.write('<script src="' + bootPATH + 'util.js" type="text/javascript"></sc' + 'ript>');
-document.write('<script src="' + bootPATH + 'miniui/bb.js" type="text/javascript" ></sc' + 'ript>');
+document.write('<script src="' + bootPATH + 'miniui/miniui.js" type="text/javascript" ></sc' + 'ript>');
 document.write('<link href="' + bootPATH + 'miniui/themes/default/miniui.css" rel="stylesheet" type="text/css" />');
 document.write('<link href="' + bootPATH + 'miniui/themes/icons.css" rel="stylesheet" type="text/css" />');
 
