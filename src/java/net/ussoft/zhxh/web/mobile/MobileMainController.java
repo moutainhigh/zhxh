@@ -10,12 +10,12 @@ import net.ussoft.zhxh.util.Logger;
 
 
 @Controller
-@RequestMapping("mobileMain")
+@RequestMapping("mMain")
 public class MobileMainController extends BaseConstroller {
 	
 	private Logger log = new Logger(MobileMainController.class);
 	
-	@RequestMapping(value="/mobile_index")
+	@RequestMapping(value="/mindex")
 	public ModelAndView index (ModelMap modelMap) throws Exception {
 		
 		return new ModelAndView("/view/mobile/main", modelMap);

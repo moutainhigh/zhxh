@@ -16,7 +16,7 @@ public class PcMainController extends BaseConstroller {
 	private Logger log = new Logger(PcMainController.class);
 	
 	
-	@RequestMapping(value="/pc_index")
+	@RequestMapping(value="/pcindex")
 	public ModelAndView index (ModelMap modelMap) throws Exception {
 		
 		return new ModelAndView("/view/pc/main", modelMap);
