@@ -37,10 +37,17 @@ public interface IPublicUserBankService {
 	 * @param Public_user_bank
 	 * @return 
 	 * */
+	public Public_user_bank insert(Public_user_bank userBank);
+	
+	/**
+	 * 修改
+	 * @param Public_user_bank
+	 * @return 
+	 * */
 	public int update(Public_user_bank userBank);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

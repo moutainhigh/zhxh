@@ -37,10 +37,17 @@ public interface IPublicUserPathService {
 	 * @param Public_user_path
 	 * @return 
 	 * */
+	public Public_user_path insert(Public_user_path userPath);
+	
+	/**
+	 * 修改
+	 * @param Public_user_path
+	 * @return 
+	 * */
 	public int update(Public_user_path userPath);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

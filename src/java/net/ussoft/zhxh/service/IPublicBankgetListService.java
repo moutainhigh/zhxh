@@ -37,10 +37,17 @@ public interface IPublicBankgetListService {
 	 * @param Public_bankget_list
 	 * @return 
 	 * */
+	public Public_bankget_list insert(Public_bankget_list bankgetList);
+	
+	/**
+	 * 修改
+	 * @param Public_bankget_list
+	 * @return 
+	 * */
 	public int update(Public_bankget_list bankgetList);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

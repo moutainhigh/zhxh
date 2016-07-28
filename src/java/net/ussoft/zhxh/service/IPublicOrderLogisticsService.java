@@ -37,10 +37,17 @@ public interface IPublicOrderLogisticsService {
 	 * @param Public_order_logistics
 	 * @return 
 	 * */
+	public Public_order_logistics insert(Public_order_logistics orderLogistics);
+	
+	/**
+	 * 修改
+	 * @param Public_order_logistics
+	 * @return 
+	 * */
 	public int update(Public_order_logistics orderLogistics);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

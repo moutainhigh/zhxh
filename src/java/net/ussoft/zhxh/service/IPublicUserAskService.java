@@ -37,10 +37,17 @@ public interface IPublicUserAskService {
 	 * @param Public_user_ask
 	 * @return 
 	 * */
+	public Public_user_ask insert(Public_user_ask userAsk);
+	
+	/**
+	 * 修改
+	 * @param Public_user_ask
+	 * @return 
+	 * */
 	public int update(Public_user_ask userAsk);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

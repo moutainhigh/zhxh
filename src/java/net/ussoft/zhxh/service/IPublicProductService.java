@@ -37,10 +37,17 @@ public interface IPublicProductService {
 	 * @param Public_product
 	 * @return 
 	 * */
+	public Public_product insert(Public_product product);
+	
+	/**
+	 * 修改
+	 * @param Public_product
+	 * @return 
+	 * */
 	public int update(Public_product product);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

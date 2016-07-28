@@ -37,10 +37,17 @@ public interface IProductRatedService {
 	 * @param Product_rated
 	 * @return 
 	 * */
+	public Product_rated insert(Product_rated rated);
+	
+	/**
+	 * 修改
+	 * @param Product_rated
+	 * @return 
+	 * */
 	public int update(Product_rated rated);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

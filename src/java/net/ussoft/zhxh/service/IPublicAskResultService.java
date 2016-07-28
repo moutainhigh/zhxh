@@ -37,10 +37,17 @@ public interface IPublicAskResultService {
 	 * @param Public_ask_result
 	 * @return 
 	 * */
+	public Public_ask_result insert(Public_ask_result askResult);
+	
+	/**
+	 * 修改
+	 * @param Public_ask_result
+	 * @return 
+	 * */
 	public int update(Public_ask_result askResult);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

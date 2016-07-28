@@ -37,10 +37,17 @@ public interface IPublicPayService {
 	 * @param Public_pay
 	 * @return 
 	 * */
+	public Public_pay insert(Public_pay pay);
+	
+	/**
+	 * 修改
+	 * @param Public_pay
+	 * @return 
+	 * */
 	public int update(Public_pay pay);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

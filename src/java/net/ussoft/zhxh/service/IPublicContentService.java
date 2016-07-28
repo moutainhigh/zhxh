@@ -37,10 +37,17 @@ public interface IPublicContentService {
 	 * @param Public_content
 	 * @return 
 	 * */
+	public Public_content insert(Public_content content);
+	
+	/**
+	 * 修改
+	 * @param Public_content
+	 * @return 
+	 * */
 	public int update(Public_content content);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

@@ -37,10 +37,17 @@ public interface IPublicUserService {
 	 * @param Public_user
 	 * @return 
 	 * */
+	public Public_user insert(Public_user user);
+	
+	/**
+	 * 修改
+	 * @param Public_user
+	 * @return 
+	 * */
 	public int update(Public_user user);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

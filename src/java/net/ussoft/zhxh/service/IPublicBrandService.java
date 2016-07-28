@@ -36,10 +36,17 @@ public interface IPublicBrandService {
 	 * @param Public_brand
 	 * @return
 	 * */
+	public Public_brand insert(Public_brand brand);
+	
+	/**
+	 * 修改
+	 * @param Public_brand
+	 * @return
+	 * */
 	public int update(Public_brand brand);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

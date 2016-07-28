@@ -37,10 +37,17 @@ public interface ILabeltypeService {
 	 * @param Labeltype
 	 * @return 
 	 * */
+	public Labeltype insert(Labeltype labeltype);
+	
+	/**
+	 * 修改
+	 * @param Labeltype
+	 * @return 
+	 * */
 	public int update(Labeltype labeltype);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

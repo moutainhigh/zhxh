@@ -37,10 +37,17 @@ public interface IPublicOrderService {
 	 * @param Public_order
 	 * @return 
 	 * */
+	public Public_order insert(Public_order order);
+	
+	/**
+	 * 修改
+	 * @param Public_order
+	 * @return 
+	 * */
 	public int update(Public_order order);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

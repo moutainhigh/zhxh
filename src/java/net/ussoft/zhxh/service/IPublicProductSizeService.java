@@ -37,10 +37,17 @@ public interface IPublicProductSizeService {
 	 * @param Public_product_size
 	 * @return 
 	 * */
+	public Public_product_size insert(Public_product_size product_size);
+	
+	/**
+	 * 修改
+	 * @param Public_product_size
+	 * @return 
+	 * */
 	public int update(Public_product_size product_size);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

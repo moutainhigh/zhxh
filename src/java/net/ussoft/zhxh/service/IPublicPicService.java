@@ -37,10 +37,17 @@ public interface IPublicPicService {
 	 * @param Public_pic
 	 * @return 
 	 * */
+	public Public_pic insert(Public_pic pic);
+	
+	/**
+	 * 修改
+	 * @param Public_pic
+	 * @return 
+	 * */
 	public int update(Public_pic pic);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

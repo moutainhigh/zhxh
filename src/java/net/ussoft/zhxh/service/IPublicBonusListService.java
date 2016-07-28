@@ -37,10 +37,17 @@ public interface IPublicBonusListService {
 	 * @param Public_bonus_list
 	 * @return 
 	 * */
+	public Public_bonus_list insert(Public_bonus_list bonusList);
+	
+	/**
+	 * 修改
+	 * @param Public_bonus_list
+	 * @return 
+	 * */
 	public int update(Public_bonus_list bonusList);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

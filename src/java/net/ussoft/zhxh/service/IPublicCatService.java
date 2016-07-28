@@ -37,10 +37,17 @@ public interface IPublicCatService {
 	 * @param Public_cat
 	 * @return 
 	 * */
+	public Public_cat insert(Public_cat cat);
+	
+	/**
+	 * 修改
+	 * @param Public_cat
+	 * @return 
+	 * */
 	public int update(Public_cat cat);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

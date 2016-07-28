@@ -37,10 +37,17 @@ public interface IBrandfirstService {
 	 * @param Brandfirst
 	 * @return 
 	 * */
+	public Brandfirst insert(Brandfirst brandfirst);
+	
+	/**
+	 * 修改
+	 * @param Brandfirst
+	 * @return 
+	 * */
 	public int update(Brandfirst brandfirst);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

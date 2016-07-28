@@ -37,10 +37,17 @@ public interface IPublicOrderPathService {
 	 * @param Public_order_path
 	 * @return 
 	 * */
+	public Public_order_path insert(Public_order_path orderPath);
+	
+	/**
+	 * 修改
+	 * @param Public_order_path
+	 * @return 
+	 * */
 	public int update(Public_order_path orderPath);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */

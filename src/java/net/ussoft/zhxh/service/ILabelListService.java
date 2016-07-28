@@ -37,10 +37,17 @@ public interface ILabelListService {
 	 * @param Label_list
 	 * @return 
 	 * */
+	public Label_list insert(Label_list label_list);
+	
+	/**
+	 * 修改
+	 * @param Label_list
+	 * @return 
+	 * */
 	public int update(Label_list label_list);
 	
 	/**
-	 * 添加
+	 * 删除
 	 * @param id
 	 * @return
 	 * */
