@@ -66,7 +66,7 @@ public class AccountController extends BaseConstroller {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		String result = "success";
+		String result = "success2";
 		
 		if ("".equals(objs) || objs == null) {
 			out.print(result);
@@ -105,7 +105,7 @@ public class AccountController extends BaseConstroller {
 		
 		account.setId(UUID.randomUUID().toString());
 		//生成默认密码md5
-		String pass = MD5.encode(account.getPassword());
+		String pass = MD5.encode("123456");
 		account.setPassword(pass);
 		account = accountService.insert(account);
 		return true;
@@ -184,6 +184,29 @@ public class AccountController extends BaseConstroller {
 		if (num > 0 ) {
 			result = "success";
 		}
+		out.print(result);
+	}
+	
+	/**
+	 * 初始化帐户密码
+	 * @param ids
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/initUpdatePass",method=RequestMethod.POST)
+	public void initUpdatePass(String ids,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "failure";
+		
+		int num = accountService.initUpdatePass(ids);
+		
+		if (num >0) {
+			result = "success";
+		}
+		
 		out.print(result);
 	}
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.model.PageBean;
@@ -20,13 +21,13 @@ public class PublicUserService implements IPublicUserService{
 	@Override
 	public Public_user getById(String id) {
 		// TODO Auto-generated method stub
-		return null;
+		return userDao.get(id);
 	}
 
 	@Override
 	public List<Public_user> list() {
 		// TODO Auto-generated method stub
-		return null;
+		return userDao.getAll();
 	}
 
 	@Override
@@ -35,22 +36,29 @@ public class PublicUserService implements IPublicUserService{
 		return null;
 	}
 
+	@Transactional("txManager")
 	@Override
 	public int update(Public_user user) {
 		// TODO Auto-generated method stub
+		Public_user obj = userDao.update(user);
+		if(obj != null)
+			return 1;
 		return 0;
 	}
 
+	@Transactional("txManager")
 	@Override
 	public int delete(String id) {
 		// TODO Auto-generated method stub
-		return 0;
+		return userDao.del(id);
 	}
 
+	@Transactional("txManager")
 	@Override
 	public Public_user insert(Public_user user) {
 		// TODO Auto-generated method stub
-		return null;
+		userDao.save(user);
+		return user;
 	}
 
 }

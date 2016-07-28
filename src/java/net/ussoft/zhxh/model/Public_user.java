@@ -24,7 +24,8 @@ public class Public_user {
 	private Integer isopen;	//	开关
 	private String password;	//	密码
 	private String uid;	//	微信唯一标识id
-	
+	private int sex;
+	private String brithday;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -124,6 +125,17 @@ public class Public_user {
 	public void setUsermemo(String usermemo) {
 		this.usermemo = usermemo;
 	}
-	
+	public int getSex() {
+		return sex;
+	}
+	public void setSex(int sex) {
+		this.sex = sex;
+	}
+	public String getBrithday() {
+		return brithday;
+	}
+	public void setBrithday(String brithday) {
+		this.brithday = brithday;
+	}
 	
 }

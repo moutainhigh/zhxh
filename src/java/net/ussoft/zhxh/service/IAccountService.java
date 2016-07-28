@@ -52,5 +52,12 @@ public interface IAccountService {
 	 */
 	public Sys_account login(Sys_account account);
 	
+	/**
+	 * 初始化帐户密码
+	 * @param ids
+	 * @return
+	 */
+	public int initUpdatePass(String ids);
+	
 	
 }

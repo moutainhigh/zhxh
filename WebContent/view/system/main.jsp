@@ -57,7 +57,7 @@
     			var funcode = $(this).attr("funcode");
     			var url = funcode;
     			if (url == 'index') {
-    				$("#main_frm").attr("src","${pageContext.request.contextPath}/h.jsp");
+    				$("#main_frm").attr("src","${pageContext.request.contextPath}/view/system/h.jsp");
     			}
     			else {
     				$("#main_frm").attr("src",url);
