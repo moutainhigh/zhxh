@@ -28,8 +28,8 @@
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
       	                { field: "accountcode",name:"accountcode", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "帐户登录名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "accountname",name:"accountname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "帐户真实姓名",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "password",name:"password", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "登录密码",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
+      	                { field: "accountname",name:"accountname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "帐户真实姓名",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	                { field: "password",name:"password", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "登录密码" }
       	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -116,12 +116,14 @@
 	        	alert("没有发现修改的内容，请直接修改，然后再保存");
 	        	return;
 	        }
-	        
 	        grid.loading("保存中，请稍后......");
+	        
 	        $.ajax({
-	            url: "${pageContext.request.contextPath}/account/save.do",
+	        	async:false,
+	            url: "${pageContext.request.contextPath}/account/save.html",
 	            data: {'objs':json},
 	            type: "post",
+	            dataType:"text",
 	            success: function (text) {
 	            	alert("保存完毕。");
 	            	grid.reload();
@@ -132,6 +134,53 @@
 	        });
 	    }
 		
+		function updatePass() {
+			var cf1 = "确定要初始化选中的帐户吗？注意：初始化密码为【123456】，请谨慎操作。";
+        	
+        	var rows = grid.getSelecteds();
+          	 
+       	 	if (rows.length == 0) {
+       	 		alert("请选择要初始化密码的帐户.");
+       		 	return;
+       	 	}
+       	 	
+       	 	var ids = getSelectGridid(rows);
+       	 
+          	if (confirm(cf1)) {
+          		grid.loading("初始化密码中，请稍后......");
+    	        
+    	        $.ajax({
+    	        	async:false,
+    	            url: "${pageContext.request.contextPath}/account/initUpdatePass.html",
+    	            data: {'ids':ids},
+    	            type: "post",
+    	            dataType:"text",
+    	            success: function (text) {
+    	            	if (text == "success") {
+    	            		alert("保存完毕。");
+    	            		grid.reload();
+    	            	}
+    	            	else {
+    	            		alert("初始化密码失败。请重新登录再尝试或与开发人员联系。")
+    	            	}
+    	            	
+    	            },
+    	            error: function (jqXHR, textStatus, errorThrown) {
+    	                alert(jqXHR.responseText);
+    	            }
+    	        });
+   		 	}
+		}
+		
+		function getSelectGridid(rows) {
+        	var ids = "";
+            for (var i=0;i<rows.length;i++) {
+            	ids += rows[i].id + ",";
+            }
+            ids = ids.substring(0,ids.length-1);
+            return ids;
+        }
+		
 </script>
 </head>
 <body>
@@ -140,12 +189,12 @@
             <tbody>
              <tr>
                  <td style="width:100%;">
-                 	<span id="pid" style="padding-left:5px;">帐户列表[注意：新增登录帐户，如果不输入密码，系统将默认为 123456]</span>
+                 	<span id="pid" style="padding-left:5px;">帐户列表[注意：新增登录帐户，系统将默认初始密码为 123456 帐户登录后，自行修改密码]</span>
                  </td>
                  <td style="white-space:nowrap;">
                  	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>
                  	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow()">删除</a>
-                 	<a class="mini-button" iconCls="icon-reload" plain="true" onclick="moveRow()">移动</a>
+                 	<a class="mini-button" iconCls="icon-reload" plain="true" onclick="updatePass()">初始化密码</a>
 	                <span class="separator"></span>
 	         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save()">保存</a>
                  </td>

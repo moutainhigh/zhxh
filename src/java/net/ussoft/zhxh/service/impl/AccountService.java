@@ -55,7 +55,7 @@ public class AccountService implements IAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.ussoft.archive.service.IAccountService#delete(java.lang.String)
+	 * @see net.ussoft.zhxh.service.IAccountService#delete(java.lang.String)
 	 */
 	@Transactional("txManager")
 	@Override
@@ -65,7 +65,7 @@ public class AccountService implements IAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.ussoft.archive.service.IAccountService#login(net.ussoft.archive.model.Sys_account)
+	 * @see net.ussoft.zhxh.service.IAccountService#login(net.ussoft.zhxh.model.Sys_account)
 	 */
 	@Override
 	public Sys_account login(Sys_account account) {
@@ -81,6 +81,28 @@ public class AccountService implements IAccountService {
 			return null;
 		}
 		return result;
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IAccountService#initUpdatePass(java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public int initUpdatePass(String ids) {
+		String[] idArr = ids.split(",");
+		
+		Sys_account tmp = new Sys_account();
+		tmp.setPassword(MD5.encode("123456").toString());
+		
+		int num = 0;
+		
+		for (String id : idArr) {
+			tmp.setId(id);
+			accountDao.update(tmp);
+			num++;
+		}
+		
+		return num;
 	}
 
 	
