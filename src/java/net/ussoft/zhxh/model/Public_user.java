@@ -9,21 +9,21 @@ import javax.persistence.Table;
 public class Public_user {
 
 	private String id;
-	private String usercode;
-	private String username;
-	private String phonenumber;
-	private String userid;
-	private String usermemo;
-	private String dianid;
-	private String shidaiid;
-	private String shengdaiid;
-	private String tuijianid;
-	private String tuijianman;
-	private String tuijiansort;
-	private Integer setreturn;
-	private Integer isopen;
-	private String password;
-	private String uid;
+	private String usercode;	//	账户名称
+	private String username;	//	真实姓名
+	private String phonenumber;	//	手机
+	private String userid;	//	身份
+	private String usermemo;	//	身份中文
+	private String dianid;	//	店id
+	private String shidaiid;	//	市代id
+	private String shengdaiid;	//	省代id
+	private String tuijianid;	//	推荐人id
+	private String tuijianman;	//	推荐人
+	private String tuijiansort;	//	推荐顺序
+	private Integer setreturn;	//	是否接收分成
+	private Integer isopen;	//	开关
+	private String password;	//	密码
+	private String uid;	//	微信唯一标识id
 	
 	
 	@Id
