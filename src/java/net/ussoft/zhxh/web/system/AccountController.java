@@ -105,9 +105,9 @@ public class AccountController extends BaseConstroller {
 		
 		account.setId(UUID.randomUUID().toString());
 		//生成默认密码md5
-		String pass = MD5.encode("password");
+		String pass = MD5.encode(account.getPassword());
 		account.setPassword(pass);
-		account = accountService.insert(account);		
+		account = accountService.insert(account);
 		return true;
 	}
 	
