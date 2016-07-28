@@ -47,4 +47,10 @@ public class PublicOrderReturnService implements IPublicOrderReturnService{
 		return 0;
 	}
 
+	@Override
+	public Public_order_return insert(Public_order_return orderReturn) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

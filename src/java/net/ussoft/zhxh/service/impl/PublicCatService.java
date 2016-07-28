@@ -47,4 +47,10 @@ public class PublicCatService implements IPublicCatService{
 		return 0;
 	}
 
+	@Override
+	public Public_cat insert(Public_cat cat) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

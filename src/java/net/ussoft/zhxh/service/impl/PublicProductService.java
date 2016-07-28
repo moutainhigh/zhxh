@@ -47,4 +47,10 @@ public class PublicProductService implements IPublicProductService{
 		return 0;
 	}
 
+	@Override
+	public Public_product insert(Public_product product) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

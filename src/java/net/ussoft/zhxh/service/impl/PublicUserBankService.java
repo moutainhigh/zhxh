@@ -45,4 +45,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 		return 0;
 	}
 
+	@Override
+	public Public_user_bank insert(Public_user_bank userBank) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

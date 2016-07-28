@@ -47,4 +47,10 @@ public class PublicBankgetListService implements IPublicBankgetListService{
 		return 0;
 	}
 
+	@Override
+	public Public_bankget_list insert(Public_bankget_list bankgetList) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

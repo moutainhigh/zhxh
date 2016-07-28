@@ -47,4 +47,10 @@ public class PublicPicService implements IPublicPicService{
 		return 0;
 	}
 
+	@Override
+	public Public_pic insert(Public_pic pic) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

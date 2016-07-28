@@ -47,4 +47,10 @@ public class LabeltypeService implements ILabeltypeService{
 		return 0;
 	}
 
+	@Override
+	public Labeltype insert(Labeltype labeltype) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

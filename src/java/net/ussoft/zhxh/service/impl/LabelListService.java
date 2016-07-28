@@ -47,4 +47,10 @@ public class LabelListService implements ILabelListService{
 		return 0;
 	}
 
+	@Override
+	public Label_list insert(Label_list label_list) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

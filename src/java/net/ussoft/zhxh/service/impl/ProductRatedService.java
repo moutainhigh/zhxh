@@ -47,4 +47,10 @@ public class ProductRatedService implements IProductRatedService{
 		return 0;
 	}
 
+	@Override
+	public Product_rated insert(Product_rated rated) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

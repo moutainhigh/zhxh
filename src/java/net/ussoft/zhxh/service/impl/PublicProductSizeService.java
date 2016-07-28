@@ -47,4 +47,10 @@ public class PublicProductSizeService implements IPublicProductSizeService{
 		return 0;
 	}
 
+	@Override
+	public Public_product_size insert(Public_product_size product_size) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

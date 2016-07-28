@@ -47,4 +47,10 @@ public class PublicOrderService implements IPublicOrderService{
 		return 0;
 	}
 
+	@Override
+	public Public_order insert(Public_order order) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

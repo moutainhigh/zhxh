@@ -47,4 +47,10 @@ public class PublicContentService implements IPublicContentService{
 		return 0;
 	}
 
+	@Override
+	public Public_content insert(Public_content content) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

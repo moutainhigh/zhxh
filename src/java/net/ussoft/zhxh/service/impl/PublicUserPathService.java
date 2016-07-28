@@ -47,4 +47,10 @@ public class PublicUserPathService implements IPublicUserPathService{
 		return 0;
 	}
 
+	@Override
+	public Public_user_path insert(Public_user_path userPath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

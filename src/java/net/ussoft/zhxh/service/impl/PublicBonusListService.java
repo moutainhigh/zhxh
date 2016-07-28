@@ -47,4 +47,10 @@ public class PublicBonusListService implements IPublicBonusListService{
 		return 0;
 	}
 
+	@Override
+	public Public_bonus_list insert(Public_bonus_list bonusList) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

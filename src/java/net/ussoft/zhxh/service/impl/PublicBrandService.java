@@ -51,4 +51,10 @@ public class PublicBrandService implements IPublicBrandService{
 		return null;
 	}
 
+	@Override
+	public Public_brand insert(Public_brand brand) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

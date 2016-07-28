@@ -47,4 +47,10 @@ public class PublicUserAskService implements IPublicUserAskService{
 		return 0;
 	}
 
+	@Override
+	public Public_user_ask insert(Public_user_ask userAsk) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

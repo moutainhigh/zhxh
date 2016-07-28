@@ -48,4 +48,10 @@ public class PublicOrderProductService implements IPublicOrderProductService{
 		return 0;
 	}
 
+	@Override
+	public Public_order_product insert(Public_order_product orderProduct) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

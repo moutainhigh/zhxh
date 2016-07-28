@@ -48,4 +48,10 @@ public class PublicOrderLogisticsService implements IPublicOrderLogisticsService
 		return 0;
 	}
 
+	@Override
+	public Public_order_logistics insert(Public_order_logistics orderLogistics) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

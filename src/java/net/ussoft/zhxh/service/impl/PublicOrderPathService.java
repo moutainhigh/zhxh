@@ -47,4 +47,10 @@ public class PublicOrderPathService implements IPublicOrderPathService{
 		return 0;
 	}
 
+	@Override
+	public Public_order_path insert(Public_order_path orderPath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

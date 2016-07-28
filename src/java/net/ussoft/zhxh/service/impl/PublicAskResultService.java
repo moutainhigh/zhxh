@@ -47,4 +47,10 @@ public class PublicAskResultService implements IPublicAskResultService{
 		return 0;
 	}
 
+	@Override
+	public Public_ask_result insert(Public_ask_result askResult) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

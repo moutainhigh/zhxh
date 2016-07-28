@@ -47,4 +47,10 @@ public class BrandfirstService implements IBrandfirstService{
 		return 0;
 	}
 
+	@Override
+	public Brandfirst insert(Brandfirst brandfirst) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -47,4 +47,10 @@ public class PublicUserService implements IPublicUserService{
 		return 0;
 	}
 
+	@Override
+	public Public_user insert(Public_user user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

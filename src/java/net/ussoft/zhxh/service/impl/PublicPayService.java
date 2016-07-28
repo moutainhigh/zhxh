@@ -47,4 +47,10 @@ public class PublicPayService implements IPublicPayService{
 		return 0;
 	}
 
+	@Override
+	public Public_pay insert(Public_pay pay) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
