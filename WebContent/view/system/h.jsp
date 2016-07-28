@@ -15,12 +15,12 @@
     
     <script src="${pageContext.request.contextPath}/js/echarts/echarts.min.js"></script>
 	<!-- 引入 vintage 主题 -->
-	<script src="${pageContext.request.contextPath}/js/echarts/theme/vintage.js"></script>
+	<script src="${pageContext.request.contextPath}/js/echarts/theme/shine.js"></script>
     
     <script type="text/javascript">
     	$(function(){
     		// 第二个参数可以指定前面引入的主题
-    		var myChart = echarts.init(document.getElementById('main'), 'vintage');
+    		var myChart = echarts.init(document.getElementById('main'), 'shine');
     		
     		var dataMap = {};
     		function dataFormatter(obj) {
@@ -361,6 +361,62 @@
 
             // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
+            
+            var myChart_pay = echarts.init(document.getElementById('main_pay'), 'shine');
+            
+            option_pay = {
+            	    title: {
+            	        text: '2016年度品牌销售金额'
+            	    },
+            	    tooltip: {
+            	        trigger: 'axis'
+            	    },
+            	    legend: {
+            	        data:['诗蜜安黛','夏目','摩漾']
+            	    },
+            	    grid: {
+            	        left: '3%',
+            	        right: '4%',
+            	        bottom: '3%',
+            	        containLabel: true
+            	    },
+            	    toolbox: {
+            	        feature: {
+            	            saveAsImage: {}
+            	        }
+            	    },
+            	    xAxis: {
+            	        type: 'category',
+            	        boundaryGap: false,
+            	        data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+            	    },
+            	    yAxis: {
+            	        type: 'value'
+            	    },
+            	    series: [
+            	        {
+            	            name:'诗蜜安黛',
+            	            type:'line',
+            	            stack: '金额',
+            	            data:[120000, 132000, 101000, 134000, 90000, 230000, 210000]
+            	        },
+            	        {
+            	            name:'夏目',
+            	            type:'line',
+            	            stack: '金额',
+            	            data:[220000, 182000, 191000, 234000, 290000, 330000, 310000]
+            	        },
+            	        {
+            	            name:'摩漾',
+            	            type:'line',
+            	            stack: '金额',
+            	            data:[150000, 232000, 201000, 154000, 190000, 330000, 410000]
+            	        }
+            	    ]
+            	};
+            
+            myChart_pay.setOption(option_pay);
+
     	})
 	    function updatepass(id) {
 			
@@ -414,17 +470,22 @@
 			</div>
 			<div class="xm9">
 				<div class="alert alert-yellow"><span class="close"></span><strong>注意：</strong>您有5条未读信息，<a href="#">点击查看</a>。</div>
-				<div class="alert">
+				<!-- <div class="alert">
 					<h4>拼图前端框架介绍</h4>
 					<p class="text-gray padding-top">拼图是优秀的响应式前端CSS框架，国内前端框架先驱及领导者，自动适应手机、平板、电脑等设备，让前端开发像游戏般快乐、简单、灵活、便捷。</p>
 					<a target="_blank" class="button bg-dot icon-code" href="pintuer4.zip"> 下载示例代码</a>
 					<a target="_blank" class="button bg-main icon-download" href="http://www.pintuer.com/download/pintuer.zip"> 下载拼图框架</a>
 					<a target="_blank" class="button border-main icon-file" href="http://www.pintuer.com/"> 拼图使用教程</a>
-				</div>
+				</div> -->
 				<div class="panel">
-					<div class="panel-head"><strong>品牌销量统计图</strong></div>
+					<div class="panel-head"><strong>2016年度品牌销量统计图</strong></div>
 					<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    				<div id="main" style="width:100%;height:400px;"></div>
+    				<div id="main" style="width:100%;height:500px;margin-top: 20px"></div>
+				</div>
+				<div class="panel" style="margin-top: 20px">
+					<div class="panel-head"><strong>2016年度品牌销售金额统计图</strong></div>
+					<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    				<div id="main_pay" style="width:100%;height:500px;margin-top: 20px"></div>
 				</div>
 				<div class="panel" style="margin-top: 20px">
 					<div class="panel-head"><strong>系统信息</strong></div>
@@ -438,7 +499,7 @@
 								<td width="110" align="right">操作系统：</td>
 								<td>Windows 2008</td>
 								<td width="90" align="right">系统开发：</td>
-								<td><a href="http://www.pintuer.com" target="_blank">拼图前端框架</a></td>
+								<td><a href="http://www.pintuer.com" target="_blank">框架</a></td>
 							</tr>
 							<tr>
 								<td align="right">Web服务器：</td>
@@ -463,13 +524,8 @@
 				</div>
 			</div>
 		</div>
-		<p class="text-right text-gray">基于<a class="text-gray" target="_blank" href="http://www.pintuer.com">拼图前端框架</a>构建</p>
-		<div class="clearfix text-center">
-			<a class="button button-big bg-main badge-corner" href="http://www.pintuer.com/demo/pintuer3/" target="_blank">拼图最美中文后台-后翘<span class="badge bg-red">会员</span></a>
-			<br>
-			<br>
-			<br>
-		</div>
+		<!-- <p class="text-right text-gray">基于<a class="text-gray" target="_blank" href="http://www.pintuer.com">框架</a>构建</p> -->
+		
 		<br>
 	</div>
 </body>

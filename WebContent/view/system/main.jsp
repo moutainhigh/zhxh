@@ -116,68 +116,13 @@
 					<div id="navbar1" class="navbar-body nav-navicon">
 						<ul class="nav nav-inline nav-menu">
 							<li><a href="javascript:;" funcode="index">首页</a></li>
-							<c:forEach items="${functions}" varStatus="i" var="item">
-								<c:choose>
-									<c:when test="${item.funenglishname == 'SYSTEM'}">
-										<li><a href="javascript:;">${item.funchinesename }<span class="arrow"></span></a>
-											<ul class="drop-menu">
-												<c:forEach items="${functions}" varStatus="j" var="item_child">
-													<c:if test="${item_child.funparent == '1'}">
-														<li><a href="javascript:;" funcode="${item_child.funpath }">${item_child.funchinesename }</a></li>
-													</c:if>
-												</c:forEach>
-											</ul>
-										</li>
-									</c:when>
-									<c:when test="${item.funenglishname == 'AUTH'}">
-										<li><a href="javascript:;">${item.funchinesename }<span class="arrow"></span></a>
-											<ul class="drop-menu">
-												<c:forEach items="${functions}" varStatus="j" var="item_child">
-													<c:if test="${item_child.funparent == '5'}">
-														<li><a href="javascript:;" funcode="${item_child.funpath }">${item_child.funchinesename }</a></li>
-													</c:if>
-												</c:forEach>
-											</ul>
-										</li>
-									</c:when>
-									<c:when test="${item.funenglishname == 'GROUP'}">
-										<li><a href="javascript:;">${item.funchinesename }<span class="arrow"></span></a>
-											<ul class="drop-menu">
-												<c:forEach items="${functions}" varStatus="j" var="item_child">
-													<c:if test="${item_child.funparent == '15'}">
-														<li><a href="javascript:;" funcode="${item_child.funpath }">${item_child.funchinesename }</a></li>
-													</c:if>
-												</c:forEach>
-											</ul>
-										</li>
-									</c:when>
-									<c:when test="${item.funenglishname == 'ARCHIVEMANAGE'}">
-										<li><a href="javascript:;">${item.funchinesename }<span class="arrow"></span></a>
-											<ul class="drop-menu">
-												<c:forEach items="${functions}" varStatus="j" var="item_child">
-													<c:if test="${item_child.funparent == '8'}">
-														<li><a href="javascript:;" funcode="${item_child.funpath }">${item_child.funchinesename }</a></li>
-													</c:if>
-												</c:forEach>
-											</ul>
-										</li>
-									</c:when>
-									<c:when test="${item.funenglishname == 'SEARCHMANAGE'}">
-										<li><a href="javascript:;">${item.funchinesename }<span class="arrow"></span></a>
-											<ul class="drop-menu">
-												<c:forEach items="${functions}" varStatus="j" var="item_child">
-													<c:if test="${item_child.funparent == '9'}">
-														<li><a href="javascript:;" funcode="${item_child.funpath }">${item_child.funchinesename }</a></li>
-													</c:if>
-												</c:forEach>
-											</ul>
-										</li>
-									</c:when>
-									<c:otherwise>
-						    			
-									</c:otherwise>
-								</c:choose>					
-							</c:forEach>
+							<li><a href="javascript:;" funcode="common/dispatch.html?page=/view/system/system">系统配置</a></li>
+							<li><a href="javascript:;">下拉菜单<span class="arrow"></span></a>
+								<ul class="drop-menu">
+									<li><a href="javascript:;" funcode="">子菜单</a></li>
+									<li><a href="javascript:;" funcode="">子菜单2</a></li>
+								</ul>
+							</li>
 						</ul>
 						<div class="navbar-text navbar-right hidden-s">
 							欢迎 <a href="#" title="点击修改帐户信息" style="color: #0ae;" onclick="updatepass('${sessionScope.CURRENT_USER_IN_SESSION.id }')">${sessionScope.CURRENT_USER_IN_SESSION.accountname == ""?sessionScope.CURRENT_USER_IN_SESSION.accountcode:sessionScope.CURRENT_USER_IN_SESSION.accountname  } </a>。 
