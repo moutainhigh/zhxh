@@ -24,6 +24,8 @@ public class Public_user {
 	private Integer isopen;
 	private String password;
 	private String uid;
+	private Integer sex;
+	private String birthday;
 	
 	
 	@Id
@@ -123,6 +125,18 @@ public class Public_user {
 	}
 	public void setUsermemo(String usermemo) {
 		this.usermemo = usermemo;
+	}
+	public Integer getSex() {
+		return sex;
+	}
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
+	public String getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
 	}
 	
 	
