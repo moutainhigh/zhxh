@@ -19,16 +19,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
-import net.ussoft.zhxh.model.Sys_account;
-import net.ussoft.zhxh.service.IAccountService;
-import net.ussoft.zhxh.util.MD5;
+import net.ussoft.zhxh.model.Labeltype;
+import net.ussoft.zhxh.service.ILabeltypeService;
 
 @Controller
-@RequestMapping(value="account")
-public class AccountController extends BaseConstroller {
+@RequestMapping(value="label")
+public class LabelController extends BaseConstroller {
 	
 	@Resource
-	private IAccountService accountService;
+	private ILabeltypeService labeltypeService;
 	
 	/**
 	 * 获取帐户列表
@@ -36,16 +35,16 @@ public class AccountController extends BaseConstroller {
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/list",method=RequestMethod.POST)
-	public void list(HttpServletResponse response) throws IOException {
+	public void list(String parentid,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		List<Sys_account> accountList = accountService.list();
+		List<Labeltype> labelList = labeltypeService.list(parentid);
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		map.put("total", accountList.size());
-		map.put("data", accountList);
+		map.put("total", labelList.size());
+		map.put("data", labelList);
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
@@ -100,14 +99,11 @@ public class AccountController extends BaseConstroller {
 		if (null == row) {
 			return false;
 		}
-		Sys_account account = new Sys_account();
-		BeanUtils.populate(account, row);
+		Labeltype labeltype = new Labeltype();
+		BeanUtils.populate(labeltype, row);
 		
-		account.setId(UUID.randomUUID().toString());
-		//生成默认密码md5
-		String pass = MD5.encode("123456");
-		account.setPassword(pass);
-		account = accountService.insert(account);
+		labeltype.setId(UUID.randomUUID().toString());
+		labeltype = labeltypeService.insert(labeltype);
 		return true;
 	}
 	
@@ -123,7 +119,7 @@ public class AccountController extends BaseConstroller {
 		if (id == null || id.equals("") ) {
 			return false;
 		}
-		int num = accountService.delete(id);
+		int num = labeltypeService.delete(id);
 		
 		if (num <= 0 ) {
 			return false;
@@ -143,10 +139,10 @@ public class AccountController extends BaseConstroller {
 		if (null == row) {
 			return false;
 		}
-		Sys_account account = new Sys_account();
-		BeanUtils.populate(account, row);
+		Labeltype labeltype = new Labeltype();
+		BeanUtils.populate(labeltype, row);
 		
-		int num = accountService.update(account);
+		int num = labeltypeService.update(labeltype);
 		
 		if (num <= 0 ) {
 			return false;
@@ -154,61 +150,6 @@ public class AccountController extends BaseConstroller {
 		return true;
 	}
 	
-	/**
-	 * 执行更新帐户密码
-	 * @param id
-	 * @param password
-	 * @param response
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value="/toupdatepass",method=RequestMethod.POST)
-	public void toupdatepass(String id,String password,HttpServletResponse response) throws IOException {
-		
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		String result = "failure";
-		
-		Sys_account account = accountService.getById(id);
-		
-		if (account == null || password.equals("")) {
-			out.print(result);
-			return;
-		}
-		
-		account.setPassword(MD5.encode(password).toString());
-		
-		int num = accountService.update(account);
-		if (num > 0 ) {
-			result = "success";
-		}
-		out.print(result);
-	}
-	
-	/**
-	 * 初始化帐户密码
-	 * @param ids
-	 * @param response
-	 * @throws IOException
-	 */
-	@RequestMapping(value="/initUpdatePass",method=RequestMethod.POST)
-	public void initUpdatePass(String ids,HttpServletResponse response) throws IOException {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		String result = "failure";
-		
-		int num = accountService.initUpdatePass(ids);
-		
-		if (num >0) {
-			result = "success";
-		}
-		
-		out.print(result);
-	}
 	
 	
 }

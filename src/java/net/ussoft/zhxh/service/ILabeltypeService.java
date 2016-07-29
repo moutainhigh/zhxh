@@ -23,7 +23,7 @@ public interface ILabeltypeService {
 	 * 查询所有
 	 * @return list
 	 * */
-	public List<Labeltype> list();
+	public List<Labeltype> list(String parentid);
 	
 	/**
 	 * 查询所有 分页

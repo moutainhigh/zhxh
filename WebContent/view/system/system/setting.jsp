@@ -54,7 +54,7 @@
 	    t3.pid = "right";
 	    t3.text = "标签管理";
 	    t3.iconCls = "label";
-	    t3.url = getRootPath_web() + "/common/dispatch.do?page=/view/config/docserver_list";
+	    t3.url = getRootPath_web() + "/common/dispatch.html?page=/view/system/system/labellist";
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
 	    
