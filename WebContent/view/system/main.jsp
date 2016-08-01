@@ -117,7 +117,7 @@
 						<ul class="nav nav-inline nav-menu">
 							<li><a href="javascript:;" funcode="index">首页</a></li>
 							<li><a href="javascript:;" funcode="common/dispatch.html?page=/view/system/system/setting">系统配置</a></li>
-							<li><a href="javascript:;" funcode="common/dispatch.html?page=/view/system/userManager">会员管理</a></li>
+							<li><a href="javascript:;" funcode="common/dispatch.html?page=/view/system/member/userManager">会员管理</a></li>
 							<li><a href="javascript:;">下拉菜单<span class="arrow"></span></a>
 								<ul class="drop-menu">
 									<li><a href="javascript:;" funcode="">子菜单</a></li>
