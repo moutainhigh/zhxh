@@ -62,14 +62,16 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
+      	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	                { field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnProductEdit" } },
       	                { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "productcode",name:"productcode", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品型号",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"PC"},{"id":"2","text":"仅移动端"}] } },
+      	                { field: "productcode",name:"productcode", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品型号",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	                { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
       	                { field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
       	                { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "createdate",name:"update",dateFormat:"yyyy-MM-dd", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "上架日期",vtype:"required",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "ifdis",name:"ifdis",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "是否参与三级分销",editor: { type: "combobox", data: [{"id":"0","text":"否"},{"id":"1","text":"是"}] } }
+      	                { field: "createdate",name:"update",dateFormat:"yyyy-MM-dd", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "上架日期",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
+      	                { field: "ifdis",name:"ifdis",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "是否参与三级分销",editor: { type: "combobox", data: [{"id":"0","text":"否"},{"id":"1","text":"是"}] } },
+      	                { field: "sort",name:"sort", width: 30, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -88,6 +90,17 @@
 	        });
         	drawcell();
         })
+        
+        function onActionRenderer(e) {
+            var grid = e.sender;
+            var record = e.record;
+            var uid = record._uid;
+            var rowIndex = e.rowIndex;
+
+            var s = ' <a class="Edit_Button" href="javascript:editBook(\'' + uid + '\')" >评价</a>'
+            s += '  <a class="Edit_Button" href="javascript:delete_book(\'' + uid + '\')" >描述</a>';
+            return s;
+        }
         
         function drawcell() {
        		grid_brand.on("drawcell", function (e) {
@@ -310,8 +323,13 @@
 				newRow.showtype = "1";
 				newRow.isshow = "0";
 				newRow.productmemo = "";
-				newRow.createdate = "";
+				
 				newRow.ifdis = "0";
+				newRow.sort = 1;
+				
+				var now = new Date();
+	            var nowDate = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth()+1)+"-"+(now.getDate()<10?"0":"")+now.getDate();
+		    	newRow.createdate = nowDate;
 				
 				editField = "productname";
 			}
