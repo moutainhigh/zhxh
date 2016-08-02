@@ -125,12 +125,6 @@
 									<li><a href="javascript:;" funcode="">子菜单2</a></li>
 								</ul>
 							</li>
-							<li><a href="javascript:;">内容管理<span class="arrow"></span></a>
-								<ul class="drop-menu">
-									<li><a href="javascript:;" funcode="common/dispatch.html?page=/view/system/content/home">首页</a></li>
-									<li><a href="javascript:;" funcode="">子菜单2</a></li>
-								</ul>
-							</li>
 						</ul>
 						<div class="navbar-text navbar-right hidden-s">
 							欢迎 <a href="#" title="点击修改帐户信息" style="color: #0ae;" onclick="updatepass('${sessionScope.CURRENT_USER_IN_SESSION.id }')">${sessionScope.CURRENT_USER_IN_SESSION.accountname == ""?sessionScope.CURRENT_USER_IN_SESSION.accountcode:sessionScope.CURRENT_USER_IN_SESSION.accountname  } </a>。 
