@@ -30,7 +30,7 @@ public interface IPublicProductService {
 	 * @param pageBean
 	 * @return list
 	 * */
-	public List<Public_product> list(PageBean<Public_product> pageBean);
+	public List<Public_product> list(PageBean<Public_product> pageBean,String brandid);
 	
 	/**
 	 * 添加

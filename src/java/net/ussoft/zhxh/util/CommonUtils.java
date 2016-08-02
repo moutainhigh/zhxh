@@ -2,6 +2,7 @@ package net.ussoft.zhxh.util;
 
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -12,12 +13,17 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 public class CommonUtils {
 	
@@ -422,6 +428,62 @@ public class CommonUtils {
 	     String newString = String.format("%0"+formatLength+"d", sourceDate);  
 	     return  newString;  
     } 
+    
+    /**
+	 * 上传文件公共方法（form提交方式上传）。仅将文件保存到服务器，返回map文件的基本属性。
+	 * @param file				文件流
+	 * @param saveFolder		保存的目录
+	 * @return
+	 * @throws IOException
+	 */
+	public static HashMap<String,String> toinsert_file(@RequestParam("file") MultipartFile file,String saveFolder,HttpServletRequest request) throws IOException {
+		
+		String uuidString = "";
+		String newName = "";
+		String oldName = "";
+		String newFilePath = "";
+		String path = "";
+		
+		String filePath = "";
+		
+		HashMap<String,String> resultMap = new HashMap<String,String>(); 
+		
+        int size = file.getInputStream().available();
+		if (size != 0) {
+			if (null != saveFolder && !"".equals(saveFolder)) {
+				path = request.getSession().getServletContext().getRealPath("/file/" + saveFolder);
+				filePath = "file/" + saveFolder + "/";
+			}
+			else {
+				path = request.getSession().getServletContext().getRealPath("/file");
+				filePath = "file/";
+			}
+			
+			FileOperate.isExist(path);
+			
+	        String ext = "";//扩展名
+	        
+	        oldName = file.getOriginalFilename();
+	        //获取扩展名
+	        if (oldName.lastIndexOf(".") >= 0) {
+	            ext = oldName.substring(oldName.lastIndexOf("."));
+	        }
+	        
+	        uuidString = UUID.randomUUID().toString();
+	        newName = uuidString + ext;
+	        newFilePath = path + "/" + newName;
+	        File excFile = new File(newFilePath);
+	        FileCopyUtils.copy(file.getBytes(),excFile);
+	        
+	        resultMap.put("oldname", oldName);
+	        resultMap.put("ext", ext);
+	        resultMap.put("newname", newName);
+	        resultMap.put("filepath", filePath);
+	        resultMap.put("uuidString", uuidString);
+		}
+		
+		return resultMap;
+	}
     
     
 }
