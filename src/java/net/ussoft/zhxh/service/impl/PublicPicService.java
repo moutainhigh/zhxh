@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicPicDao;
 import net.ussoft.zhxh.model.PageBean;
@@ -47,10 +48,10 @@ public class PublicPicService implements IPublicPicService{
 		return 0;
 	}
 
+	@Transactional("txManager")
 	@Override
 	public Public_pic insert(Public_pic pic) {
-		// TODO Auto-generated method stub
-		return null;
+		return picDao.save(pic);
 	}
 
 }
