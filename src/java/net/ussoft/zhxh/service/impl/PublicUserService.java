@@ -1,5 +1,6 @@
 package net.ussoft.zhxh.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -27,13 +28,24 @@ public class PublicUserService implements IPublicUserService{
 	@Override
 	public List<Public_user> list() {
 		// TODO Auto-generated method stub
+		
 		return userDao.getAll();
 	}
 
 	@Override
-	public List<Public_user> list(PageBean<Public_user> pageBean) {
-		// TODO Auto-generated method stub
-		return null;
+	public PageBean<Public_user> list(String key,PageBean<Public_user> pageBean) {
+		
+		String sql = "select * from public_user";
+		List<Object> values = new ArrayList<Object>();
+		
+		if (null == key || "".equals(key)) {
+			return userDao.search(sql, values, pageBean);
+		}
+		else {
+			sql += " where phonenumber = ?";
+			values.add(key);
+			return userDao.search(sql, values, pageBean);
+		}
 	}
 
 	@Transactional("txManager")
@@ -50,7 +62,11 @@ public class PublicUserService implements IPublicUserService{
 	@Override
 	public int delete(String id) {
 		// TODO Auto-generated method stub
-		return userDao.del(id);
+		String[] ids = id.split(",");
+		for(int i=0;i<ids.length;i++){
+			userDao.del(ids[i]);
+		}
+		return 1;
 	}
 
 	@Transactional("txManager")
@@ -59,6 +75,31 @@ public class PublicUserService implements IPublicUserService{
 		// TODO Auto-generated method stub
 		userDao.save(user);
 		return user;
+	}
+
+	@Override
+	public boolean checkPhoneNum(String phoneNum) {
+		// TODO Auto-generated method stub
+		List<Object> values = new ArrayList<Object>();
+		values.add(phoneNum);
+		String sql = "select id from public_user where phonenumber=?";
+		List<Public_user> list = userDao.search(sql, values);
+		if(list.size() > 0)
+			return true;
+		return false;
+	}
+
+	@Override
+	public Public_user getByPhoneNum(String phoneNum) {
+		List<Object> values = new ArrayList<Object>();
+		values.add(phoneNum);
+		String sql = "select id from public_user where phonenumber=?";
+		List<Public_user> list = userDao.search(sql, values);
+		if(list.size() > 0){
+			return list.get(0);
+		}
+		
+		return null;
 	}
 
 }
