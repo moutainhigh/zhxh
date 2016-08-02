@@ -72,7 +72,6 @@
 	            showPageSize:false,
 	            pageSize:2000
 	        });
-        	grid.load({"parentid":"0"});
         	//drawcell();
         })
         

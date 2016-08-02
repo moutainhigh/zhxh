@@ -17,8 +17,9 @@ public class Public_product {
 	private String productpic;
 	private Integer isshow;
 	private String productmemo;
-	private String update;
+	private String createdate;
 	private Integer ifdis;
+	private Integer sort;
 	
 	
 	
@@ -79,17 +80,23 @@ public class Public_product {
 	public void setProductmemo(String productmemo) {
 		this.productmemo = productmemo;
 	}
-	public String getUpdate() {
-		return update;
+	public String getCreatedate() {
+		return createdate;
 	}
-	public void setUpdate(String update) {
-		this.update = update;
+	public void setCreatedate(String createdate) {
+		this.createdate = createdate;
 	}
 	public Integer getIfdis() {
 		return ifdis;
 	}
 	public void setIfdis(Integer ifdis) {
 		this.ifdis = ifdis;
+	}
+	public Integer getSort() {
+		return sort;
+	}
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 	
 }

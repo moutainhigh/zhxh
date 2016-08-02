@@ -1,1 +1,5 @@
-﻿ssdd
+﻿
+
+1、public_product
+   (1) 将update字段名 改为 createdate
+   (2) 增加排序字段   sort  int  11
