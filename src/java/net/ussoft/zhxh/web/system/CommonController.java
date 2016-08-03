@@ -264,11 +264,14 @@ public class CommonController extends BaseConstroller {
      */
 	private String uploadSaveData(String parentid,String parenttype,File tmpFile) throws Exception {
     	
+    	String sql = "";
+        List<Object> values = new ArrayList<Object>();
         
         //文件的doc的id
         String picId = UUID.randomUUID().toString();
         
         String filename = tmpFile.getName();
+        long filesize = tmpFile.length();
         
         String docExt = "";
         //获取扩展名
@@ -281,8 +284,8 @@ public class CommonController extends BaseConstroller {
         pic.setId(picId);
         pic.setParentid(parentid);
         pic.setParenttype(parenttype);
-        String contextPath = "file" +File.separator + "upload" + File.separator;
-        pic.setPic_path(contextPath + newname);
+        String contextPath = getProjectRealPath() + "file" +File.separator + "upload" + File.separator;
+        pic.setPic_path("file" +File.separator + "upload" + File.separator + newname);
         pic.setPic_memo("");
         pic.setPic_active(0);
         pic.setPic_sort(1);
