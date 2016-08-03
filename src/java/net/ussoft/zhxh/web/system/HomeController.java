@@ -37,7 +37,7 @@ public class HomeController extends BaseConstroller{
 	
 	//公共图片parentid 的值
 	private String PARENTID = "home_pic";
-	
+	private String PARENTTYPE = "lbt";
 	/**
 	 * 首页轮播图列表
 	 * @param response
@@ -49,7 +49,7 @@ public class HomeController extends BaseConstroller{
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 
-		List<Public_pic> list = picService.list(PARENTID);
+		List<Public_pic> list = picService.list(PARENTID,PARENTTYPE);
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
@@ -119,7 +119,7 @@ public class HomeController extends BaseConstroller{
 		
 		pic.setId(UUID.randomUUID().toString());
 		pic.setParentid(PARENTID);
-		
+		pic.setParenttype(PARENTTYPE);
 		pic = picService.insert(pic);
 		return true;
 	}

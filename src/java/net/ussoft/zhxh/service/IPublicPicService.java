@@ -23,7 +23,7 @@ public interface IPublicPicService {
 	 * 查询所有
 	 * @return list
 	 * */
-	public List<Public_pic> list(String parentid);
+	public List<Public_pic> list(String parentid,String parenttype);
 	
 	/**
 	 * 查询所有 分页

@@ -24,7 +24,7 @@ public class PublicPicService implements IPublicPicService{
 	}
 
 	@Override
-	public List<Public_pic> list(String parentid) {
+	public List<Public_pic> list(String parentid,String parenttype) {
 		Public_pic pic = new Public_pic();
 		pic.setParentid(parentid);
 		PageBean<Public_pic> p = new PageBean<Public_pic>();
