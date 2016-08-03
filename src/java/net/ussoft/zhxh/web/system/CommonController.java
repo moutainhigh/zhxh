@@ -264,14 +264,11 @@ public class CommonController extends BaseConstroller {
      */
 	private String uploadSaveData(String parentid,String parenttype,File tmpFile) throws Exception {
     	
-    	String sql = "";
-        List<Object> values = new ArrayList<Object>();
         
         //文件的doc的id
         String picId = UUID.randomUUID().toString();
         
         String filename = tmpFile.getName();
-        long filesize = tmpFile.length();
         
         String docExt = "";
         //获取扩展名
@@ -294,7 +291,7 @@ public class CommonController extends BaseConstroller {
         FileOperate.copyFile(tmpFile.getPath(), contextPath + newname);
         
         //删除临时文件
-        deleteFile(tmpFile.getPath());
+        //deleteFile(tmpFile.getPath());
         
         picService.insert(pic);
         
