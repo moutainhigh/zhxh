@@ -83,7 +83,7 @@
 		function add() {
 	    	mini.open({
 	    	    //url: "/view/system/member/EmployeeWindow.html",
-	    	    url: "/common/dispatch.html?page=/view/system/content/upload_pic",
+	    	    url: "${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/content/upload_pic",
 	    	    title: "上传图片", width: 600, height: 400,
 	    	    onload: function () {
 	    	        var iframe = this.getIFrameEl();

@@ -291,7 +291,7 @@ public class CommonController extends BaseConstroller {
         FileOperate.copyFile(tmpFile.getPath(), contextPath + newname);
         
         //删除临时文件
-        //deleteFile(tmpFile.getPath());
+        deleteFile(tmpFile.getPath());
         
         picService.insert(pic);
         
