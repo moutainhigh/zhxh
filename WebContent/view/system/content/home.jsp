@@ -33,7 +33,7 @@
 	    
 	    var t1 = {};
 	    t1.id = "right";
-	    t1.text = "首页管理";
+	    t1.text = "内容管理";
 	    dataList.push(t1);
 	    
 	    var t2 = {};
@@ -45,6 +45,14 @@
 	    t2.iconPosition = "top";
 	    dataList.push(t2);
 	    
+	    var t3 = {};
+	    t3.id = "setting";
+	    t3.pid = "right";
+	    t3.text = "制作专题";
+	    t3.iconCls = "setting";
+	    t3.url = "${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/content/subjectList";
+	    t3.iconPosition = "top";
+	    dataList.push(t3);
     
     	$(function(){
             var leftTree = mini.get("leftTree");

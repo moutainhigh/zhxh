@@ -23,14 +23,14 @@ public interface IPublicContentService {
 	 * 查询所有
 	 * @return list
 	 * */
-	public List<Public_content> list();
+	public List<Public_content> list(String parentid,String parenttype);
 	
 	/**
 	 * 查询所有 分页
 	 * @param pageBean
 	 * @return list
 	 * */
-	public List<Public_content> list(PageBean<Public_content> pageBean);
+	public PageBean<Public_content> list(PageBean<Public_content> pageBean);
 	
 	/**
 	 * 添加

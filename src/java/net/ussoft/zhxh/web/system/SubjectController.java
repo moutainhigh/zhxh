@@ -12,8 +12,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
-import net.ussoft.zhxh.model.Public_pic;
-import net.ussoft.zhxh.service.IPublicPicService;
+import net.ussoft.zhxh.model.Public_content;
+import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.util.FileOperate;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -24,20 +24,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.alibaba.fastjson.JSON;
 
 /**
- * 首页-轮播图
+ * 专题
  * @author guodh
- * 
  * */
 @Controller
-@RequestMapping(value="home")
-public class HomeController extends BaseConstroller{
+@RequestMapping(value="subject")
+public class SubjectController extends BaseConstroller{
 
 	@Resource
-	IPublicPicService picService;
+	IPublicContentService contentService;
 	
-	//公共图片parentid 的值
-	private String PARENTID = "home_pic";
-	
+	private String PARENTID = "zt";
+	private String PARENTTYPE = "zt";
 	/**
 	 * 首页轮播图列表
 	 * @param response
@@ -49,7 +47,7 @@ public class HomeController extends BaseConstroller{
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 
-		List<Public_pic> list = picService.list(PARENTID);
+		List<Public_content> list = contentService.list(PARENTID,PARENTTYPE);
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
@@ -114,13 +112,14 @@ public class HomeController extends BaseConstroller{
 		if (null == row) {
 			return false;
 		}
-		Public_pic pic = new Public_pic();
-		BeanUtils.populate(pic, row);
+		Public_content content = new Public_content();
+		BeanUtils.populate(content, row);
 		
-		pic.setId(UUID.randomUUID().toString());
-		pic.setParentid(PARENTID);
+		content.setId(UUID.randomUUID().toString());
+		content.setParentid(PARENTID);
+		content.setParenttype(PARENTTYPE);
 		
-		pic = picService.insert(pic);
+		content = contentService.insert(content);
 		return true;
 	}
 	
@@ -136,7 +135,7 @@ public class HomeController extends BaseConstroller{
 		if (id == null || id.equals("") ) {
 			return false;
 		}
-		int num = picService.delete(id);
+		int num = contentService.delete(id);
 		
 		if (num <= 0 ) {
 			return false;
@@ -156,10 +155,10 @@ public class HomeController extends BaseConstroller{
 		if (null == row) {
 			return false;
 		}
-		Public_pic pic = new Public_pic();
+		Public_content pic = new Public_content();
 		BeanUtils.populate(pic, row);
 		
-		int num = picService.update(pic);
+		int num = contentService.update(pic);
 		
 		if (num <= 0 ) {
 			return false;

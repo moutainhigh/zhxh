@@ -23,14 +23,13 @@
        		
 			grid = mini.get("grid");
         	grid.set({
-        		url:"${pageContext.request.contextPath}/home/list.html",
+        		url:"${pageContext.request.contextPath}/subject/list.html",
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
-      	              	{ field: "pic_path",name:"pic_path", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "轮播图片",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "pic_memo",name:"pic_memo", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "图片描述",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "pic_url",name:"pic_url", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "图片点击URL",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "pic_sort",name:"pic_sort", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "图片排序", editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
+      	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+      	              	{ field: "title",name:"title", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "轮播图片",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	                { field: "memo",name:"memo", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "内容",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onButtonEdit"}  }
       	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -80,23 +79,6 @@
             grid.beginEditCell(newRow, "accountcode");
         }
 		
-		function add() {
-	    	mini.open({
-	    	    //url: "/view/system/member/EmployeeWindow.html",
-	    	    url: "${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/content/upload_pic",
-	    	    title: "上传图片", width: 600, height: 400,
-	    	    onload: function () {
-	    	        var iframe = this.getIFrameEl();
-	    	        var data = { parentid: "home_pic",parenttype:"lbt"};
-	    	        iframe.contentWindow.SetData(data);
-	    	    },
-	    	    ondestroy: function (action) {
-
-	    	        grid.reload();
-	    	    }
-	    	});
-		}
-		
 		function delRow() {
         	var cf1 = "确定要删除选中的帐户吗？<br>&nbsp;&nbsp;&nbsp;&nbsp;注意：不可恢复，请谨慎操作。";
         	
@@ -142,7 +124,7 @@
 	        
 	        $.ajax({
 	        	async:false,
-	            url: "${pageContext.request.contextPath}/home/save.html",
+	            url: "${pageContext.request.contextPath}/subject/save.html",
 	            data: {'objs':json},
 	            type: "post",
 	            dataType:"text",
@@ -156,14 +138,34 @@
 	        });
 	    }
 		
-		function getSelectGridid(rows) {
-        	var ids = "";
-            for (var i=0;i<rows.length;i++) {
-            	ids += rows[i].id + ",";
-            }
-            ids = ids.substring(0,ids.length-1);
-            return ids;
+		function onActionRenderer(e) {
+            var grid = e.sender;
+            var record = e.record;
+            var uid = record._uid;
+            var rowIndex = e.rowIndex;
+
+            var s = ' <a class="Edit_Button" href="javascript:edit(\'' + uid + '\')" >内容</a>'
+            return s;
         }
+		
+		function edit(){
+			var pHeight = $(window.parent).height();
+	   		var pWidth = $(window.parent).width();
+	         mini.open({
+	             url: "${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/content/uedit",
+	             title: "内容编辑", width: pWidth-100, height:pHeight-100,
+	             allowResize:true,
+	             showMaxButton:true,
+	             onload: function () {
+	            	 var iframe = this.getIFrameEl();
+	                 var data = {projectids:sel_projectid};
+	                 iframe.contentWindow.SetData(data);
+	             },
+	             ondestroy: function (action) {
+	            	 grid.reload();
+	             }
+	         });
+		}
 		
 </script>
 </head>
@@ -176,7 +178,7 @@
                  	<span id="pid" style="padding-left:5px;">首页轮播图</span>
                  </td>
                  <td style="white-space:nowrap;">
-                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="add()">新增</a>
+                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>
                  	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow()">删除</a>
 	                <span class="separator"></span>
 	         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save()">保存</a>
