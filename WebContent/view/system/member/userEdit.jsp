@@ -121,7 +121,7 @@
             if (form.isValid() == false) return;
             var json = mini.encode(o);
             $.ajax({
-            	url: "${pageContext.request.contextPath}/userManager/save.html",
+            	url: "${pageContext.request.contextPath}/userManager/save.htmls",
                 data: { "objs": json },
                 type: "post",
                 dataType:"text",
@@ -176,7 +176,7 @@
             var btnEdit = e.sender;
 
             mini.open({
-                url: "${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/member/selectUser",
+                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectUser",
                 title: "选择推荐人",
                 width: 650,
                 height: 380,

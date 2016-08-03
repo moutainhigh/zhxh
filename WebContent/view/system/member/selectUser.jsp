@@ -24,7 +24,7 @@
 	   		//mini.parse();
 			grid = mini.get("grid");
 	    	grid.set({
-	    		url:"${pageContext.request.contextPath}/userManager/list.html",
+	    		url:"${pageContext.request.contextPath}/userManager/list.htmls",
 	    		columns: [
 	  	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
 	  	              	{ field: "phonenumber",name:"phonenumber", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "手机",vtype:"required" ,editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },

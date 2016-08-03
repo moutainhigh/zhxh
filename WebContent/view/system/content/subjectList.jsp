@@ -23,7 +23,7 @@
        		
 			grid = mini.get("grid");
         	grid.set({
-        		url:"${pageContext.request.contextPath}/subject/list.html",
+        		url:"${pageContext.request.contextPath}/subject/list.htmls",
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
@@ -124,7 +124,7 @@
 	        
 	        $.ajax({
 	        	async:false,
-	            url: "${pageContext.request.contextPath}/subject/save.html",
+	            url: "${pageContext.request.contextPath}/subject/save.htmls",
 	            data: {'objs':json},
 	            type: "post",
 	            dataType:"text",
@@ -152,7 +152,7 @@
 			var pHeight = $(window.parent).height();
 	   		var pWidth = $(window.parent).width();
 	         mini.open({
-	             url: "${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/content/uedit",
+	             url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/uedit",
 	             title: "内容编辑", width: pWidth-100, height:pHeight-100,
 	             allowResize:true,
 	             showMaxButton:true,

@@ -93,7 +93,7 @@ public class LoginController extends BaseConstroller {
 		request.getSession().removeAttribute(Constants.user_in_session);
 		request.getSession().invalidate();
 //		return "login";
-		return "redirect:/login.html";
+		return "redirect:/login.htmls";
 //		return "view/system/login";
 	}
 	

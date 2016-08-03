@@ -41,7 +41,7 @@
 	    t2.pid = "right";
 	    t2.text = "首图轮播";
 	    t2.iconCls = "setting";
-	    t2.url = "${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/content/homePiclist";
+	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/homePiclist";
 	    t2.iconPosition = "top";
 	    dataList.push(t2);
 	    
@@ -50,7 +50,7 @@
 	    t3.pid = "right";
 	    t3.text = "制作专题";
 	    t3.iconCls = "setting";
-	    t3.url = "${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/content/subjectList";
+	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/subjectList";
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
     
@@ -73,7 +73,7 @@
 	        <div id="leftTree" class="mini-outlookmenu"  onitemselect="onItemSelect" borderStyle="border:0" ></div>
 	    </div>
 		<div showCollapseButton="false" >
-		    	<iframe id="mainframe" src="${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/content/homePiclist" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
+		    	<iframe id="mainframe" src="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/homePiclist" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
 		</div>
 	    
 	</div>

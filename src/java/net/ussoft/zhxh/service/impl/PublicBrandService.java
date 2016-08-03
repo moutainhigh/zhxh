@@ -21,8 +21,6 @@ public class PublicBrandService implements IPublicBrandService{
 	
 	@Resource
 	private PublicBrandDao brandDao;
-	@Autowired 
-	private HttpServletRequest request;
 
 	@Override
 	public Public_brand getById(String id) {
@@ -48,10 +46,6 @@ public class PublicBrandService implements IPublicBrandService{
 	@Override
 	public int delete(String id ) {
 		//删除时要删除品牌logo
-		Public_brand brand = brandDao.get(id);
-		if (null != brand.getBrandlogo() && !"".equals(brand.getBrandlogo())) {
-			FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + brand.getBrandlogo());
-		}
 		return brandDao.del(id);
 	}
 

@@ -35,51 +35,6 @@ public class BaseConstroller {
 	}
 	
 	/**
-	 * 获取系统配置表（sys_config）内容，形成map类型。供子类
-	 */
-//	public HashMap<String, Object> getConfig(String accountid) {
-//		List<Sys_config> configList = configService.list();
-//		
-//		HashMap<String, Object> configMap = new HashMap<String, Object>();
-//		for (Sys_config config : configList) {
-//			configMap.put(config.getConfigkey(), config.getConfigvalue());
-//		}
-//		return configMap;
-//	}
-	
-	/**
-	 * 获取当前帐户的角色，如果帐户没有角色，获取所属组的角色
-	 * @param accountid		帐户id
-	 * @return
-	 */
-//	public String getAuthRole(String accountid) {
-//		//获取帐户对象
-//		Sys_account account = accountService.getById(accountid);
-//		String roleid = account.getRoleid();
-//		//如果帐户自己的角色为空
-//		if (roleid == null || roleid.equals("")) {
-//			//获取帐户所属组的角色
-//			Sys_org org = orgService.getById(account.getOrgid());
-//			roleid = org.getRoleid();
-//		}
-//		//如果还是为空，返回null
-////		if (roleid == null || roleid.equals("")) {
-////			return null;
-////		}
-//		
-//		return roleid;
-//	}
-	
-	/**
-	 * 根据角色id，获取角色能控制的功能list
-	 * @param roleid
-	 * @return
-	 */
-//	public List<Sys_function> getFunctions(String roleid) {
-//		return roleService.searchFunctions(roleid);
-//	}
-	
-	/**
 	 * 获取项目根路径  例如 /archive 
 	 * @return
 	 */

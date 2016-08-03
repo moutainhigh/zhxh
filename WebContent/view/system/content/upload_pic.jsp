@@ -38,7 +38,7 @@
 		    $("#uploader").pluploadQueue({
 		        // General settings
 		        runtimes : 'html5,flash,silverlight,html4',
-		        url : "${pageContext.request.contextPath}/common/upload.html?parentid="+parentid+"&parenttype="+parenttype,
+		        url : "${pageContext.request.contextPath}/common/upload.htmls?parentid="+parentid+"&parenttype="+parenttype,
 		        chunk_size : '2mb',
 		        //rename : true,
 		        //dragdrop: true,

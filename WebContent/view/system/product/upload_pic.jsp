@@ -115,7 +115,7 @@
           <label id="memo">请选择图片上传</label>
     </div>
 	<div style="width:70%;margin-bottom:30px; MARGIN-RIGHT: auto; MARGIN-LEFT: auto;">
-		<form id="uploadImgForm" method="post" class="form-x"  action="${pageContext.request.contextPath}/common/update_common_file.html" enctype="multipart/form-data" style="margin-top: 30px;">
+		<form id="uploadImgForm" method="post" class="form-x"  action="${pageContext.request.contextPath}/common/update_common_file.htmls" enctype="multipart/form-data" style="margin-top: 30px;">
 	         <input type="hidden" id="redirectPath" name="redirectPath" value="/view/system/product/upload_pic" />
 	 	     <input type="hidden" id="id" name="id" value="" />
 	 	     <input type="hidden" id="saveFolder" name="saveFolder" value="" />

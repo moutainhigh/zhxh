@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
-import net.ussoft.zhxh.model.Labeltype;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Product_rated;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_product;
+import net.ussoft.zhxh.service.IProductRatedService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicProductService;
+import net.ussoft.zhxh.util.FileOperate;
 
 @Controller
 @RequestMapping(value="product")
@@ -34,16 +36,18 @@ public class ProductController extends BaseConstroller {
 	private IPublicBrandService brandService;
 	@Resource
 	private IPublicProductService productService;
+	@Resource
+	private IProductRatedService ratedService;
 	
 	/**
 	 * 获取列表
-	 * @param listtype  	为了共用。获取列表的对象类型。 brand：获取品牌列表   product：获取商品列表
-	 * @param brandid		如果是获取商品列表。要有品牌id作为参数
+	 * @param listtype  	为了共用。获取列表的对象类型。 brand：获取品牌列表   product：获取商品列表 rated:商品评价
+	 * @param parentid		如果是获取的列表有父节点id。要有id作为参数
 	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/list",method=RequestMethod.POST)
-	public void list(String listtype,String brandid,HttpServletResponse response) throws IOException {
+	public void list(String listtype,String parentid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -60,9 +64,19 @@ public class ProductController extends BaseConstroller {
 			
 			p.setIsPage(false);
 			p.setOrderBy("sort");
-			List<Public_product> pList = productService.list(p, brandid);
+			List<Public_product> pList = productService.list(p, parentid);
 			map.put("total", pList.size());
 			map.put("data", pList);
+		}
+		else if (listtype.equals("rated")) {
+			PageBean<Product_rated> p = new PageBean<Product_rated>();
+			p.setPageSize(pageSize);
+			p.setPageNo(pageIndex + 1);
+			p.setOrderBy("ratedtime");
+			p.setOrderType("desc");
+			p = ratedService.list(p, parentid);
+			map.put("total", p.getPageCount());
+			map.put("data", p.getList());
 		}
 		
 		String json = JSON.toJSONString(map);
@@ -112,7 +126,7 @@ public class ProductController extends BaseConstroller {
 	/**
 	 * 保存品牌
 	 * @param objs			保存的实体json
-	 * @param savetype		保存的实体类型。共用 brand:保存的是品牌   product：保存的是商品信息
+	 * @param savetype		保存的实体类型。共用 brand:保存的是品牌   product：保存的是商品信息 rated:商品评价
 	 * @param response
 	 * @throws IOException
 	 * @throws IllegalAccessException
@@ -144,7 +158,18 @@ public class ProductController extends BaseConstroller {
 	        	insert(row,savetype);
 	        }
 	        else if (state.equals("removed") || state.equals("deleted")) {
-	        	delete(id,savetype);
+	        	boolean isok = delete(id,savetype);
+	        	if (isok) {
+	        		String tmpPath = "";
+	        		if (savetype.equals("brand")) {
+	        			tmpPath = row.get("brandlog");
+	        		}
+	        		else if (savetype.equals("product")) {
+	        			tmpPath = row.get("productpic");
+	        		}
+	        		
+	        		FileOperate.delFile(super.getProjectRealPath() + tmpPath); 
+	        	}
 	        }
 	        //更新：_state为空，或modified
 	        else if (state.equals("modified") || state.equals(""))	 {
@@ -173,6 +198,13 @@ public class ProductController extends BaseConstroller {
 			product.setId(UUID.randomUUID().toString());
 			product = productService.insert(product);
 		}
+		else if (savetype.equals("rated")) {
+			Product_rated rated = new Product_rated();
+			BeanUtils.populate(rated, row);
+			
+			rated.setId(UUID.randomUUID().toString());
+			rated = ratedService.insert(rated);
+		}
 		
 		return true;
 	}
@@ -193,8 +225,11 @@ public class ProductController extends BaseConstroller {
 		if (savetype.equals("brand")) {
 			num = brandService.delete(id);
 		}
-		else {
+		else if (savetype.equals("product")){
 			num = productService.delete(id);
+		}
+		else if (savetype.equals("rated")) {
+			num = ratedService.delete(id);
 		}
 		
 		if (num <= 0 ) {
@@ -222,10 +257,15 @@ public class ProductController extends BaseConstroller {
 			BeanUtils.populate(brand, row);
 			num = brandService.update(brand);
 		}
-		else {
+		else if (savetype.equals("product")){
 			Public_product product = new Public_product();
 			BeanUtils.populate(product, row);
 			num = productService.update(product);
+		}
+		else if (savetype.equals("rated")) {
+			Product_rated rated = new Product_rated();
+			BeanUtils.populate(rated, row);
+			num = ratedService.update(rated);
 		}
 		
 		if (num <= 0 ) {

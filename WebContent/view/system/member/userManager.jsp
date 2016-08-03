@@ -41,7 +41,7 @@
 	    t2.pid = "right";
 	    t2.text = "会员管理";
 	    t2.iconCls = "setting";
-	    t2.url = "${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/member/userList";
+	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userList";
 	    t2.iconPosition = "top";
 	    dataList.push(t2);
 	    
@@ -65,7 +65,7 @@
 	        <div id="leftTree" class="mini-outlookmenu"  onitemselect="onItemSelect" borderStyle="border:0" ></div>
 	    </div>
 		<div showCollapseButton="false" >
-		    	<iframe id="mainframe" src="${pageContext.request.contextPath}/common/dispatch.html?page=/view/system/member/userList" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
+		    	<iframe id="mainframe" src="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userList" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
 		</div>
 	    
 	</div>

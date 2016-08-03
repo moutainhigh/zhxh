@@ -108,7 +108,7 @@ public class SystemFilter implements Filter {
 //                out.close(); 
                 return;  
             }
-            httpResponse.sendRedirect(path + "/login.html");
+            httpResponse.sendRedirect(path + "/login.htmls");
             return;  
         }
         filterChain.doFilter(servletRequest, servletResponse);

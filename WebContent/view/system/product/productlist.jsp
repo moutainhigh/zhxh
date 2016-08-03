@@ -27,7 +27,7 @@
        		
 			grid_brand = mini.get("grid_brand");
 			grid_brand.set({
-        		url:"${pageContext.request.contextPath}/product/list.html",
+        		url:"${pageContext.request.contextPath}/product/list.htmls",
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
@@ -58,7 +58,7 @@
         	
 			grid_product = mini.get("grid_product");
 			grid_product.set({
-        		url:"${pageContext.request.contextPath}/product/list.html",
+        		url:"${pageContext.request.contextPath}/product/list.htmls",
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
@@ -95,10 +95,12 @@
             var grid = e.sender;
             var record = e.record;
             var uid = record._uid;
+            var id = record.id;
             var rowIndex = e.rowIndex;
+            var productname = record.productname;
 
-            var s = ' <a class="Edit_Button" href="javascript:editBook(\'' + uid + '\')" >评价</a>'
-            s += '  <a class="Edit_Button" href="javascript:delete_book(\'' + uid + '\')" >描述</a>';
+            var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
+            s += '  <a class="Edit_Button" href="javascript:delete_book(\'' + uid + '\')" >详细</a>';
             return s;
         }
         
@@ -154,7 +156,7 @@
         	var row = grid_brand.getEditorOwnerRow(buttonEdit);
         	
         	mini.open({
-                url: bootPATH + "../common/dispatch.html?page=/view/system/product/upload_pic",
+                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
                 title: "上传品牌Logo", width: 600, height:500,
                 allowResize:true,
                 onload: function () {
@@ -188,7 +190,7 @@
         	var row = grid_product.getEditorOwnerRow(buttonEdit);
         	
         	mini.open({
-                url: bootPATH + "../common/dispatch.html?page=/view/system/product/upload_pic",
+                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
                 title: "上传商品主图片", width: 600, height:500,
                 allowResize:true,
                 onload: function () {
@@ -222,7 +224,7 @@
         	var buttonEdit = e.sender;
         	
         	mini.open({
-                url: bootPATH + "../common/dispatch.html?page=/view/system/product/selectColor",
+                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/selectColor",
                 title: "选择颜色", width: 600, height:500,
                 allowResize:true,
                 onload: function () {
@@ -258,30 +260,30 @@
 	      	}
             
             if (record) {
-            	grid_product.load({listtype:'product', brandid: record.id });
+            	grid_product.load({listtype:'product', parentid: record.id });
             }
         }
         
-        /* function drawcell() {
-       		grid.on("drawcell", function (e) {
-                var record = e.record,
-	            column = e.column,
-	            field = e.field,
-	            uid = record._uid,
-	            value = e.value;
-                
-                if (field == "password") {
-   	        		if (value == "") {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellStyle = "color:red;text-align:center";
-   	        			e.cellHtml = "********";
-   	        		}
-    	        }
+        function editRated(id,productname) {
+        	
+        	var title = "商品评价";
+        	mini.open({
+                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/editRated",
+                title: title, width: 800, height:600,
+                allowResize:true,
+                onload: function () {
+                	var iframe = this.getIFrameEl();
+               	 	var data = {productid:id,productname:productname};
+                    iframe.contentWindow.SetData(data);
+                },
+                ondestroy: function (action) {
+                	if (action == "ok") {
+                		
+                    }
+                }
             });
-        } */
-       	
+        }
+        
 		function addRow(grid_type) {
 			
 			var tmpGrid;
@@ -373,7 +375,7 @@
 		function save(grid_type) {
 			
 			var tmpGrid;
-			var url = "${pageContext.request.contextPath}/product/save.html";
+			var url = "${pageContext.request.contextPath}/product/save.htmls";
 			var savetype = "brand";
 			if (grid_type == "grid_brand") {
 				tmpGrid = grid_brand;
@@ -468,7 +470,7 @@
 </head>
 <body>
 	<div class="mini-splitter" style="width:100%;height:100%;" borderStyle="border:0;" vertical="true">
-   		<div size="60%" showCollapseButton="false" style="border-width: 1;">
+   		<div size="50%" showCollapseButton="false" style="border-width: 1;">
 	    	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
 		        <table style="width:100%;">
 		            <tbody>

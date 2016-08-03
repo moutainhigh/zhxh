@@ -29,7 +29,7 @@
 	   		
 			grid = mini.get("grid");
 	    	grid.set({
-	    		url:"${pageContext.request.contextPath}/userManager/list.html",
+	    		url:"${pageContext.request.contextPath}/userManager/list.htmls",
 	    		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
 	  	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
@@ -91,7 +91,7 @@
 	    function add() {
 	    	mini.open({
 	    	    //url: "/view/system/member/EmployeeWindow.html",
-	    	    url: "/common/dispatch.html?page=/view/system/member/userEdit",
+	    	    url: "/common/dispatch.htmls?page=/view/system/member/userEdit",
 	    	    title: "新增员工", width: 600, height: 400,
 	    	    onload: function () {
 	    	        var iframe = this.getIFrameEl();
@@ -111,7 +111,7 @@
             var rows = grid.getSelecteds();	//所选行数 多行
             if (rows.length == 1) {
                 mini.open({
-                	url: "/common/dispatch.html?page=/view/system/member/userEdit",
+                	url: "/common/dispatch.htmls?page=/view/system/member/userEdit",
                     title: "编辑员工", width: 600, height: 400,
                     onload: function () {
                         var iframe = this.getIFrameEl();
@@ -146,7 +146,7 @@
 	                        var id = ids.join(',');
 	                        grid.loading("操作中，请稍后......");
 	                        $.ajax({
-	                        	url: "${pageContext.request.contextPath}/userManager/delete.html?id=" +id,
+	                        	url: "${pageContext.request.contextPath}/userManager/delete.htmls?id=" +id,
 	                            dataType:"text",
 	                            success: function (text) {
 	                                grid.reload();
@@ -181,7 +181,7 @@
 	
 	            form.loading();
 	            $.ajax({
-	            	url: "${pageContext.request.contextPath}/userManager/getById.html?id=" + row.id,
+	            	url: "${pageContext.request.contextPath}/userManager/getById.htmls?id=" + row.id,
 	            	dataType:"text",
 	                success: function (text) {
 	                    form.unmask();

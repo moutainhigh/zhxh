@@ -72,7 +72,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>springmvc</servlet-name>
-		<url-pattern>*.html</url-pattern>
+		<url-pattern>*.htmls</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>springmvc</servlet-name>

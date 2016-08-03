@@ -23,7 +23,7 @@
        		
 			grid = mini.get("grid");
         	grid.set({
-        		url:"${pageContext.request.contextPath}/account/list.html",
+        		url:"${pageContext.request.contextPath}/account/list.htmls",
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
@@ -120,7 +120,7 @@
 	        
 	        $.ajax({
 	        	async:false,
-	            url: "${pageContext.request.contextPath}/account/save.html",
+	            url: "${pageContext.request.contextPath}/account/save.htmls",
 	            data: {'objs':json},
 	            type: "post",
 	            dataType:"text",
@@ -151,7 +151,7 @@
     	        
     	        $.ajax({
     	        	async:false,
-    	            url: "${pageContext.request.contextPath}/account/initUpdatePass.html",
+    	            url: "${pageContext.request.contextPath}/account/initUpdatePass.htmls",
     	            data: {'ids':ids},
     	            type: "post",
     	            dataType:"text",

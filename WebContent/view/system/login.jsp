@@ -26,7 +26,7 @@
 			function (){
 			  $('#kaptcha').click(
 				  function (){
-					$(this).attr('src', 'kaptcha.html?' + Math.floor(Math.random() * 100));
+					$(this).attr('src', 'kaptcha.htmls?' + Math.floor(Math.random() * 100));
 				  }
 			  );
 			}
@@ -68,7 +68,7 @@
 	                </div> --%>
 	            </div>
 	            <br /><br /><br />
-	            <form action="onlogin.html" method="post">
+	            <form action="onlogin.htmls" method="post">
 	            <div class="panel">
 	                <div class="panel-head text-center"><strong>登录众恒信和管理后台</strong></div>
 	                <div class="panel-body" style="padding:30px;">
@@ -87,7 +87,7 @@
 	                    <div class="form-group">
 	                        <div class="field">
 	                            <input type="text" class="input" name="kaptchafield" placeholder="填写右侧的验证码" data-validate="required:请填写右侧的验证码" />
-	                            <img  width="80" height="32" class="passcode kaptcha" style="cursor:pointer;" id="kaptcha" src="kaptcha.html"/>
+	                            <img  width="80" height="32" class="passcode kaptcha" style="cursor:pointer;" id="kaptcha" src="kaptcha.htmls"/>
 	                        </div>
 	                    </div>
 	                </div>

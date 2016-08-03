@@ -96,7 +96,7 @@
     	
     	function quit() {
 			if(confirm("真的要退出系统吗?")) {
-	            window.location.href = "${pageContext.request.contextPath}/logout.html";
+	            window.location.href = "${pageContext.request.contextPath}/logout.htmls";
 	        };
 	    }
     	
@@ -116,10 +116,10 @@
 					<div id="navbar1" class="navbar-body nav-navicon">
 						<ul class="nav nav-inline nav-menu">
 							<li><a href="javascript:;" funcode="index">首页</a></li>
-							<li><a href="javascript:;" funcode="common/dispatch.html?page=/view/system/system/setting">系统配置</a></li>
-							<li><a href="javascript:;" funcode="common/dispatch.html?page=/view/system/product/productmain">商品管理</a></li>
-							<li><a href="javascript:;" funcode="common/dispatch.html?page=/view/system/member/userManager">会员管理</a></li>
-							<li><a href="javascript:;" funcode="common/dispatch.html?page=/view/system/content/home">会员管理</a></li>
+							<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/system/setting">系统配置</a></li>
+							<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/product/productmain">商品管理</a></li>
+							<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/member/userManager">会员管理</a></li>
+							<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/content/home">内容管理</a></li>
 							
 							<li><a href="javascript:;">下拉菜单<span class="arrow"></span></a>
 								<ul class="drop-menu">

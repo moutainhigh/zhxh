@@ -30,7 +30,7 @@ public interface IProductRatedService {
 	 * @param pageBean
 	 * @return list
 	 * */
-	public List<Product_rated> list(PageBean<Product_rated> pageBean);
+	public PageBean<Product_rated> list(PageBean<Product_rated> pageBean,String parentid);
 	
 	/**
 	 * 添加

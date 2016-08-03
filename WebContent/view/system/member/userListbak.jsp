@@ -19,7 +19,7 @@
 	   		
 			grid = mini.get("grid");
 	    	grid.set({
-	    		url:"${pageContext.request.contextPath}/userManager/list.html",
+	    		url:"${pageContext.request.contextPath}/userManager/list.htmls",
 	    		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
 	  	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
@@ -107,7 +107,7 @@
             var json = mini.encode(data);
             grid.loading("保存中，请稍后......");
             $.ajax({
-                url: "${pageContext.request.contextPath}/userManager/save.html",
+                url: "${pageContext.request.contextPath}/userManager/save.htmls",
                 data: { "objs": json },
                 type: "post",
                 dataType:"text",

@@ -24,7 +24,7 @@
        		
 			grid = mini.get("grid");
         	grid.set({
-        		url:"${pageContext.request.contextPath}/label/list.html",
+        		url:"${pageContext.request.contextPath}/label/list.htmls",
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:60},
@@ -50,7 +50,7 @@
         	
         	grid_label_2 = mini.get("grid_label_2");
         	grid_label_2.set({
-        		url:"${pageContext.request.contextPath}/label/list.html",
+        		url:"${pageContext.request.contextPath}/label/list.htmls",
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:60},
@@ -207,7 +207,7 @@
 	        
 	        $.ajax({
 	        	async:false,
-	            url: "${pageContext.request.contextPath}/label/save.html",
+	            url: "${pageContext.request.contextPath}/label/save.htmls",
 	            data: {'objs':json},
 	            type: "post",
 	            dataType:"text",
