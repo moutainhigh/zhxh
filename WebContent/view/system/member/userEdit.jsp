@@ -128,7 +128,7 @@
                 cache: false,
                 success: function (text) {
                 	if(text == "isPhoneNum"){
-                		alert("手机号已存在");
+                		mini.alert("手机号已存在");
                 		return;
                 	}
                     CloseWindow("save");

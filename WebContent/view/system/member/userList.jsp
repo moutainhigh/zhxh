@@ -126,7 +126,7 @@
                 });
                 
             } else {
-                alert("请选中一条记录");
+                mini.alert("请选中一条记录");
             }
             
         }
@@ -135,26 +135,30 @@
         function remove() {
             var rows = grid.getSelecteds();
             if (rows.length > 0) {
-                if (confirm("确定删除选中记录？")) {
-                    var ids = [];
-                    for (var i = 0, l = rows.length; i < l; i++) {
-                        var r = rows[i];
-                        ids.push(r.id);
-                    }
-                    var id = ids.join(',');
-                    grid.loading("操作中，请稍后......");
-                    $.ajax({
-                    	url: "${pageContext.request.contextPath}/userManager/delete.html?id=" +id,
-                        dataType:"text",
-                        success: function (text) {
-                            grid.reload();
-                        },
-                        error: function () {
-                        }
-                    });
-                }
+            	 mini.confirm("确定删除记录？", "系统消息",
+          	     	function (action) {
+	         	    	if (action == "ok") {
+	         	    		var ids = [];
+	                        for (var i = 0, l = rows.length; i < l; i++) {
+	                            var r = rows[i];
+	                            ids.push(r.id);
+	                        }
+	                        var id = ids.join(',');
+	                        grid.loading("操作中，请稍后......");
+	                        $.ajax({
+	                        	url: "${pageContext.request.contextPath}/userManager/delete.html?id=" +id,
+	                            dataType:"text",
+	                            success: function (text) {
+	                                grid.reload();
+	                            },
+	                            error: function () {
+	                            }
+	                        });
+	          	       	}
+          	    	}
+         	    );
             } else {
-                alert("请选中一条记录");
+                mini.alert("请选中一条记录");
             }
         }
         
@@ -185,7 +189,7 @@
 	                    form.setData(o.data);
 	                },
 	                error: function () {
-	                    alert("表单加载错误");
+	                    mini.alert("表单加载错误");
 	                    form.unmask();
 	                }
 	            });
@@ -205,7 +209,7 @@
                 </td>
                 <td style="white-space:nowrap;">
                     <input id="key" class="mini-textbox" emptyText="请输入手机号" style="width:150px;" onenter="onKeyEnter"/>   
-                    <a class="mini-button" onclick="search()">查询</a>
+                    <a class="mini-button mini-button-plain" href="javascript:search()"><span class="mini-button-text  mini-button-icon-text "><span class="mini-button-icon mini-iconfont icon-search" style=""></span>查询</span></a>
                 </td>
             </tr>
         </table>           

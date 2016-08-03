@@ -23,14 +23,14 @@ public interface IPublicPicService {
 	 * 查询所有
 	 * @return list
 	 * */
-	public List<Public_pic> list();
+	public List<Public_pic> list(String parentid);
 	
 	/**
 	 * 查询所有 分页
 	 * @param pageBean
 	 * @return list
 	 * */
-	public List<Public_pic> list(PageBean<Public_pic> pageBean);
+	public PageBean list(PageBean<Public_pic> pageBean);
 	
 	/**
 	 * 添加
