@@ -19,12 +19,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.Brandfirst;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Product_rated;
 import net.ussoft.zhxh.model.Public_brand;
+import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
+import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IProductRatedService;
 import net.ussoft.zhxh.service.IPublicBrandService;
+import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
 import net.ussoft.zhxh.util.FileOperate;
 
@@ -38,10 +42,14 @@ public class ProductController extends BaseConstroller {
 	private IPublicProductService productService;
 	@Resource
 	private IProductRatedService ratedService;
+	@Resource
+	private IPublicPicService picService;
+	@Resource
+	private IBrandfirstService brandFirstService;
 	
 	/**
 	 * 获取列表
-	 * @param listtype  	为了共用。获取列表的对象类型。 brand：获取品牌列表   product：获取商品列表 rated:商品评价
+	 * @param listtype  	为了共用。获取列表的对象类型。 brand：获取品牌列表   product：获取商品列表 rated:商品评价  brandfirst_lb_pic:品牌综合页轮播图片  brandfirst:获取品牌综合页
 	 * @param parentid		如果是获取的列表有父节点id。要有id作为参数
 	 * @param response
 	 * @throws IOException
@@ -77,6 +85,16 @@ public class ProductController extends BaseConstroller {
 			p = ratedService.list(p, parentid);
 			map.put("total", p.getPageCount());
 			map.put("data", p.getList());
+		}
+		else if (listtype.equals("brandfirst_lb_pic")) {
+			List<Public_pic> pList = picService.list(parentid,listtype);
+			map.put("total", pList.size());
+			map.put("data", pList);
+		}
+		else if (listtype.equals("brandfirst")) {
+			List<Brandfirst> pList = brandFirstService.list(parentid);
+			map.put("total", pList.size());
+			map.put("data", pList);
 		}
 		
 		String json = JSON.toJSONString(map);

@@ -1,10 +1,12 @@
 package net.ussoft.zhxh.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.BrandfirstDao;
 import net.ussoft.zhxh.model.Brandfirst;
@@ -19,38 +21,44 @@ public class BrandfirstService implements IBrandfirstService{
 	
 	@Override
 	public Brandfirst getById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		return firstDao.get(id);
 	}
 
 	@Override
-	public List<Brandfirst> list() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Brandfirst> list(String parentid) {
+		String sql = "select * from brandfirst where brandid =? order by sort";
+		List<Object> values = new ArrayList<Object>();
+		values.add(parentid);
+		return firstDao.search(sql, values);
 	}
 
 	@Override
-	public List<Brandfirst> list(PageBean<Brandfirst> pageBean) {
-		// TODO Auto-generated method stub
-		return null;
+	public PageBean<Brandfirst> list(PageBean<Brandfirst> pageBean,String parentid) {
+		String sql = "select * from brandfirst where brandid =? order by sort";
+		List<Object> values = new ArrayList<Object>();
+		values.add(parentid);
+		return firstDao.search(sql, values, pageBean);
 	}
 
+	@Transactional("txManager")
 	@Override
 	public int update(Brandfirst brandfirst) {
-		// TODO Auto-generated method stub
+		Brandfirst obj = firstDao.update(brandfirst);
+		if(obj != null)
+			return 1;
 		return 0;
 	}
 
+	@Transactional("txManager")
 	@Override
 	public int delete(String id) {
-		// TODO Auto-generated method stub
-		return 0;
+		return firstDao.del(id);
 	}
 
+	@Transactional("txManager")
 	@Override
 	public Brandfirst insert(Brandfirst brandfirst) {
-		// TODO Auto-generated method stub
-		return null;
+		return firstDao.save(brandfirst);
 	}
 
 }

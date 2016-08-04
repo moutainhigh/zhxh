@@ -23,14 +23,14 @@ public interface IBrandfirstService {
 	 * 查询所有
 	 * @return list
 	 * */
-	public List<Brandfirst> list();
+	public List<Brandfirst> list(String parentid);
 	
 	/**
 	 * 查询所有 分页
 	 * @param pageBean
 	 * @return list
 	 * */
-	public List<Brandfirst> list(PageBean<Brandfirst> pageBean);
+	public PageBean<Brandfirst> list(PageBean<Brandfirst> pageBean,String parentid);
 	
 	/**
 	 * 添加

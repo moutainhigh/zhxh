@@ -27,6 +27,7 @@ public class PublicPicService implements IPublicPicService{
 	public List<Public_pic> list(String parentid,String parenttype) {
 		Public_pic pic = new Public_pic();
 		pic.setParentid(parentid);
+		pic.setParenttype(parenttype);
 		PageBean<Public_pic> p = new PageBean<Public_pic>();
 		p.setIsPage(false);
 		p.setOrderBy("pic_sort");
@@ -39,7 +40,7 @@ public class PublicPicService implements IPublicPicService{
 	}
 
 	@Override
-	public PageBean list(PageBean<Public_pic> pageBean,String parentid,String parenttype) {
+	public PageBean<Public_pic> list(PageBean<Public_pic> pageBean,String parentid,String parenttype) {
 		Public_pic pic = new Public_pic();
 		pic.setParentid(parentid);
 		pic.setParenttype(parenttype);

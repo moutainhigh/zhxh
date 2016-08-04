@@ -14,6 +14,8 @@ public class Brandfirst {
 	private String title;
 	private String righttitle;
 	private String righttitleurl;
+	private String firstpic;
+	private String firstpicurl;
 	private Integer sort;
 	
 	@Id
@@ -59,6 +61,18 @@ public class Brandfirst {
 	}
 	public void setSort(Integer sort) {
 		this.sort = sort;
+	}
+	public String getFirstpic() {
+		return firstpic;
+	}
+	public void setFirstpic(String firstpic) {
+		this.firstpic = firstpic;
+	}
+	public String getFirstpicurl() {
+		return firstpicurl;
+	}
+	public void setFirstpicurl(String firstpicurl) {
+		this.firstpicurl = firstpicurl;
 	}
 	
 	

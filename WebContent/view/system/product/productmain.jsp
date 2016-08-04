@@ -47,11 +47,11 @@
 	    dataList.push(t2);
 	    
 	    var t3 = {};
-	    t3.id = "label";
+	    t3.id = "brandfirst";
 	    t3.pid = "right";
-	    t3.text = "标签管理";
-	    t3.iconCls = "label";
-	    t3.url = getRootPath_web() + "/common/dispatch.htmls?page=/view/system/system/labellist";
+	    t3.text = "品牌综合页";
+	    t3.iconCls = "indexer";
+	    t3.url = getRootPath_web() + "/common/dispatch.htmls?page=/view/system/product/brandfirst";
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
 	    
