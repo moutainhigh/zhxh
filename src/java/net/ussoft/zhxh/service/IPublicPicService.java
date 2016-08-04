@@ -30,7 +30,7 @@ public interface IPublicPicService {
 	 * @param pageBean
 	 * @return list
 	 * */
-	public PageBean list(PageBean<Public_pic> pageBean);
+	public PageBean list(PageBean<Public_pic> pageBean,String parentid,String parenttype);
 	
 	/**
 	 * 添加

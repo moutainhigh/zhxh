@@ -39,9 +39,14 @@ public class PublicPicService implements IPublicPicService{
 	}
 
 	@Override
-	public PageBean list(PageBean<Public_pic> pageBean) {
-		// TODO Auto-generated method stub
-		return null;
+	public PageBean list(PageBean<Public_pic> pageBean,String parentid,String parenttype) {
+		Public_pic pic = new Public_pic();
+		pic.setParentid(parentid);
+		pic.setParenttype(parenttype);
+		
+		pageBean = picDao.search(pic, pageBean);
+		
+		return pageBean;
 	}
 
 	@Transactional("txManager")

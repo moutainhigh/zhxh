@@ -23,7 +23,7 @@
        		
 			grid = mini.get("grid");
         	grid.set({
-        		url:"${pageContext.request.contextPath}/home/list.htmls",
+        		url:"${pageContext.request.contextPath}/public/list.htmls",
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
@@ -46,7 +46,7 @@
 	            showPageSize:false,
 	            pageSize:2000
 	        });
-        	grid.load();
+        	grid.load({act:'publicpic', parentid: 'home_pic',parenttype:'lbt' });
         	drawcell();
         })
         
@@ -142,8 +142,8 @@
 	        
 	        $.ajax({
 	        	async:false,
-	            url: "${pageContext.request.contextPath}/home/save.htmls",
-	            data: {'objs':json},
+	            url: "${pageContext.request.contextPath}/public/save.htmls",
+	            data: {'objs':json,'act':'publicpic','parentid':'home_pic','parenttype':'lbt'},
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
