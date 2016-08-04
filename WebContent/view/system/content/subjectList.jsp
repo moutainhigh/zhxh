@@ -23,13 +23,13 @@
        		
 			grid = mini.get("grid");
         	grid.set({
-        		url:"${pageContext.request.contextPath}/subject/list.htmls",
+        		url:"${pageContext.request.contextPath}/public/list.htmls",
         		columns: [
-						{ type: "checkcolumn",headerAlign:"center",width: 30},
-      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
+						{ type: "checkcolumn",headerAlign:"center",width: 50},
+      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
       	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
-      	              	{ field: "title",name:"title", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "轮播图片",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "memo",name:"memo", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "内容",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onButtonEdit"}  }
+      	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "专题名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -41,11 +41,12 @@
 	            //onselectionchanged:"onSelectionChanged",
 	            //oncellbeginedit:"OnCellBeginEdit",
 	            //oncellcommitedit:"onCellCommitEdit",
+	            fitColumns:false,
 	            editNextOnEnterKey:true,
 	            showPageSize:false,
 	            pageSize:2000
 	        });
-        	grid.load();
+        	grid.load({act:'subject',parentid:'zt',parenttype:'dzyf'});
         	drawcell();
         })
         
@@ -124,8 +125,8 @@
 	        
 	        $.ajax({
 	        	async:false,
-	            url: "${pageContext.request.contextPath}/subject/save.htmls",
-	            data: {'objs':json},
+	            url: "${pageContext.request.contextPath}/public/save.htmls",
+	            data: {'objs':json,'act':'subject','parentid':'zt','parenttype':'dzyf'},
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
@@ -141,25 +142,24 @@
 		function onActionRenderer(e) {
             var grid = e.sender;
             var record = e.record;
-            var uid = record._uid;
-            var rowIndex = e.rowIndex;
-
-            var s = ' <a class="Edit_Button" href="javascript:edit(\'' + uid + '\')" >内容</a>'
+           	var id = record.id;
+            var s = ' <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >内容</a>'
             return s;
         }
 		
-		function edit(){
+		function edit(id){
 			var pHeight = $(window.parent).height();
 	   		var pWidth = $(window.parent).width();
 	         mini.open({
-	             url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/uedit",
+	             url: "${pageContext.request.contextPath}/public/edit.htmls?id="+id,
 	             title: "内容编辑", width: pWidth-100, height:pHeight-100,
 	             allowResize:true,
 	             showMaxButton:true,
 	             onload: function () {
 	            	 var iframe = this.getIFrameEl();
-	                 var data = {projectids:sel_projectid};
-	                 iframe.contentWindow.SetData(data);
+	            	 var data = { 'id': id };
+	                 
+	                 //iframe.contentWindow.SetData(data);
 	             },
 	             ondestroy: function (action) {
 	            	 grid.reload();

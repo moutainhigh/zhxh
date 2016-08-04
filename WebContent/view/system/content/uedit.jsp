@@ -3,172 +3,164 @@
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<script type="text/javascript" charset="utf-8" src="/js/uedit1.4.3/ueditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="/js/uedit1.4.3/ueditor.all.min.js"> </script>
-    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
-    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
-    <script type="text/javascript" charset="utf-8" src="/js/uedit1.4.3/lang/zh-cn/zh-cn.js"></script>
-
-    <style type="text/css">
-        div{
-            width:100%;
-        }
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
+	
+	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/js/tinymce4.2.3/upload/plugin.css" />
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/tinymce4.2.3/tinymce.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/tinymce4.2.3/jquery.tinymce.min.js"></script>
+	<script src="${pageContext.request.contextPath}/js/tinymce4.2.3/upload/plugin.js"></script>
+	<style type="text/css">
+	    body{
+	        margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
+	    }    
     </style>
+    
+    <script type="text/javascript">
+		//var result = '${result}';
+		var pHeight = $(window.parent).height()-402;
+		tinymce.init({
+	        selector: "textarea",
+	        plugins: [
+	            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+	            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+	            "table contextmenu directionality emoticons template textcolor paste fullpage textcolor upload"
+	        ],
+	
+	        toolbar1: "undo redo | cut copy paste | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect",
+	        toolbar2: " searchreplace | bullist numlist | outdent indent blockquote | link unlink anchor image media code | inserttime preview | forecolor backcolor",
+	        toolbar3: "table | hr removeformat | subscript superscript | charmap emoticons | print fullscreen | ltr rtl | spellchecker | visualchars visualblocks nonbreaking template pagebreak restoredraft upload",
+	
+			//width: 600,
+			height: pHeight,
+			upload_action: '${pageContext.request.contextPath}/public/upload_content_pic.htmls',//required
+			upload_file_name: 'file',//required
+	        menubar: false,
+	        toolbar_items_size: 'small',
+	 		font_formats : '宋体=宋体;微软雅黑=微软雅黑;新宋体=新宋体;黑体=黑体;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
+	        style_formats: [
+	            {title: 'Bold text', inline: 'b'},
+	            {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+	            {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+	            {title: 'Example 1', inline: 'span', classes: 'example1'},
+	            {title: 'Example 2', inline: 'span', classes: 'example2'},
+	            {title: 'Table styles'},
+	            {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+	        ],
+	
+	        templates: [
+	            {title: 'Test template 1', content: 'Test 1'},
+	            {title: 'Test template 2', content: 'Test 2'}
+	        ],
+	        language:'zh_CN'
+	    });
+    </script>
 </head>
 <body>
-<div>
-    <h1>完整demo</h1>
-    <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
-</div>
-<div id="btns">
-    <div>
-        <button onclick="getAllHtml()">获得整个html的内容</button>
-        <button onclick="getContent()">获得内容</button>
-        <button onclick="setContent()">写入内容</button>
-        <button onclick="setContent(true)">追加内容</button>
-        <button onclick="getContentTxt()">获得纯文本</button>
-        <button onclick="getPlainTxt()">获得带格式的纯文本</button>
-        <button onclick="hasContent()">判断是否有内容</button>
-        <button onclick="setFocus()">使编辑器获得焦点</button>
-        <button onmousedown="isFocus(event)">编辑器是否获得焦点</button>
-        <button onmousedown="setblur(event)" >编辑器失去焦点</button>
+	<div class="mini-splitter" style="width:100%;height:100%;">
+	    <div id="preview" size="50%" showCollapseButton="true" style="padding:0px;">
+	    	<div class="mini-toolbar" borderStyle="border-top:0;border-bottom:1;border-left:0;border-right:0;">
+		        <table style="width:100%;">
+		            <tbody>
+		             <tr>
+		                 <td style="width:100%;">
+		                 	<span id="pid" style="padding-left:5px;">预览</span>
+		                 </td>
+		                 <td style="white-space:nowrap;">
+		                 </td>
+		             </tr>
+		         </tbody>
+		        </table>
+		    </div>
+		    <div class="mini-fit">
+		    	${content.memo }
+		    </div>
+	    </div>
+	    <div showCollapseButton="true">
+	    	<div class="mini-toolbar" borderStyle="border:0;">
+		        <table style="width:100%;">
+		            <tbody>
+		             <tr>
+		                 <td style="width:100%;">
+		                 	<span id="pid" style="padding-left:5px;">内容编辑</span>
+		                 </td>
+		                 <td style="white-space:nowrap;">
+		                  	<!-- <a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>
+		                	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow()">删除</a>
+			                <span class="separator"></span> -->
+			         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="onOk()">保存</a>
+		                 </td>
+		             </tr>
+		         </tbody>
+		        </table>
+		    </div>
+		    <div class="mini-fit"><!-- border-bottom: 1;border-top: 0;border-left:0;broder-right:0" -->
+		    	<form id="form1" method="post">
+					<input type="hidden" id="id" name="id" value="${content.id }"/>
+					<div>
+					    <textarea id="memo" name="memo">${content.memo }</textarea>
+					</div>
+				</form>
+		    </div>
+	        
+	    </div>        
+	</div>
+	
+	<script type="text/javascript">
+		$(function(){
+			/* var pHeight = $(window.parent).height();
+	   		var pWidth = $(window.parent).width();
+	   		$('.mini-splitter').height(pHeight);
+	   		$('.mini-splitter').width(pWidth); */
+	   		
+		});
+	    //添加
+	    function SaveData() {
+			var content = {};
+			var memo = tinymce.activeEditor.getContent();
+			content.id = $('#id').val();
+			content.memo = memo;
+	        $.ajax({
+	        	url: "${pageContext.request.contextPath}/public/memo.htmls",
+	            data: content,
+	            type: "post",
+	            dataType:"text",
+	            cache: false,
+	            success: function (text) {
+	            	if(text != "success"){
+	            		mini.alert("保存失败！");
+	            		return;
+	            	}
+	            	$('#preview').html(memo);
+	            	//CloseWindow("save");
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	                alert(jqXHR.responseText);
+	                CloseWindow();
+	            }
+	        });
+	    }
+	
+	    /* function SetData(data) {
+	    	id = data.id;
+	    	alert(data.id);
+        } */
+	    
+	    function CloseWindow(action) {            
+	        if (action == "close" && form.isChanged()) {
+	            if (confirm("数据被修改了，是否先保存？")) {
+	                return false;
+	            }
+	        }
+	        if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+	        else window.close();            
+	    }
+	    function onOk(e) {
+	        SaveData();
+	    }
+	    function onCancel(e) {
+	        CloseWindow("cancel");
+	    }
 
-    </div>
-    <div>
-        <button onclick="getText()">获得当前选中的文本</button>
-        <button onclick="insertHtml()">插入给定的内容</button>
-        <button id="enable" onclick="setEnabled()">可以编辑</button>
-        <button onclick="setDisabled()">不可编辑</button>
-        <button onclick=" UE.getEditor('editor').setHide()">隐藏编辑器</button>
-        <button onclick=" UE.getEditor('editor').setShow()">显示编辑器</button>
-        <button onclick=" UE.getEditor('editor').setHeight(300)">设置高度为300默认关闭了自动长高</button>
-    </div>
-
-    <div>
-        <button onclick="getLocalData()" >获取草稿箱内容</button>
-        <button onclick="clearLocalData()" >清空草稿箱</button>
-    </div>
-
-</div>
-<div>
-    <button onclick="createEditor()">
-    创建编辑器</button>
-    <button onclick="deleteEditor()">
-    删除编辑器</button>
-</div>
-
-<script type="text/javascript">
-
-    //实例化编辑器
-    //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
-    var ue = UE.getEditor('editor');
-
-
-    function isFocus(e){
-        alert(UE.getEditor('editor').isFocus());
-        UE.dom.domUtils.preventDefault(e)
-    }
-    function setblur(e){
-        UE.getEditor('editor').blur();
-        UE.dom.domUtils.preventDefault(e)
-    }
-    function insertHtml() {
-        var value = prompt('插入html代码', '');
-        UE.getEditor('editor').execCommand('insertHtml', value)
-    }
-    function createEditor() {
-        enableBtn();
-        UE.getEditor('editor');
-    }
-    function getAllHtml() {
-        alert(UE.getEditor('editor').getAllHtml())
-    }
-    function getContent() {
-        var arr = [];
-        arr.push("使用editor.getContent()方法可以获得编辑器的内容");
-        arr.push("内容为：");
-        arr.push(UE.getEditor('editor').getContent());
-        alert(arr.join("\n"));
-    }
-    function getPlainTxt() {
-        var arr = [];
-        arr.push("使用editor.getPlainTxt()方法可以获得编辑器的带格式的纯文本内容");
-        arr.push("内容为：");
-        arr.push(UE.getEditor('editor').getPlainTxt());
-        alert(arr.join('\n'))
-    }
-    function setContent(isAppendTo) {
-        var arr = [];
-        arr.push("使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容");
-        UE.getEditor('editor').setContent('欢迎使用ueditor', isAppendTo);
-        alert(arr.join("\n"));
-    }
-    function setDisabled() {
-        UE.getEditor('editor').setDisabled('fullscreen');
-        disableBtn("enable");
-    }
-
-    function setEnabled() {
-        UE.getEditor('editor').setEnabled();
-        enableBtn();
-    }
-
-    function getText() {
-        //当你点击按钮时编辑区域已经失去了焦点，如果直接用getText将不会得到内容，所以要在选回来，然后取得内容
-        var range = UE.getEditor('editor').selection.getRange();
-        range.select();
-        var txt = UE.getEditor('editor').selection.getText();
-        alert(txt)
-    }
-
-    function getContentTxt() {
-        var arr = [];
-        arr.push("使用editor.getContentTxt()方法可以获得编辑器的纯文本内容");
-        arr.push("编辑器的纯文本内容为：");
-        arr.push(UE.getEditor('editor').getContentTxt());
-        alert(arr.join("\n"));
-    }
-    function hasContent() {
-        var arr = [];
-        arr.push("使用editor.hasContents()方法判断编辑器里是否有内容");
-        arr.push("判断结果为：");
-        arr.push(UE.getEditor('editor').hasContents());
-        alert(arr.join("\n"));
-    }
-    function setFocus() {
-        UE.getEditor('editor').focus();
-    }
-    function deleteEditor() {
-        disableBtn();
-        UE.getEditor('editor').destroy();
-    }
-    function disableBtn(str) {
-        var div = document.getElementById('btns');
-        var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
-        for (var i = 0, btn; btn = btns[i++];) {
-            if (btn.id == str) {
-                UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
-            } else {
-                btn.setAttribute("disabled", "true");
-            }
-        }
-    }
-    function enableBtn() {
-        var div = document.getElementById('btns');
-        var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
-        for (var i = 0, btn; btn = btns[i++];) {
-            UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
-        }
-    }
-
-    function getLocalData () {
-        alert(UE.getEditor('editor').execCommand( "getlocaldata" ));
-    }
-
-    function clearLocalData () {
-        UE.getEditor('editor').execCommand( "clearlocaldata" );
-        alert("已清空草稿箱")
-    }
-</script>
+	</script>
 </body>
 </html>

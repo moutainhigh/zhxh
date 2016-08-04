@@ -1,5 +1,6 @@
 package net.ussoft.zhxh.web.system;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -9,18 +10,28 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
+import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
+import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.FileOperate;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 
@@ -34,11 +45,51 @@ import com.alibaba.fastjson.JSON;
 public class PublicController extends BaseConstroller{
 
 	@Resource
-	IPublicPicService picService;
+	IPublicPicService picService;	//公共图片
+	
+	@Resource
+	IPublicContentService contentService;  //富文本
 	
 	private final String PUBLICPIC = "publicpic";		//公共图片获取list
 	private final String PUBLICPIC_PAGE = "publicpic_page";	//公共图片获取list 分页
 	private final String SUBJECT = "subject";	//专题
+	
+	/**
+	 * 编辑富文本
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/edit",method=RequestMethod.GET)
+	public ModelAndView edit(String id,ModelMap modelMap) throws IOException {
+
+		Public_content content = contentService.getById(id);
+		
+		modelMap.put("content", content);
+		
+		return new ModelAndView("/view/system/content/uedit", modelMap);
+	}
+	
+	/**
+	 * 保存富文本
+	 * @param objs
+	 * @param response
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	@RequestMapping(value="/memo",method=RequestMethod.POST)
+	public void save(Public_content content,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "error";
+		int num = contentService.update(content);
+		if(num >0)
+			result = "success";
+		out.print(result);
+	}
 	
 	/**
 	 * 公共列表 
@@ -83,10 +134,22 @@ public class PublicController extends BaseConstroller{
 		}
 		//专题制作
 		else if(act.equals(SUBJECT)){
+			PageBean<Public_content> p = new PageBean<Public_content>();
+			p.setPageSize(pageSize);
+			p.setPageNo(pageIndex + 1);
+			p.setOrderBy("sort");
+			p.setOrderType("asc");
+			p.setOrderBy("createtime");
+			p.setOrderType("desc");
+			p = contentService.list(p,parentid,parenttype);
 			
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			
+			map.put("total", p.getRowCount());
+			map.put("data", p.getList());
+			String json = JSON.toJSONString(map);
+			out.print(json);
 		}
-		
-		
 		
 	}
 	
@@ -129,7 +192,10 @@ public class PublicController extends BaseConstroller{
 	        	String filePath = "";
 	        	if(act.equals(PUBLICPIC)){
 	        		filePath = row.get("pic_path");
-		        	flag = delete(id,act);
+		        	flag = delete(id,act); //需要删除附件的，要有返回值
+	        	}
+	        	else if(act.equals(SUBJECT)){
+	        		delete(id, act);
 	        	}
 	        	
 	        	if(flag){
@@ -159,6 +225,18 @@ public class PublicController extends BaseConstroller{
 			pic = picService.insert(pic);
 			return true;
 		}
+		else if(act.equals(SUBJECT)){
+			Public_content content = new Public_content();
+			BeanUtils.populate(content, row);
+			
+			content.setId(UUID.randomUUID().toString());
+			content.setParentid(parentid);
+			content.setParenttype(parenttype);
+			String createtime = DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss");
+			content.setCreatetime(createtime);;
+			content = contentService.insert(content);
+			return true;
+		}
 		return false;
 	}
 	
@@ -176,6 +254,9 @@ public class PublicController extends BaseConstroller{
 		int num = 0;
 		if(act.equals(PUBLICPIC)){
 			num = picService.delete(id);
+		}
+		else if(act.equals(SUBJECT)){
+			num = contentService.delete(id);
 		}
 		if (num <= 0 ) {
 			return false;
@@ -201,11 +282,60 @@ public class PublicController extends BaseConstroller{
 			BeanUtils.populate(pic, row);
 			num = picService.update(pic);
 		}
+		else if(act.equals(SUBJECT)){
+			Public_content pic = new Public_content();
+			BeanUtils.populate(pic, row);
+			num = contentService.update(pic);
+		}
 		
 		if (num <= 0 ) {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * 专为内容页富文本编辑器上传图片用。存储图片到文件夹，返回路径。
+	 * @param file
+	 * @param editor
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value="/upload_content_pic",method=RequestMethod.POST,produces = "text/html; charset=UTF-8")
+	public String upload_content_pic(@RequestParam("file") MultipartFile file,String editor,HttpServletRequest request) throws IOException {
+		String uuidString = "";
+		String newName = "";
+		String oldName = "";
+		String newFilePath = "";
+		String path = request.getSession().getServletContext().getRealPath("/file/richedit/");
+		
+        int size = file.getInputStream().available();
+		if (size != 0) {
+			
+	        String ext = "";//扩展名
+	        
+	        oldName = file.getOriginalFilename();
+	        //获取扩展名
+	        if (oldName.lastIndexOf(".") >= 0) {
+	            ext = oldName.substring(oldName.lastIndexOf("."));
+	        }
+	        
+	        uuidString = UUID.randomUUID().toString();
+	        newName = uuidString + ext;
+	        newFilePath = path + "/" + newName;
+	        File excFile = new File(newFilePath);
+	        FileCopyUtils.copy(file.getBytes(),excFile);
+		}
+		String project_path = getProjectPath();
+		StringBuffer sb = new StringBuffer();
+		sb.append("<script>");
+		sb.append("window.parent.").append(editor).append(".insertContent('<img src=\""+project_path+"/file/richedit/"+newName+"\"/>');");
+		sb.append("window.parent."+editor+".plugins.upload.finish();");
+		sb.append("</script>");
+		return sb.toString();
+        
 	}
 	
 }

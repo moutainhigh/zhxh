@@ -30,7 +30,7 @@ public interface IPublicContentService {
 	 * @param pageBean
 	 * @return list
 	 * */
-	public PageBean<Public_content> list(PageBean<Public_content> pageBean);
+	public PageBean<Public_content> list(PageBean<Public_content> pageBean,String parentid,String parenttype);
 	
 	/**
 	 * 添加
