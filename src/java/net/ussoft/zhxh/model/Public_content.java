@@ -17,6 +17,7 @@ public class Public_content {
 	private String createtime;
 	private String pic_url;
 	private Integer top;
+	private Integer sort;
 	
 	
 	
@@ -75,6 +76,12 @@ public class Public_content {
 	}
 	public void setTop(Integer top) {
 		this.top = top;
+	}
+	public Integer getSort() {
+		return sort;
+	}
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 	
 }

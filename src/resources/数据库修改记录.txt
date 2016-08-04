@@ -7,3 +7,6 @@
    
 2、brandfist （品牌综合页表）
 	（1）增加firstpic varchar 200   综合页主图片
+	
+3、public_content (富文本表)
+	（1）增加sort int 11    排序

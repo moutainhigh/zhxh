@@ -47,6 +47,14 @@ public class ProductController extends BaseConstroller {
 	@Resource
 	private IBrandfirstService brandFirstService;
 	
+	
+	//定义常量，用来标识参数
+	private final String BRAND = "brand";		//品牌
+	private final String PRODUCT = "product";	//对商品表的处理
+	private final String RATED = "rated";	//对商品评价表的处理
+	private final String BRANDFIRST_LB_PIC = "brandfirst_lb_pic";	//对品牌综合页轮播图片的处理
+	private final String BRANDFIRST = "brandfirst";	//对品牌综合页的处理
+	
 	/**
 	 * 获取列表
 	 * @param listtype  	为了共用。获取列表的对象类型。 brand：获取品牌列表   product：获取商品列表 rated:商品评价  brandfirst_lb_pic:品牌综合页轮播图片  brandfirst:获取品牌综合页
@@ -62,12 +70,12 @@ public class ProductController extends BaseConstroller {
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		if (listtype.equals("brand")) {
+		if (listtype.equals(BRAND)) {
 			List<Public_brand> brandList = brandService.list();
 			map.put("total", brandList.size());
 			map.put("data", brandList);
 		}
-		else if (listtype.equals("product")) {
+		else if (listtype.equals(PRODUCT)) {
 			PageBean<Public_product> p = new PageBean<Public_product>();
 			
 			p.setIsPage(false);
@@ -76,7 +84,7 @@ public class ProductController extends BaseConstroller {
 			map.put("total", pList.size());
 			map.put("data", pList);
 		}
-		else if (listtype.equals("rated")) {
+		else if (listtype.equals(RATED)) {
 			PageBean<Product_rated> p = new PageBean<Product_rated>();
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex + 1);
@@ -86,12 +94,12 @@ public class ProductController extends BaseConstroller {
 			map.put("total", p.getPageCount());
 			map.put("data", p.getList());
 		}
-		else if (listtype.equals("brandfirst_lb_pic")) {
+		else if (listtype.equals(BRANDFIRST_LB_PIC)) {
 			List<Public_pic> pList = picService.list(parentid,listtype);
 			map.put("total", pList.size());
 			map.put("data", pList);
 		}
-		else if (listtype.equals("brandfirst")) {
+		else if (listtype.equals(BRANDFIRST)) {
 			List<Brandfirst> pList = brandFirstService.list(parentid);
 			map.put("total", pList.size());
 			map.put("data", pList);
@@ -179,11 +187,14 @@ public class ProductController extends BaseConstroller {
 	        	boolean isok = delete(id,savetype);
 	        	if (isok) {
 	        		String tmpPath = "";
-	        		if (savetype.equals("brand")) {
+	        		if (savetype.equals(BRAND)) {
 	        			tmpPath = row.get("brandlog");
 	        		}
-	        		else if (savetype.equals("product")) {
+	        		else if (savetype.equals(PRODUCT)) {
 	        			tmpPath = row.get("productpic");
+	        		}
+	        		else if (savetype.equals(BRANDFIRST)) {
+	        			tmpPath = row.get("firstpic");
 	        		}
 	        		
 	        		FileOperate.delFile(super.getProjectRealPath() + tmpPath); 
@@ -202,26 +213,33 @@ public class ProductController extends BaseConstroller {
 			return false;
 		}
 		
-		if (savetype.equals("brand")) {
+		if (savetype.equals(BRAND)) {
 			Public_brand brand = new Public_brand();
 			BeanUtils.populate(brand, row);
 			
 			brand.setId(UUID.randomUUID().toString());
 			brand = brandService.insert(brand);
 		}
-		else if (savetype.equals("product")) {
+		else if (savetype.equals(PRODUCT)) {
 			Public_product product = new Public_product();
 			BeanUtils.populate(product, row);
 			
 			product.setId(UUID.randomUUID().toString());
 			product = productService.insert(product);
 		}
-		else if (savetype.equals("rated")) {
+		else if (savetype.equals(RATED)) {
 			Product_rated rated = new Product_rated();
 			BeanUtils.populate(rated, row);
 			
 			rated.setId(UUID.randomUUID().toString());
 			rated = ratedService.insert(rated);
+		}
+		else if (savetype.equals(BRANDFIRST)) {
+			Brandfirst bFirst = new Brandfirst();
+			BeanUtils.populate(bFirst, row);
+			
+			bFirst.setId(UUID.randomUUID().toString());
+			bFirst = brandFirstService.insert(bFirst);
 		}
 		
 		return true;
@@ -240,14 +258,17 @@ public class ProductController extends BaseConstroller {
 			return false;
 		}
 		int num = 0;
-		if (savetype.equals("brand")) {
+		if (savetype.equals(BRAND)) {
 			num = brandService.delete(id);
 		}
-		else if (savetype.equals("product")){
+		else if (savetype.equals(PRODUCT)){
 			num = productService.delete(id);
 		}
-		else if (savetype.equals("rated")) {
+		else if (savetype.equals(RATED)) {
 			num = ratedService.delete(id);
+		}
+		else if (savetype.equals(BRANDFIRST)) {
+			num = brandFirstService.delete(id);
 		}
 		
 		if (num <= 0 ) {
@@ -270,20 +291,25 @@ public class ProductController extends BaseConstroller {
 		}
 		
 		int num = 0;
-		if (savetype.equals("brand")) {
+		if (savetype.equals(BRAND)) {
 			Public_brand brand = new Public_brand();
 			BeanUtils.populate(brand, row);
 			num = brandService.update(brand);
 		}
-		else if (savetype.equals("product")){
+		else if (savetype.equals(PRODUCT)){
 			Public_product product = new Public_product();
 			BeanUtils.populate(product, row);
 			num = productService.update(product);
 		}
-		else if (savetype.equals("rated")) {
+		else if (savetype.equals(RATED)) {
 			Product_rated rated = new Product_rated();
 			BeanUtils.populate(rated, row);
 			num = ratedService.update(rated);
+		}
+		else if (savetype.equals(BRANDFIRST)) {
+			Brandfirst bFirst = new Brandfirst();
+			BeanUtils.populate(bFirst, row);
+			num = brandFirstService.update(bFirst);
 		}
 		
 		if (num <= 0 ) {

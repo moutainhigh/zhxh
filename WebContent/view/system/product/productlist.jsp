@@ -100,9 +100,14 @@
             var productname = record.productname;
 
             var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
-            s += '  <a class="Edit_Button" href="javascript:delete_book(\'' + uid + '\')" >详细</a>';
+            s += '  <a class="Edit_Button" href="javascript:delete_book(\'' + id + '\')" >详细</a>';
+            s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
             return s;
         }
+       	
+       	function getUrl() {
+       		alert("${pageContext.request.contextPath}/id");
+       	}
         
         function drawcell() {
        		grid_brand.on("drawcell", function (e) {

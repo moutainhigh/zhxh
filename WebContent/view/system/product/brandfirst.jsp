@@ -62,7 +62,7 @@
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
       	                { field: "pic_path",name:"pic_path", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "品牌综合页轮播图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnBrandPicEdit" } },
       	              	{ field: "pic_active",name:"pic_active",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
-      	              	{ field: "pic_url",name:"pic_url", width: 350, headerAlign: "center", align:"center",allowSort: false, header: "图片点击URL",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "pic_url",name:"pic_url", width: 350, headerAlign: "center", align:"center",allowSort: false, header: "图片点击URL",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "pic_sort",name:"pic_sort", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	                { field: "pic_memo",name:"pic_memo", width: 450, headerAlign: "center", align:"center",allowSort: false, header: "图片描述",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} }
       	            ],
@@ -90,10 +90,10 @@
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
       	                { field: "firstpic",name:"firstpic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "品牌综合内容主图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnBrandFirstEdit" } },
-      	              	{ field: "title",name:"title", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "标题",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "righttitle",name:"righttitle", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "右侧标题",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "righttitleurl",name:"righttitleurl", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "右侧标题点击url",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "firstpicurl",name:"firstpicurl", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "图片点击url",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "title",name:"title", width: 250, headerAlign: "center", align:"center",allowSort: false, header: "标题",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "righttitle",name:"righttitle", width: 250, headerAlign: "center", align:"center",allowSort: false, header: "右侧标题",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "righttitleurl",name:"righttitleurl", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "右侧标题点击url",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "firstpicurl",name:"firstpicurl", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "图片点击url",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "sort",name:"sort", width: 50, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
@@ -159,6 +159,23 @@
    	        		}
     	        }
          	});
+       		grid_brandfirst.on("drawcell", function (e) {
+                var record = e.record,
+	            column = e.column,
+	            field = e.field,
+	            uid = record._uid,
+	            value = e.value;
+                
+                if (field == "firstpic") {
+                	if (typeof(value) == "undefined" || value == "") {
+   	        			e.cellhtml = "";
+       	        	}
+   	        		else {
+   	        			e.cellStyle = "background-color:"+value+";text-align:center";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
+   	        		}
+    	        }
+         	});
        	}
        	
        	function onSelectionChanged(e) {
@@ -185,7 +202,7 @@
        		//获取品牌
        		var record = grid_brand.getSelected();
 	      	
-            if (typeof(record.id) == "undefined" || record.id == "") {
+            if (null == record || typeof(record.id) == "undefined" || record.id == "") {
             	alert("请先选择品牌，在上传品牌综合页轮播图片.");
 	      		return;
 	      	}
@@ -207,8 +224,8 @@
 			
 			//获取品牌
        		var record = grid_brand.getSelected();
-	      	
-            if (typeof(record.id) == "undefined" || record.id == "") {
+			
+            if (null == record || typeof(record.id) == "undefined" || record.id == "") {
             	alert("请先选择品牌，再添加品牌综合页内容.");
 	      		return;
 	      	}
@@ -231,13 +248,11 @@
 			
 			var cf1 = "确定要删除选中的数据吗？";
 			var tmpGrid;
-			if (grid_type == "grid_brand") {
-				tmpGrid = grid_brand;
-				cf1 += "<br>注意：删除品牌，将同时删除所属的商品，并删除该品牌下的所有设置。不可恢复，请谨慎操作。";
+			if (grid_type == "grid_brandpic") {
+				tmpGrid = grid_brandpic;
 			}
 			else {
-				tmpGrid = grid_product;
-				cf1 += "<br>注意：删除商品，将同时删除该商品的所有设置,不可恢复，请谨慎操作";
+				tmpGrid = grid_brandfirst;
 			}
 			
         	var rows = tmpGrid.getSelecteds();
@@ -246,49 +261,33 @@
        	 		alert("请选择要删除的数据.");
        		 	return;
        	 	}
-       	 	var del_row = [];
-       	 	for (var i=0;i<rows.length;i++) {
-       	 		if (rows[i].id != 1) {
-       	 			del_row.push(rows[i]);
-       	 		}
-       	 	}
        	 
           	if (confirm(cf1)) {
-          		tmpGrid.removeRows(del_row, false);
+          		tmpGrid.removeRows(rows, false);
    		 	}
 			
         }
        	
-		function save(grid_type) {
+		function save() {
 			
-			var tmpGrid;
 			var url = "${pageContext.request.contextPath}/product/save.htmls";
-			var savetype = "brand";
-			if (grid_type == "grid_brand") {
-				tmpGrid = grid_brand;
-			}
-			else {
-				tmpGrid = grid_product;
-				//url = "${pageContext.request.contextPath}/product/saveProduct.html";
-				savetype = "product";
-			}
+			var savetype = "brandfirst";
 			
-			
-			tmpGrid.validate();
-	        if (tmpGrid.isValid() == false) {
+			grid_brandfirst.validate();
+	        if (grid_brandfirst.isValid() == false) {
 	            alert("输入有误，请校验输入单元格内容");
-	            var error = tmpGrid.getCellErrors()[0];
-	            tmpGrid.beginEditCell(error.record, error.column);
+	            var error = grid_brandfirst.getCellErrors()[0];
+	            grid_brandfirst.beginEditCell(error.record, error.column);
 	            return;
 	        }
 	    	
-	        var objs = tmpGrid.getChanges();
+	        var objs = grid_brandfirst.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
 	        	alert("没有发现修改的内容，请直接修改，然后再保存");
 	        	return;
 	        }
-	        tmpGrid.loading("保存中，请稍后......");
+	        grid_brandfirst.loading("保存中，请稍后......");
 	        
 	        $.ajax({
 	        	async:false,
@@ -298,7 +297,51 @@
 	            dataType:"text",
 	            success: function (text) {
 	            	alert("保存完毕。");
-	            	tmpGrid.reload();
+	            	grid_brandfirst.reload();
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	                alert(jqXHR.responseText);
+	            }
+	        });
+	    }
+		
+		function saveBrandpic() {
+			
+			//获取品牌
+       		var record = grid_brand.getSelected();
+	      	
+            if (typeof(record.id) == "undefined" || record.id == "") {
+            	alert("请先选择品牌，再添加品牌综合页内容.");
+	      		return;
+	      	}
+			
+			var url = "${pageContext.request.contextPath}/public/save.htmls";
+			
+			grid_brandpic.validate();
+	        if (grid_brandpic.isValid() == false) {
+	            alert("输入有误，请校验输入单元格内容");
+	            var error = grid_brandpic.getCellErrors()[0];
+	            grid_brandpic.beginEditCell(error.record, error.column);
+	            return;
+	        }
+	    	
+	        var objs = grid_brandpic.getChanges();
+	        var json = mini.encode(objs);
+	        if (json.length == 2) {
+	        	alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	return;
+	        }
+	        grid_brandpic.loading("保存中，请稍后......");
+	        
+	        $.ajax({
+	        	async:false,
+	            url: url,
+	            data: {'objs':json,'act':'publicpic','parentid':record.id,'parenttype':'brandfirst_lb_pic'},
+	            type: "post",
+	            dataType:"text",
+	            success: function (text) {
+	            	alert("保存完毕。");
+	            	grid_brandpic.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
 	                alert(jqXHR.responseText);
@@ -313,6 +356,41 @@
             }
             ids = ids.substring(0,ids.length-1);
             return ids;
+        }
+		
+		function onBtnBrandFirstEdit(e) {
+        	var buttonEdit = e.sender;
+        	var row = grid_brandfirst.getEditorOwnerRow(buttonEdit);
+        	
+        	mini.open({
+                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
+                title: "上传品牌综合页主图片", width: 600, height:500,
+                allowResize:true,
+                onload: function () {
+                	var iframe = this.getIFrameEl();
+               	 	var data = {id:row.id,saveFolder:"pic",forObj:"firstpic"};
+                    //var data = rows[0];
+                    iframe.contentWindow.SetData(data);
+                },
+                ondestroy: function (action) {
+                	if (action == "ok") {
+                		grid_brand.reload();
+                		/* var iframe = this.getIFrameEl();
+                        var grid_data = iframe.contentWindow.GetData();
+                        grid_data = mini.clone(grid_data);    //必须
+                        if (grid_data != "" || grid_data.length > 0) {
+                        	var row = grid_book.getEditorOwnerRow(buttonEdit);
+                            //var row = grid_book.getSelecteds();
+                            grid_book.cancelEdit();
+                            grid_book.updateRow(row, {
+                            	itemid :grid_data.id,
+                            	itemcode: grid_data.itemcode,
+                            	itemtype:grid_data.itemtype
+                            });
+                        } */
+                    }
+                }
+            });
         }
         
         
@@ -350,40 +428,7 @@
             }); */
         
        	
-       	function onButtonEdit(e) {
-        	var buttonEdit = e.sender;
-        	var row = grid_brand.getEditorOwnerRow(buttonEdit);
-        	
-        	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传品牌Logo", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"logo",forObj:"brandlog"};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	if (action == "ok") {
-                		grid_brand.reload();
-                		/* var iframe = this.getIFrameEl();
-                        var grid_data = iframe.contentWindow.GetData();
-                        grid_data = mini.clone(grid_data);    //必须
-                        if (grid_data != "" || grid_data.length > 0) {
-                        	var row = grid_book.getEditorOwnerRow(buttonEdit);
-                            //var row = grid_book.getSelecteds();
-                            grid_book.cancelEdit();
-                            grid_book.updateRow(row, {
-                            	itemid :grid_data.id,
-                            	itemcode: grid_data.itemcode,
-                            	itemtype:grid_data.itemtype
-                            });
-                        } */
-                    }
-                }
-            });
-        }
+       	
        	function onBtnProductEdit(e) {
         	var buttonEdit = e.sender;
         	var row = grid_product.getEditorOwnerRow(buttonEdit);
@@ -500,9 +545,9 @@
 	        	<div name="brandPic" title="综合页轮播图片">
 	                <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
 			    		 <a class="mini-button" plain="true" iconCls="icon-addfolder" onclick="upload_brandfirstpic()">上传</a>
-				     	 <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delCharge('charge')">删除</a>
+				     	 <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandpic')">删除</a>
 				     	 <span class="separator"></span>
-				         <a class="mini-button" iconCls="icon-save" plain="true" onclick="saveCharge('charge')">保存</a>
+				         <a class="mini-button" iconCls="icon-save" plain="true" onclick="saveBrandpic()">保存</a>
 				     </div>
 			        <div class="mini-fit" >
 				         <div id="grid_brandpic" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  
@@ -511,9 +556,9 @@
 	            <div name="brandFirst" title="综合页内容">
 	                <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
 				         <a class="mini-button" plain="true" iconCls="icon-addfolder" onclick="addRow()">新增</a>
-				         <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delCharge('meter')">删除</a>
+				         <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandfirst')">删除</a>
 				         <span class="separator"></span>
-				         <a class="mini-button" iconCls="icon-save" plain="true" onclick="saveCharge('meter')">保存</a>
+				         <a class="mini-button" iconCls="icon-save" plain="true" onclick="save('meter')">保存</a>
 				         <span class="separator"></span>
 				     </div>
 			        <div class="mini-fit" >

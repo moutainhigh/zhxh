@@ -3,15 +3,12 @@ package net.ussoft.zhxh.web.system;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,9 +29,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.Brandfirst;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
+import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
@@ -58,6 +57,8 @@ public class CommonController extends BaseConstroller {
 	private IPublicProductService productService;
 	@Resource
 	private IPublicPicService picService;
+	@Resource
+	private IBrandfirstService firstService;
 	
 	private static final int BUFFER_SIZE = 2 * 1024;
 	
@@ -87,7 +88,7 @@ public class CommonController extends BaseConstroller {
 	 * @param id		 		当前上传文件所属记录的id，用来更新记录与文件的关联
 	 * @param saveFolder		上传文件的保存路径		 
 	 * @param redirectPath		上传完毕返回的路径（如果仅是同一个form提交，就不需要这个）
-	 * @param forObj			为了共用，上传文件对应那个实体类.  （1）brandlog:品牌logo上传  （如果是其他的实体类，请在这里添加forObj值的意义）	(2)productpic:商品主图片	
+	 * @param forObj			为了共用，上传文件对应那个实体类.  （1）brandlog:品牌logo上传  （如果是其他的实体类，请在这里添加forObj值的意义）	(2)productpic:商品主图片	 (3) firstpic :品牌综合展示页主图片
 	 * @param request
 	 * @return
 	 * @throws IOException
@@ -141,8 +142,26 @@ public class CommonController extends BaseConstroller {
         			}
         			tmp.setProductpic("");
         		}
-        		
         		productService.update(tmp);
+        	}
+        	else if (forObj.equals("firstpic")) {
+        		//如果是上传的品牌综合页主图片
+        		//更新内容
+        		Brandfirst tmp = firstService.getById(id);
+        		if (null != fileMap && fileMap.size() > 0 && !fileMap.get("newname").isEmpty()) {
+        			//删除原图片
+        			if (null != tmp.getFirstpic() && !"".equals(tmp.getFirstpic())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getFirstpic());
+        			}
+        			tmp.setFirstpic(fileMap.get("filepath") + fileMap.get("newname"));
+        		}
+        		else {
+        			if (null != tmp.getFirstpic() && !"".equals(tmp.getFirstpic())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getFirstpic());
+        			}
+        			tmp.setFirstpic("");
+        		}
+        		firstService.update(tmp);
         	}
         	
         }
