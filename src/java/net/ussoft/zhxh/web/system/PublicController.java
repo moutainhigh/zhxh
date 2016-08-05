@@ -19,6 +19,7 @@ import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
+import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.FileOperate;
 
@@ -50,9 +51,9 @@ public class PublicController extends BaseConstroller{
 	@Resource
 	IPublicContentService contentService;  //富文本
 	
-	private final String PUBLICPIC = "publicpic";		//公共图片获取list
-	private final String PUBLICPIC_PAGE = "publicpic_page";	//公共图片获取list 分页
-	private final String SUBJECT = "subject";	//专题
+//	private final String PUBLICPIC = "publicpic";		//公共图片获取list
+//	private final String PUBLICPIC_PAGE = "publicpic_page";	//公共图片获取list 分页
+//	private final String SUBJECT = "subject";	//专题
 	
 	/**
 	 * 编辑富文本
@@ -106,7 +107,7 @@ public class PublicController extends BaseConstroller{
 		PrintWriter out = response.getWriter();
 
 		//公共图片获取list
-		if(act.equals(PUBLICPIC)){
+		if(act.equals(Constants.PUBLICPIC)){
 			List<Public_pic> list = picService.list(parentid,parenttype);
 			
 			HashMap<String,Object> map = new HashMap<String,Object>();
@@ -117,7 +118,7 @@ public class PublicController extends BaseConstroller{
 			out.print(json);
 		}
 		//公共图片获取list 分页
-		else if(act.equals(PUBLICPIC_PAGE)){
+		else if(act.equals(Constants.PUBLICPIC_PAGE)){
 			PageBean<Public_pic> p = new PageBean<Public_pic>();
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex + 1);
@@ -133,7 +134,7 @@ public class PublicController extends BaseConstroller{
 			out.print(json);
 		}
 		//专题制作
-		else if(act.equals(SUBJECT)){
+		else if(act.equals(Constants.SUBJECT)){
 			PageBean<Public_content> p = new PageBean<Public_content>();
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex + 1);
@@ -190,11 +191,11 @@ public class PublicController extends BaseConstroller{
 	        else if (state.equals("removed") || state.equals("deleted")) {
 	        	boolean flag = false;
 	        	String filePath = "";
-	        	if(act.equals(PUBLICPIC)){
+	        	if(act.equals(Constants.PUBLICPIC)){
 	        		filePath = row.get("pic_path");
 		        	flag = delete(id,act); //需要删除附件的，要有返回值
 	        	}
-	        	else if(act.equals(SUBJECT)){
+	        	else if(act.equals(Constants.SUBJECT)){
 	        		delete(id, act);
 	        	}
 	        	
@@ -215,7 +216,7 @@ public class PublicController extends BaseConstroller{
 		if (null == row) {
 			return false;
 		}
-		if(act.equals(PUBLICPIC)){
+		if(act.equals(Constants.PUBLICPIC)){
 			Public_pic pic = new Public_pic();
 			BeanUtils.populate(pic, row);
 			
@@ -225,7 +226,7 @@ public class PublicController extends BaseConstroller{
 			pic = picService.insert(pic);
 			return true;
 		}
-		else if(act.equals(SUBJECT)){
+		else if(act.equals(Constants.SUBJECT)){
 			Public_content content = new Public_content();
 			BeanUtils.populate(content, row);
 			
@@ -252,10 +253,10 @@ public class PublicController extends BaseConstroller{
 			return false;
 		}
 		int num = 0;
-		if(act.equals(PUBLICPIC)){
+		if(act.equals(Constants.PUBLICPIC)){
 			num = picService.delete(id);
 		}
-		else if(act.equals(SUBJECT)){
+		else if(act.equals(Constants.SUBJECT)){
 			num = contentService.delete(id);
 		}
 		if (num <= 0 ) {
@@ -277,12 +278,12 @@ public class PublicController extends BaseConstroller{
 			return false;
 		}
 		int num = 0;
-		if(act.equals(PUBLICPIC)){
+		if(act.equals(Constants.PUBLICPIC)){
 			Public_pic pic = new Public_pic();
 			BeanUtils.populate(pic, row);
 			num = picService.update(pic);
 		}
-		else if(act.equals(SUBJECT)){
+		else if(act.equals(Constants.SUBJECT)){
 			Public_content pic = new Public_content();
 			BeanUtils.populate(pic, row);
 			num = contentService.update(pic);

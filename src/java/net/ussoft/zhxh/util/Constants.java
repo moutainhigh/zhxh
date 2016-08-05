@@ -9,78 +9,60 @@ public class Constants{
 	 */
 	public static final String user_in_session = "CURRENT_USER_IN_SESSION";
 	
+	//==========商品管理===========
 	/**
-	 * 物业管理是否有全部操作权。没有仅查看和打印
+	 * 品牌常量。对品牌表的操作。
 	 */
-	public static final String project_all_auth = "CURRENT_PROJECT_ALL_AUTH";
+	public static final String BRAND = "brand";
 	/**
-	 * 台帐管理是否有全部操作权。
+	 * 对商品表的处理
 	 */
-	public static final String book_auth = "CURRENT_BOOK_AUTH";
+	public static final String PRODUCT = "product";
 	/**
-	 * 台帐管理是否有仅待整理操作权。
+	 * 对商品评价表的处理
 	 */
-	public static final String book_not_in_auth = "CURRENT_BOOK_NOT_IN_AUTH";
+	public static final String RATED = "rated";
 	/**
-	 * 台帐管理是否有仅打印操作权。
+	 * 对品牌综合页轮播图片的处理
 	 */
-	public static final String book_print_auth = "CURRENT_BOOK_PRINT_AUTH";
+	public static final String BRANDFIRST_LB_PIC = "brandfirst_lb_pic";
 	/**
-	 * 台帐管理是否有仅收款的操作权。
+	 * 对品牌综合页的处理
 	 */
-	public static final String book_note_auth = "CURRENT_BOOK_NOTE_AUTH";
-	
-	/**
-	 * 字段copy时，记录copy的字段id
-	 */
-	public static final String field_copy_session = "CURRENT_FIELD_COPY_SESSION";
-	
-	/**
-	 * 档案数据copy时，记录copy的字段id
-	 */
-	public static final String data_copy_session = "CURRENT_DATA_COPY_SESSION";
-	
-	/**
-	 * 档案数据copy时，记录copy的字段id所属treeid
-	 */
-	public static final String data_copy_treeid_session = "CURRENT_DATA_COPY_TREEID_SESSION";
-	
-	/**
-	 * 档案数据copy时，记录copy的字段id所属tabletype
-	 */
-	public static final String data_copy_tabletype_session = "CURRENT_DATA_COPY_TABLETYPE_SESSION";
-	
-	/**
-	 * 智能检索，存储查询值
-	 */
-	public static final String intel_search_session = "CURRENT_INTEL_SEARCH_SESSION";
-	
-	/**
-	 * 智能检索，存储查询数量
-	 */
-	public static final String intel_search_count_session = "CURRENT_INTEL_SEARCH_COUNT_SESSION";
-	
-	/**
-	 * 智能检索，存储选择的树节点
-	 */
-	public static final String intel_search_treeid_session = "CURRENT_INTEL_SEARCH_TREEID_SESSION";
+	public static final String BRANDFIRST = "brandfirst";
 	
 	
+	//==============公共图片表
 	
 	/**
-	 * 总行数
+	 * 公共图片获取list
 	 */
-	public static final String total_row = "TOTAL_ROW_IN_SESSION";
-
+	public static final String PUBLICPIC = "publicpic";
 	/**
-	 * 每页显示的行数
+	 * 公共图片获取list 分页
 	 */
-	//public static final int each_page = 10;
+	public static final String PUBLICPIC_PAGE = "publicpic_page";
 	/**
-	 * 开始行数
+	 * 专题
 	 */
-	public static final int start_row = 1;
-	public static final int start_page = 1;
+	public static final String SUBJECT = "subject";
+	
+	
+	//================图片上传
+	
+	/*
+	 * 品牌logo
+	 */
+	public static final String BRANDLOG = "brandlog";
+	
+	/**
+	 * 商品主图片
+	 */
+	public static final String PRODUCTPIC = "productpic";
+	/**
+	 * 品牌综合展示页主图片
+	 */
+	public static final String FIRSTPIC = "firstpic";
 	
 
 }

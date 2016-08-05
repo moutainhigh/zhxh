@@ -30,6 +30,7 @@ import net.ussoft.zhxh.service.IProductRatedService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
+import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.FileOperate;
 
 @Controller
@@ -48,12 +49,12 @@ public class ProductController extends BaseConstroller {
 	private IBrandfirstService brandFirstService;
 	
 	
-	//定义常量，用来标识参数
-	private final String BRAND = "brand";		//品牌
-	private final String PRODUCT = "product";	//对商品表的处理
-	private final String RATED = "rated";	//对商品评价表的处理
-	private final String BRANDFIRST_LB_PIC = "brandfirst_lb_pic";	//对品牌综合页轮播图片的处理
-	private final String BRANDFIRST = "brandfirst";	//对品牌综合页的处理
+//	//定义常量，用来标识参数
+//	private final String BRAND = "brand";		//品牌
+//	private final String PRODUCT = "product";	//对商品表的处理
+//	private final String RATED = "rated";	//对商品评价表的处理
+//	private final String BRANDFIRST_LB_PIC = "brandfirst_lb_pic";	//对品牌综合页轮播图片的处理
+//	private final String BRANDFIRST = "brandfirst";	//对品牌综合页的处理
 	
 	/**
 	 * 获取列表
@@ -70,12 +71,12 @@ public class ProductController extends BaseConstroller {
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		if (listtype.equals(BRAND)) {
+		if (listtype.equals(Constants.BRAND)) {
 			List<Public_brand> brandList = brandService.list();
 			map.put("total", brandList.size());
 			map.put("data", brandList);
 		}
-		else if (listtype.equals(PRODUCT)) {
+		else if (listtype.equals(Constants.PRODUCT)) {
 			PageBean<Public_product> p = new PageBean<Public_product>();
 			
 			p.setIsPage(false);
@@ -84,7 +85,7 @@ public class ProductController extends BaseConstroller {
 			map.put("total", pList.size());
 			map.put("data", pList);
 		}
-		else if (listtype.equals(RATED)) {
+		else if (listtype.equals(Constants.RATED)) {
 			PageBean<Product_rated> p = new PageBean<Product_rated>();
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex + 1);
@@ -94,12 +95,12 @@ public class ProductController extends BaseConstroller {
 			map.put("total", p.getPageCount());
 			map.put("data", p.getList());
 		}
-		else if (listtype.equals(BRANDFIRST_LB_PIC)) {
+		else if (listtype.equals(Constants.BRANDFIRST_LB_PIC)) {
 			List<Public_pic> pList = picService.list(parentid,listtype);
 			map.put("total", pList.size());
 			map.put("data", pList);
 		}
-		else if (listtype.equals(BRANDFIRST)) {
+		else if (listtype.equals(Constants.BRANDFIRST)) {
 			List<Brandfirst> pList = brandFirstService.list(parentid);
 			map.put("total", pList.size());
 			map.put("data", pList);
@@ -187,13 +188,13 @@ public class ProductController extends BaseConstroller {
 	        	boolean isok = delete(id,savetype);
 	        	if (isok) {
 	        		String tmpPath = "";
-	        		if (savetype.equals(BRAND)) {
+	        		if (savetype.equals(Constants.BRAND)) {
 	        			tmpPath = row.get("brandlog");
 	        		}
-	        		else if (savetype.equals(PRODUCT)) {
+	        		else if (savetype.equals(Constants.PRODUCT)) {
 	        			tmpPath = row.get("productpic");
 	        		}
-	        		else if (savetype.equals(BRANDFIRST)) {
+	        		else if (savetype.equals(Constants.BRANDFIRST)) {
 	        			tmpPath = row.get("firstpic");
 	        		}
 	        		
@@ -213,28 +214,28 @@ public class ProductController extends BaseConstroller {
 			return false;
 		}
 		
-		if (savetype.equals(BRAND)) {
+		if (savetype.equals(Constants.BRAND)) {
 			Public_brand brand = new Public_brand();
 			BeanUtils.populate(brand, row);
 			
 			brand.setId(UUID.randomUUID().toString());
 			brand = brandService.insert(brand);
 		}
-		else if (savetype.equals(PRODUCT)) {
+		else if (savetype.equals(Constants.PRODUCT)) {
 			Public_product product = new Public_product();
 			BeanUtils.populate(product, row);
 			
 			product.setId(UUID.randomUUID().toString());
 			product = productService.insert(product);
 		}
-		else if (savetype.equals(RATED)) {
+		else if (savetype.equals(Constants.RATED)) {
 			Product_rated rated = new Product_rated();
 			BeanUtils.populate(rated, row);
 			
 			rated.setId(UUID.randomUUID().toString());
 			rated = ratedService.insert(rated);
 		}
-		else if (savetype.equals(BRANDFIRST)) {
+		else if (savetype.equals(Constants.BRANDFIRST)) {
 			Brandfirst bFirst = new Brandfirst();
 			BeanUtils.populate(bFirst, row);
 			
@@ -258,16 +259,16 @@ public class ProductController extends BaseConstroller {
 			return false;
 		}
 		int num = 0;
-		if (savetype.equals(BRAND)) {
+		if (savetype.equals(Constants.BRAND)) {
 			num = brandService.delete(id);
 		}
-		else if (savetype.equals(PRODUCT)){
+		else if (savetype.equals(Constants.PRODUCT)){
 			num = productService.delete(id);
 		}
-		else if (savetype.equals(RATED)) {
+		else if (savetype.equals(Constants.RATED)) {
 			num = ratedService.delete(id);
 		}
-		else if (savetype.equals(BRANDFIRST)) {
+		else if (savetype.equals(Constants.BRANDFIRST)) {
 			num = brandFirstService.delete(id);
 		}
 		
@@ -291,22 +292,22 @@ public class ProductController extends BaseConstroller {
 		}
 		
 		int num = 0;
-		if (savetype.equals(BRAND)) {
+		if (savetype.equals(Constants.BRAND)) {
 			Public_brand brand = new Public_brand();
 			BeanUtils.populate(brand, row);
 			num = brandService.update(brand);
 		}
-		else if (savetype.equals(PRODUCT)){
+		else if (savetype.equals(Constants.PRODUCT)){
 			Public_product product = new Public_product();
 			BeanUtils.populate(product, row);
 			num = productService.update(product);
 		}
-		else if (savetype.equals(RATED)) {
+		else if (savetype.equals(Constants.RATED)) {
 			Product_rated rated = new Product_rated();
 			BeanUtils.populate(rated, row);
 			num = ratedService.update(rated);
 		}
-		else if (savetype.equals(BRANDFIRST)) {
+		else if (savetype.equals(Constants.BRANDFIRST)) {
 			Brandfirst bFirst = new Brandfirst();
 			BeanUtils.populate(bFirst, row);
 			num = brandFirstService.update(bFirst);

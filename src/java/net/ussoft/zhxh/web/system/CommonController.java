@@ -38,6 +38,7 @@ import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
 import net.ussoft.zhxh.util.CommonUtils;
+import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.FileOperate;
 import net.ussoft.zhxh.util.Logger;
 
@@ -80,8 +81,6 @@ public class CommonController extends BaseConstroller {
 		return page;
 	}
 	
-	
-	
 	/**
 	 * form提交方式上传保存文件。主要用于单文件上传。
 	 * @param imageInput		form提交的文件流
@@ -106,7 +105,7 @@ public class CommonController extends BaseConstroller {
         }
         else {
         	//如果是上传的品牌logo
-        	if (forObj.equals("brandlog")) {
+        	if (forObj.equals(Constants.BRANDLOG)) {
         		//更新内容
         		Public_brand tmp = brandService.getById(id);
         		if (null != fileMap && fileMap.size() > 0 && !fileMap.get("newname").isEmpty()) {
@@ -125,7 +124,7 @@ public class CommonController extends BaseConstroller {
     	    	
         		brandService.update(tmp);
         	}
-        	else if (forObj.equals("productpic")) {
+        	else if (forObj.equals(Constants.PRODUCTPIC)) {
         		//如果是上传的商品主图片
         		//更新内容
         		Public_product tmp = productService.getById(id);
@@ -144,7 +143,7 @@ public class CommonController extends BaseConstroller {
         		}
         		productService.update(tmp);
         	}
-        	else if (forObj.equals("firstpic")) {
+        	else if (forObj.equals(Constants.FIRSTPIC)) {
         		//如果是上传的品牌综合页主图片
         		//更新内容
         		Brandfirst tmp = firstService.getById(id);
