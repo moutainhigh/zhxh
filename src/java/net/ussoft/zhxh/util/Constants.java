@@ -30,12 +30,16 @@ public class Constants{
 	 * 对品牌综合页的处理
 	 */
 	public static final String BRANDFIRST = "brandfirst";
+	/**
+	 * 对品牌系列页的处理
+	 */
+	public static final String BRANDLIST = "brandlist";
 	
 	
 	//==============公共图片表
 	
 	/**
-	 * 公共图片获取list
+	 * 公共图片
 	 */
 	public static final String PUBLICPIC = "publicpic";
 	/**

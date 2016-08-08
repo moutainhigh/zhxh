@@ -9,13 +9,16 @@ import javax.persistence.Table;
 public class Public_video {
 
 	private String id;
-	private String videopath;
-	private String videooldname;
-	private String videonewname;
 	private String parentid;
 	private String parenttype;
-	private String videoext;
+	private String videopath;
+	private String mp4oldname;
+	private String mp4newname;
+	private String webmoldname;
+	private String webmnewname;
 	private Integer islocal;
+	private Integer sort;
+	private Integer isshow;
 	
 	
 	
@@ -27,24 +30,6 @@ public class Public_video {
 	}
 	public void setId(String id) {
 		this.id = id;
-	}
-	public String getVideopath() {
-		return videopath;
-	}
-	public void setVideopath(String videopath) {
-		this.videopath = videopath;
-	}
-	public String getVideooldname() {
-		return videooldname;
-	}
-	public void setVideooldname(String videooldname) {
-		this.videooldname = videooldname;
-	}
-	public String getVideonewname() {
-		return videonewname;
-	}
-	public void setVideonewname(String videonewname) {
-		this.videonewname = videonewname;
 	}
 	public String getParentid() {
 		return parentid;
@@ -58,11 +43,35 @@ public class Public_video {
 	public void setParenttype(String parenttype) {
 		this.parenttype = parenttype;
 	}
-	public String getVideoext() {
-		return videoext;
+	public String getVideopath() {
+		return videopath;
 	}
-	public void setVideoext(String videoext) {
-		this.videoext = videoext;
+	public void setVideopath(String videopath) {
+		this.videopath = videopath;
+	}
+	public String getMp4oldname() {
+		return mp4oldname;
+	}
+	public void setMp4oldname(String mp4oldname) {
+		this.mp4oldname = mp4oldname;
+	}
+	public String getMp4newname() {
+		return mp4newname;
+	}
+	public void setMp4newname(String mp4newname) {
+		this.mp4newname = mp4newname;
+	}
+	public String getWebmoldname() {
+		return webmoldname;
+	}
+	public void setWebmoldname(String webmoldname) {
+		this.webmoldname = webmoldname;
+	}
+	public String getWebmnewname() {
+		return webmnewname;
+	}
+	public void setWebmnewname(String webmnewname) {
+		this.webmnewname = webmnewname;
 	}
 	public Integer getIslocal() {
 		return islocal;
@@ -70,8 +79,18 @@ public class Public_video {
 	public void setIslocal(Integer islocal) {
 		this.islocal = islocal;
 	}
-	
-	
+	public Integer getSort() {
+		return sort;
+	}
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+	public Integer getIsshow() {
+		return isshow;
+	}
+	public void setIsshow(Integer isshow) {
+		this.isshow = isshow;
+	}
 	
 	
 	

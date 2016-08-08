@@ -129,7 +129,7 @@
        	        	}
    	        		else {
    	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
    	        		}
     	        }
                 if (field == "brandcolor") {
@@ -155,7 +155,16 @@
        	        	}
    	        		else {
    	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
+   	        		}
+    	        }
+                
+                if (field == "pic_active") {
+                	if (value == 0){
+   	        			e.cellStyle = "color:red;text-align:center";
+   	        		}
+   	        		else if (value == 1) {
+   	        			e.cellStyle = "color:blue;text-align:center";
    	        		}
     	        }
          	});
@@ -172,7 +181,7 @@
        	        	}
    	        		else {
    	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
    	        		}
     	        }
          	});
@@ -373,9 +382,12 @@
                     iframe.contentWindow.SetData(data);
                 },
                 ondestroy: function (action) {
-                	if (action == "ok") {
+                	grid_brand.cancelEdit();
+            		grid_brand.reload();
+            		/* if (action == "ok") {
+                		grid_brandpic.cancelEdit();
                 		grid_brand.reload();
-                		/* var iframe = this.getIFrameEl();
+                		var iframe = this.getIFrameEl();
                         var grid_data = iframe.contentWindow.GetData();
                         grid_data = mini.clone(grid_data);    //必须
                         if (grid_data != "" || grid_data.length > 0) {
@@ -387,8 +399,29 @@
                             	itemcode: grid_data.itemcode,
                             	itemtype:grid_data.itemtype
                             });
-                        } */
-                    }
+                        } 
+                    }*/
+                }
+            });
+        }
+		//上传修改综合页轮播图片。单张修改
+		function onBtnBrandPicEdit(e) {
+        	var buttonEdit = e.sender;
+        	var row = grid_brandpic.getEditorOwnerRow(buttonEdit);
+        	
+        	mini.open({
+                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
+                title: "上传修改综合页轮播图片", width: 600, height:500,
+                allowResize:true,
+                onload: function () {
+                	var iframe = this.getIFrameEl();
+               	 	var data = {id:row.id,saveFolder:"upload",forObj:"publicpic"};
+                    //var data = rows[0];
+                    iframe.contentWindow.SetData(data);
+                },
+                ondestroy: function (action) {
+                	grid_brandpic.cancelEdit();
+            		grid_brandpic.reload();
                 }
             });
         }
@@ -429,40 +462,6 @@
         
        	
        	
-       	function onBtnProductEdit(e) {
-        	var buttonEdit = e.sender;
-        	var row = grid_product.getEditorOwnerRow(buttonEdit);
-        	
-        	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传商品主图片", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"pic",forObj:"productpic"};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	if (action == "ok") {
-                		grid_product.reload();
-                		/* var iframe = this.getIFrameEl();
-                        var grid_data = iframe.contentWindow.GetData();
-                        grid_data = mini.clone(grid_data);    //必须
-                        if (grid_data != "" || grid_data.length > 0) {
-                        	var row = grid_book.getEditorOwnerRow(buttonEdit);
-                            //var row = grid_book.getSelecteds();
-                            grid_book.cancelEdit();
-                            grid_book.updateRow(row, {
-                            	itemid :grid_data.id,
-                            	itemcode: grid_data.itemcode,
-                            	itemtype:grid_data.itemtype
-                            });
-                        } */
-                    }
-                }
-            });
-        }
        	
        	function onBtnColorEdit(e) {
         	var buttonEdit = e.sender;
@@ -527,8 +526,8 @@
 		                 	<span id="pid" style="padding-left:5px;">品牌列表</span>
 		                 </td>
 		                 <td style="white-space:nowrap;">
-		                 	<!-- <a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_brand')">新增</a>
-		                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brand')">删除</a>
+		                 	<a class="mini-button" iconCls="icon-tip" plain="true" onclick="addRow('grid_brand')">查看综合页效果</a>
+		                 	<!-- <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brand')">删除</a>
 			                <span class="separator"></span>
 			         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a> -->
 		                 </td>

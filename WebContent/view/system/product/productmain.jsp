@@ -23,8 +23,8 @@
 	    .print {
 	        background:url(${pageContext.request.contextPath}/images/print.png) no-repeat;width:32px;height:32px;
 	    }
-	    .indexer {
-	        background:url(${pageContext.request.contextPath}/images/Notes_Large.png) no-repeat;width:32px;height:32px;
+	    .page {
+	        background:url(${pageContext.request.contextPath}/images/page.png) no-repeat;width:32px;height:32px;
 	    }
     </style>
     
@@ -42,7 +42,7 @@
 	    t2.pid = "right";
 	    t2.text = "商品管理";
 	    t2.iconCls = "product";
-	    t2.url = getRootPath_web() + "/common/dispatch.htmls?page=/view/system/product/productlist";
+	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/productlist";
 	    t2.iconPosition = "top";
 	    dataList.push(t2);
 	    
@@ -50,15 +50,25 @@
 	    t3.id = "brandfirst";
 	    t3.pid = "right";
 	    t3.text = "品牌综合页";
-	    t3.iconCls = "indexer";
-	    t3.url = getRootPath_web() + "/common/dispatch.htmls?page=/view/system/product/brandfirst";
+	    t3.iconCls = "page";
+	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/brandfirst";
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
+	    
+	    var t4 = {};
+	    t4.id = "brandlist";
+	    t4.pid = "right";
+	    t4.text = "品牌系列页";
+	    t4.iconCls = "page";
+	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/brandlist";
+	    t4.iconPosition = "top";
+	    dataList.push(t4);
 	    
     
     	$(function(){
             var leftTree = mini.get("leftTree");
             leftTree.loadList(dataList,"id","pid");
+          	leftTree.selectNode("product");
         })
         
         function onItemSelect(e) {

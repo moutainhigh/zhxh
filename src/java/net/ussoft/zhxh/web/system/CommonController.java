@@ -30,6 +30,7 @@ import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Brandfirst;
+import net.ussoft.zhxh.model.Brandlist;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
@@ -161,6 +162,43 @@ public class CommonController extends BaseConstroller {
         			tmp.setFirstpic("");
         		}
         		firstService.update(tmp);
+        	}
+        	else if (forObj.equals(Constants.BRANDLIST)) {
+        		//如果是上传的品牌系列页主图片
+        		//更新内容
+        		Brandlist tmp = firstService.getBrandlistById(id);
+        		if (null != fileMap && fileMap.size() > 0 && !fileMap.get("newname").isEmpty()) {
+        			//删除原图片
+        			if (null != tmp.getPic() && !"".equals(tmp.getPic())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getPic());
+        			}
+        			tmp.setPic(fileMap.get("filepath") + fileMap.get("newname"));
+        		}
+        		else {
+        			if (null != tmp.getPic() && !"".equals(tmp.getPic())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getPic());
+        			}
+        			tmp.setPic("");
+        		}
+        		firstService.updateBrandList(tmp);
+        	}
+        	else if (forObj.equals(Constants.PUBLICPIC)) {
+        		//如果是公共图片表单图片更新
+        		Public_pic tmp = picService.getById(id);
+        		if (null != fileMap && fileMap.size() > 0 && !fileMap.get("newname").isEmpty()) {
+        			//删除原图片
+        			if (null != tmp.getPic_path() && !"".equals(tmp.getPic_path())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getPic_path());
+        			}
+        			tmp.setPic_path(fileMap.get("filepath") + fileMap.get("newname"));
+        		}
+        		else {
+        			if (null != tmp.getPic_path() && !"".equals(tmp.getPic_path())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getPic_path());
+        			}
+        			tmp.setPic_path("");
+        		}
+        		picService.update(tmp);
         	}
         	
         }

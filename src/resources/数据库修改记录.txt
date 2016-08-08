@@ -10,3 +10,17 @@
 	
 3、public_content (富文本表)
 	（1）增加sort int 11    排序
+	
+4、brandlist （品牌系列页表）
+	（1）增加pic varchar 200     系列页顶部主图片
+	（2）增加picurl varchar 200	系列页主图片点击url
+	
+5、public_video (公共视频表)
+	（1） 增加videoshowpic	varchar 200  视频封面图片
+	（2） 将videooldname 字段名改为mp4oldname
+	（3） 将videonewname 字段名改为mp4newname
+	（4）增加webmoldname varchar 500 		webm原文件名
+	（5）增加webmnewname varchar 500		webm服务器路径+文件名称
+	（6）删除videoext 字段
+	（7）增加sort int 11 排序字段
+	（8）增加isshow int 11  是否显示

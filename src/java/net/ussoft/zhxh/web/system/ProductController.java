@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Brandfirst;
+import net.ussoft.zhxh.model.Brandlist;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Product_rated;
 import net.ussoft.zhxh.model.Public_brand;
@@ -102,6 +103,11 @@ public class ProductController extends BaseConstroller {
 		}
 		else if (listtype.equals(Constants.BRANDFIRST)) {
 			List<Brandfirst> pList = brandFirstService.list(parentid);
+			map.put("total", pList.size());
+			map.put("data", pList);
+		}
+		else if (listtype.equals(Constants.BRANDLIST)) {
+			List<Brandlist> pList = brandFirstService.getBrandList(parentid);
 			map.put("total", pList.size());
 			map.put("data", pList);
 		}
@@ -197,6 +203,9 @@ public class ProductController extends BaseConstroller {
 	        		else if (savetype.equals(Constants.BRANDFIRST)) {
 	        			tmpPath = row.get("firstpic");
 	        		}
+	        		else if (savetype.equals(Constants.BRANDLIST)) {
+	        			tmpPath = row.get("pic");
+	        		}
 	        		
 	        		FileOperate.delFile(super.getProjectRealPath() + tmpPath); 
 	        	}
@@ -242,6 +251,13 @@ public class ProductController extends BaseConstroller {
 			bFirst.setId(UUID.randomUUID().toString());
 			bFirst = brandFirstService.insert(bFirst);
 		}
+		else if (savetype.equals(Constants.BRANDLIST)) {
+			Brandlist bList = new Brandlist();
+			BeanUtils.populate(bList, row);
+			
+			bList.setId(UUID.randomUUID().toString());
+			bList = brandFirstService.insertBrandList(bList);
+		}
 		
 		return true;
 	}
@@ -270,6 +286,9 @@ public class ProductController extends BaseConstroller {
 		}
 		else if (savetype.equals(Constants.BRANDFIRST)) {
 			num = brandFirstService.delete(id);
+		}
+		else if (savetype.equals(Constants.BRANDLIST)) {
+			num = brandFirstService.deleteBrandList(id);
 		}
 		
 		if (num <= 0 ) {
@@ -311,6 +330,11 @@ public class ProductController extends BaseConstroller {
 			Brandfirst bFirst = new Brandfirst();
 			BeanUtils.populate(bFirst, row);
 			num = brandFirstService.update(bFirst);
+		}
+		else if (savetype.equals(Constants.BRANDLIST)) {
+			Brandlist bList = new Brandlist();
+			BeanUtils.populate(bList, row);
+			num = brandFirstService.updateBrandList(bList);
 		}
 		
 		if (num <= 0 ) {

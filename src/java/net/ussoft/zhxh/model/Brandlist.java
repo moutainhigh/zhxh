@@ -12,6 +12,8 @@ public class Brandlist {
 	private String parentid;
 	private String listname;
 	private Integer sort;
+	private String pic;
+	private String picurl;
 	
 	
 	@Id
@@ -39,6 +41,18 @@ public class Brandlist {
 	}
 	public void setSort(Integer sort) {
 		this.sort = sort;
+	}
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic;
+	}
+	public String getPicurl() {
+		return picurl;
+	}
+	public void setPicurl(String picurl) {
+		this.picurl = picurl;
 	}
 	
 	

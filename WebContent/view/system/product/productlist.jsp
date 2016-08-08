@@ -123,7 +123,7 @@
        	        	}
    	        		else {
    	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
    	        		}
     	        }
                 if (field == "brandcolor") {
@@ -150,7 +150,7 @@
        	        	}
    	        		else {
    	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
    	        		}
     	        }
             });
