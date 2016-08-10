@@ -55,9 +55,6 @@ public class PublicController extends BaseConstroller{
 	@Resource
 	IPublicContentService contentService;  //富文本
 	
-//	private final String PUBLICPIC = "publicpic";		//公共图片获取list
-//	private final String PUBLICPIC_PAGE = "publicpic_page";	//公共图片获取list 分页
-//	private final String SUBJECT = "subject";	//专题
 	
 	/**
 	 * 编辑富文本
@@ -148,8 +145,8 @@ public class PublicController extends BaseConstroller{
 			String json = JSON.toJSONString(map);
 			out.print(json);
 		}
-		//专题制作
-		else if(act.equals(Constants.SUBJECT)){
+		//公共 富文本操作
+		else if(act.equals(Constants.PUBLIC_CONTENT)){
 			PageBean<Public_content> p = new PageBean<Public_content>();
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex + 1);
@@ -219,7 +216,7 @@ public class PublicController extends BaseConstroller{
 	        			FileOperate.delFile(super.getProjectRealPath() + webmPath);
 	        		}
 	        	}
-	        	else if(act.equals(Constants.SUBJECT)){
+	        	else if(act.equals(Constants.PUBLIC_CONTENT)){
 	        		delete(id, act);
 	        	}
 	        	
@@ -260,7 +257,7 @@ public class PublicController extends BaseConstroller{
 			video = videoService.insert(video);
 			return true;
 		}
-		else if(act.equals(Constants.SUBJECT)){
+		else if(act.equals(Constants.PUBLIC_CONTENT)){
 			Public_content content = new Public_content();
 			BeanUtils.populate(content, row);
 			
@@ -293,7 +290,7 @@ public class PublicController extends BaseConstroller{
 		else if(act.equals(Constants.PUBLICVIDEO)){
 			num = videoService.delete(id);
 		}
-		else if(act.equals(Constants.SUBJECT)){
+		else if(act.equals(Constants.PUBLIC_CONTENT)){
 			num = contentService.delete(id);
 		}
 		if (num <= 0 ) {
@@ -325,7 +322,7 @@ public class PublicController extends BaseConstroller{
 			BeanUtils.populate(video, row);
 			num = videoService.update(video);
 		}
-		else if(act.equals(Constants.SUBJECT)){
+		else if(act.equals(Constants.PUBLIC_CONTENT)){
 			Public_content pic = new Public_content();
 			BeanUtils.populate(pic, row);
 			num = contentService.update(pic);
