@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,10 +35,12 @@ import net.ussoft.zhxh.model.Brandlist;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
+import net.ussoft.zhxh.model.Public_video;
 import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
+import net.ussoft.zhxh.service.IPublicVideoService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.FileOperate;
@@ -59,6 +62,8 @@ public class CommonController extends BaseConstroller {
 	private IPublicProductService productService;
 	@Resource
 	private IPublicPicService picService;
+	@Resource
+	private IPublicVideoService videoService;
 	@Resource
 	private IBrandfirstService firstService;
 	
@@ -313,9 +318,8 @@ public class CommonController extends BaseConstroller {
     
     /**
      * 保存上传电子全文的信息到数据库
-     * @param archiveid
-     * @param tabletype
-     * @param treeid
+     * @param parentid
+     * @param parenttype
      * @throws Exception 
      */
 	private String uploadSaveData(String parentid,String parenttype,File tmpFile) throws Exception {
@@ -330,6 +334,7 @@ public class CommonController extends BaseConstroller {
         //获取扩展名
         if (filename.lastIndexOf(".") >= 0) {
             docExt = filename.substring(filename.lastIndexOf("."));
+            docExt = docExt.toLowerCase();
         }
         //文件的新名字
         String newname = picId + docExt;
@@ -369,6 +374,119 @@ public class CommonController extends BaseConstroller {
         }
         return flag;
     }
+    
+    /**
+	 * 视频文件上传。专为视频公共表上传视频文件
+	 * @param request
+	 * @param response
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	
+	@RequestMapping("/upload_video")
+	public void upload_video(HttpServletRequest request,HttpServletResponse response) throws IllegalStateException, IOException{
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+    	CommonsMultipartResolver multipartResolver  = new CommonsMultipartResolver(request.getSession().getServletContext());
+		if(multipartResolver.isMultipart(request)){
+			MultipartHttpServletRequest  multiRequest = (MultipartHttpServletRequest)request;
+			//获取参数
+			String id = request.getParameter("id");
+			//当前上传视频的类型。mp4  or webm
+			String videotype = request.getParameter("videotype");
+			
+			
+			//获取plupload参数
+			Integer chunks = Integer.valueOf(request.getParameter("chunks"));
+//			String uuid = UUID.randomUUID().toString();
+			String oldname = request.getParameter("name");
+			Integer chunk = Integer.valueOf(request.getParameter("chunk"));
+//			//获取扩展名  
+//	        String ext = oldname.substring(oldname.lastIndexOf(".")+1); 
+//			
+//	        String tmpname = uuid + "." + ext;
+	        
+			
+			//获取文件列表
+			Iterator<String>  iter = multiRequest.getFileNames();
+			while(iter.hasNext()){
+				//获取文件对象
+				MultipartFile file = multiRequest.getFile((String)iter.next());
+				//获取临时文件的绝对路径
+				String contextPath = getProjectRealPath() + "file" +File.separator + "tmp" + File.separator;
+				
+				FileOperate.isExist(contextPath);
+				
+				//生成临时文件
+		        String dstPath =  contextPath + oldname;
+		        File dstFile = new File(dstPath);
+		        // 文件已存在（上传了同名的文件）
+		        if (chunk == 0 && dstFile.exists()) {
+		            dstFile.delete();
+		            dstFile = new File(dstPath);
+		        }
+		        //合并文件
+		        cat(file, dstFile);
+		        // 完成一整个文件;
+		        if (chunk == chunks - 1) {
+		        	//获取临时文件对象
+		        	File newFile =new File(contextPath+oldname);
+		        	
+		        	if(newFile != null){
+		        		String filename = newFile.getName();
+		        		String newUUID = UUID.randomUUID().toString();
+		        		
+		        		String docExt = "";
+		                //获取扩展名
+		                if (filename.lastIndexOf(".") >= 0) {
+		                    docExt = filename.substring(filename.lastIndexOf("."));
+		                    docExt = docExt.toLowerCase();
+		                }
+		                //文件的新名字
+		                String newname = newUUID + docExt;
+		                
+		                String contextPath2 = getProjectRealPath() + "file" +File.separator + "video" + File.separator;
+		                FileOperate.isExist(contextPath2);
+		        		//
+		        		Public_video video = videoService.getById(id);
+		        		
+		        		if (videotype.equals("mp4")) {
+		        			//如果原来是有内容的，要删除原文件。
+		        			if (null != video.getMp4newname() && !"".equals(video.getMp4newname())) {
+		        				String mp4path = video.getMp4newname();
+		        				deleteFile(getProjectRealPath() + mp4path);
+		        			}
+		        			video.setMp4oldname(oldname);
+		        			video.setMp4newname("file" +File.separator + "video" + File.separator + newname);
+		        		}
+		        		else if (videotype.equals("webm")) {
+		        			//如果原来是有内容的，要删除原文件。
+		        			if (null != video.getWebmnewname() && !"".equals(video.getWebmnewname())) {
+		        				String webmpath = video.getWebmnewname();
+		        				deleteFile(getProjectRealPath() + webmpath);
+		        			}
+		        			video.setWebmoldname(oldname);
+		        			video.setWebmnewname("file" +File.separator + "video" + File.separator + newname);
+		        		}
+		                
+		                FileOperate.copyFile(newFile.getPath(), contextPath2 + newname);
+		                
+		                //删除临时文件
+		                deleteFile(newFile.getPath());
+		                
+		                videoService.update(video);
+		                
+//		                String json = JSON.toJSONString(resultList);
+//		        		newFile.delete();
+//		        		out.print(json);
+					}
+		        }
+			}
+		}
+	}
 	
 
 }

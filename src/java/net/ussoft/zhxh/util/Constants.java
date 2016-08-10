@@ -51,6 +51,13 @@ public class Constants{
 	 */
 	public static final String SUBJECT = "subject";
 	
+	//==============公共视频表
+	
+	/**
+	 * 公共视频
+	 */
+	public static final String PUBLICVIDEO = "publicvideo";
+	
 	
 	//================图片上传
 	

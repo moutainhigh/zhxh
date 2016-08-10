@@ -467,6 +467,7 @@ public class CommonUtils {
 	        //获取扩展名
 	        if (oldName.lastIndexOf(".") >= 0) {
 	            ext = oldName.substring(oldName.lastIndexOf("."));
+	            ext = ext.toLowerCase();
 	        }
 	        
 	        uuidString = UUID.randomUUID().toString();

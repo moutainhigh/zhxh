@@ -17,8 +17,10 @@ import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
+import net.ussoft.zhxh.model.Public_video;
 import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
+import net.ussoft.zhxh.service.IPublicVideoService;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.FileOperate;
@@ -47,6 +49,8 @@ public class PublicController extends BaseConstroller{
 
 	@Resource
 	IPublicPicService picService;	//公共图片
+	@Resource
+	private IPublicVideoService videoService;	//公共图片
 	
 	@Resource
 	IPublicContentService contentService;  //富文本
@@ -109,6 +113,17 @@ public class PublicController extends BaseConstroller{
 		//公共图片获取list
 		if(act.equals(Constants.PUBLICPIC)){
 			List<Public_pic> list = picService.list(parentid,parenttype);
+			
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			
+			map.put("total", list.size());
+			map.put("data", list);
+			String json = JSON.toJSONString(map);
+			out.print(json);
+		}
+		//公共视频获取list
+		else if(act.equals(Constants.PUBLICVIDEO)){
+			List<Public_video> list = videoService.list(parentid,parenttype);
 			
 			HashMap<String,Object> map = new HashMap<String,Object>();
 			
@@ -195,6 +210,15 @@ public class PublicController extends BaseConstroller{
 	        		filePath = row.get("pic_path");
 		        	flag = delete(id,act); //需要删除附件的，要有返回值
 	        	}
+	        	else if(act.equals(Constants.PUBLICVIDEO)){
+	        		String mp4Path = row.get("mp4newname");
+	        		String webmPath = row.get("webmnewname");
+	        		boolean isok = delete(id,act); //需要删除附件的，要有返回值
+	        		if (isok) {
+	        			FileOperate.delFile(super.getProjectRealPath() + mp4Path);
+	        			FileOperate.delFile(super.getProjectRealPath() + webmPath);
+	        		}
+	        	}
 	        	else if(act.equals(Constants.SUBJECT)){
 	        		delete(id, act);
 	        	}
@@ -224,6 +248,16 @@ public class PublicController extends BaseConstroller{
 			pic.setParentid(parentid);
 			pic.setParenttype(parenttype);
 			pic = picService.insert(pic);
+			return true;
+		}	//公共视频表插入
+		if(act.equals(Constants.PUBLICVIDEO)){
+			Public_video video = new Public_video();
+			BeanUtils.populate(video, row);
+			
+			video.setId(UUID.randomUUID().toString());
+			video.setParentid(parentid);
+			video.setParenttype(parenttype);
+			video = videoService.insert(video);
 			return true;
 		}
 		else if(act.equals(Constants.SUBJECT)){
@@ -256,6 +290,9 @@ public class PublicController extends BaseConstroller{
 		if(act.equals(Constants.PUBLICPIC)){
 			num = picService.delete(id);
 		}
+		else if(act.equals(Constants.PUBLICVIDEO)){
+			num = videoService.delete(id);
+		}
 		else if(act.equals(Constants.SUBJECT)){
 			num = contentService.delete(id);
 		}
@@ -282,6 +319,11 @@ public class PublicController extends BaseConstroller{
 			Public_pic pic = new Public_pic();
 			BeanUtils.populate(pic, row);
 			num = picService.update(pic);
+		}
+		else if(act.equals(Constants.PUBLICVIDEO)){
+			Public_video video = new Public_video();
+			BeanUtils.populate(video, row);
+			num = videoService.update(video);
 		}
 		else if(act.equals(Constants.SUBJECT)){
 			Public_content pic = new Public_content();
