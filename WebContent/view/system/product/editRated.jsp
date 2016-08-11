@@ -82,7 +82,7 @@
         	var rows = grid_rated.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		alert("请选择要删除的数据.");
+       	 		mini.alert("请选择要删除的数据.");
        		 	return;
        	 	}
        	 	var del_row = [];
@@ -105,7 +105,7 @@
 			
 			grid_rated.validate();
 	        if (grid_rated.isValid() == false) {
-	            alert("输入有误，请校验输入单元格内容");
+	            mini.alert("输入有误，请校验输入单元格内容");
 	            var error = grid_rated.getCellErrors()[0];
 	            grid_rated.beginEditCell(error.record, error.column);
 	            return;
@@ -114,7 +114,7 @@
 	        var objs = grid_rated.getChanges();
 	        var json = mini.encode(objs,"yyyy-MM-dd");
 	        if (json.length == 2) {
-	        	alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
 	        	return;
 	        }
 	        grid_rated.loading("保存中，请稍后......");
@@ -126,11 +126,11 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	alert("保存完毕。");
+	            	mini.alert("保存完毕。");
 	            	grid_rated.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                alert(jqXHR.responseText);
+	                mini.alert(jqXHR.responseText);
 	            }
 	        });
 	    }

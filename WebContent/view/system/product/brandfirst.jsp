@@ -371,6 +371,11 @@
         	var buttonEdit = e.sender;
         	var row = grid_brandfirst.getEditorOwnerRow(buttonEdit);
         	
+        	if (null == row || typeof(row.id) == "undefined" || row.id == "") {
+            	mini.alert("请先保存，再添加图片.");
+	      		return;
+	      	}
+        	
         	mini.open({
                 url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
                 title: "上传品牌综合页主图片", width: 600, height:500,

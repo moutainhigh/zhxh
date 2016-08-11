@@ -85,7 +85,7 @@
         	var rows = grid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		alert("请选择要删除的帐户.");
+       	 		mini.alert("请选择要删除的帐户.");
        		 	return;
        	 	}
        	 	var del_row = [];
@@ -104,7 +104,7 @@
 		function save() {
 	    	grid.validate();
 	        if (grid.isValid() == false) {
-	            alert("输入有误，请校验输入单元格内容");
+	            mini.alert("输入有误，请校验输入单元格内容");
 	            var error = grid.getCellErrors()[0];
 	            grid.beginEditCell(error.record, error.column);
 	            return;
@@ -113,7 +113,7 @@
 	        var objs = grid.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
 	        	return;
 	        }
 	        grid.loading("保存中，请稍后......");
@@ -125,11 +125,11 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	alert("保存完毕。");
+	            	mini.alert("保存完毕。");
 	            	grid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                alert(jqXHR.responseText);
+	                mini.alert(jqXHR.responseText);
 	            }
 	        });
 	    }
@@ -140,7 +140,7 @@
         	var rows = grid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		alert("请选择要初始化密码的帐户.");
+       	 		mini.alert("请选择要初始化密码的帐户.");
        		 	return;
        	 	}
        	 	
@@ -157,16 +157,16 @@
     	            dataType:"text",
     	            success: function (text) {
     	            	if (text == "success") {
-    	            		alert("保存完毕。");
+    	            		mini.alert("保存完毕。");
     	            		grid.reload();
     	            	}
     	            	else {
-    	            		alert("初始化密码失败。请重新登录再尝试或与开发人员联系。")
+    	            		mini.alert("初始化密码失败。请重新登录再尝试或与开发人员联系。")
     	            	}
     	            	
     	            },
     	            error: function (jqXHR, textStatus, errorThrown) {
-    	                alert(jqXHR.responseText);
+    	                mini.alert(jqXHR.responseText);
     	            }
     	        });
    		 	}

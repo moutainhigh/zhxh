@@ -123,12 +123,12 @@
 				var rows = grid.getSelecteds();
 	          	 
 	       	 	if (rows.length == 0) {
-	       	 		alert("请选择要添加二级标签的所属一级标签.");
+	       	 		mini.alert("请选择要添加二级标签的所属一级标签.");
 	       		 	return;
 	       	 	}
 	       	 	else {
 	       	 		if (typeof(rows[0].id) == "undefined" || rows[0].id == "") {
-	       	 			alert("当前一级标签还没有保存。请先保存一级标签后再创建二级标签。");
+	       	 			mini.alert("当前一级标签还没有保存。请先保存一级标签后再创建二级标签。");
 	       	 			return;
 	       	 		}
 	       	 		else {
@@ -162,7 +162,7 @@
         	var rows = tmpGrid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		alert("请选择要删除的标签.");
+       	 		mini.alert("请选择要删除的标签.");
        		 	return;
        	 	}
        	 	var del_row = [];
@@ -191,7 +191,7 @@
 			
 			tmpGrid.validate();
 	        if (tmpGrid.isValid() == false) {
-	            alert("输入有误，请校验输入单元格内容");
+	            mini.alert("输入有误，请校验输入单元格内容");
 	            var error = tmpGrid.getCellErrors()[0];
 	            tmpGrid.beginEditCell(error.record, error.column);
 	            return;
@@ -200,7 +200,7 @@
 	        var objs = tmpGrid.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
 	        	return;
 	        }
 	        tmpGrid.loading("保存中，请稍后......");
@@ -212,11 +212,11 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	alert("保存完毕。");
+	            	mini.alert("保存完毕。");
 	            	tmpGrid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                alert(jqXHR.responseText);
+	                mini.alert(jqXHR.responseText);
 	            }
 	        });
 	    }
@@ -227,7 +227,7 @@
         	var rows = grid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		alert("请选择要初始化密码的帐户.");
+       	 		mini.alert("请选择要初始化密码的帐户.");
        		 	return;
        	 	}
        	 	
@@ -244,16 +244,16 @@
     	            dataType:"text",
     	            success: function (text) {
     	            	if (text == "success") {
-    	            		alert("保存完毕。");
+    	            		mini.alert("保存完毕。");
     	            		grid.reload();
     	            	}
     	            	else {
-    	            		alert("初始化密码失败。请重新登录再尝试或与开发人员联系。")
+    	            		mini.alert("初始化密码失败。请重新登录再尝试或与开发人员联系。")
     	            	}
     	            	
     	            },
     	            error: function (jqXHR, textStatus, errorThrown) {
-    	                alert(jqXHR.responseText);
+    	                mini.alert(jqXHR.responseText);
     	            }
     	        });
    		 	}
