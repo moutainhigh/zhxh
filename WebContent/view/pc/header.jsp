@@ -4,7 +4,7 @@
 
 <div class="header-three">
 	  	<div class="header header-width clearfix">
-	    		<h1 class="logo fl"><a href="index.html"><img src="images/logo.png" /></a></h1>
+	    		<h1 class="logo fl"><a href="pcindex.htmls"><img src="${pageContext.request.contextPath}/images/logo.png" /></a></h1>
 	    		<ul class="user-header fr">
 	    			 <li class="name"><a href="javascript:;"></a></li>
 	    			 <li class="shop-cart"><a href="javascript:;"></a></li>
@@ -13,7 +13,7 @@
 	        <a href="javascript:;" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" /></a>
 	        <div class="nav">
             <c:forEach var="brand" items="${brandList }">
-		    	<a id="${brand.id }" href="商品展示类 - 诗蜜安黛.html" >${brand.brandname }</a>
+		    	<a id="${brand.id }" href="${pageContext.request.contextPath}/pcMain/zh.htmls?id=${brand.id}" >${brand.brandname }</a>
 		    </c:forEach>
 		    <c:forEach var="subject" items="${subjectList }">
 		    	<a id="${subject.id }" href="${pageContext.request.contextPath}/pcMain/subject.htmls?id=${subject.id}">${subject.title }</a>

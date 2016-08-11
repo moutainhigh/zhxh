@@ -7,10 +7,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.Brandfirst;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
@@ -41,6 +43,9 @@ public class PcMainController extends BaseConstroller {
 	
 	@Resource
 	IPublicUserService userService;	//会员
+	
+	@Resource
+	IBrandfirstService bfService;	//品牌综合
 	
 	@RequestMapping(value="/pcindex")
 	public ModelAndView index (ModelMap modelMap) throws Exception {
@@ -105,7 +110,35 @@ public class PcMainController extends BaseConstroller {
 		return new ModelAndView("/view/pc/service", modelMap);
 	}
 	
-	
+	/**
+	 * 品牌综合页
+	 * @param id 品牌ID
+	 * @param modelMap
+	 * @return ModelAndView
+	 * */
+	@RequestMapping(value="/zh")
+	public ModelAndView zh (String id,ModelMap modelMap) throws Exception {
+		
+		//头部
+		List<Public_brand> brandList = brandService.list();	//品牌
+		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
+		
+		//品牌 轮播图
+		List<Public_pic> brandPicList = picService.list(id,"brandfirst_lb_pic");
+		
+		//品牌综合页内容
+		List<Brandfirst> bfList = bfService.list(id);
+		
+		modelMap.put("brandList", brandList);
+		modelMap.put("subjectList", subjectList);
+		modelMap.put("brandPicList", brandPicList);
+		modelMap.put("bfList", bfList);
+		
+		
+		modelMap.put("id", id);
+		
+		return new ModelAndView("/view/pc/brand_zh", modelMap);
+	}
 	
 	
 	/**

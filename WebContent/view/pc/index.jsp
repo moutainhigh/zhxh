@@ -90,7 +90,7 @@
 	    <div class="clearfix"></div>
 	    <div class="imgnum">
 	    <c:forEach var="brand" items="${brandList }">
-	    	<a href="商品展示类 - 诗蜜安黛.html" >${brand.brandname }</a>
+	    	<a href="${pageContext.request.contextPath}/pcMain/zh.htmls?id=${brand.id}" >${brand.brandname }</a>
 	    </c:forEach>
 	    </div>
 	    <div class="imgnum-bottom">

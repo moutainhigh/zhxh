@@ -1,7 +1,7 @@
 .shop-con-l{ width:49%;}
 .shop-Img .title{ width: 100%; min-height: 21px; background: #000; margin: 20px 0 10px 0;}
 .shop-Img .title span{ display: block; float: left; font-size: 18px; color: #fff;padding: 9px 0;margin-left: 10px;}
-.shop-Img .title a{ display: block; float: right; font-size: 14px; color: #fff;padding: 9px 0;background: url(../images/shape.png) center right no-repeat; padding-right: 11px; margin-right: 10px;}
+.shop-Img .title a{ display: block; float: right; font-size: 14px; color: #fff;padding: 9px 0;background: url(../../images/shape.png) center right no-repeat; padding-right: 11px; margin-right: 10px;}
 .shop-Img a img{ width: 100%; border: solid 1px #e0e0e0;}
 .shop-con-r{ width: 49%;}
 .container .row{margin-bottom: auto;}
@@ -26,7 +26,7 @@
 .focus .D1fBt .current,.focus .D1fBt a:hover{background:#fff;}    
 .focus .D1fBt img{display:none}    
 .focus .D1fBt i{display:none; font-style:normal; }    
-.focus .prev,.focus .next{position:absolute;width:45px;height:86px;background: url(../images/btn.png) no-repeat;}
+.focus .prev,.focus .next{position:absolute;width:45px;height:86px;background: url(../../images/btn.png) no-repeat;}
 .focus .prev{top: 50%;margin-top: -37px; left:50px;background-position:0 0; cursor:pointer; }  
 .focus .next{top: 50%;margin-top: -37px; right:50px;  background-position:-45px 0;  cursor:pointer;}  
 .shop-TXT{margin:182px auto;}
@@ -69,7 +69,7 @@
 .area .left img{ display: block; margin:auto;}
 .area .left p{ text-align: center; font-size: 16px; color: #000; margin-top: 45px;}
 .area .btns{position:relative;height:1px;font-size:0;width:1200px;}
-.area .btns a{background:url(../images/btn.png) no-repeat}
+.area .btns a{background:url(../../images/btn.png) no-repeat}
 .area .btns a{position:absolute;background-position:0 -108px;width:30px;height:57px;top:-188px;left:0}
 .area .btns .down{background-position:-30px -108px;left:auto;right:0}
 .area .cons{width:1140px;margin: auto;overflow:hidden;position:relative;height:280px; }
@@ -81,11 +81,11 @@
 .shop-page-cnter3 .comment li em{ color: #000}
 .shop-page-cnter3 .comment li p{ color: #666; margin-top:15px;}
 .shop-page-cnter3 .comment li b{ display: block; font-weight: normal; color: #666; margin-top: 8px;}
-.norms-div .norms{ float: left; font-size: 18px; color: #111; cursor: pointer;background: url(../images/norms.png) left center no-repeat; padding-left: 20px; margin-right: 20px; }
-.norms-div .cur{ background: url(../images/norms-cur.png) left center no-repeat; }
+.norms-div .norms{ float: left; font-size: 18px; color: #111; cursor: pointer;background: url(../../images/norms.png) left center no-repeat; padding-left: 20px; margin-right: 20px; }
+.norms-div .cur{ background: url(../../images/norms-cur.png) left center no-repeat; }
 /*定制研发*/
 .dzyf h3{ text-align: center; font-weight: normal; font-size: 30px; color: #0c0307; margin-top: 100px;}
-.dzyf-IMG{ height: 500px; background: url(../images/bg.jpg) no-repeat; margin-top: 40px;}
+.dzyf-IMG{ height: 500px; background: url(../../images/bg.jpg) no-repeat; margin-top: 40px;}
 .dzyf-IMG .dzyfimg-l{width: 500px;}
 .dzyf-IMG .dzyfimg-l span{ font-size: 36px; color: #fff; display: block; text-indent: 60px;}
 .dzyf-IMG .dzyfimg-l span:first-child{ margin-top: 50px;}
@@ -123,7 +123,7 @@
 /*新闻中心*/
 .new-tab{ width: 1200px; height: 60px; background: #f7f7f7; text-align: center; margin-top: 45px;}
 .new-tab li{ padding: 0 115px; line-height: 60px; display: inline-block; font-size: 16px; color: #000; cursor: pointer;}
-.new-tab li.cur,.new-tab li:hover{ background: #fff url(../images/jiantou.jpg) center 95% no-repeat;}
+.new-tab li.cur,.new-tab li:hover{ background: #fff url(../../images/jiantou.jpg) center 95% no-repeat;}
 .new{ display: none;}
 .new dl dd h3 em{ float: right; font-weight: normal; font-size: 12px;}
 
@@ -137,4 +137,4 @@
 .download-a a{ display: block; width: 270px; height: 388px; border: solid 1px #e0e0e0; float: left; margin-right: 34px; margin-top: 40px;}
 .download-a a img{ width: 270px; height:292px;}
 .download-a a span{ display: block; font-size: 14px; margin-left: 20px; margin-top: 20px;}
-.download-a a em{ display: block; background: url(../images/download.jpg) left center no-repeat; font-size: 14px; color:#000; margin-top:15px; margin-left: 20px; padding-left: 20px;}
+.download-a a em{ display: block; background: url(../../images/download.jpg) left center no-repeat; font-size: 14px; color:#000; margin-top:15px; margin-left: 20px; padding-left: 20px;}
