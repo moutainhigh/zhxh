@@ -47,9 +47,9 @@ public class Constants{
 	 */
 	public static final String PUBLICPIC_PAGE = "publicpic_page";
 	/**
-	 * 专题
+	 * 富文本操作
 	 */
-	public static final String SUBJECT = "subject";
+	public static final String PUBLIC_CONTENT = "public_content";
 	
 	//==============公共视频表
 	
@@ -81,6 +81,5 @@ public class Constants{
 	
 	
 	
-
 }
 

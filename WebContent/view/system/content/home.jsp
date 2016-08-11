@@ -54,6 +54,68 @@
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
     
+	    var t4 = {};
+	    t4.id = "setting";
+	    t4.pid = "right";
+	    t4.text = "FAQ";
+	    t4.iconCls = "setting";
+	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/faqList";
+	    t4.iconPosition = "top";
+	    dataList.push(t4);
+    
+	    var t5 = {};
+	    t5.id = "setting";
+	    t5.pid = "right";
+	    t5.text = "联系我们";
+	    t5.iconCls = "setting";
+	    t5.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/contactusList";
+	    t5.iconPosition = "top";
+	    dataList.push(t5);
+	    
+	    var t6 = {};
+	    t6.id = "setting";
+	    t6.pid = "right";
+	    t6.text = "工作招聘";
+	    t6.iconCls = "setting";
+	    t6.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/jobList";
+	    t6.iconPosition = "top";
+	    dataList.push(t6);
+	    
+	    var t7 = {};
+	    t7.id = "setting";
+	    t7.pid = "right";
+	    t7.text = "区域合作";
+	    t7.iconCls = "setting";
+	    t7.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/joinList";
+	    t7.iconPosition = "top";
+	    dataList.push(t7);
+	    
+	    var t8 = {};
+	    t8.id = "setting";
+	    t8.pid = "right";
+	    t8.text = "隐私政策";
+	    t8.iconCls = "setting";
+	    t8.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/policyList";
+	    t8.iconPosition = "top";
+	    dataList.push(t8);
+	    
+	    var t9 = {};
+	    t9.id = "setting";
+	    t9.pid = "right";
+	    t9.text = "合作伙伴";
+	    t9.iconCls = "setting";
+	    t9.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/partnerList";
+	    t9.iconPosition = "top";
+	    dataList.push(t9);
+	    
+	    var t10 = {};
+	    t10.id = "setting";
+	    t10.pid = "right";
+	    t10.text = "法律声明";
+	    t10.iconCls = "setting";
+	    t10.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/lawList";
+	    t10.iconPosition = "top";
+	    dataList.push(t10);
     	$(function(){
             var leftTree = mini.get("leftTree");
             leftTree.loadList(dataList,"id","pid");

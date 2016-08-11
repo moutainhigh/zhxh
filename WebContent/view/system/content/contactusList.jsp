@@ -46,7 +46,7 @@
 	            showPageSize:false,
 	            pageSize:2000
 	        });
-        	grid.load({act:'public_content',parentid:'zt',parenttype:'dzyf'});
+        	grid.load({act:'public_content',parentid:'service',parenttype:'lxwm'});
         	drawcell();
         })
         
@@ -126,7 +126,7 @@
 	        $.ajax({
 	        	async:false,
 	            url: "${pageContext.request.contextPath}/public/save.htmls",
-	            data: {'objs':json,'act':'public_content','parentid':'zt','parenttype':'dzyf'},
+	            data: {'objs':json,'act':'public_content','parentid':'service','parenttype':'lxwm'},
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
@@ -175,7 +175,7 @@
             <tbody>
              <tr>
                  <td style="width:100%;">
-                 	<span id="pid" style="padding-left:5px;">专题制作</span>
+                 	<span id="pid" style="padding-left:5px;">联系我们</span>
                  </td>
                  <td style="white-space:nowrap;">
                  	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>
