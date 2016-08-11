@@ -13,45 +13,30 @@
 	    }    
     </style>
     
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/js/videojs_5.10.4/video-js.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
-	<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/video.js"></script>
-	<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/videojs-mux.js"></script>
-	
+	<link href="${pageContext.request.contextPath}/js/videojs5.8/video-js.css" rel="stylesheet">
+	<script src="${pageContext.request.contextPath}/js/videojs5.8/video.js"></script>
 	
     <script type="text/javascript">
     	var id = "";
-    	var videoshowpic = "";
     	var mp4path = "";
     	var webmpath = "";
     	
 	    $(function() {
-	    	/* var poster = "${pageContext.request.contextPath}/file/upload/1af06e63-3cd1-4783-8d91-99ca55782a5b.jpg";
-			$('#preview-player2').attr('poster', poster); */
-			
-			
+	    	var poster = "${pageContext.request.contextPath}/file/upload/1af06e63-3cd1-4783-8d91-99ca55782a5b.jpg";
+			$('#my-video').attr('poster', poster);
 		});
 	    
 	    //标准方法接口定义
 		function SetData(data) {
 			//跨页面传递的数据
-			id = data.id;
+			/* id = data.id;
 			mp4path = data.mp4path;
 			webmpath = data.webmpath;
-			videoshowpic = data.videoshowpic;
 			
-			var myPlayer = videojs("preview-player");
+			var myPlayer = videojs("my-video");
 			myPlayer.src({type: "video/mp4", src: "${pageContext.request.contextPath}/" + mp4path});
-			myPlayer.src({type: "video/webm", src: "${pageContext.request.contextPath}/" + webmpath});
-			
-			if (videoshowpic != "") {
-				//$('#preview-player2').attr('poster', "${pageContext.request.contextPath}/" + videoshowpic);
-				myPlayer.poster( "${pageContext.request.contextPath}/" + videoshowpic);
-				/* myPlayer.one('canplay', function() {
-					$('#preview-player2').attr('poster', "${pageContext.request.contextPath}/" + videoshowpic);
-				}); */
-			}
-			
+			myPlayer.src({type: "video/webm", src: "${pageContext.request.contextPath}/" + webmpath}); */
 			
 						
 			
@@ -90,18 +75,19 @@
     
 </head>
 <body>
-	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;botton:30px">
+	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
         <table style="width:100%;">
              <tbody>
 	             <tr>
 	                 <td style="">
-						视频文件播放测试
+						<div id="filelist" style="float:left;padding-left:5px;">请选择视频文件。</div>
+						<div id="console"></div>
 	                 </td>
 	                 <td style="white-space:nowrap;" width="200">
-	                 	<!-- <div id="container" style="float:right">
+	                 	<div id="container" style="float:right">
 	                 		<a id="pickfiles" class="mini-button" plain="true" name="auth">选择视频文件</a>
 	                 		<a id="uploadfiles" class="mini-button" iconCls="icon-upload" plain="true"  name="auth">上传</a>
-						</div> -->
+						</div>
 	                 </td>
 	             </tr>
 	         </tbody>
@@ -113,18 +99,16 @@
 				要查看此视频请启用JavaScript，并考虑升级到现代高版本Web浏览器。
 			</p>
 		</video> -->
-		<video id="preview-player" class="video-js vjs-fluid placeholder vjs-big-play-centered" controls preload="auto" width="640" height="264" poster="">
-		    <!-- <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4"></source>
-		    <source src="http://vjs.zencdn.net/v/oceans.webm" type="video/webm"></source>
-		    <source src="http://vjs.zencdn.net/v/oceans.ogv" type="video/ogg"></source> -->
-		    <p class="vjs-no-js">要查看此视频请启用JavaScript，并考虑升级到现代高版本Web浏览器。</p>
-		</video>
 	</div>
-	
+	<video id="preview-player" class="video-js vjs-fluid placeholder" controls preload="auto" poster="http://vjs.zencdn.net/v/oceans.png">
+	    <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
+	    </source><source src="http://vjs.zencdn.net/v/oceans.webm" type="video/webm">
+	    </source><source src="http://vjs.zencdn.net/v/oceans.ogv" type="video/ogg">
+	    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+	  	</source>
+	</video>
     <div class="mini-toolbar" style="text-align:center;padding-top:8px;padding-bottom:8px;" style="padding:0px;border-top:1;border-left:0;border-right:0;border-bottom:0; ">
         <a class="mini-button" style="width:60px;" onclick="onCancel()">关闭</a>
     </div>
-    
-    <%-- <script src="${pageContext.request.contextPath}/js/videojs_5.10.4/home.js"></script> --%>
 </body>
 </html>

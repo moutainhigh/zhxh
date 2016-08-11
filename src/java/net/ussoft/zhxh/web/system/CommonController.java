@@ -205,6 +205,24 @@ public class CommonController extends BaseConstroller {
         		}
         		picService.update(tmp);
         	}
+        	else if (forObj.equals(Constants.VIDEO)) {
+        		//如果是公共视频表单图片更新
+        		Public_video tmp = videoService.getById(id);
+        		if (null != fileMap && fileMap.size() > 0 && !fileMap.get("newname").isEmpty()) {
+        			//删除原图片
+        			if (null != tmp.getVideoshowpic() && !"".equals(tmp.getVideoshowpic())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getVideoshowpic());
+        			}
+        			tmp.setVideoshowpic(fileMap.get("filepath") + fileMap.get("newname"));
+        		}
+        		else {
+        			if (null != tmp.getVideoshowpic() && !"".equals(tmp.getVideoshowpic())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getVideoshowpic());
+        			}
+        			tmp.setVideoshowpic("");
+        		}
+        		videoService.update(tmp);
+        	}
         	
         }
         

@@ -74,6 +74,12 @@ public class Constants{
 	 * 品牌综合展示页主图片
 	 */
 	public static final String FIRSTPIC = "firstpic";
+	/**
+	 * 公共视频表常量。可能用于视频表的主图片
+	 */
+	public static final String VIDEO = "video";
+	
+	
 	
 
 }

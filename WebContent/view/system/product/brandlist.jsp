@@ -122,7 +122,7 @@
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
       	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
-      	                /* { field: "videoshowpic",name:"videoshowpic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "视频封面图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnBrandPicEdit" } }, */
+      	                { field: "videoshowpic",name:"videoshowpic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "视频封面图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnVideoPicEdit" } },
       	              	{ field: "mp4oldname",name:"mp4oldname", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "本站视频mp4名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnMp4VideoEdit" } },
       	              	{ field: "webmoldname",name:"webmoldname", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "本站视频webm名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnWebmVideoEdit" } },
       	              	{ field: "videopath",name:"videopath", width: 280, headerAlign: "center", align:"center",allowSort: false, header: "外站视频地址",editor: {  type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
@@ -222,6 +222,24 @@
     	        }
          	});
        		
+       		grid_brandlist_v.on("drawcell", function (e) {
+                var record = e.record,
+	            column = e.column,
+	            field = e.field,
+	            uid = record._uid,
+	            value = e.value;
+                
+                if (field == "videoshowpic") {
+                	if (typeof(value) == "undefined" || value == "") {
+   	        			e.cellhtml = "";
+       	        	}
+   	        		else {
+   	        			e.cellStyle = "background-color:"+value+";text-align:center";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
+   	        		}
+    	        }
+         	});
+       		
        		grid_brandlist_lb_pic.on("drawcell", function (e) {
                 var record = e.record,
 	            column = e.column,
@@ -284,6 +302,7 @@
             var id = record.id;
             var rowIndex = e.rowIndex;
             
+            var videoshowpic = record.videoshowpic;
             var mp4path = record.mp4newname;
             var webmpath = record.webmnewname;
             if (typeof(mp4path) == "undefined" || mp4path == "" || typeof(webmpath) == "undefined" || webmpath == "" ) {
@@ -291,18 +310,19 @@
             	return;
             }
 
-            var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + mp4path + '\',\'' + webmpath + '\')" >播放视频</a>'
+            var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + videoshowpic + '\',\'' + mp4path + '\',\'' + webmpath + '\')" >播放视频</a>'
             return s;
         }
        	
-       	function showVideo(mp4path,webmpath) {
+       	function showVideo(videoshowpic,mp4path,webmpath) {
+       		//TODO 要判断是本站还是外站视频。处理方法会不一样。
        		mini.open({
                 url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/show_video",
-                title: "播放系列页视频", width: 600, height:500,
+                title: "播放系列页视频", width: 800, height:600,
                 allowResize:true,
                 onload: function () {
                 	var iframe = this.getIFrameEl();
-               	 	var data = {mp4path:mp4path,webmpath:webmpath};
+               	 	var data = {videoshowpic:videoshowpic,mp4path:mp4path,webmpath:webmpath};
                     //var data = rows[0];
                     iframe.contentWindow.SetData(data);
                 },
@@ -454,10 +474,20 @@
        	 		alert("请选择要删除的数据.");
        		 	return;
        	 	}
+       	 	
+       	 	mini.confirm("确定删除记录？", "确定？",
+                 function (action) {
+                     if (action == "ok") {
+                    	 tmpGrid.removeRows(rows, false);
+                     } else {
+                         
+                     }
+                 }
+             );
        	 
-          	if (confirm(cf1)) {
+          	/* if (confirm(cf1)) {
           		tmpGrid.removeRows(rows, false);
-   		 	}
+   		 	} */
 			
         }
        	
@@ -581,10 +611,41 @@
                 }
             });
         }
+		function onBtnVideoPicEdit(e) {
+        	var buttonEdit = e.sender;
+        	var row = grid_brandlist_v.getEditorOwnerRow(buttonEdit);
+        	
+        	if (typeof(row.id) == "undefined" || row.id == "") {
+        		alert("行记录还没有保存，请先保存后再上传.");
+        		return;
+        	}
+        	
+        	mini.open({
+                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
+                title: "上传系列页视频主图片", width: 600, height:500,
+                allowResize:true,
+                onload: function () {
+                	var iframe = this.getIFrameEl();
+               	 	var data = {id:row.id,saveFolder:"pic",forObj:"video"};
+                    //var data = rows[0];
+                    iframe.contentWindow.SetData(data);
+                },
+                ondestroy: function (action) {
+                	grid_brandlist_v.cancelEdit();
+                	grid_brandlist_v.reload();
+                }
+            });
+        }
+		
 		//上传修改系列页轮播图片。单张修改
 		function onBtnBrandListLBPicEdit(e) {
         	var buttonEdit = e.sender;
         	var row = grid_brandlist_lb_pic.getEditorOwnerRow(buttonEdit);
+        	
+        	if (typeof(row.id) == "undefined" || row.id == "") {
+        		alert("行记录还没有保存，请先保存后再上传.");
+        		return;
+        	}
         	
         	mini.open({
                 url:"${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
@@ -607,6 +668,11 @@
 		function onBtnBrandListPicEdit(e) {
         	var buttonEdit = e.sender;
         	var row = grid_brandlist_pic.getEditorOwnerRow(buttonEdit);
+        	
+        	if (typeof(row.id) == "undefined" || row.id == "") {
+        		alert("要系列页的行记录还没有保存，请先保存后再上传.");
+        		return;
+        	}
         	
         	mini.open({
                 url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",

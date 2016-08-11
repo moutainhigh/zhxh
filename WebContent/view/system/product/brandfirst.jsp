@@ -409,6 +409,11 @@
         	var buttonEdit = e.sender;
         	var row = grid_brandpic.getEditorOwnerRow(buttonEdit);
         	
+        	if (null == row || typeof(row.id) == "undefined" || row.id == "") {
+        		alert("行记录还没有保存，请先保存后再上传.");
+	      		return;
+	      	}
+        	
         	mini.open({
                 url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
                 title: "上传修改综合页轮播图片", width: 600, height:500,

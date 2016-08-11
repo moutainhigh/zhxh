@@ -11,6 +11,7 @@ public class Public_video {
 	private String id;
 	private String parentid;
 	private String parenttype;
+	private String videoshowpic;
 	private String videopath;
 	private String mp4oldname;
 	private String mp4newname;
@@ -90,6 +91,12 @@ public class Public_video {
 	}
 	public void setIsshow(Integer isshow) {
 		this.isshow = isshow;
+	}
+	public String getVideoshowpic() {
+		return videoshowpic;
+	}
+	public void setVideoshowpic(String videoshowpic) {
+		this.videoshowpic = videoshowpic;
 	}
 	
 	
