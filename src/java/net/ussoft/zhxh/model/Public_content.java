@@ -18,6 +18,7 @@ public class Public_content {
 	private String pic_url;
 	private Integer top;
 	private Integer sort;
+	private String brief;
 	
 	
 	
@@ -82,6 +83,12 @@ public class Public_content {
 	}
 	public void setSort(Integer sort) {
 		this.sort = sort;
+	}
+	public String getBrief() {
+		return brief;
+	}
+	public void setBrief(String brief) {
+		this.brief = brief;
 	}
 	
 }

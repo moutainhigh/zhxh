@@ -25,7 +25,7 @@
     	
     	$(function(){
     		if (result != "") {
-    			alert(result);
+    			mini.alert(result);
     			result = "";
     			$("#id").val(result_id);
     			$("#saveFolder").val(result_saveFolder);
@@ -69,7 +69,7 @@
 						return;
 					}
 					if (!rFilter.test(aFiles[0].type)) {
-						alert("您选择的文件并不是图片格式。请重新选择!");
+						mini.alert("您选择的文件并不是图片格式。请重新选择!");
 						return;
 					}
 					oFReader.readAsDataURL(aFiles[0]);

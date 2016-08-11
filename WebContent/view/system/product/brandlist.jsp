@@ -305,10 +305,10 @@
             var videoshowpic = record.videoshowpic;
             var mp4path = record.mp4newname;
             var webmpath = record.webmnewname;
-            if (typeof(mp4path) == "undefined" || mp4path == "" || typeof(webmpath) == "undefined" || webmpath == "" ) {
-            	alert("请先上传mp4和webm视频文件，在播放视频。")
+            /* if (typeof(mp4path) == "undefined" || mp4path == "" || typeof(webmpath) == "undefined" || webmpath == "" ) {
+            	mini.alert("请先上传mp4和webm视频文件，在播放视频。")
             	return;
-            }
+            } */
 
             var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + videoshowpic + '\',\'' + mp4path + '\',\'' + webmpath + '\')" >播放视频</a>'
             return s;
@@ -386,7 +386,7 @@
        		var record = grid_brandlist.getSelected();
 	      	
             if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	alert("请先选择品牌系列，在上传品牌系列页图片.");
+            	mini.alert("请先选择品牌系列，在上传品牌系列页图片.");
 	      		return;
 	      	}
 	    	mini.open({
@@ -409,7 +409,7 @@
        		var record = grid_brand.getSelected();
 			
             if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	alert("请先选择品牌，再添加品牌系列页内容.");
+            	mini.alert("请先选择品牌，再添加品牌系列页内容.");
 	      		return;
 	      	}
 			
@@ -430,7 +430,7 @@
        		var record = grid_brandlist.getSelected();
 			
             if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	alert("请先选择系列，再添加视频内容.");
+            	mini.alert("请先选择系列，再添加视频内容.");
 	      		return;
 	      	}
 			
@@ -448,7 +448,7 @@
 			newRow.isshow = "0";
 			
 			grid_brandlist_v.addRow(newRow, 0);
-			grid_brandlist_v.beginEditCell(newRow, "videoshowpic");
+			//grid_brandlist_v.beginEditCell(newRow, "videoshowpic");
         }
 		
 		function delRow(grid_type) {
@@ -471,7 +471,7 @@
         	var rows = tmpGrid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		alert("请选择要删除的数据.");
+       	 		mini.alert("请选择要删除的数据.");
        		 	return;
        	 	}
        	 	
@@ -508,7 +508,7 @@
 				var record = grid_brandlist.getSelected();
 		      	
 	            if (typeof(record.id) == "undefined" || record.id == "") {
-	            	alert("请先选择系列，再添加品牌系列页图片.");
+	            	mini.alert("请先选择系列，再添加品牌系列页图片.");
 		      		return;
 		      	}
 
@@ -523,7 +523,7 @@
 				var record = grid_brandlist.getSelected();
 		      	
 	            if (typeof(record.id) == "undefined" || record.id == "") {
-	            	alert("请先选择系列，再添加品牌系列页轮播图片.");
+	            	mini.alert("请先选择系列，再添加品牌系列页轮播图片.");
 		      		return;
 		      	}
 	            
@@ -537,7 +537,7 @@
 				var record = grid_brandlist.getSelected();
 		      	
 	            if (typeof(record.id) == "undefined" || record.id == "") {
-	            	alert("请先选择系列，再添加品牌系列页视频.");
+	            	mini.alert("请先选择系列，再添加品牌系列页视频.");
 		      		return;
 		      	}
 	            
@@ -550,7 +550,7 @@
 			
 			tmpGrid.validate();
 	        if (tmpGrid.isValid() == false) {
-	            alert("输入有误，请校验输入单元格内容");
+	            mini.alert("输入有误，请校验输入单元格内容");
 	            var error = tmpGrid.getCellErrors()[0];
 	            tmpGrid.beginEditCell(error.record, error.column);
 	            return;
@@ -559,7 +559,7 @@
 	        var objs = tmpGrid.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
 	        	return;
 	        }
 	        
@@ -574,11 +574,11 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	alert("保存完毕。");
+	            	mini.alert("保存完毕。");
 	            	tmpGrid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                alert(jqXHR.responseText);
+	                mini.alert(jqXHR.responseText);
 	            }
 	        });
 	    }
@@ -616,7 +616,7 @@
         	var row = grid_brandlist_v.getEditorOwnerRow(buttonEdit);
         	
         	if (typeof(row.id) == "undefined" || row.id == "") {
-        		alert("行记录还没有保存，请先保存后再上传.");
+        		mini.alert("行记录还没有保存，请先保存后再上传.");
         		return;
         	}
         	
@@ -643,7 +643,7 @@
         	var row = grid_brandlist_lb_pic.getEditorOwnerRow(buttonEdit);
         	
         	if (typeof(row.id) == "undefined" || row.id == "") {
-        		alert("行记录还没有保存，请先保存后再上传.");
+        		mini.alert("行记录还没有保存，请先保存后再上传.");
         		return;
         	}
         	
@@ -670,7 +670,7 @@
         	var row = grid_brandlist_pic.getEditorOwnerRow(buttonEdit);
         	
         	if (typeof(row.id) == "undefined" || row.id == "") {
-        		alert("要系列页的行记录还没有保存，请先保存后再上传.");
+        		mini.alert("要系列页的行记录还没有保存，请先保存后再上传.");
         		return;
         	}
         	
@@ -695,7 +695,7 @@
         	var buttonEdit = e.sender;
         	var record = grid_brandlist_v.getEditorOwnerRow(buttonEdit);
         	if (typeof(record.id) == "undefined" || record.id == "") {
-        		alert("要上传视频的行记录还没有保存，请先保存后再上传视频.");
+        		mini.alert("要上传视频的行记录还没有保存，请先保存后再上传视频.");
         		return;
         	}
         	
@@ -720,7 +720,7 @@
         	var buttonEdit = e.sender;
         	var record = grid_brandlist_v.getEditorOwnerRow(buttonEdit);
         	if (typeof(record.id) == "undefined" || record.id == "") {
-        		alert("要上传视频的行记录还没有保存，请先保存后再上传视频.");
+        		mini.alert("要上传视频的行记录还没有保存，请先保存后再上传视频.");
         		return;
         	}
         	
