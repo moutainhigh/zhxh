@@ -29,3 +29,5 @@
 20160811
 	public_content (富文本表)
 		（1）增加brief varchar 2000    简介
+	filesdown (文件下载表)
+		（1）增加pic varchar 200  	图片

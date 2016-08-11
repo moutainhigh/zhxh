@@ -17,6 +17,7 @@ public class Filesdown {
 	private String file_ext;
 	private String file_size;
 	private String file_path;
+	private String pic;
 	private Integer sort;
 	
 	
@@ -81,6 +82,12 @@ public class Filesdown {
 	}
 	public void setSort(Integer sort) {
 		this.sort = sort;
+	}
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic;
 	}
 	
 	

@@ -302,33 +302,52 @@
             var id = record.id;
             var rowIndex = e.rowIndex;
             
-            var videoshowpic = record.videoshowpic;
+            /* var videoshowpic = record.videoshowpic;
             var mp4path = record.mp4newname;
-            var webmpath = record.webmnewname;
+            var webmpath = record.webmnewname; */
             /* if (typeof(mp4path) == "undefined" || mp4path == "" || typeof(webmpath) == "undefined" || webmpath == "" ) {
             	mini.alert("请先上传mp4和webm视频文件，在播放视频。")
             	return;
             } */
 
-            var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + videoshowpic + '\',\'' + mp4path + '\',\'' + webmpath + '\')" >播放视频</a>'
+            //var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + videoshowpic + '\',\'' + mp4path + '\',\'' + webmpath + '\')" >播放视频</a>'
+            var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + id + '\')" >播放视频</a>'
             return s;
         }
        	
-       	function showVideo(videoshowpic,mp4path,webmpath) {
-       		//TODO 要判断是本站还是外站视频。处理方法会不一样。
-       		mini.open({
-                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/show_video",
-                title: "播放系列页视频", width: 800, height:600,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {videoshowpic:videoshowpic,mp4path:mp4path,webmpath:webmpath};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                }
-            });
+       	function showVideo(id) {
+/*        	function showVideo(videoshowpic,mp4path,webmpath) { */
+       		
+       		var row = grid_brandlist_v.getRow(id);
+       		
+       		if (row.islocal == "0") {
+       			//本地的
+       			var videoshowpic = row.videoshowpic;
+            	var mp4path = row.mp4newname;
+            	var webmpath = row.webmnewname;
+            	if (typeof(mp4path) == "undefined" || mp4path == "") {
+            		mini.alert("缺少mp4文件，可能某些浏览器不能播放视频。");
+            	}
+            	else if (typeof(webmpath) == "undefined" || webmpath == "") {
+            		mini.alert("缺少webm文件，可能某些浏览器不能播放视频。");
+            	}
+       			mini.open({
+                    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/show_video",
+                    title: "播放系列页视频", width: 800, height:600,
+                    allowResize:true,
+                    onload: function () {
+                    	var iframe = this.getIFrameEl();
+                   	 	var data = {videoshowpic:videoshowpic,mp4path:mp4path,webmpath:webmpath };
+                        //var data = rows[0];
+                        iframe.contentWindow.SetData(data);
+                    },
+                    ondestroy: function (action) {
+                    }
+                });
+       		}
+       		else if (row.islocal == "1") {
+       			alert("外地的");
+       		}
        	}
        	
        	function onSelectionChanged(e) {
