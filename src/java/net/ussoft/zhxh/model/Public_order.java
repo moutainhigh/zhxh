@@ -9,12 +9,15 @@ import javax.persistence.Table;
 public class Public_order {
 
 	private String id;
+	private String parentid;
 	private String userid;
 	private String ordernumber;
 	private String ordertime;
 	private Float ordertotal;
 	private Integer orderstatus;
 	private String orderstatusmemo;
+	private String identity;
+	private String deliverynum;
 	
 	
 	
@@ -62,6 +65,49 @@ public class Public_order {
 	public void setOrderstatusmemo(String orderstatusmemo) {
 		this.orderstatusmemo = orderstatusmemo;
 	}
+	/**
+	 * 订单发起机构上级id，用来获取订单
+	 * @return
+	 */
+	public String getParentid() {
+		return parentid;
+	}
+	/**
+	 * 订单发起机构上级id，用来获取订单
+	 * @param parentid
+	 */
+	public void setParentid(String parentid) {
+		this.parentid = parentid;
+	}
+	/**
+	 * 订单发起机构身份标识，用来区分订单发起人身份，用来获取订单
+	 * @return
+	 */
+	public String getIdentity() {
+		return identity;
+	}
+	/**
+	 * 订单发起机构身份标识，用来区分订单发起人身份，用来获取订单
+	 * @param identity
+	 */
+	public void setIdentity(String identity) {
+		this.identity = identity;
+	}
+	/**
+	 * 快递单号
+	 * @return
+	 */
+	public String getDeliverynum() {
+		return deliverynum;
+	}
+	/**
+	 * 快递单号
+	 * @param deliverynum
+	 */
+	public void setDeliverynum(String deliverynum) {
+		this.deliverynum = deliverynum;
+	}
+	
 	
 	
 }

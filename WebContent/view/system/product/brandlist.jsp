@@ -238,6 +238,14 @@
    	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
    	        		}
     	        }
+                if (field == "videopath") {
+                	if (typeof(value) == "undefined" || value == "") {
+   	        			e.cellhtml = "";
+       	        	}
+   	        		else {
+   	        			e.cellHtml = "外站视频地址";
+   	        		}
+    	        }
          	});
        		
        		grid_brandlist_lb_pic.on("drawcell", function (e) {
@@ -346,7 +354,25 @@
                 });
        		}
        		else if (row.islocal == "1") {
-       			alert("外地的");
+       			var videopath = row.videopath;
+            	if (typeof(videopath) == "undefined" || videopath == "") {
+            		mini.alert("缺少外站视频地址，不能播放视频。");
+            		return;
+            	}
+            	
+       			mini.open({
+                    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/show_video_out",
+                    title: "播放系列页外站视频", width: 800, height:600,
+                    allowResize:true,
+                    onload: function () {
+                    	var iframe = this.getIFrameEl();
+                   	 	var data = {videopath:videopath };
+                        //var data = rows[0];
+                        iframe.contentWindow.SetData(data);
+                    },
+                    ondestroy: function (action) {
+                    }
+                });
        		}
        	}
        	

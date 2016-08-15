@@ -14,6 +14,7 @@ public class Public_product_size {
 	private Float price;
 	private Integer sizesort;
 	private Integer isshow;
+	private Float saleprice;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -52,6 +53,12 @@ public class Public_product_size {
 	}
 	public void setIsshow(Integer isshow) {
 		this.isshow = isshow;
+	}
+	public Float getSaleprice() {
+		return saleprice;
+	}
+	public void setSaleprice(Float saleprice) {
+		this.saleprice = saleprice;
 	}
 	
 	

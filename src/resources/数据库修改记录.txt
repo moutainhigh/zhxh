@@ -31,3 +31,91 @@
 		（1）增加brief varchar 2000    简介
 	filesdown (文件下载表)
 		（1）增加pic varchar 200  	图片
+		
+		
+20160814 新需求增加和修改的数据库结构
+
+	1、public_product_size 商品规格表
+	
+	（1）增加 特价 saleprice float(2)
+	
+	2、public_user  个人中心表
+	（1）增加机构名称  companyname varchar 200	存储机构（代理或店）的名称
+	（2）增加机构地址  companypath varchar 1000	存储机构（代理或店）的地址
+	（3）增加机构上级id parentid varchar 40		存储机构（代理或店）的直属上级id
+	（4）增加所属店代码 belongcode varchar 100      存储普通会员的所属店代码
+	（5）增加机构代码   companycode varchar 100	存储机构的代码
+	（6）将字段名 userid 改为identity		身份标识，原userid容易混淆
+	（7）将字段名usermemo 改为identitymemo		身份说明 
+	（8）增加 wechar varchar 100			微信号码
+	（9）代理商或店的证照信息			都包含哪些？？
+	（10）增加 rank  varchar 200			代理商或店的级别。存文本，仅仅显示，没有实际意义。
+	
+	3、public_user_bank 个人账户表
+	（1）增加parentid  用户的父节点id，即该机构与不同上级（代理或平台）进货，所有的账户只针对父机构。
+	（2）将banktotal 改为收入总计     incomebank		平台、代理
+	（3）将bankget 改为支出总计       costbank		平台、代理
+	（4）将nointonum 改为可提现账户   takenbank Float (2)	平台、代理
+	（5）将totalnum 改为平台销售额	  sellbank  Float（2）	平台、代理、店
+	（6）增加可支配账户  havebank	  Float（2）		代理、店
+	（7）增加配额账户    quotabank    Float（2）		代理、店
+	（8）增加充值账户    depositbank  Float（2）		代理、店
+	（9）增加平台销售额可提现账户   selltakenbank Float（2）店
+	（10）增加返利账户	rebatesbank Float（2）		店
+	（11）增加奖励账户	bonusesbank Float（2）		店
+	（12）增加奖励可提现账户 bonusestakenbank Float（2）	店
+	
+	4、增加表 public_set_user_standard  设置采购各种标准
+	（1） id varchar 40		主键
+	（2）parentid varchar 40	设置标准的机构
+	（3）userid	40		被设置标准的机构
+	（4）buyerdis Float（2）	商品采购折扣
+	（5）rebatesdis	Float（2）	返利标准
+	（6）bonusesdis Float（2）	奖励标准	
+	
+	5、public_order  订单表
+	（1）增加parentid varchar 40	订单发起机构上级id，用来获取订单
+	（2）增加identity varchar 40    订单发起机构身份标识，用来区分订单发起人身份，用来获取订单
+	（3）增加 deliverynum varchar 100   快递单号
+	
+	6、增加表public_dis_config   	平台公共利益分配参数设置
+	（1）id varchar 40		主键
+	（2）rebates_down Float（2）	设置返利下限
+	（3）rebates_up Float（2）	设置返利上限
+	（4）bonuses_down Float(2)	设置奖励下限
+	（5）bonuses_up	  Float(2)	设置奖励上限
+	（6）taken_dian	int 11		设置店提现日期。整数，2代表每周2
+	（7）taken_daili int 11		设置代理的提现日期。整数，2代表每周2
+	（8）quota_down	 int 11		设置配额下限
+	（9）quota_up	int 11		设置配额上限
+	（10）deposit_down  int 11	设置充值金额下限
+	（11）deposit_up    int 11	设置充值金额上限
+	（12）bonuses_ratio_down int 11	设置奖励转货款下限
+	（13）bonuses_ratio_up	int 11	设置奖励转货款上限
+	（14）balance_date	int 11	设置普通会员购买后，平台分成给代理和店，进入可提现账户的金额的天数，因为存在退货的可能
+	
+	7、机构对于充值、配额、奖励等的说明文字，存入富文本表，可以使用或不使用富文本编辑器来存入该表内容。
+	
+	8、增加表public_log 		日志表。依靠日志分类字段，来区分日志类型。
+	（1）id varchar(40)		主键
+	（2）userid varchar（40）	主操作人id
+	（3）touserid varchar（40）	被操作人id
+	（4）logtype varchar（40）	操作类型。（例如登录日志为logoin，充值为deposit，配额为quota，可以扩充，代码意义存入字典）。可以取代取现、充值、配额记录表
+	（5）logmemo varchar（500）	日志内容描	述
+	（6）logtime varchar（100）	日志日期
+	（7）lognum varchar（100）	日志流水号（有些记录是有流水号的，例如提现流水号）
+	（8）logpay float（2）		日志金额（有些记录是用金额的，例如充值、配额、提现）
+	
+	
+	9、在数据字典表里增加如下记录。sys_data_dic(可以根据情况再添加日志的类型)
+	id	table name	field		dic_key		dic_value
+	40	public_log	logtype		logoin		登录日志
+	41	public_log	logtype		deposit		充值日志
+	42	public_log	logtype		quota		配额日志
+	43	public_log	logtype		rebates		返利日志
+	44	public_log	logtype		bonuses		奖励日志
+	45	public_log	logtype		bonuses_ratio	奖励转贷款日志
+	
+	
+	
+	

@@ -35,7 +35,7 @@
 	<style>
 		.doc-footer {
 		    position:fixed;
-			bottom:0;
+			bottom:50px;
 			text-align: center;
 			padding: 20px 0;
 		}

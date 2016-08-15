@@ -10,47 +10,27 @@
     <meta name="renderer" content="webkit">
     <title>众恒信和综合管理平台</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/admin.css">
+    <%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/admin.css"> --%>
     <script src="${pageContext.request.contextPath}/js/boot.js" type="text/javascript"></script> 
-    <%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script> --%>
+    <%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script> 
     <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/admin.js"></script>
-    <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
+    <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>--%>
     
     <!-- <link type="image/x-icon" href="/favicon.ico" rel="shortcut icon" />
     <link href="/favicon.ico" rel="bookmark icon" /> -->
     
     <style type="text/css">
-    	.bread_hide {
-    		display:none;
-    	}
-    	.bread_show {
-    		display:block;
-    	}
-    	
 	    body{
 	        margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
 	    }    
-	    .Note
-	    {
-	        background:url(Notes_Large.png) no-repeat;width:32px;height:32px;
-	    }
-	    .Reports
-	    {
-	        background:url(Reports_Large.png) no-repeat;width:32px;height:32px;
-	    }
 
-		.menu_iframe{position:absolute; visibility:inherit; top:0px; left:0px; width:120px; z-index:-1; filter: Alpha(Opacity=100); background:#000000;}
-    
     </style>
     
     <script type="text/javascript">
     	$(function(){
     		mini.parse();
-    		/* $(".bread").addClass("bread_hide");
-    		$("#index").removeClass("bread_hide");
-    		$("#index").addClass("bread_show"); */
     		$("#north").css("overflow","visible");
     		$(".mini-layout-region-body ").css("overflow","visible");
     		$("#navbar1  a").click(function(){

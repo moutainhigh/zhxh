@@ -9,23 +9,30 @@ import javax.persistence.Table;
 public class Public_user {
 
 	private String id;
-	private String usercode;	//	账户名称
-	private String username;	//	真实姓名
-	private String phonenumber;	//	手机
-	private String userid;	//	身份
-	private String usermemo;	//	身份中文
-	private String dianid;	//	店id
-	private String shidaiid;	//	市代id
-	private String shengdaiid;	//	省代id
-	private String tuijianid;	//	推荐人id
-	private String tuijianman;	//	推荐人
-	private String tuijiansort;	//	推荐顺序
-	private Integer setreturn;	//	是否接收分成
-	private Integer isopen;	//	开关
-	private String password;	//	密码
-	private String uid;	//	微信唯一标识id
+	private String usercode;		//	账户名称
+	private String username;		//	真实姓名
+	private String phonenumber;		//	手机
+	private String identity;		//	身份
+	private String identitymemo;	//	身份中文
+	private String dianid;			//	店id
+	private String shidaiid;		//	市代id
+	private String shengdaiid;		//	省代id
+	private String tuijianid;		//	推荐人id
+	private String tuijianman;		//	推荐人
+	private String tuijiansort;		//	推荐顺序
+	private Integer setreturn;		//	是否接收分成
+	private Integer isopen;			//	开关
+	private String password;		//	密码
+	private String uid;				//	微信唯一标识id
 	private int sex;
 	private String birthday;
+	private String companyname;		//存储机构（代理或店）的名称
+	private String companypath; 	//存储机构（代理或店）的地址
+	private String parentid; 		//存储机构（代理或店）的直属上级id
+	private String belongcode; 		//存储普通会员的所属店代码
+	private String companycode; 	//存储机构的代码
+	private String wechar; 			//微信号码
+	private String rank; 			//代理商或店的级别,存文本，仅仅显示，没有实际意义。
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -52,12 +59,6 @@ public class Public_user {
 	}
 	public void setPhonenumber(String phonenumber) {
 		this.phonenumber = phonenumber;
-	}
-	public String getUserid() {
-		return userid;
-	}
-	public void setUserid(String userid) {
-		this.userid = userid;
 	}
 	public String getDianid() {
 		return dianid;
@@ -119,12 +120,6 @@ public class Public_user {
 	public void setTuijianman(String tuijianman) {
 		this.tuijianman = tuijianman;
 	}
-	public String getUsermemo() {
-		return usermemo;
-	}
-	public void setUsermemo(String usermemo) {
-		this.usermemo = usermemo;
-	}
 	public int getSex() {
 		return sex;
 	}
@@ -136,6 +131,60 @@ public class Public_user {
 	}
 	public void setBirthday(String birthday) {
 		this.birthday = birthday;
+	}
+	public String getIdentity() {
+		return identity;
+	}
+	public void setIdentity(String identity) {
+		this.identity = identity;
+	}
+	public String getIdentitymemo() {
+		return identitymemo;
+	}
+	public void setIdentitymemo(String identitymemo) {
+		this.identitymemo = identitymemo;
+	}
+	public String getCompanyname() {
+		return companyname;
+	}
+	public void setCompanyname(String companyname) {
+		this.companyname = companyname;
+	}
+	public String getCompanypath() {
+		return companypath;
+	}
+	public void setCompanypath(String companypath) {
+		this.companypath = companypath;
+	}
+	public String getParentid() {
+		return parentid;
+	}
+	public void setParentid(String parentid) {
+		this.parentid = parentid;
+	}
+	public String getBelongcode() {
+		return belongcode;
+	}
+	public void setBelongcode(String belongcode) {
+		this.belongcode = belongcode;
+	}
+	public String getCompanycode() {
+		return companycode;
+	}
+	public void setCompanycode(String companycode) {
+		this.companycode = companycode;
+	}
+	public String getWechar() {
+		return wechar;
+	}
+	public void setWechar(String wechar) {
+		this.wechar = wechar;
+	}
+	public String getRank() {
+		return rank;
+	}
+	public void setRank(String rank) {
+		this.rank = rank;
 	}
 	
 }
