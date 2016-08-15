@@ -72,6 +72,29 @@ public class PublicController extends BaseConstroller{
 	}
 	
 	/**
+	 * 编辑富文本
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/edit_o",method=RequestMethod.GET)
+	public ModelAndView edit(String parentid,String parenttype,ModelMap modelMap) throws IOException {
+		List<Public_content> list = contentService.list(parentid, parenttype);
+		Public_content content = new Public_content();
+		if(list.size() >0){
+			content = list.get(0);
+		}else{
+			content.setId(UUID.randomUUID().toString());
+			content.setParentid(parentid);
+			content.setParenttype(parenttype);
+			content = contentService.insert(content);
+		}
+		
+		modelMap.put("content", content);
+		
+		return new ModelAndView("/view/system/content/uedit", modelMap);
+	}
+	
+	/**
 	 * 保存富文本
 	 * @param objs
 	 * @param response
