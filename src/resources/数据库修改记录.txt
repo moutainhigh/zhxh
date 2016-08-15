@@ -116,6 +116,11 @@
 	44	public_log	logtype		bonuses		奖励日志
 	45	public_log	logtype		bonuses_ratio	奖励转贷款日志
 	
+20160815
+
+1、filesdown 文件下载表
+  （1）增加parenttype varchar 100 类型
+	
 	
 	
 	

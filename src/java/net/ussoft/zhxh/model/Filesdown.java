@@ -19,6 +19,7 @@ public class Filesdown {
 	private String file_path;
 	private String pic;
 	private Integer sort;
+	private String parenttype;
 	
 	
 	@Id
@@ -88,6 +89,12 @@ public class Filesdown {
 	}
 	public void setPic(String pic) {
 		this.pic = pic;
+	}
+	public String getParenttype() {
+		return parenttype;
+	}
+	public void setParenttype(String parenttype) {
+		this.parenttype = parenttype;
 	}
 	
 	
