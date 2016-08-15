@@ -33,11 +33,13 @@ import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Brandfirst;
 import net.ussoft.zhxh.model.Brandlist;
 import net.ussoft.zhxh.model.Public_brand;
+import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
 import net.ussoft.zhxh.model.Public_video;
 import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IPublicBrandService;
+import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
 import net.ussoft.zhxh.service.IPublicVideoService;
@@ -66,6 +68,9 @@ public class CommonController extends BaseConstroller {
 	private IPublicVideoService videoService;
 	@Resource
 	private IBrandfirstService firstService;
+	
+	@Resource
+	private IPublicContentService contentService;
 	
 	private static final int BUFFER_SIZE = 2 * 1024;
 	
@@ -222,6 +227,25 @@ public class CommonController extends BaseConstroller {
         			tmp.setVideoshowpic("");
         		}
         		videoService.update(tmp);
+        	}
+        	else if (Constants.PUBLIC_CONTENT_PIC.equals(forObj)) {
+        		//富文本图片,应用于新闻、
+        		Public_content tmp = contentService.getById(id);
+        		if (null != fileMap && fileMap.size() > 0 && !fileMap.get("newname").isEmpty()) {
+        			//删除原图片
+        			if (null != tmp.getPic_url() && !"".equals(tmp.getPic_url())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getPic_url());
+        			}
+        			tmp.setPic_url(fileMap.get("filepath") + fileMap.get("newname"));
+        		}
+        		else {
+        			//清空
+        			if (null != tmp.getPic_url() && !"".equals(tmp.getPic_url())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getPic_url());
+        			}
+        			tmp.setPic_url("");
+        		}
+        		contentService.update(tmp);
         	}
         	
         }
@@ -506,5 +530,4 @@ public class CommonController extends BaseConstroller {
 		}
 	}
 	
-
 }
