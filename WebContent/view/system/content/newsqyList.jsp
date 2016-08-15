@@ -27,8 +27,10 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
-      	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "专题名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "pic_url",name:"pic_url", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnNewsPicEdit"} },
+      	                { field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+      	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "brief",name:"brief", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "简介",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
@@ -46,7 +48,7 @@
 	            showPageSize:false,
 	            pageSize:2000
 	        });
-        	grid.load({act:'public_content',parentid:'service',parenttype:'join'});
+        	grid.load({act:'public_content',parentid:'news',parenttype:'qy'});
         	drawcell();
         })
         
@@ -58,7 +60,7 @@
 	            uid = record._uid,
 	            value = e.value;
                 
-                if (field == "pic_path") {
+                if (field == "pic_url") {
    	        		if (value == "") {
    	        			e.cellhtml = "";
        	        	}
@@ -126,7 +128,7 @@
 	        $.ajax({
 	        	async:false,
 	            url: "${pageContext.request.contextPath}/public/save.htmls",
-	            data: {'objs':json,'act':'public_content','parentid':'service','parenttype':'join'},
+	            data: {'objs':json,'act':'public_content','parentid':'news','parenttype':'qy'},
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
@@ -171,6 +173,33 @@
 	         });
 		}
 		
+		//上传新聞圖片
+		function onBtnNewsPicEdit(e) {
+        	var buttonEdit = e.sender;
+        	var row = grid.getEditorOwnerRow(buttonEdit);
+        	
+        	if (null == row || typeof(row.id) == "undefined" || row.id == "") {
+        		mini.alert("行记录还没有保存，请先保存后再上传.");
+	      		return;
+	      	}
+        	
+        	mini.open({
+                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
+                title: "上传新闻图片", width: 600, height:500,
+                allowResize:true,
+                onload: function () {
+                	var iframe = this.getIFrameEl();
+               	 	var data = {id:row.id,saveFolder:"upload",forObj:"public_content_pic"};
+                    //var data = rows[0];
+                    iframe.contentWindow.SetData(data);
+                },
+                ondestroy: function (action) {
+                	grid.cancelEdit();
+            		grid.reload();
+                }
+            });
+        }
+		
 </script>
 </head>
 <body>
@@ -179,7 +208,7 @@
             <tbody>
              <tr>
                  <td style="width:100%;">
-                 	<span id="pid" style="padding-left:5px;">区域合作</span>
+                 	<span id="pid" style="padding-left:5px;">企业新闻</span>
                  </td>
                  <td style="white-space:nowrap;">
                  	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>

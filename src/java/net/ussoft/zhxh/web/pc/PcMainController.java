@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Brandfirst;
+import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -109,6 +111,176 @@ public class PcMainController extends BaseConstroller {
 		
 		return new ModelAndView("/view/pc/service", modelMap);
 	}
+	
+	/**
+	 * 新闻
+	 * @param id
+	 * */
+	@RequestMapping(value="/news")
+	public ModelAndView news (String ptype,@RequestParam(value="page",defaultValue="1")int page,ModelMap modelMap) throws Exception {
+		int pageSize = 10;
+		List<Public_brand> brandList = brandService.list();	//品牌
+		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
+		
+		PageBean<Public_content> p = new PageBean<Public_content>();
+		p.setPageSize(pageSize);
+		p.setPageNo(page);
+		p.setOrderBy("sort");
+		p.setOrderType("asc");
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		
+		ptype = !"".equals(ptype) && ptype != null ?ptype:"hy";
+		p = contentService.list(p,"news", ptype);
+		
+		
+		modelMap.put("brandList", brandList);
+		modelMap.put("subjectList", subjectList);
+		
+		modelMap.put("newsList", p.getList());
+		
+		modelMap.put("ptype", ptype);
+		
+		modelMap.put("page", page);
+		modelMap.put("pageCount", p.getPageCount());
+		modelMap.put("rowCount", p.getRowCount());
+		
+		return new ModelAndView("/view/pc/news", modelMap);
+	}
+	
+	/**
+	 * 新闻 中心内容
+	 * @param id
+	 * */
+	@RequestMapping(value="/news-c")
+	public ModelAndView news_c (String id,ModelMap modelMap) throws Exception {
+		List<Public_brand> brandList = brandService.list();	//品牌
+		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
+		
+		Public_content content = contentService.getById(id);
+		
+		
+		modelMap.put("brandList", brandList);
+		modelMap.put("subjectList", subjectList);
+		
+		modelMap.put("news", content);
+		
+		return new ModelAndView("/view/pc/newscontent", modelMap);
+	}
+	
+	/**
+	 * 美容文章
+	 * @param id
+	 * */
+	@RequestMapping(value="/article")
+	public ModelAndView article (String ptype,@RequestParam(value="page",defaultValue="1")int page,ModelMap modelMap) throws Exception {
+		int pageSize = 10;
+		List<Public_brand> brandList = brandService.list();	//品牌
+		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
+		
+		PageBean<Public_content> p = new PageBean<Public_content>();
+		p.setPageSize(pageSize);
+		p.setPageNo(page);
+		p.setOrderBy("sort");
+		p.setOrderType("asc");
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		
+		ptype = !"".equals(ptype) && ptype != null ?ptype:"mrwz"; //美容文章
+		p = contentService.list(p,"article", ptype);
+		
+		
+		modelMap.put("brandList", brandList);
+		modelMap.put("subjectList", subjectList);
+		
+		modelMap.put("articleList", p.getList());
+		
+		modelMap.put("ptype", ptype);
+		
+		modelMap.put("page", page);
+		modelMap.put("pageCount", p.getPageCount());
+		modelMap.put("rowCount", p.getRowCount());
+		
+		return new ModelAndView("/view/pc/article", modelMap);
+	}
+	
+	/**
+	 * 美容文章内容
+	 * @param id
+	 * */
+	@RequestMapping(value="/article-c")
+	public ModelAndView article_c (String id,ModelMap modelMap) throws Exception {
+		List<Public_brand> brandList = brandService.list();	//品牌
+		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
+		
+		Public_content content = contentService.getById(id);
+		
+		
+		modelMap.put("brandList", brandList);
+		modelMap.put("subjectList", subjectList);
+		
+		modelMap.put("article", content);
+		
+		return new ModelAndView("/view/pc/articlecontent", modelMap);
+	}
+	
+	
+	/**
+	 * 案例库
+	 * @param id
+	 * */
+	@RequestMapping(value="/cases")
+	public ModelAndView cases (String ptype,@RequestParam(value="page",defaultValue="1")int page,ModelMap modelMap) throws Exception {
+		int pageSize = 10;
+		List<Public_brand> brandList = brandService.list();	//品牌
+		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
+		
+		PageBean<Public_content> p = new PageBean<Public_content>();
+		p.setPageSize(pageSize);
+		p.setPageNo(page);
+		p.setOrderBy("sort");
+		p.setOrderType("asc");
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		
+		ptype = !"".equals(ptype) && ptype != null ?ptype:"alk"; //案例库
+		p = contentService.list(p,"case", ptype);
+		
+		
+		modelMap.put("brandList", brandList);
+		modelMap.put("subjectList", subjectList);
+		
+		modelMap.put("articleList", p.getList());
+		
+		modelMap.put("ptype", ptype);
+		
+		modelMap.put("page", page);
+		modelMap.put("pageCount", p.getPageCount());
+		modelMap.put("rowCount", p.getRowCount());
+		
+		return new ModelAndView("/view/pc/case", modelMap);
+	}
+	
+	/**
+	 * 案例库内容
+	 * @param id
+	 * */
+	@RequestMapping(value="/cases-c")
+	public ModelAndView cases_c (String id,ModelMap modelMap) throws Exception {
+		List<Public_brand> brandList = brandService.list();	//品牌
+		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
+		
+		Public_content content = contentService.getById(id);
+		
+		
+		modelMap.put("brandList", brandList);
+		modelMap.put("subjectList", subjectList);
+		
+		modelMap.put("article", content);
+		
+		return new ModelAndView("/view/pc/casecontent", modelMap);
+	}
+	
 	
 	/**
 	 * 品牌综合页

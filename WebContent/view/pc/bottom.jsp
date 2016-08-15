@@ -30,11 +30,10 @@
             <a href="${pageContext.request.contextPath}/pcMain/service.htmls?ptype=policy">隐私政策</a>
             <a href="${pageContext.request.contextPath}/pcMain/service.htmls?ptype=partner">合作伙伴</a>
             <a href="${pageContext.request.contextPath}/pcMain/service.htmls?ptype=law">法律声明</a>
-            <a href="javascript:;">网站地图</a>
-            <a href="javascript:;">新闻中心</a>
-            <a href="javascript:;">说明书</a>
-            <a href="javascript:;">美容文章</a>
-            <a href="javascript:;">案例库</a>      
+            <a href="${pageContext.request.contextPath}/pcMain/news.htmls">新闻中心</a>
+            <a href="">说明书</a>
+            <a href="${pageContext.request.contextPath}/pcMain/article.htmls">美容文章</a>
+            <a href="${pageContext.request.contextPath}/pcMain/cases.htmls">案例库</a>      
         </div>
     </div>
 </div>

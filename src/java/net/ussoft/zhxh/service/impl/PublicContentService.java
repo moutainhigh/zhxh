@@ -49,7 +49,7 @@ public class PublicContentService implements IPublicContentService{
 		List<Object> values = new ArrayList<Object>();
 		values.add(parentid);
 		values.add(parenttype);
-		String sql = "SELECT id,parentid,parenttype,title,source,createtime,pic_url,top,sort FROM public_content where parentid=? and parenttype=?";
+		String sql = "SELECT id,parentid,parenttype,title,brief,source,createtime,pic_url,top,sort FROM public_content where parentid=? and parenttype=?";
 		pageBean = contentDao.search(sql,values, pageBean);
 		
 		return pageBean;

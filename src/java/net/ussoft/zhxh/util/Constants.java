@@ -50,6 +50,11 @@ public class Constants{
 	 * 富文本操作
 	 */
 	public static final String PUBLIC_CONTENT = "public_content";
+	/**
+	 * 富文本圖片
+	 */
+	public static final String PUBLIC_CONTENT_PIC = "public_content_pic";
+	
 	
 	//==============公共视频表
 	
