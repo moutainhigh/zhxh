@@ -121,6 +121,84 @@
             leftTree.loadList(dataList,"id","pid");
         })
         
+        var t11 = {};
+	    t11.id = "setting";
+	    t11.pid = "right";
+	    t11.text = "行业新闻";
+	    t11.iconCls = "setting";
+	    t11.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/newshyList";
+	    t11.iconPosition = "top";
+	    dataList.push(t11);
+    	$(function(){
+            var leftTree = mini.get("leftTree");
+            leftTree.loadList(dataList,"id","pid");
+        })
+        
+        var t12 = {};
+	    t12.id = "setting";
+	    t12.pid = "right";
+	    t12.text = "企业新闻";
+	    t12.iconCls = "setting";
+	    t12.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/newsqyList";
+	    t12.iconPosition = "top";
+	    dataList.push(t12);
+    	$(function(){
+            var leftTree = mini.get("leftTree");
+            leftTree.loadList(dataList,"id","pid");
+        })
+        
+        var t13 = {};
+	    t13.id = "setting";
+	    t13.pid = "right";
+	    t13.text = "商品新闻";
+	    t13.iconCls = "setting";
+	    t13.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/newsspList";
+	    t13.iconPosition = "top";
+	    dataList.push(t13);
+    	$(function(){
+            var leftTree = mini.get("leftTree");
+            leftTree.loadList(dataList,"id","pid");
+        })
+        
+        var t14 = {};
+	    t14.id = "setting";
+	    t14.pid = "right";
+	    t14.text = "美容文章";
+	    t14.iconCls = "setting";
+	    t14.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/articleList";
+	    t14.iconPosition = "top";
+	    dataList.push(t14);
+    	$(function(){
+            var leftTree = mini.get("leftTree");
+            leftTree.loadList(dataList,"id","pid");
+        })
+        
+        var t15 = {};
+	    t15.id = "setting";
+	    t15.pid = "right";
+	    t15.text = "案例库";
+	    t15.iconCls = "setting";
+	    t15.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/caseList";
+	    t15.iconPosition = "top";
+	    dataList.push(t15);
+    	$(function(){
+            var leftTree = mini.get("leftTree");
+            leftTree.loadList(dataList,"id","pid");
+        })
+        
+        var t16 = {};
+	    t16.id = "setting";
+	    t16.pid = "right";
+	    t16.text = "说明书";
+	    t16.iconCls = "setting";
+	    t16.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/specList";
+	    t16.iconPosition = "top";
+	    dataList.push(t16);
+    	$(function(){
+            var leftTree = mini.get("leftTree");
+            leftTree.loadList(dataList,"id","pid");
+        })
+        
         function onItemSelect(e) {
     		var iframe = document.getElementById("mainframe");
             var item = e.item;

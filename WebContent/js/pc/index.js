@@ -45,12 +45,12 @@ $(document).ready(function(){
 	})
 
  	// 新闻中心切换
- 	$('.new-tab li').click(function(){
+ 	/*$('.new-tab li').click(function(){
 	    $('.new').hide();
 		$('.new').eq($(this).index()).show();		
 		$('.new-tab li').removeClass('cur');
 		$('.new-tab li').eq($(this).index()).addClass('cur');
-	})
+	})*/
 
 
 	$('.download-a a:nth-child(4n)').css({'margin-right':'0'});

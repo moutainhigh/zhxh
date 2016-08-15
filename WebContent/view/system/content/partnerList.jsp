@@ -148,6 +148,10 @@
         }
 		
 		function edit(id){
+			if(id == 'undefined'){
+				mini.alert("请先保存信息，再添加内容!");
+				return;
+			}
 			var pHeight = $(window.parent).height();
 	   		var pWidth = $(window.parent).width();
 	         mini.open({

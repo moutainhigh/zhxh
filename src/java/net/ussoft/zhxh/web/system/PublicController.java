@@ -378,4 +378,44 @@ public class PublicController extends BaseConstroller{
         
 	}
 	
+	/**
+	 * 文件上传
+	 * @param file
+	 * @param editor
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value="/upload_content_file",method=RequestMethod.POST,produces = "text/html; charset=UTF-8")
+	public String upload_content_file(@RequestParam("file") MultipartFile file,String editor,HttpServletRequest request) throws IOException {
+		String uuidString = "";
+		String newName = "";
+		String oldName = "";
+		String newFilePath = "";
+		String path = request.getSession().getServletContext().getRealPath("/file/richedit/");
+		
+        int size = file.getInputStream().available();
+		if (size != 0) {
+			
+	        String ext = "";//扩展名
+	        
+	        oldName = file.getOriginalFilename();
+	        //获取扩展名
+	        if (oldName.lastIndexOf(".") >= 0) {
+	            ext = oldName.substring(oldName.lastIndexOf("."));
+	        }
+	        
+	        uuidString = UUID.randomUUID().toString();
+	        newName = uuidString + ext;
+	        newFilePath = path + "/" + newName;
+	        File excFile = new File(newFilePath);
+	        FileCopyUtils.copy(file.getBytes(),excFile);
+		}
+		String project_path = getProjectPath();
+		StringBuffer sb = new StringBuffer();
+
+		return sb.toString();
+        
+	}
 }
