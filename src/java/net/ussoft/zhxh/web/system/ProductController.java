@@ -26,11 +26,13 @@ import net.ussoft.zhxh.model.Product_rated;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
+import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IProductRatedService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
+import net.ussoft.zhxh.service.IPublicProductSizeService;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.FileOperate;
 
@@ -48,6 +50,8 @@ public class ProductController extends BaseConstroller {
 	private IPublicPicService picService;
 	@Resource
 	private IBrandfirstService brandFirstService;
+	@Resource
+	private IPublicProductSizeService productSizeService;
 	
 	
 //	//定义常量，用来标识参数
@@ -108,6 +112,11 @@ public class ProductController extends BaseConstroller {
 		}
 		else if (listtype.equals(Constants.BRANDLIST)) {
 			List<Brandlist> pList = brandFirstService.getBrandList(parentid);
+			map.put("total", pList.size());
+			map.put("data", pList);
+		}//商品规格列表
+		else if (listtype.equals(Constants.PRODUCTSIZE)) {
+			List<Public_product_size> pList = productSizeService.list(parentid);
 			map.put("total", pList.size());
 			map.put("data", pList);
 		}
@@ -258,6 +267,13 @@ public class ProductController extends BaseConstroller {
 			bList.setId(UUID.randomUUID().toString());
 			bList = brandFirstService.insertBrandList(bList);
 		}
+		else if (savetype.equals(Constants.PRODUCTSIZE)) {
+			Public_product_size size = new Public_product_size();
+			BeanUtils.populate(size, row);
+			
+			size.setId(UUID.randomUUID().toString());
+			size = productSizeService.insert(size);
+		}
 		
 		return true;
 	}
@@ -289,6 +305,9 @@ public class ProductController extends BaseConstroller {
 		}
 		else if (savetype.equals(Constants.BRANDLIST)) {
 			num = brandFirstService.deleteBrandList(id);
+		}
+		else if (savetype.equals(Constants.PRODUCTSIZE)) {
+			num = productSizeService.delete(id);
 		}
 		
 		if (num <= 0 ) {
@@ -335,6 +354,11 @@ public class ProductController extends BaseConstroller {
 			Brandlist bList = new Brandlist();
 			BeanUtils.populate(bList, row);
 			num = brandFirstService.updateBrandList(bList);
+		}
+		else if (savetype.equals(Constants.PRODUCTSIZE)) {
+			Public_product_size size = new Public_product_size();
+			BeanUtils.populate(size, row);
+			num = productSizeService.update(size);
 		}
 		
 		if (num <= 0 ) {

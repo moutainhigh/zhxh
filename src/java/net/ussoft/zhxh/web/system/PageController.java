@@ -12,7 +12,7 @@ public class PageController {
 	@RequestMapping("/index.jsp")
     public String index(ModelMap modelMap) throws Exception {
 		
-		return "redirect:/pcMain/pc_index.htmls";
+		return "redirect:/pcMain/pcindex.htmls";
     }
 	@RequestMapping("/page/content")
 	public String content() {

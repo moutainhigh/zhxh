@@ -78,6 +78,10 @@ public class Constants{
 	 * 公共视频表常量。可能用于视频表的主图片
 	 */
 	public static final String VIDEO = "video";
+	/**
+	 * 公共常量。可能用于视频表的主图片
+	 */
+	public static final String PRODUCTSIZE = "productsize";
 	
 	
 	
