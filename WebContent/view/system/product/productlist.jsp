@@ -62,15 +62,15 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
-      	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+      	              	{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	                { field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnProductEdit" } },
       	                { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "productcode",name:"productcode", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品型号",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	                //{ field: "productcode",name:"productcode", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品型号",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	                { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
       	                { field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
       	                { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "createdate",name:"update",dateFormat:"yyyy-MM-dd", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "上架日期",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "ifdis",name:"ifdis",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "是否参与三级分销",editor: { type: "combobox", data: [{"id":"0","text":"否"},{"id":"1","text":"是"}] } },
+      	                { field: "createdate",name:"update",dateFormat:"yyyy-MM-dd", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "上架日期",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
+      	                { field: "ifdis",name:"ifdis",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "三级分销",editor: { type: "combobox", data: [{"id":"0","text":"否"},{"id":"1","text":"是"}] } },
       	                { field: "sort",name:"sort", width: 30, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
@@ -100,7 +100,8 @@
             var productname = record.productname;
 
             var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
-            s += '  <a class="Edit_Button" href="javascript:delete_book(\'' + id + '\')" >详细</a>';
+            s += '  <a class="Edit_Button" href="javascript:editSize(\'' + id + '\',\'' + productname + '\')" >售价</a> | ';
+            s += '  <a class="Edit_Button" href="javascript:(\'' + id + '\')" >详细</a>';
             s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
             return s;
         }
@@ -191,38 +192,60 @@
             });
         }
        	function onBtnProductEdit(e) {
-        	var buttonEdit = e.sender;
-        	var row = grid_product.getEditorOwnerRow(buttonEdit);
-        	
-        	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传商品主图片", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"pic",forObj:"productpic"};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	if (action == "ok") {
-                		grid_product.reload();
-                		/* var iframe = this.getIFrameEl();
-                        var grid_data = iframe.contentWindow.GetData();
-                        grid_data = mini.clone(grid_data);    //必须
-                        if (grid_data != "" || grid_data.length > 0) {
-                        	var row = grid_book.getEditorOwnerRow(buttonEdit);
-                            //var row = grid_book.getSelecteds();
-                            grid_book.cancelEdit();
-                            grid_book.updateRow(row, {
-                            	itemid :grid_data.id,
-                            	itemcode: grid_data.itemcode,
-                            	itemtype:grid_data.itemtype
-                            });
-                        } */
+       		
+       		var objs = grid_product.getChanges();
+       		if (objs != "") {
+       			mini.confirm("发现有未保存的修改内容，继续上传后将刷新数据，不保存已修改的内容，确认？", "确定？",
+   		            function (action) {
+   		                if (action == "ok") {
+   		                	var buttonEdit = e.sender;
+	   		             	var row = grid_product.getEditorOwnerRow(buttonEdit);
+	   		             	
+	   		             	mini.open({
+	   		                     url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
+	   		                     title: "上传商品主图片", width: 600, height:500,
+	   		                     allowResize:true,
+	   		                     onload: function () {
+	   		                     	var iframe = this.getIFrameEl();
+	   		                    	 	var data = {id:row.id,saveFolder:"pic",forObj:"productpic"};
+	   		                         //var data = rows[0];
+	   		                         iframe.contentWindow.SetData(data);
+	   		                     },
+	   		                     ondestroy: function (action) {
+	   		                     	if (action == "ok") {
+	   		                     		grid_product.reload();
+	   		                         }
+	   		                     }
+	   		                 });
+   		                } else {
+   		                	return;
+   		                }
+   		            }
+   		        );
+       		}
+       		else {
+       			var buttonEdit = e.sender;
+            	var row = grid_product.getEditorOwnerRow(buttonEdit);
+            	
+            	mini.open({
+                    url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
+                    title: "上传商品主图片", width: 600, height:500,
+                    allowResize:true,
+                    onload: function () {
+                    	var iframe = this.getIFrameEl();
+                   	 	var data = {id:row.id,saveFolder:"pic",forObj:"productpic"};
+                        //var data = rows[0];
+                        iframe.contentWindow.SetData(data);
+                    },
+                    ondestroy: function (action) {
+                    	if (action == "ok") {
+                    		grid_product.reload();
+                        }
                     }
-                }
-            });
+                });
+       		}
+       		
+        	
         }
        	
        	function onBtnColorEdit(e) {
@@ -274,6 +297,26 @@
         	var title = "商品评价";
         	mini.open({
                 url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/editRated",
+                title: title, width: 800, height:600,
+                allowResize:true,
+                onload: function () {
+                	var iframe = this.getIFrameEl();
+               	 	var data = {productid:id,productname:productname};
+                    iframe.contentWindow.SetData(data);
+                },
+                ondestroy: function (action) {
+                	if (action == "ok") {
+                		
+                    }
+                }
+            });
+        }
+        
+        function editSize(id,productname) {
+        	
+        	var title = "商品售价";
+        	mini.open({
+                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/editSize",
                 title: title, width: 800, height:600,
                 allowResize:true,
                 onload: function () {
@@ -370,11 +413,16 @@
        	 			del_row.push(rows[i]);
        	 		}
        	 	}
-       	 
-          	if (confirm(cf1)) {
-          		tmpGrid.removeRows(del_row, false);
-   		 	}
-			
+       	 	
+       	 	mini.confirm(cf1, "确定？",
+                 function (action) {
+                     if (action == "ok") {
+                    	 tmpGrid.removeRows(del_row, false);
+                     } else {
+                         
+                     }
+                 }
+            );
         }
        	
 		function save(grid_type) {
@@ -424,43 +472,30 @@
 	        });
 	    }
 		
-		/* function updatePass() {
-			var cf1 = "确定要初始化选中的帐户吗？注意：初始化密码为【123456】，请谨慎操作。";
-        	
-        	var rows = grid.getSelecteds();
-          	 
-       	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要初始化密码的帐户.");
-       		 	return;
-       	 	}
-       	 	
-       	 	var ids = getSelectGridid(rows);
-       	 
-          	if (confirm(cf1)) {
-          		grid.loading("初始化密码中，请稍后......");
-    	        
-    	        $.ajax({
-    	        	async:false,
-    	            url: "${pageContext.request.contextPath}/account/initUpdatePass.html",
-    	            data: {'ids':ids},
-    	            type: "post",
-    	            dataType:"text",
-    	            success: function (text) {
-    	            	if (text == "success") {
-    	            		mini.alert("保存完毕。");
-    	            		grid.reload();
-    	            	}
-    	            	else {
-    	            		mini.alert("初始化密码失败。请重新登录再尝试或与开发人员联系。")
-    	            	}
-    	            	
-    	            },
-    	            error: function (jqXHR, textStatus, errorThrown) {
-    	                mini.alert(jqXHR.responseText);
-    	            }
-    	        });
-   		 	}
-		} */
+		function edit(id){
+			if(id == 'undefined'){
+				mini.alert("请先保存信息，再添加内容!");
+				return;
+			}
+			var pHeight = $(window.parent).height();
+	   		var pWidth = $(window.parent).width();
+	         mini.open({
+	             url: "${pageContext.request.contextPath}/public/edit.htmls?id="+id,
+	             title: "内容编辑", width: pWidth-100, height:pHeight-100,
+	             allowResize:true,
+	             showMaxButton:true,
+	             onload: function () {
+	            	 var iframe = this.getIFrameEl();
+	            	 var data = { 'id': id };
+	                 
+	                 //iframe.contentWindow.SetData(data);
+	             },
+	             ondestroy: function (action) {
+	            	 grid.reload();
+	             }
+	         });
+		}
+		
 		
 		function getSelectGridid(rows) {
         	var ids = "";

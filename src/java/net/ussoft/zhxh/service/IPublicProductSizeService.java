@@ -23,14 +23,14 @@ public interface IPublicProductSizeService {
 	 * 查询所有
 	 * @return list
 	 * */
-	public List<Public_product_size> list();
+	public List<Public_product_size> list(String parentid);
 	
 	/**
 	 * 查询所有 分页
 	 * @param pageBean
 	 * @return list
 	 * */
-	public List<Public_product_size> list(PageBean<Public_product_size> pageBean);
+	public PageBean<Public_product_size> list(PageBean<Public_product_size> pageBean,String parentid);
 	
 	/**
 	 * 添加
