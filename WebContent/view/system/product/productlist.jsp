@@ -101,7 +101,7 @@
 
             var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
             s += '  <a class="Edit_Button" href="javascript:editSize(\'' + id + '\',\'' + productname + '\')" >售价</a> | ';
-            s += '  <a class="Edit_Button" href="javascript:delete_book(\'' + id + '\')" >详细</a>';
+            s += '  <a class="Edit_Button" href="javascript:(\'' + id + '\')" >详细</a>';
             s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
             return s;
         }
@@ -472,43 +472,30 @@
 	        });
 	    }
 		
-		/* function updatePass() {
-			var cf1 = "确定要初始化选中的帐户吗？注意：初始化密码为【123456】，请谨慎操作。";
-        	
-        	var rows = grid.getSelecteds();
-          	 
-       	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要初始化密码的帐户.");
-       		 	return;
-       	 	}
-       	 	
-       	 	var ids = getSelectGridid(rows);
-       	 
-          	if (confirm(cf1)) {
-          		grid.loading("初始化密码中，请稍后......");
-    	        
-    	        $.ajax({
-    	        	async:false,
-    	            url: "${pageContext.request.contextPath}/account/initUpdatePass.html",
-    	            data: {'ids':ids},
-    	            type: "post",
-    	            dataType:"text",
-    	            success: function (text) {
-    	            	if (text == "success") {
-    	            		mini.alert("保存完毕。");
-    	            		grid.reload();
-    	            	}
-    	            	else {
-    	            		mini.alert("初始化密码失败。请重新登录再尝试或与开发人员联系。")
-    	            	}
-    	            	
-    	            },
-    	            error: function (jqXHR, textStatus, errorThrown) {
-    	                mini.alert(jqXHR.responseText);
-    	            }
-    	        });
-   		 	}
-		} */
+		function edit(id){
+			if(id == 'undefined'){
+				mini.alert("请先保存信息，再添加内容!");
+				return;
+			}
+			var pHeight = $(window.parent).height();
+	   		var pWidth = $(window.parent).width();
+	         mini.open({
+	             url: "${pageContext.request.contextPath}/public/edit.htmls?id="+id,
+	             title: "内容编辑", width: pWidth-100, height:pHeight-100,
+	             allowResize:true,
+	             showMaxButton:true,
+	             onload: function () {
+	            	 var iframe = this.getIFrameEl();
+	            	 var data = { 'id': id };
+	                 
+	                 //iframe.contentWindow.SetData(data);
+	             },
+	             ondestroy: function (action) {
+	            	 grid.reload();
+	             }
+	         });
+		}
+		
 		
 		function getSelectGridid(rows) {
         	var ids = "";
