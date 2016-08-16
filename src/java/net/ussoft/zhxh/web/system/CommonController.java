@@ -28,10 +28,12 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.ibm.icu.text.DecimalFormat;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Brandfirst;
 import net.ussoft.zhxh.model.Brandlist;
+import net.ussoft.zhxh.model.Filesdown;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
@@ -43,6 +45,7 @@ import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
 import net.ussoft.zhxh.service.IPublicVideoService;
+import net.ussoft.zhxh.service.IPublicfilesdownService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.FileOperate;
@@ -71,6 +74,9 @@ public class CommonController extends BaseConstroller {
 	
 	@Resource
 	private IPublicContentService contentService;
+	
+	@Resource
+	private IPublicfilesdownService filesdownService;
 	
 	private static final int BUFFER_SIZE = 2 * 1024;
 	
@@ -247,7 +253,25 @@ public class CommonController extends BaseConstroller {
         		}
         		contentService.update(tmp);
         	}
-        	
+        	else if (Constants.PUBLIC_FILE_PIC.equals(forObj)) {
+        		//文件 文件标题图片
+        		Filesdown tmp = filesdownService.getById(id);
+        		if (null != fileMap && fileMap.size() > 0 && !fileMap.get("newname").isEmpty()) {
+        			//删除原图片
+        			if (null != tmp.getPic() && !"".equals(tmp.getPic())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getPic());
+        			}
+        			tmp.setPic(fileMap.get("filepath") + fileMap.get("newname"));
+        		}
+        		else {
+        			//清空
+        			if (null != tmp.getPic() && !"".equals(tmp.getPic())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getPic());
+        			}
+        			tmp.setPic("");
+        		}
+        		filesdownService.update(tmp);
+        	}
         }
         
 	    map.put("result", "更新成功.");
@@ -530,4 +554,102 @@ public class CommonController extends BaseConstroller {
 		}
 	}
 	
+	
+	/**
+	 * 文件上传 -单文件上传
+	 * @param request
+	 * @param response
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	
+	@RequestMapping("/upload_file")
+	public void upload_file(HttpServletRequest request,HttpServletResponse response) throws IllegalStateException, IOException{
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+    	CommonsMultipartResolver multipartResolver  = new CommonsMultipartResolver(request.getSession().getServletContext());
+		if(multipartResolver.isMultipart(request)){
+			MultipartHttpServletRequest  multiRequest = (MultipartHttpServletRequest)request;
+			//获取参数
+			String id = request.getParameter("id");
+			
+			//获取plupload参数
+			Integer chunks = Integer.valueOf(request.getParameter("chunks"));
+//			String uuid = UUID.randomUUID().toString();
+			String oldname = request.getParameter("name");
+			Integer chunk = Integer.valueOf(request.getParameter("chunk"));
+
+	        
+			
+			//获取文件列表
+			Iterator<String>  iter = multiRequest.getFileNames();
+			while(iter.hasNext()){
+				//获取文件对象
+				MultipartFile file = multiRequest.getFile((String)iter.next());
+				//获取临时文件的绝对路径
+				String contextPath = getProjectRealPath() + "file" +File.separator + "tmp" + File.separator;
+				
+				FileOperate.isExist(contextPath);
+				
+				//生成临时文件
+		        String dstPath =  contextPath + oldname;
+		        File dstFile = new File(dstPath);
+		        // 文件已存在（上传了同名的文件）
+		        if (chunk == 0 && dstFile.exists()) {
+		            dstFile.delete();
+		            dstFile = new File(dstPath);
+		        }
+		        //合并文件
+		        cat(file, dstFile);
+		        // 完成一整个文件;
+		        if (chunk == chunks - 1) {
+		        	//获取临时文件对象
+		        	File newFile =new File(contextPath+oldname);
+		        	
+		        	if(newFile != null){
+		        		String filename = newFile.getName();
+		        		String newUUID = UUID.randomUUID().toString();
+		        		
+		        		String docExt = "";
+		                //获取扩展名
+		                if (filename.lastIndexOf(".") >= 0) {
+		                    docExt = filename.substring(filename.lastIndexOf("."));
+		                    docExt = docExt.toLowerCase();
+		                }
+		                //文件的新名字
+		                String newname = newUUID + docExt;
+		                
+		                String contextPath2 = getProjectRealPath() + "file" +File.separator + "filesdown" + File.separator;
+		                FileOperate.isExist(contextPath2);
+		        		//
+		        		Filesdown files = filesdownService.getById(id);
+		        		
+	        			//如果原来是有内容的，要删除原文件。
+	        			if (null != files.getFile_path() && !"".equals(files.getFile_path())) {
+	        				String filePath = files.getFile_path();
+	        				deleteFile(getProjectRealPath() + filePath);
+	        			}
+	        			files.setFile_old_name(oldname);
+	        			files.setFile_new_name(newname);
+	        			DecimalFormat df = new DecimalFormat("#.00"); 
+	        			String size = df.format((double) newFile.length() / 1024) + "KB";
+	        			files.setFile_size(size);
+	        			files.setFile_ext(docExt);
+	        			files.setFile_path("file" +File.separator + "filesdown" + File.separator + newname);
+		        		
+		                FileOperate.copyFile(newFile.getPath(), contextPath2 + newname);
+		                
+		                //删除临时文件
+		                deleteFile(newFile.getPath());
+		                
+		                filesdownService.update(files);
+		                
+					}
+		        }
+			}
+		}
+	}
 }

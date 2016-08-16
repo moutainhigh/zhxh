@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.Filesdown;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
@@ -21,6 +22,7 @@ import net.ussoft.zhxh.model.Public_video;
 import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicVideoService;
+import net.ussoft.zhxh.service.IPublicfilesdownService;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.FileOperate;
@@ -55,6 +57,8 @@ public class PublicController extends BaseConstroller{
 	@Resource
 	IPublicContentService contentService;  //富文本
 	
+	@Resource
+	IPublicfilesdownService filesdownService;	//文件
 	
 	/**
 	 * 编辑富文本
@@ -186,6 +190,22 @@ public class PublicController extends BaseConstroller{
 			String json = JSON.toJSONString(map);
 			out.print(json);
 		}
+		else if(Constants.PUBLIC_FILE.equals(act)){
+			PageBean<Filesdown> p = new PageBean<Filesdown>();
+			p.setPageSize(pageSize);
+			p.setPageNo(pageIndex +1);
+			p.setOrderBy("sort");
+			p.setOrderType("asc");
+			p.setOrderBy("filetime");
+			p.setOrderType("desc");
+			p = filesdownService.list(p, parentid, parenttype);
+			
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			map.put("total", p.getRowCount());
+			map.put("data", p.getList());
+			String json = JSON.toJSONString(map);
+			out.print(json);
+		}
 		
 	}
 	
@@ -224,11 +244,12 @@ public class PublicController extends BaseConstroller{
 	        	insert(row,act,parentid,parenttype);
 	        }
 	        else if (state.equals("removed") || state.equals("deleted")) {
-	        	boolean flag = false;
-	        	String filePath = "";
 	        	if(act.equals(Constants.PUBLICPIC)){
-	        		filePath = row.get("pic_path");
-		        	flag = delete(id,act); //需要删除附件的，要有返回值
+	        		String filePath = row.get("pic_path");
+		        	boolean flag = delete(id,act); //需要删除附件的，要有返回值
+		        	if(flag){
+		        		FileOperate.delFile(super.getProjectRealPath() + filePath);
+		        	}
 	        	}
 	        	else if(act.equals(Constants.PUBLICVIDEO)){
 	        		String mp4Path = row.get("mp4newname");
@@ -239,13 +260,24 @@ public class PublicController extends BaseConstroller{
 	        			FileOperate.delFile(super.getProjectRealPath() + webmPath);
 	        		}
 	        	}
+	        	else if(Constants.PUBLIC_FILE.equals(act)){
+	        		String filePath = row.get("file_path"); //文件地址
+	        		String picPath = row.get("pic");	//文件图片
+	        		boolean flag = delete(id,act);
+	        		if(flag){
+	        			FileOperate.delFile(super.getProjectRealPath() + filePath);
+	        			FileOperate.delFile(super.getProjectRealPath() + picPath);
+	        		}
+	        	}
 	        	else if(act.equals(Constants.PUBLIC_CONTENT)){
-	        		delete(id, act);
+	        		String pic_url = row.get("pic_url"); //富文本标题图片
+	        		boolean flag = delete(id, act);
+	        		if(flag){
+	        			if(null != pic_url)
+	        				FileOperate.delFile(super.getProjectRealPath() + pic_url);
+	        		}
 	        	}
 	        	
-	        	if(flag){
-	        		FileOperate.delFile(super.getProjectRealPath() + filePath);
-	        	}
 	        }
 	        //更新：_state为空，或modified
 	        else if (state.equals("modified") || state.equals(""))	 {
@@ -291,6 +323,15 @@ public class PublicController extends BaseConstroller{
 			content.setCreatetime(createtime);;
 			content = contentService.insert(content);
 			return true;
+		}else if(Constants.PUBLIC_FILE.equals(act)){
+			Filesdown filesdown = new Filesdown();
+			BeanUtils.populate(filesdown, row);
+			filesdown.setId(UUID.randomUUID().toString());
+			filesdown.setParentid(parentid);
+			filesdown.setParenttype(parenttype);
+			filesdown.setFiletime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+			filesdown = filesdownService.insert(filesdown);
+			return true;
 		}
 		return false;
 	}
@@ -315,6 +356,9 @@ public class PublicController extends BaseConstroller{
 		}
 		else if(act.equals(Constants.PUBLIC_CONTENT)){
 			num = contentService.delete(id);
+		}
+		else if(Constants.PUBLIC_FILE.equals(act)){
+			num = filesdownService.delete(id);
 		}
 		if (num <= 0 ) {
 			return false;
@@ -349,6 +393,11 @@ public class PublicController extends BaseConstroller{
 			Public_content pic = new Public_content();
 			BeanUtils.populate(pic, row);
 			num = contentService.update(pic);
+		}
+		else if(Constants.PUBLIC_FILE.equals(act)){
+			Filesdown fd = new Filesdown();
+			BeanUtils.populate(fd, row);
+			num = filesdownService.update(fd);
 		}
 		
 		if (num <= 0 ) {

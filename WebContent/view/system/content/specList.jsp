@@ -27,10 +27,10 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	              	{ field: "pic_url",name:"pic_url", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnNewsPicEdit"} },
+      	              	{ field: "pic",name:"pic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnNewsPicEdit"} },
       	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "brief",name:"brief", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "简介",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "file_old_name",name:"file_old_name", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "文件名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnFileEdit" } },
       	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
@@ -48,7 +48,7 @@
 	            showPageSize:false,
 	            pageSize:2000
 	        });
-        	grid.load({act:'public_content',parentid:'case',parenttype:'alk'});
+        	grid.load({act:'public_file',parentid:'files',parenttype:'spec'});
         	drawcell();
         })
         
@@ -60,7 +60,7 @@
 	            uid = record._uid,
 	            value = e.value;
                 
-                if (field == "pic_url") {
+                if (field == "pic") {
    	        		if (value == "") {
    	        			e.cellhtml = "";
        	        	}
@@ -128,7 +128,7 @@
 	        $.ajax({
 	        	async:false,
 	            url: "${pageContext.request.contextPath}/public/save.htmls",
-	            data: {'objs':json,'act':'public_content','parentid':'case','parenttype':'alk'},
+	            data: {'objs':json,'act':'public_file','parentid':'files','parenttype':'spec'},
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
@@ -145,7 +145,12 @@
             var grid = e.sender;
             var record = e.record;
            	var id = record.id;
-            var s = ' <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >内容</a>'
+           	var filePath = record.file_path;
+           	var s = "";
+           	if(filePath != undefined){
+           		s = ' <a class="Edit_Button" href="${pageContext.request.contextPath}/pcMain/downloadfile.htmls?id=' + id + '" >下载</a>'
+           	}
+            		
             return s;
         }
 		
@@ -173,7 +178,7 @@
 	         });
 		}
 		
-		//上传案例库图片
+		//上传文件图片
 		function onBtnNewsPicEdit(e) {
         	var buttonEdit = e.sender;
         	var row = grid.getEditorOwnerRow(buttonEdit);
@@ -185,11 +190,11 @@
         	
         	mini.open({
                 url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传文章图片", width: 600, height:500,
+                title: "上传图片", width: 600, height:500,
                 allowResize:true,
                 onload: function () {
                 	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"upload",forObj:"public_content_pic"};
+               	 	var data = {id:row.id,saveFolder:"upload",forObj:"public_file_pic"};
                     //var data = rows[0];
                     iframe.contentWindow.SetData(data);
                 },
@@ -200,6 +205,32 @@
             });
         }
         
+		//上传文件
+		function onBtnFileEdit(e) {
+        	var buttonEdit = e.sender;
+			var row = grid.getEditorOwnerRow(buttonEdit);
+        	
+        	if (null == row || typeof(row.id) == "undefined" || row.id == "") {
+        		mini.alert("行记录还没有保存，请先保存后再上传.");
+	      		return;
+	      	}
+        	
+        	mini.open({
+                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/upload_file",
+                title: "上传文件", width: 600, height:500,
+                allowResize:true,
+                onload: function () {
+                	var iframe = this.getIFrameEl();
+               	 	var data = {id:row.id};
+                    //var data = rows[0];
+                    iframe.contentWindow.SetData(data);
+                },
+                ondestroy: function (action) {
+                	grid.cancelEdit();
+                	grid.reload();
+                }
+            });
+        }
 </script>
 </head>
 <body>
