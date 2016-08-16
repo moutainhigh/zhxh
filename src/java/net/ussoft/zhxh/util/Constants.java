@@ -55,6 +55,16 @@ public class Constants{
 	 */
 	public static final String PUBLIC_CONTENT_PIC = "public_content_pic";
 	
+	/**
+	 * 文件
+	 */
+	public static final String PUBLIC_FILE = "public_file";
+	/**
+	 * 文件 标题图片
+	 */
+	public static final String PUBLIC_FILE_PIC = "public_file_pic";
+	
+	
 	
 	//==============公共视频表
 	
