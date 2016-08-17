@@ -110,9 +110,13 @@
 			
 			grid_rated.validate();
 	        if (grid_rated.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容");
-	            var error = grid_rated.getCellErrors()[0];
-	            grid_rated.beginEditCell(error.record, error.column);
+	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
+	            	function(action){
+	            		//alert(action);
+	            		var error = grid_rated.getCellErrors()[0];
+	            		grid_rated.beginEditCell(error.record, error.column);
+		            }
+	            );
 	            return;
 	        }
 	    	

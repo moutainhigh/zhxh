@@ -64,6 +64,15 @@
 	    t4.iconPosition = "top";
 	    dataList.push(t4);
 	    
+	    var t5 = {};
+	    t5.id = "productlist";
+	    t5.pid = "right";
+	    t5.text = "品牌列表页";
+	    t5.iconCls = "page";
+	    t5.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/plist";
+	    t5.iconPosition = "top";
+	    dataList.push(t5);
+	    
     
     	$(function(){
             var leftTree = mini.get("leftTree");

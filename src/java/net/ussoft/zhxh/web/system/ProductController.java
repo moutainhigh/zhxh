@@ -22,12 +22,14 @@ import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Brandfirst;
 import net.ussoft.zhxh.model.Brandlist;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Product_list;
 import net.ussoft.zhxh.model.Product_rated;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.service.IBrandfirstService;
+import net.ussoft.zhxh.service.IProductListService;
 import net.ussoft.zhxh.service.IProductRatedService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicPicService;
@@ -52,6 +54,8 @@ public class ProductController extends BaseConstroller {
 	private IBrandfirstService brandFirstService;
 	@Resource
 	private IPublicProductSizeService productSizeService;
+	@Resource
+	private IProductListService pListService;
 	
 	
 //	//定义常量，用来标识参数
@@ -116,6 +120,16 @@ public class ProductController extends BaseConstroller {
 			map.put("data", pList);
 		}//商品规格列表
 		else if (listtype.equals(Constants.PRODUCTSIZE)) {
+			List<Public_product_size> pList = productSizeService.list(parentid);
+			map.put("total", pList.size());
+			map.put("data", pList);
+		}//获取商品列表页内容
+		else if (listtype.equals(Constants.PLIST)) {
+			List<Product_list> pList = pListService.list(parentid);
+			map.put("total", pList.size());
+			map.put("data", pList);
+		}//商品列表关联的商品
+		else if (listtype.equals(Constants.LABEL_PLIST)) {
 			List<Public_product_size> pList = productSizeService.list(parentid);
 			map.put("total", pList.size());
 			map.put("data", pList);
@@ -274,6 +288,13 @@ public class ProductController extends BaseConstroller {
 			size.setId(UUID.randomUUID().toString());
 			size = productSizeService.insert(size);
 		}
+		else if (savetype.equals(Constants.PLIST)) {
+			Product_list obj = new Product_list();
+			BeanUtils.populate(obj, row);
+			
+			obj.setId(UUID.randomUUID().toString());
+			obj = pListService.insert(obj);
+		}
 		
 		return true;
 	}
@@ -308,6 +329,9 @@ public class ProductController extends BaseConstroller {
 		}
 		else if (savetype.equals(Constants.PRODUCTSIZE)) {
 			num = productSizeService.delete(id);
+		}
+		else if (savetype.equals(Constants.PLIST)) {
+			num = pListService.delete(id);
 		}
 		
 		if (num <= 0 ) {
@@ -359,6 +383,11 @@ public class ProductController extends BaseConstroller {
 			Public_product_size size = new Public_product_size();
 			BeanUtils.populate(size, row);
 			num = productSizeService.update(size);
+		}
+		else if (savetype.equals(Constants.PLIST)) {
+			Product_list obj = new Product_list();
+			BeanUtils.populate(obj, row);
+			num = pListService.update(obj);
 		}
 		
 		if (num <= 0 ) {

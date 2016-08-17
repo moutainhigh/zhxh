@@ -105,9 +105,13 @@
 			
 			grid.validate();
 	        if (grid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容");
-	            var error = grid.getCellErrors()[0];
-	            grid.beginEditCell(error.record, error.column);
+	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
+	            	function(action){
+	            		//alert(action);
+	            		var error = grid.getCellErrors()[0];
+	            		grid.beginEditCell(error.record, error.column);
+		            }
+	            );
 	            return;
 	        }
 	    	

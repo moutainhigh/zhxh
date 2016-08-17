@@ -191,9 +191,13 @@
 			
 			tmpGrid.validate();
 	        if (tmpGrid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容");
-	            var error = tmpGrid.getCellErrors()[0];
-	            tmpGrid.beginEditCell(error.record, error.column);
+	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
+	            	function(action){
+	            		//alert(action);
+	            		var error = tmpGrid.getCellErrors()[0];
+	            		tmpGrid.beginEditCell(error.record, error.column);
+		            }
+	            );
 	            return;
 	        }
 	    	

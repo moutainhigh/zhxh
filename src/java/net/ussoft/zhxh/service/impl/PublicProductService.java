@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.ussoft.zhxh.dao.PublicContentDao;
 import net.ussoft.zhxh.dao.PublicProductDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_product;
@@ -18,6 +19,8 @@ public class PublicProductService implements IPublicProductService{
 	
 	@Resource
 	private PublicProductDao productDao;
+	@Resource
+	private PublicContentDao contentDao;  //富文本
 
 	@Override
 	public Public_product getById(String id) {
@@ -53,6 +56,12 @@ public class PublicProductService implements IPublicProductService{
 	@Transactional("txManager")
 	@Override
 	public int delete(String id) {
+		//删除商品，同时删除该商品的富文本表关联内容
+		String sql = "delete from public_content where parentid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(id);
+		contentDao.del(sql, values);
+		
 		return productDao.del(id);
 	}
 

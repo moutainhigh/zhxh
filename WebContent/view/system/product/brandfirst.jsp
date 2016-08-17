@@ -284,9 +284,13 @@
 			
 			grid_brandfirst.validate();
 	        if (grid_brandfirst.isValid() == false) {
-	            alert("输入有误，请校验输入单元格内容");
-	            var error = grid_brandfirst.getCellErrors()[0];
-	            grid_brandfirst.beginEditCell(error.record, error.column);
+	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
+	            	function(action){
+	            		//alert(action);
+	            		var error = grid_brandfirst.getCellErrors()[0];
+	            		grid_brandfirst.beginEditCell(error.record, error.column);
+		            }
+	            );
 	            return;
 	        }
 	    	
@@ -328,9 +332,13 @@
 			
 			grid_brandpic.validate();
 	        if (grid_brandpic.isValid() == false) {
-	            alert("输入有误，请校验输入单元格内容");
-	            var error = grid_brandpic.getCellErrors()[0];
-	            grid_brandpic.beginEditCell(error.record, error.column);
+	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
+	            	function(action){
+	            		//alert(action);
+	            		var error = grid_brandpic.getCellErrors()[0];
+	            		grid_brandpic.beginEditCell(error.record, error.column);
+		            }
+	            );
 	            return;
 	        }
 	    	

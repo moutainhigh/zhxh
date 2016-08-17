@@ -553,7 +553,7 @@
 				var record = grid_brandlist.getSelected();
 		      	
 	            if (typeof(record.id) == "undefined" || record.id == "") {
-	            	mini.alert("请先选择系列，再添加品牌系列页图片.");
+	            	mini.alert("请先选择系列，再保存品牌系列页图片.");
 		      		return;
 		      	}
 
@@ -568,7 +568,7 @@
 				var record = grid_brandlist.getSelected();
 		      	
 	            if (typeof(record.id) == "undefined" || record.id == "") {
-	            	mini.alert("请先选择系列，再添加品牌系列页轮播图片.");
+	            	mini.alert("请先选择系列，再保存品牌系列页轮播图片.");
 		      		return;
 		      	}
 	            
@@ -582,7 +582,7 @@
 				var record = grid_brandlist.getSelected();
 		      	
 	            if (typeof(record.id) == "undefined" || record.id == "") {
-	            	mini.alert("请先选择系列，再添加品牌系列页视频.");
+	            	mini.alert("请先选择系列，再处理品牌系列页视频.");
 		      		return;
 		      	}
 	            
@@ -595,9 +595,13 @@
 			
 			tmpGrid.validate();
 	        if (tmpGrid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容");
-	            var error = tmpGrid.getCellErrors()[0];
-	            tmpGrid.beginEditCell(error.record, error.column);
+	        	mini.alert("输入有误，请校验输入单元格内容","系统提示",
+	            	function(action){
+	            		//alert(action);
+	            		var error = tmpGrid.getCellErrors()[0];
+	            		tmpGrid.beginEditCell(error.record, error.column);
+		            }
+	            );
 	            return;
 	        }
 	    	

@@ -101,7 +101,7 @@
 
             var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
             s += '  <a class="Edit_Button" href="javascript:editSize(\'' + id + '\',\'' + productname + '\')" >售价</a> | ';
-            s += '  <a class="Edit_Button" href="javascript:(\'' + id + '\')" >详细</a>';
+            s += '  <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >详细</a>';
             s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
             return s;
         }
@@ -442,9 +442,13 @@
 			
 			tmpGrid.validate();
 	        if (tmpGrid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容");
-	            var error = tmpGrid.getCellErrors()[0];
-	            tmpGrid.beginEditCell(error.record, error.column);
+	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
+	            	function(action){
+	            		//alert(action);
+	            		var error = tmpGrid.getCellErrors()[0];
+	            		tmpGrid.beginEditCell(error.record, error.column);
+		            }
+	            );
 	            return;
 	        }
 	    	
@@ -480,18 +484,15 @@
 			var pHeight = $(window.parent).height();
 	   		var pWidth = $(window.parent).width();
 	         mini.open({
-	             url: "${pageContext.request.contextPath}/public/edit.htmls?id="+id,
-	             title: "内容编辑", width: pWidth-100, height:pHeight-100,
+	             url: "${pageContext.request.contextPath}/public/edit_o.htmls?parentid="+id +"&parenttype=productrich",
+	             title: "内容编辑", width: pWidth-300, height:pHeight-100,
 	             allowResize:true,
 	             showMaxButton:true,
 	             onload: function () {
-	            	 var iframe = this.getIFrameEl();
-	            	 var data = { 'id': id };
-	                 
-	                 //iframe.contentWindow.SetData(data);
+	            	 
 	             },
 	             ondestroy: function (action) {
-	            	 grid.reload();
+	            	 
 	             }
 	         });
 		}

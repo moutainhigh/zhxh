@@ -94,9 +94,18 @@ public class Constants{
 	 */
 	public static final String VIDEO = "video";
 	/**
-	 * 公共常量。可能用于视频表的主图片
+	 * 公共常量。商品规格
 	 */
 	public static final String PRODUCTSIZE = "productsize";
+	
+	/**
+	 * 商品列表
+	 */
+	public static final String PLIST = "plist";
+	/**
+	 * 商品列表关联的商品
+	 */
+	public static final String LABEL_PLIST = "label_plist";
 	
 	
 	
