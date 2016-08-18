@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Labeltype;
+import net.ussoft.zhxh.service.ILabelListService;
 import net.ussoft.zhxh.service.ILabeltypeService;
 
 @Controller
@@ -28,9 +29,11 @@ public class LabelController extends BaseConstroller {
 	
 	@Resource
 	private ILabeltypeService labeltypeService;
+	@Resource
+	private ILabelListService labelListService;
 	
 	/**
-	 * 获取帐户列表
+	 * 获取列表
 	 * @param response
 	 * @throws IOException
 	 */
@@ -149,6 +152,47 @@ public class LabelController extends BaseConstroller {
 		}
 		return true;
 	}
+	
+	/**
+	 * 保存标签与对象的关联
+	 * @param objids
+	 * @param listid
+	 * @param tablename
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/labelListSave",method=RequestMethod.POST)
+	public void labelListSave(String objids,String labelid,String tablename,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		
+		labelListService.saveLableList(objids, labelid, tablename);
+		
+		out.print("success");
+	}
+	
+	/**
+	 * 移除对象与标签的关联
+	 * @param objids			对象id字符串数组
+	 * @param labelid			标签id
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/labelListDel",method=RequestMethod.POST)
+	public void labelListDel(String objids,String labelid,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		
+		labelListService.deleteLableList(objids, labelid);
+		
+		out.print("success");
+	}
+	
+	
 	
 	
 	

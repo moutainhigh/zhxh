@@ -13,9 +13,6 @@
     </style>
     
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
-    <%-- <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/js/jquery.bigcolorpicker/jquery.bigcolorpicker.css" />
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.bigcolorpicker/jquery.bigcolorpicker.min.js"></script> --%>
-	<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/colorpicker/jquery.colorpicker.js"></script> --%>
     
 <script type="text/javascript">
 
@@ -98,10 +95,11 @@
             var id = record.id;
             var rowIndex = e.rowIndex;
             var productname = record.productname;
+            var showtype = record.showtype;
 
             var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
             s += '  <a class="Edit_Button" href="javascript:editSize(\'' + id + '\',\'' + productname + '\')" >售价</a> | ';
-            s += '  <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >详细</a>';
+            s += '  <a class="Edit_Button" href="javascript:edit(\'' + id + '\',\'' + showtype + '\')" >详细</a>';
             s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
             return s;
         }
@@ -476,25 +474,45 @@
 	        });
 	    }
 		
-		function edit(id){
+		function edit(id,showtype){
 			if(id == 'undefined'){
 				mini.alert("请先保存信息，再添加内容!");
 				return;
 			}
 			var pHeight = $(window.parent).height();
 	   		var pWidth = $(window.parent).width();
-	         mini.open({
-	             url: "${pageContext.request.contextPath}/public/edit_o.htmls?parentid="+id +"&parenttype=productrich",
-	             title: "内容编辑", width: pWidth-300, height:pHeight-100,
-	             allowResize:true,
-	             showMaxButton:true,
-	             onload: function () {
-	            	 
-	             },
-	             ondestroy: function (action) {
-	            	 
-	             }
-	         });
+	   		
+	   		if (showtype == 1) {
+		   		 mini.open({
+		             url: "${pageContext.request.contextPath}/public/edit_o.htmls?parentid="+id +"&parenttype=productrich",
+		             title: "内容编辑", width: pWidth-300, height:pHeight-100,
+		             allowResize:true,
+		             showMaxButton:true,
+		             onload: function () {
+		            	 
+		             },
+		             ondestroy: function (action) {
+		            	 
+		             }
+		         });
+	   		}
+	   		else {
+	   			mini.open({
+	   				url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/productContentPic",
+		            title: "内容编辑-图片", width: 600, height:pHeight-100,
+		            allowResize:true,
+		            showMaxButton:true,
+		            onload: function () {
+		            	var iframe = this.getIFrameEl();
+		    	        var data = { parentid: id,parenttype:"productContentPic"};
+		    	        iframe.contentWindow.SetData(data);
+		            },
+		            ondestroy: function (action) {
+		            	 
+		            }
+		        });
+	   		}
+	        
 		}
 		
 		

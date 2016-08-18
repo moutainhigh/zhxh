@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Product_list;
+import net.ussoft.zhxh.model.Public_product;
 
 /**
  * 商品列表页
@@ -52,4 +53,12 @@ public interface IProductListService {
 	 * @return
 	 * */
 	public int delete(String id);
+	
+	/**
+	 * 根据商品列表的id，获取列表对应的商品。
+	 * @param pageBean
+	 * @param productListid
+	 * @return
+	 */
+	public PageBean<Public_product> listLableProduct(PageBean<Public_product> pageBean,String productListid);
 }

@@ -15,7 +15,7 @@
     
 	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/js/plupload-2.1.8/js/jquery.plupload.queue/css/jquery.plupload.queue.css" media="screen" />
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script>
+	<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script> --%>
 	
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/plupload-2.1.8/js/plupload.full.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/plupload-2.1.8/js/jquery.plupload.queue/jquery.plupload.queue.min.js"></script>

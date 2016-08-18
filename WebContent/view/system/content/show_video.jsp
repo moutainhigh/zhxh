@@ -113,7 +113,7 @@
 				要查看此视频请启用JavaScript，并考虑升级到现代高版本Web浏览器。
 			</p>
 		</video> -->
-		<video id="preview-player" class="video-js vjs-fluid placeholder vjs-big-play-centered" controls preload="auto" width="640" height="264" poster="">
+		<video id="preview-player" class="video-js vjs-fluid placeholder vjs-big-play-centered" controls preload="auto" width="640" height="100%" poster="" >
 		    <!-- <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4"></source>
 		    <source src="http://vjs.zencdn.net/v/oceans.webm" type="video/webm"></source>
 		    <source src="http://vjs.zencdn.net/v/oceans.ogv" type="video/ogg"></source> -->

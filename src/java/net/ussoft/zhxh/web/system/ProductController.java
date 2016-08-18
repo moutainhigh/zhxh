@@ -101,7 +101,7 @@ public class ProductController extends BaseConstroller {
 			p.setOrderBy("ratedtime");
 			p.setOrderType("desc");
 			p = ratedService.list(p, parentid);
-			map.put("total", p.getPageCount());
+			map.put("total", p.getRowCount());
 			map.put("data", p.getList());
 		}
 		else if (listtype.equals(Constants.BRANDFIRST_LB_PIC)) {
@@ -128,11 +128,20 @@ public class ProductController extends BaseConstroller {
 			List<Product_list> pList = pListService.list(parentid);
 			map.put("total", pList.size());
 			map.put("data", pList);
-		}//商品列表关联的商品
+		}//获取公共图片。listtype作为判断，同时也作为公共图片的分类。
+//		else if (listtype.equals(Constants.PUBLICPIC)) {
+//			List<Public_pic> pList = picService.list(parentid,listtype);
+//			map.put("total", pList.size());
+//			map.put("data", pList);
+//		}
 		else if (listtype.equals(Constants.LABEL_PLIST)) {
-			List<Public_product_size> pList = productSizeService.list(parentid);
-			map.put("total", pList.size());
-			map.put("data", pList);
+			PageBean<Public_product> p = new PageBean<Public_product>();
+			p.setPageSize(pageSize);
+			p.setPageNo(pageIndex + 1);
+			p.setOrderBy("sort");
+			p = pListService.listLableProduct(p, parentid);
+			map.put("total", p.getRowCount());
+			map.put("data", p.getList());
 		}
 		
 		String json = JSON.toJSONString(map);
@@ -395,7 +404,5 @@ public class ProductController extends BaseConstroller {
 		}
 		return true;
 	}
-	
-	
 	
 }

@@ -87,10 +87,8 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
-      	              	{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	                { field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnProductEdit" } },
       	                { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                //{ field: "productcode",name:"productcode", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品型号",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	                { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
       	                { field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
       	                { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
@@ -226,6 +224,8 @@
             if (record) {
             	if (grid.id == 'grid_brand') {
             		grid_plist.load({listtype:'plist', parentid: record.id });
+            		grid_product.setData([]);
+                	grid_product.setTotalCount(0);
             	}
             	else if (grid.id == 'grid_plist') {
             		grid_product.load({listtype:'label_plist', parentid: record.id });
@@ -338,6 +338,8 @@
 	            success: function (text) {
 	            	mini.alert("保存完毕。");
 	            	tmpGrid.reload();
+	            	grid_product.setData([]);
+                	grid_product.setTotalCount(0);
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
 	                mini.alert(jqXHR.responseText);
@@ -353,6 +355,96 @@
             ids = ids.substring(0,ids.length-1);
             return ids;
         }
+		
+		function sel_product(){
+			
+			var record = grid_plist.getSelected();
+			
+			if (null == record || typeof(record.id) == "undefined" || record.id == "") {
+            	mini.alert("请先选择要选择商品的列表页.");
+	      		return;
+	      	}
+         	 
+			var pHeight = $(window.parent).height();
+	   		var pWidth = $(window.parent).width();
+	         mini.open({
+	        	 url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/selectProduct",
+	             title: "选择商品至商品列表", width: pWidth-200, height:pHeight-100,
+	             allowResize:true,
+	             showMaxButton:true,
+	             onload: function () {
+	            	 /* var iframe = this.getIFrameEl();
+                	 	var data = {listid:record.id};
+                     iframe.contentWindow.SetData(data); */
+	             },
+	             ondestroy: function (action) {
+	            	 if (action == "ok") {
+                         var iframe = this.getIFrameEl();
+                         var rows = iframe.contentWindow.GetData();
+                         
+                         var ids = getSelectGridid(rows);
+                         
+                         grid_product.loading("保存中，请稍后......");
+                         $.ajax({
+                             url: "${pageContext.request.contextPath}/label/labelListSave.htmls",
+                             data: {'objids':ids,'labelid':record.id,'tablename':'product_list'},
+                             type: "post",
+                             dataType:"text",
+                             success: function (text) {
+                             	grid_product.reload();
+                             },
+                             error: function (jqXHR, textStatus, errorThrown) {
+                                 alert(jqXHR.responseText);
+                             }
+                         });
+                     }
+	             }
+	         });
+		}
+		
+		function labelListDel() {
+			
+			var record = grid_plist.getSelected();
+			
+			if (null == record || typeof(record.id) == "undefined" || record.id == "") {
+            	mini.alert("请先选择要移除商品的列表页.");
+	      		return;
+	      	}
+			
+			var rows = grid_product.getSelecteds();
+         	 
+       	 	if (rows.length == 0) {
+       	 		mini.alert("请选择要删除的数据.");
+       		 	return;
+       	 	}
+       	 	
+       	 	var ids = getSelectGridid(rows);
+       	 	
+       	 	mini.confirm("确定删除记录？", "确定？",
+                 function (action) {
+                     if (action == "ok") {
+                    	 grid_product.loading("保存中，请稍后......");
+                    	 var url = "${pageContext.request.contextPath}/label/labelListDel.htmls";
+						$.ajax({
+							async:false,
+						    url: url,
+						    data: {'objids':ids,'labelid':record.id},
+						    type: "post",
+						    dataType:"text",
+						    success: function (text) {
+						    	grid_product.reload();
+						    },
+						    error: function (jqXHR, textStatus, errorThrown) {
+						        mini.alert(jqXHR.responseText);
+						    }
+						});
+                     } else {
+                         
+                     }
+                 }
+             );
+       	 	
+		}
 		
 		
 </script>
@@ -389,7 +481,7 @@
 				                 </td>
 				                 <td style="white-space:nowrap;">
 				                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">添加</a>
-				                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandlist')">删除</a>
+				                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_plist')">删除</a>
 					                <span class="separator"></span>
 					         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_plist')">保存</a>
 					         		<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showRow('grid_brand')">查看系列页效果</a>
@@ -411,11 +503,8 @@
 				                 	<span id="pid" style="padding-left:5px;">商品列表页显示的商品</span>
 				                 </td>
 				                 <td style="white-space:nowrap;">
-				                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_brandlist')">添加</a>
-				                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandlist')">删除</a>
-					                <span class="separator"></span>
-					         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brandlist')">保存</a>
-					         		<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showRow('grid_brand')">查看系列页效果</a>
+				                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="sel_product()">添加</a>
+				                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="labelListDel()">移除</a>
 				                 </td>
 				             </tr>
 				         	</tbody>

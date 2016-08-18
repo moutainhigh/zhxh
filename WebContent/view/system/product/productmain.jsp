@@ -94,7 +94,7 @@
 	        <div id="leftTree" class="mini-outlookmenu"  onitemselect="onItemSelect" borderStyle="border:0" ></div>
 	    </div>
 		<div showCollapseButton="false" >
-		    	<iframe id="mainframe" src="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/productlist" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
+		    	<iframe id="mainframe" src="" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
 		</div>
 	    
 	</div>
