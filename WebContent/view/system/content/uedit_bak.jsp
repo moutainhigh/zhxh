@@ -11,13 +11,13 @@
 	<script src="${pageContext.request.contextPath}/js/tinymce4.2.3/upload/plugin.js"></script>
 	<style type="text/css">
 	    body{
-	        margin:0;padding:0;border:0;width:100%;height:100%;overflow-y:hidden;
+	        margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
 	    }    
     </style>
     
     <script type="text/javascript">
 		//var result = '${result}';
-		var pHeight = $(window.parent).height()-405;
+		var pHeight = $(window.parent).height()-402;
 		tinymce.init({
 	        selector: "textarea",
 	        plugins: [
@@ -56,34 +56,26 @@
     </script>
 </head>
 <body>
-	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
-        <table style="width:100%;">
-            <tbody>
-             <tr>
-                 <td style="width:100%;">
-                 	<!-- <span id="pid" style="padding-left:5px;">内容编辑</span> -->
-                 </td>
-                 <td style="white-space:nowrap;">
-                  	<!-- <a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>
-                	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow()">删除</a>
-	                <span class="separator"></span> -->
-	         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="onOk()">保存</a>
-                 </td>
-             </tr>
-         </tbody>
-        </table>
-    </div>
-    <div class="mini-fit">
-		<form id="form1" method="post">
-			<input type="hidden" id="id" name="id" value="${content.id }"/>
-			<div>
-			    <textarea id="memo" name="memo">${content.memo }</textarea>
-			</div>
-		</form>
-    </div>                
-    
-	<%-- <div class="mini-splitter" style="width:100%;height:100%;">
-	    <div>
+	<div class="mini-splitter" style="width:100%;height:100%;">
+	    <div id="preview" size="50%" showCollapseButton="true" style="padding:0px;">
+	    	<div class="mini-toolbar" borderStyle="border-top:0;border-bottom:1;border-left:0;border-right:0;">
+		        <table style="width:100%;">
+		            <tbody>
+		             <tr>
+		                 <td style="width:100%;">
+		                 	<span id="pid" style="padding-left:5px;">预览</span>
+		                 </td>
+		                 <td style="white-space:nowrap;">
+		                 </td>
+		             </tr>
+		         </tbody>
+		        </table>
+		    </div>
+		    <div class="mini-fit">
+		    	${content.memo }
+		    </div>
+	    </div>
+	    <div showCollapseButton="true">
 	    	<div class="mini-toolbar" borderStyle="border:0;">
 		        <table style="width:100%;">
 		            <tbody>
@@ -111,7 +103,7 @@
 		    </div>
 	        
 	    </div>        
-	</div> --%>
+	</div>
 	
 	<script type="text/javascript">
 		$(function(){

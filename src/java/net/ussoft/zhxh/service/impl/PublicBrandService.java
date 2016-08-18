@@ -1,20 +1,16 @@
 package net.ussoft.zhxh.service.impl;
 
-import java.io.File;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicBrandDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.service.IPublicBrandService;
-import net.ussoft.zhxh.util.FileOperate;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PublicBrandService implements IPublicBrandService{
@@ -30,6 +26,18 @@ public class PublicBrandService implements IPublicBrandService{
 	@Override
 	public List<Public_brand> list() {
 		return brandDao.getAll("sort");
+	}
+	
+	@Override
+	public List<Public_brand> list(int isshow) {
+		Public_brand brand = new Public_brand();
+		brand.setIsshow(isshow);
+		PageBean<Public_brand> p = new PageBean<Public_brand>();
+		p.setIsPage(false);
+		p.setOrderBy("sort");
+		p.setOrderType("asc");
+		p = brandDao.search(brand,p);
+		return p.getList();
 	}
 
 	@Transactional("txManager")

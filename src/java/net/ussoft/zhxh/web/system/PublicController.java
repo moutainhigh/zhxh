@@ -136,7 +136,7 @@ public class PublicController extends BaseConstroller{
 
 		//公共图片获取list
 		if(act.equals(Constants.PUBLICPIC)){
-			List<Public_pic> list = picService.list(parentid,parenttype);
+			List<Public_pic> list = picService.list(parentid,parenttype,-1);
 			
 			HashMap<String,Object> map = new HashMap<String,Object>();
 			
@@ -177,10 +177,7 @@ public class PublicController extends BaseConstroller{
 			PageBean<Public_content> p = new PageBean<Public_content>();
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex + 1);
-			p.setOrderBy("sort");
-			p.setOrderType("asc");
-			p.setOrderBy("createtime");
-			p.setOrderType("desc");
+			p.setOrderBy("sort asc ,createtime desc");
 			p = contentService.list(p,parentid,parenttype);
 			
 			HashMap<String,Object> map = new HashMap<String,Object>();
@@ -194,10 +191,7 @@ public class PublicController extends BaseConstroller{
 			PageBean<Filesdown> p = new PageBean<Filesdown>();
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex +1);
-			p.setOrderBy("sort");
-			p.setOrderType("asc");
-			p.setOrderBy("filetime");
-			p.setOrderType("desc");
+			p.setOrderBy("sort asc,filetime desc");
 			p = filesdownService.list(p, parentid, parenttype);
 			
 			HashMap<String,Object> map = new HashMap<String,Object>();

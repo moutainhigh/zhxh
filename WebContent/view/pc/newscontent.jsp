@@ -12,6 +12,9 @@
 <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
 
+<link rel="stylesheet" href="${pageContext.request.contextPath}/js/videojs_5.10.4/video-js.css">
+<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/video.js"></script>
+<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/videojs-mux.js"></script>
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->

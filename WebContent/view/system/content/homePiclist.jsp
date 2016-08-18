@@ -25,12 +25,13 @@
         	grid.set({
         		url:"${pageContext.request.contextPath}/public/list.htmls",
         		columns: [
-						{ type: "checkcolumn",headerAlign:"center",width: 30},
-      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
-      	              	{ field: "pic_path",name:"pic_path", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "轮播图片",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "pic_memo",name:"pic_memo", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "图片描述",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "pic_url",name:"pic_url", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "图片点击URL",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "pic_sort",name:"pic_sort", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "图片排序", editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
+						{ type: "checkcolumn",headerAlign:"center",width: 50},
+      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
+      	              	{ field: "pic_path",name:"pic_path", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "轮播图片",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	                { field: "pic_memo",name:"pic_memo", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "图片描述",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "pic_url",name:"pic_url", width: 280, headerAlign: "center", align:"center",allowSort: false, header: "图片点击URL",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "pic_active",name:"pic_active",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
+      	              	{ field: "pic_sort",name:"pic_sort", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "图片排序", editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -42,6 +43,7 @@
 	            //onselectionchanged:"onSelectionChanged",
 	            //oncellbeginedit:"OnCellBeginEdit",
 	            //oncellcommitedit:"onCellCommitEdit",
+	            fitColumns:false,
 	            editNextOnEnterKey:true,
 	            showPageSize:false,
 	            pageSize:2000
@@ -98,7 +100,7 @@
 		}
 		
 		function delRow() {
-        	var cf1 = "确定要删除选中的帐户吗？<br>&nbsp;&nbsp;&nbsp;&nbsp;注意：不可恢复，请谨慎操作。";
+        	var cf1 = "确定要删除吗？<br>&nbsp;&nbsp;&nbsp;&nbsp;注意：不可恢复，请谨慎操作。";
         	
         	var rows = grid.getSelecteds();
           	 
@@ -106,17 +108,11 @@
        	 		mini.alert("请选择要删除的数据");
        		 	return;
        	 	}
-       	 	var del_row = [];
-       	 	for (var i=0;i<rows.length;i++) {
-       	 		if (rows[i].id != 1) {
-       	 			del_row.push(rows[i]);
-       	 		}
-       	 	}
        	 
        	 	mini.confirm(cf1, "系统提示",
                  function (action) {
                      if (action == "ok") {
-                    	 grid.removeRows(del_row, false);
+                    	 grid.removeRows(rows, false);
                      }
                  }
              );

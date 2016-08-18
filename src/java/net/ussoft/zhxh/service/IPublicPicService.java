@@ -21,16 +21,19 @@ public interface IPublicPicService {
 	
 	/**
 	 * 查询所有
+	 * @param parentid
+	 * @param parenttype
+	 * @param pic_active 是否显示，1：显示，0：隐藏，-1：所有
 	 * @return list
 	 * */
-	public List<Public_pic> list(String parentid,String parenttype);
+	public List<Public_pic> list(String parentid,String parenttype,int pic_active);
 	
 	/**
 	 * 查询所有 分页
 	 * @param pageBean
 	 * @return list
 	 * */
-	public PageBean list(PageBean<Public_pic> pageBean,String parentid,String parenttype);
+	public PageBean<Public_pic> list(PageBean<Public_pic> pageBean,String parentid,String parenttype);
 	
 	/**
 	 * 添加

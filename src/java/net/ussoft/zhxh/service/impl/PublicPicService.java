@@ -24,10 +24,12 @@ public class PublicPicService implements IPublicPicService{
 	}
 
 	@Override
-	public List<Public_pic> list(String parentid,String parenttype) {
+	public List<Public_pic> list(String parentid,String parenttype,int pic_active) {
 		Public_pic pic = new Public_pic();
 		pic.setParentid(parentid);
 		pic.setParenttype(parenttype);
+		if(pic_active > 0)
+			pic.setPic_active(pic_active); //显示
 		PageBean<Public_pic> p = new PageBean<Public_pic>();
 		p.setIsPage(false);
 		p.setOrderBy("pic_sort");

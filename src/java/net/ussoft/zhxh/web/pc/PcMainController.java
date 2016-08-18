@@ -63,18 +63,11 @@ public class PcMainController extends BaseConstroller {
 	public ModelAndView index (ModelMap modelMap) throws Exception {
 		
 		//首页轮播图
-		List<Public_pic> homePicList = picService.list("home_pic","lbt");
-		
-		//品牌
-		List<Public_brand> brandList = brandService.list();
-		
-		//专题
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");
-		
+		List<Public_pic> homePicList = picService.list("home_pic","lbt",1);
+		//初始品牌、专题
+		init(modelMap);
 		
 		modelMap.put("homePic", homePicList);
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
 		
 		return new ModelAndView("/view/pc/index", modelMap);
 	}
@@ -85,16 +78,11 @@ public class PcMainController extends BaseConstroller {
 	 * */
 	@RequestMapping(value="/subject")
 	public ModelAndView subject (String id,ModelMap modelMap) throws Exception {
-		
-		//头部
-		List<Public_brand> brandList = brandService.list();	//品牌
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
-		
 		//专题
 		Public_content content = contentService.getById(id);
+		//初始品牌、专题
+		init(modelMap);
 		
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
 		modelMap.put("content", content);
 		modelMap.put("id", id);
 		return new ModelAndView("/view/pc/subject", modelMap);
@@ -106,16 +94,12 @@ public class PcMainController extends BaseConstroller {
 	 * */
 	@RequestMapping(value="/service")
 	public ModelAndView footer (String ptype,ModelMap modelMap) throws Exception {
-		List<Public_brand> brandList = brandService.list();	//品牌
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
-		
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"faq";
 		List<Public_content> serviceList = contentService.list("service", ptype);	//专题
 		
+		//初始品牌、专题
+		init(modelMap);
 		
-		
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
 		modelMap.put("serviceList", serviceList);
 		modelMap.put("ptype", ptype);
 		
@@ -129,8 +113,6 @@ public class PcMainController extends BaseConstroller {
 	@RequestMapping(value="/news")
 	public ModelAndView news (String ptype,@RequestParam(value="page",defaultValue="1")int page,ModelMap modelMap) throws Exception {
 		int pageSize = 10;
-		List<Public_brand> brandList = brandService.list();	//品牌
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
 		
 		PageBean<Public_content> p = new PageBean<Public_content>();
 		p.setPageSize(pageSize);
@@ -144,8 +126,8 @@ public class PcMainController extends BaseConstroller {
 		p = contentService.list(p,"news", ptype);
 		
 		
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
+		//初始品牌、专题
+		init(modelMap);
 		
 		modelMap.put("newsList", p.getList());
 		
@@ -164,14 +146,11 @@ public class PcMainController extends BaseConstroller {
 	 * */
 	@RequestMapping(value="/news-c")
 	public ModelAndView news_c (String id,ModelMap modelMap) throws Exception {
-		List<Public_brand> brandList = brandService.list();	//品牌
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
-		
 		Public_content content = contentService.getById(id);
 		
 		
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
+		//初始品牌、专题
+		init(modelMap);
 		
 		modelMap.put("news", content);
 		
@@ -185,8 +164,6 @@ public class PcMainController extends BaseConstroller {
 	@RequestMapping(value="/article")
 	public ModelAndView article (String ptype,@RequestParam(value="page",defaultValue="1")int page,ModelMap modelMap) throws Exception {
 		int pageSize = 10;
-		List<Public_brand> brandList = brandService.list();	//品牌
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
 		
 		PageBean<Public_content> p = new PageBean<Public_content>();
 		p.setPageSize(pageSize);
@@ -199,9 +176,8 @@ public class PcMainController extends BaseConstroller {
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"mrwz"; //美容文章
 		p = contentService.list(p,"article", ptype);
 		
-		
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
+		//初始品牌、专题
+		init(modelMap);
 		
 		modelMap.put("articleList", p.getList());
 		
@@ -220,14 +196,11 @@ public class PcMainController extends BaseConstroller {
 	 * */
 	@RequestMapping(value="/article-c")
 	public ModelAndView article_c (String id,ModelMap modelMap) throws Exception {
-		List<Public_brand> brandList = brandService.list();	//品牌
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
-		
 		Public_content content = contentService.getById(id);
 		
 		
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
+		//初始品牌、专题
+		init(modelMap);
 		
 		modelMap.put("article", content);
 		
@@ -242,9 +215,6 @@ public class PcMainController extends BaseConstroller {
 	@RequestMapping(value="/cases")
 	public ModelAndView cases (String ptype,@RequestParam(value="page",defaultValue="1")int page,ModelMap modelMap) throws Exception {
 		int pageSize = 10;
-		List<Public_brand> brandList = brandService.list();	//品牌
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
-		
 		PageBean<Public_content> p = new PageBean<Public_content>();
 		p.setPageSize(pageSize);
 		p.setPageNo(page);
@@ -256,9 +226,8 @@ public class PcMainController extends BaseConstroller {
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"alk"; //案例库
 		p = contentService.list(p,"case", ptype);
 		
-		
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
+		//初始品牌、专题
+		init(modelMap);
 		
 		modelMap.put("articleList", p.getList());
 		
@@ -277,14 +246,10 @@ public class PcMainController extends BaseConstroller {
 	 * */
 	@RequestMapping(value="/cases-c")
 	public ModelAndView cases_c (String id,ModelMap modelMap) throws Exception {
-		List<Public_brand> brandList = brandService.list();	//品牌
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
-		
 		Public_content content = contentService.getById(id);
 		
-		
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
+		//初始品牌、专题
+		init(modelMap);
 		
 		modelMap.put("article", content);
 		
@@ -298,8 +263,6 @@ public class PcMainController extends BaseConstroller {
 	@RequestMapping(value="/spec")
 	public ModelAndView spec (String ptype,@RequestParam(value="page",defaultValue="1")int page,ModelMap modelMap) throws Exception {
 		int pageSize = 10;
-		List<Public_brand> brandList = brandService.list();	//品牌
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
 		
 		PageBean<Filesdown> p = new PageBean<Filesdown>();
 		p.setPageSize(pageSize);
@@ -312,9 +275,8 @@ public class PcMainController extends BaseConstroller {
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"spec";
 		p = filesdownService.list(p,"files", ptype);
 		
-		
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
+		//初始品牌、专题
+		init(modelMap);
 		
 		modelMap.put("specList", p.getList());
 		
@@ -336,18 +298,14 @@ public class PcMainController extends BaseConstroller {
 	@RequestMapping(value="/zh")
 	public ModelAndView zh (String id,ModelMap modelMap) throws Exception {
 		
-		//头部
-		List<Public_brand> brandList = brandService.list();	//品牌
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");	//专题
-		
 		//品牌 轮播图
-		List<Public_pic> brandPicList = picService.list(id,"brandfirst_lb_pic");
+		List<Public_pic> brandPicList = picService.list(id,"brandfirst_lb_pic",1);
 		
 		//品牌综合页内容
 		List<Brandfirst> bfList = bfService.list(id);
 		
-		modelMap.put("brandList", brandList);
-		modelMap.put("subjectList", subjectList);
+		//初始品牌、专题
+		init(modelMap);
 		modelMap.put("brandPicList", brandPicList);
 		modelMap.put("bfList", bfList);
 		

@@ -26,6 +26,12 @@ public interface IPublicBrandService {
 	public List<Public_brand> list();
 	
 	/**
+	 * 查询
+	 * @param isshow 前台品牌是否显示
+	 * */
+	public List<Public_brand> list(int isshow);
+		
+	/**
 	 * 查询所有 分页
 	 * 
 	 * */

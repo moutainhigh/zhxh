@@ -165,15 +165,9 @@
        	 		mini.alert("请选择要删除的标签.");
        		 	return;
        	 	}
-       	 	var del_row = [];
-       	 	for (var i=0;i<rows.length;i++) {
-       	 		if (rows[i].id != 1) {
-       	 			del_row.push(rows[i]);
-       	 		}
-       	 	}
        	 
           	if (confirm(cf1)) {
-          		tmpGrid.removeRows(del_row, false);
+          		tmpGrid.removeRows(rows, false);
    		 	}
 			
         }

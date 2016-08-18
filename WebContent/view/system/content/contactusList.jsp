@@ -28,7 +28,7 @@
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
       	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
-      	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "专题名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
@@ -59,7 +59,7 @@
 	            value = e.value;
                 
                 if (field == "pic_path") {
-   	        		if (value == "") {
+   	        		if (value == undefined) {
    	        			e.cellhtml = "";
        	        	}
    	        		else {
@@ -89,17 +89,10 @@
        	 		mini.alert("请选择要删除的数据");
        		 	return;
        	 	}
-       	 	var del_row = [];
-       	 	for (var i=0;i<rows.length;i++) {
-       	 		if (rows[i].id != 1) {
-       	 			del_row.push(rows[i]);
-       	 		}
-       	 	}
-       	 
        	 	mini.confirm(cf1, "系统提示",
                  function (action) {
                      if (action == "ok") {
-                    	 grid.removeRows(del_row, false);
+                    	 grid.removeRows(rows, false);
                      }
                  }
              );
@@ -160,7 +153,7 @@
 	   		var pWidth = $(window.parent).width();
 	         mini.open({
 	             url: "${pageContext.request.contextPath}/public/edit.htmls?id="+id,
-	             title: "内容编辑", width: pWidth-100, height:pHeight-100,
+	             title: "内容编辑", width: pWidth-200, height:pHeight-100,
 	             allowResize:true,
 	             showMaxButton:true,
 	             onload: function () {
@@ -170,7 +163,7 @@
 	                 //iframe.contentWindow.SetData(data);
 	             },
 	             ondestroy: function (action) {
-	            	 grid.reload();
+	            	 //grid.reload();
 	             }
 	         });
 		}

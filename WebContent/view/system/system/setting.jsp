@@ -57,6 +57,14 @@
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
 	    
+	    var t4 = {};
+	    t4.id = "label";
+	    t4.pid = "right";
+	    t4.text = "视频管理";
+	    t4.iconCls = "label";
+	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/system/videoList";
+	    t4.iconPosition = "top";
+	    dataList.push(t4);
     
     	$(function(){
             var leftTree = mini.get("leftTree");

@@ -80,17 +80,11 @@
        	 		mini.alert("请选择要删除的数据.");
        		 	return;
        	 	}
-       	 	var del_row = [];
-       	 	for (var i=0;i<rows.length;i++) {
-       	 		if (rows[i].id != 1) {
-       	 			del_row.push(rows[i]);
-       	 		}
-       	 	}
        	 	
        	 	mini.confirm(cf1, "确定？",
                  function (action) {
                      if (action == "ok") {
-                    	 grid.removeRows(del_row, false);
+                    	 grid.removeRows(rows, false);
                      } else {
                          
                      }

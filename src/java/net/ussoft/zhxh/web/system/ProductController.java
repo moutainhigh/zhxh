@@ -105,7 +105,7 @@ public class ProductController extends BaseConstroller {
 			map.put("data", p.getList());
 		}
 		else if (listtype.equals(Constants.BRANDFIRST_LB_PIC)) {
-			List<Public_pic> pList = picService.list(parentid,listtype);
+			List<Public_pic> pList = picService.list(parentid,listtype,-1);
 			map.put("total", pList.size());
 			map.put("data", pList);
 		}

@@ -1,12 +1,19 @@
 package net.ussoft.zhxh.base;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 
+import net.ussoft.zhxh.model.Public_brand;
+import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Sys_account;
 import net.ussoft.zhxh.service.IAccountService;
+import net.ussoft.zhxh.service.IPublicBrandService;
+import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 
@@ -21,6 +28,12 @@ public class BaseConstroller {
 	
 	@Resource
 	private IAccountService accountService;
+	
+	@Resource
+	IPublicBrandService brandService;	//品牌
+	
+	@Resource
+	IPublicContentService contentService;  //富文本
 	
 	@Autowired  
 	private  HttpServletRequest request; 
@@ -62,5 +75,14 @@ public class BaseConstroller {
     	return basePath;
 	}
 	
-	
+	public void init(ModelMap modelMap){
+		//品牌
+		List<Public_brand> brandList = brandService.list(1);
+		
+		//专题
+		List<Public_content> subjectList = contentService.list("zt", "dzyf");
+		
+		modelMap.put("brandList", brandList);
+		modelMap.put("subjectList", subjectList);
+	}
 }
