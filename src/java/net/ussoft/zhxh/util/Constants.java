@@ -77,6 +77,10 @@ public class Constants{
 	//================图片上传
 	
 	/*
+	 * 公共资源logo
+	 */
+	public static final String LOGO = "logo";
+	/*
 	 * 品牌logo
 	 */
 	public static final String BRANDLOG = "brandlog";
@@ -106,6 +110,11 @@ public class Constants{
 	 * 商品列表关联的商品
 	 */
 	public static final String LABEL_PLIST = "label_plist";
+	
+	/**
+	 * 公共资源
+	 */
+	public static final String SYSPUBLIC = "syspublic";
 	
 	
 	

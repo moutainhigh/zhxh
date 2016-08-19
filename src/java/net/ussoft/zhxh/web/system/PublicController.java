@@ -19,10 +19,12 @@ import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_video;
+import net.ussoft.zhxh.model.Sys_public;
 import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicVideoService;
 import net.ussoft.zhxh.service.IPublicfilesdownService;
+import net.ussoft.zhxh.service.ISysPublicService;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.FileOperate;
@@ -59,6 +61,8 @@ public class PublicController extends BaseConstroller{
 	
 	@Resource
 	IPublicfilesdownService filesdownService;	//文件
+	@Resource
+	private ISysPublicService sysPublicService;	//文件
 	
 	/**
 	 * 编辑富文本
@@ -197,6 +201,14 @@ public class PublicController extends BaseConstroller{
 			HashMap<String,Object> map = new HashMap<String,Object>();
 			map.put("total", p.getRowCount());
 			map.put("data", p.getList());
+			String json = JSON.toJSONString(map);
+			out.print(json);
+		}
+		else if(Constants.SYSPUBLIC.equals(act)){
+			List<Sys_public> sysPList= sysPublicService.list();
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			map.put("total", sysPList.size());
+			map.put("data", sysPList);
 			String json = JSON.toJSONString(map);
 			out.print(json);
 		}
@@ -392,6 +404,11 @@ public class PublicController extends BaseConstroller{
 			Filesdown fd = new Filesdown();
 			BeanUtils.populate(fd, row);
 			num = filesdownService.update(fd);
+		}
+		else if(Constants.LOGO.equals(act)){
+			Sys_public tmp = new Sys_public();
+			BeanUtils.populate(tmp, row);
+			num = sysPublicService.update(tmp);
 		}
 		
 		if (num <= 0 ) {

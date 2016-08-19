@@ -39,6 +39,7 @@ import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
 import net.ussoft.zhxh.model.Public_video;
+import net.ussoft.zhxh.model.Sys_public;
 import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicContentService;
@@ -46,6 +47,7 @@ import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
 import net.ussoft.zhxh.service.IPublicVideoService;
 import net.ussoft.zhxh.service.IPublicfilesdownService;
+import net.ussoft.zhxh.service.ISysPublicService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.FileOperate;
@@ -74,6 +76,8 @@ public class CommonController extends BaseConstroller {
 	
 	@Resource
 	private IPublicContentService contentService;
+	@Resource
+	private ISysPublicService sysPublicService;
 	
 	@Resource
 	private IPublicfilesdownService filesdownService;
@@ -271,6 +275,25 @@ public class CommonController extends BaseConstroller {
         			tmp.setPic("");
         		}
         		filesdownService.update(tmp);
+        	}
+        	else if (forObj.equals(Constants.LOGO)) {
+        		//更新内容
+        		Sys_public tmp = sysPublicService.getById(id);
+        		if (null != fileMap && fileMap.size() > 0 && !fileMap.get("newname").isEmpty()) {
+    	    		//删除原图片
+    	    		if (null != tmp.getPic_path() && !"".equals(tmp.getPic_path())) {
+    	    			FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getPic_path());
+    	    		}
+    	    		tmp.setPic_path(fileMap.get("filepath") + fileMap.get("newname"));
+    	    	}
+        		else {
+        			if (null != tmp.getPic_path() && !"".equals(tmp.getPic_path())) {
+    	    			FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getPic_path());
+    	    		}
+    	    		tmp.setPic_path("");
+        		}
+    	    	
+        		sysPublicService.update(tmp);
         	}
         }
         

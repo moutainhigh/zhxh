@@ -160,7 +160,7 @@
         	var row = grid_brand.getEditorOwnerRow(buttonEdit);
         	
         	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
+                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
                 title: "上传品牌Logo", width: 600, height:500,
                 allowResize:true,
                 onload: function () {
@@ -200,7 +200,7 @@
 	   		             	var row = grid_product.getEditorOwnerRow(buttonEdit);
 	   		             	
 	   		             	mini.open({
-	   		                     url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
+	   		                     url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
 	   		                     title: "上传商品主图片", width: 600, height:500,
 	   		                     allowResize:true,
 	   		                     onload: function () {
@@ -226,7 +226,7 @@
             	var row = grid_product.getEditorOwnerRow(buttonEdit);
             	
             	mini.open({
-                    url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
+                    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
                     title: "上传商品主图片", width: 600, height:500,
                     allowResize:true,
                     onload: function () {
@@ -250,7 +250,7 @@
         	var buttonEdit = e.sender;
         	
         	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/selectColor",
+                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/selectColor",
                 title: "选择颜色", width: 600, height:500,
                 allowResize:true,
                 onload: function () {
@@ -294,7 +294,7 @@
         	
         	var title = "商品评价";
         	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/editRated",
+                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/editRated",
                 title: title, width: 800, height:600,
                 allowResize:true,
                 onload: function () {
@@ -314,7 +314,7 @@
         	
         	var title = "商品售价";
         	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/editSize",
+                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/editSize",
                 title: title, width: 800, height:600,
                 allowResize:true,
                 onload: function () {

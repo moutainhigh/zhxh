@@ -65,10 +65,20 @@
 	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/system/videoList";
 	    t4.iconPosition = "top";
 	    dataList.push(t4);
+	    
+	    var t5 = {};
+	    t5.id = "syspublic";
+	    t5.pid = "right";
+	    t5.text = "系统级配置";
+	    t5.iconCls = "setting";
+	    t5.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/system/sysPubliclist";
+	    t5.iconPosition = "top";
+	    dataList.push(t5);
     
     	$(function(){
             var leftTree = mini.get("leftTree");
             leftTree.loadList(dataList,"id","pid");
+            leftTree.selectNode("account");
         })
         
         function onItemSelect(e) {
@@ -85,7 +95,7 @@
 	        <div id="leftTree" class="mini-outlookmenu"  onitemselect="onItemSelect" borderStyle="border:0" ></div>
 	    </div>
 		<div showCollapseButton="false" >
-		    	<iframe id="mainframe" src="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/system/accountlist" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
+		    	<iframe id="mainframe" src="" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
 		</div>
 	    
 	</div>
