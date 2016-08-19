@@ -73,8 +73,8 @@
 	          <div class="shop-con-l">
 	              <div class="shop-Img">
 	              	<c:forEach var="item" items="${bfList }" begin="0" end="0">
-	    				<div class="title clearfix"><span>${item.title }</span><a href="javascript:;">查看更多</a></div>
-	                  	<a href="javascript:;"><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
+	    				<div class="title clearfix"><span>${item.title }</span><a href='${item.righttitleurl !="" ?item.righttitleurl:"javascript:;" }' target="_blank">${item.righttitle }</a></div>
+	                  	<a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' target="_blank"><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
 	    			</c:forEach>
 	                  <!--注  图片要传和这个大小一样的 940*1134-->
 	              </div> 
@@ -82,14 +82,14 @@
 	          <div class="shop-con-r">
 	          <c:forEach var="item" items="${bfList }" begin="1" end="1">
 	              <div class="shop-Img top-0">
-	                  <div class="title clearfix"><span>${item.title }</span><a href="javascript:;">查看更多</a></div>
-	                  <a href="javascript:;"><img src="${pageContext.request.contextPath}/${item.firstpic}"/></a>
+	                  <div class="title clearfix"><span>${item.title }</span><a href='${item.righttitleurl !="" ?item.righttitleurl:"javascript:;" }' target="_blank">${item.righttitle }</a></div>
+	                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' target="_blank"><img src="${pageContext.request.contextPath}/${item.firstpic}"/></a>
 	              </div>
 	          </c:forEach>
 	          <c:forEach var="item" items="${bfList }" begin="2" end="2">
 	              <div class="shop-Img bottom-0">
-	                  <div class="title clearfix"><span>${item.title }</span><a href="javascript:;">查看更多</a></div>
-	                  <a href="javascript:;"><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
+	                  <div class="title clearfix"><span>${item.title }</span><a href='${item.righttitleurl !="" ?item.righttitleurl:"javascript:;" }' target="_blank">${item.righttitle }</a></div>
+	                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' target="_blank"><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
 	              </div> 
 	          </c:forEach>
 	          </div>
@@ -100,16 +100,16 @@
 	      		<c:when test="${status.count%2 == 0 }">
 	      			<div class="shop-con-r fr">
 			          <div class="shop-Img">
-			              <div class="title clearfix"><span>${item.title }</span><a href="javascript:;">查看更多</a></div>
-		                  <a href="javascript:;"><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
+			              <div class="title clearfix"><span>${item.title }</span><a href='${item.righttitleurl !="" ?item.righttitleurl:"javascript:;" }' target="_blank">${item.righttitle }</a></div>
+		                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' target="_blank"><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
 			          </div>
 			      </div>
 	      		</c:when>
 	      		<c:otherwise>
 	      			<div class="shop-con-l fl">
 				          <div class="shop-Img">
-				          	  <div class="title clearfix"><span>${item.title }</span><a href="javascript:;">查看更多</a></div>
-			                  <a href="javascript:;"><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
+				          	  <div class="title clearfix"><span>${item.title }</span><a href='${item.righttitleurl !="" ?item.righttitleurl:"javascript:;" }' target="_blank">${item.righttitle }</a></div>
+			                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' target="_blank"><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
 				              <!--注  图片要传和这个大小一样的 940*506-->
 				          </div>
 				      </div>

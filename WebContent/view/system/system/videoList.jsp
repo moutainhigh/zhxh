@@ -31,7 +31,6 @@
       	                { field: "videoshowpic",name:"videoshowpic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "视频封面图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnVideoPicEdit" } },
       	              	{ field: "mp4oldname",name:"mp4oldname",id:"mp4", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "本站视频mp4名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnMp4VideoEdit" } },
       	              	{ field: "webmoldname",name:"webmoldname",id:"webm", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "本站视频webm名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnWebmVideoEdit" } },
-      	                { field: "islocal",name:"islocal",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "视频来源",editor: { type: "combobox", data: [{"id":"0","text":"本站"},{"id":"1","text":"外站"}] } },
       	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } }
       	            ],
@@ -154,10 +153,15 @@
 		function onActionRenderer(e) {
             var grid = e.sender;
             var record = e.record;
-           	var id = record.id;
-           	var mp4 = record.mp4newname.replace(/\\/g,'/');
-        	var webm = record.webmnewname.replace(/\\/g,'/');
-            var s = ' <a class="Edit_Button" href="javascript:copypath(\''+mp4+'\',\''+webm+'\')" >内容</a>';
+           	var mp4 = record.mp4newname;
+        	var webm = record.webmnewname;
+        	if(mp4 != undefined){
+        		mp4 = mp4.replace(/\\/g,'/');
+        	}
+        	if(webm != undefined){
+        		webm = webm.replace(/\\/g,'/');
+        	}
+            var s = ' <a class="Edit_Button" href="javascript:copypath(\''+mp4+'\',\''+webm+'\')" >视频地址</a>';
             return s;
         }
 		
@@ -271,7 +275,7 @@
             <tbody>
              <tr>
                  <td style="width:100%;">
-                 	<span id="pid" style="padding-left:5px;">行业新闻</span>
+                 	<span id="pid" style="padding-left:5px;">本地视频</span>
                  </td>
                  <td style="white-space:nowrap;">
                  	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>

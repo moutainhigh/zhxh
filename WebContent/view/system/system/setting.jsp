@@ -29,6 +29,9 @@
 	    .indexer {
 	        background:url(${pageContext.request.contextPath}/images/Notes_Large.png) no-repeat;width:32px;height:32px;
 	    }
+	    .video {
+	        background:url(${pageContext.request.contextPath}/images/icon/video.png) no-repeat;width:32px;height:32px;
+	    }
     </style>
     
     <script type="text/javascript">
@@ -61,7 +64,7 @@
 	    t4.id = "label";
 	    t4.pid = "right";
 	    t4.text = "视频管理";
-	    t4.iconCls = "label";
+	    t4.iconCls = "video";
 	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/system/videoList";
 	    t4.iconPosition = "top";
 	    dataList.push(t4);

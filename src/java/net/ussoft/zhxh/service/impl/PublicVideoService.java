@@ -24,10 +24,13 @@ public class PublicVideoService implements IPublicVideoService{
 	}
 
 	@Override
-	public List<Public_video> list(String parentid,String parenttype) {
+	public List<Public_video> list(String parentid,String parenttype,int isshow) {
 		Public_video video = new Public_video();
 		video.setParentid(parentid);
 		video.setParenttype(parenttype);
+		if(isshow > -1){
+			video.setIsshow(isshow);
+		}
 		PageBean<Public_video> p = new PageBean<Public_video>();
 		p.setIsPage(false);
 		p.setOrderBy("sort");

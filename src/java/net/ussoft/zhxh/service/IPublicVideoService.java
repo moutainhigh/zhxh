@@ -21,9 +21,12 @@ public interface IPublicVideoService {
 	
 	/**
 	 * 查询所有
+	 * @param parentid
+	 * @param parenttype
+	 * @param isshow  -1:显示说有，0:隐藏，1:显示
 	 * @return list
 	 * */
-	public List<Public_video> list(String parentid,String parenttype);
+	public List<Public_video> list(String parentid,String parenttype,int isshow);
 	
 	/**
 	 * 查询所有 分页

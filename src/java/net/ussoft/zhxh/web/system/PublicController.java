@@ -151,7 +151,7 @@ public class PublicController extends BaseConstroller{
 		}
 		//公共视频获取list
 		else if(act.equals(Constants.PUBLICVIDEO)){
-			List<Public_video> list = videoService.list(parentid,parenttype);
+			List<Public_video> list = videoService.list(parentid,parenttype,-1);
 			
 			HashMap<String,Object> map = new HashMap<String,Object>();
 			

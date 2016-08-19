@@ -13,17 +13,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Brandfirst;
+import net.ussoft.zhxh.model.Brandlist;
 import net.ussoft.zhxh.model.Filesdown;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.model.Public_video;
 import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicUserService;
+import net.ussoft.zhxh.service.IPublicVideoService;
 import net.ussoft.zhxh.service.IPublicfilesdownService;
 import net.ussoft.zhxh.util.Logger;
 
@@ -58,6 +61,12 @@ public class PcMainController extends BaseConstroller {
 	
 	@Resource
 	IPublicfilesdownService filesdownService;	//文件下载
+	
+	@Resource
+	private IBrandfirstService brandFirstService;	//品牌综合、系列
+	
+	@Resource
+	private IPublicVideoService videoService;	//视频
 	
 	@RequestMapping(value="/pcindex")
 	public ModelAndView index (ModelMap modelMap) throws Exception {
@@ -314,6 +323,36 @@ public class PcMainController extends BaseConstroller {
 		
 		return new ModelAndView("/view/pc/brand_zh", modelMap);
 	}
+	
+	/**
+	 * 品牌系列页
+	 * @param id 品牌ID
+	 * @param modelMap
+	 * @return ModelAndView
+	 * */
+	@RequestMapping(value="/series")
+	public ModelAndView series (String id,ModelMap modelMap) throws Exception {
+		//品牌系列
+		Brandlist series = brandFirstService.getBrandlistById(id);
+		//品牌系列轮播图
+		List<Public_pic> brandlistPic = picService.list(id,"brandlist_lb_pic",1);
+		//系列视频
+		List<Public_video> videoList = videoService.list(id, "brandlist_video",1);
+		//底部图片
+		List<Public_pic> brandlist_pic = picService.list(id,"brandlist_pic",1);
+		
+		//初始品牌、专题
+		init(modelMap);
+		modelMap.put("series", series);
+		modelMap.put("brandlistPic", brandlistPic);
+		modelMap.put("videoList", videoList);
+		modelMap.put("brandlist_pic", brandlist_pic);
+		
+		modelMap.put("id", id);
+		
+		return new ModelAndView("/view/pc/brand_series", modelMap);
+	}
+	
 	
 	/**
 	 * 下载
