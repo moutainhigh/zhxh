@@ -29,9 +29,9 @@ mini_debugger = false;
 //miniui
 document.write('<script src="' + bootPATH + 'jquery-1.11.0.js" type="text/javascript"></sc' + 'ript>');
 document.write('<script src="' + bootPATH + 'util.js" type="text/javascript"></sc' + 'ript>');
-document.write('<script src="' + bootPATH + 'miniui/miniui.js" type="text/javascript" ></sc' + 'ript>');
-document.write('<link href="' + bootPATH + 'miniui/themes/default/miniui.css" rel="stylesheet" type="text/css" />');
-document.write('<link href="' + bootPATH + 'miniui/themes/icons.css" rel="stylesheet" type="text/css" />');
+document.write('<script src="' + bootPATH + 'miniui3.6/miniui.js" type="text/javascript" ></sc' + 'ript>');
+document.write('<link href="' + bootPATH + 'miniui3.6/themes/default/miniui.css" rel="stylesheet" type="text/css" />');
+document.write('<link href="' + bootPATH + 'miniui3.6/themes/icons.css" rel="stylesheet" type="text/css" />');
 
 //skin
 //var skin = getCookie("miniuiSkin");
@@ -39,7 +39,7 @@ var skin = "blue";
 //var skin = "Default";
 
 if (skin != "Default") {
-    document.write('<link href="' + bootPATH + 'miniui/themes/' + skin + '/skin.css" rel="stylesheet" type="text/css" />');
+    document.write('<link href="' + bootPATH + 'miniui3.6/themes/' + skin + '/skin.css" rel="stylesheet" type="text/css" />');
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

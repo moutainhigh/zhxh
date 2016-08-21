@@ -10,16 +10,8 @@
     <meta name="renderer" content="webkit">
     <title>众恒信和综合管理平台</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css">
-    <%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/admin.css"> --%>
     <script src="${pageContext.request.contextPath}/js/boot.js" type="text/javascript"></script> 
-    <%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script> 
-    <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
-    <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
-    <script src="${pageContext.request.contextPath}/js/pintuer/admin.js"></script>
-    <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>--%>
     
-    <!-- <link type="image/x-icon" href="/favicon.ico" rel="shortcut icon" />
-    <link href="/favicon.ico" rel="bookmark icon" /> -->
     
     <style type="text/css">
 	    body{
@@ -98,12 +90,19 @@
 							<li><a href="javascript:;" funcode="index">首页</a></li>
 							<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/system/setting">系统配置</a></li>
 							<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/product/productmain">商品管理</a></li>
-							<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/member/userManager">会员管理</a></li>
 							<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/content/home">内容管理</a></li>
-							
+							<li><a href="javascript:;">采购分销<span class="arrow"></span></a>
+								<ul class="drop-menu">
+									<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/member/userManager">会员管理</a></li>
+									<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/member/userManager">订单管理</a></li>
+									<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/order/ordermain">利益分配</a></li>
+									<li><a href="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/order/main" target="_brank">采购分销系统</a></li>
+									<li><a href="javascript:;" funcode="">子菜单2</a></li>
+								</ul>
+							</li>
 							<li><a href="javascript:;">下拉菜单<span class="arrow"></span></a>
 								<ul class="drop-menu">
-									<li><a href="javascript:;" funcode="">子菜单</a></li>
+									<li><a href="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/order/main" target="_brank">进货系统</a></li>
 									<li><a href="javascript:;" funcode="">子菜单2</a></li>
 								</ul>
 							</li>

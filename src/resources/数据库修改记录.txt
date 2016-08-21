@@ -120,6 +120,20 @@
 
 1、filesdown 文件下载表
   （1）增加parenttype varchar 100 类型
+  
+20160819 
+
+1、sys_public 公共资源表
+	（1）增加该表一条数据。
+	id	codename	pic_path	memo  	codetype											
+	1	企业Logo							logo1
+	
+20160821
+
+1、public_dis_config 公共利益分配标准设置表
+	（1）增加该表一条id为1的数据。其他数据项不用填入。
+
+	
 	
 	
 	

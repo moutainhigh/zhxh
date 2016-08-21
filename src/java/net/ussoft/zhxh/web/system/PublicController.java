@@ -13,6 +13,19 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSON;
+
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Filesdown;
 import net.ussoft.zhxh.model.PageBean;
@@ -28,19 +41,6 @@ import net.ussoft.zhxh.service.ISysPublicService;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.FileOperate;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSON;
 
 /**
  * 内容管理  公共
@@ -62,7 +62,7 @@ public class PublicController extends BaseConstroller{
 	@Resource
 	IPublicfilesdownService filesdownService;	//文件
 	@Resource
-	private ISysPublicService sysPublicService;	//文件
+	private ISysPublicService sysPublicService;
 	
 	/**
 	 * 编辑富文本
@@ -133,7 +133,7 @@ public class PublicController extends BaseConstroller{
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/list",method=RequestMethod.POST)
-	public void list(String act,String parentid,String parenttype,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void list(String act,String parentid,String parenttype,@RequestParam(value = "pageIndex", required = false, defaultValue = "0")int pageIndex,@RequestParam(value = "pageSize", required = false, defaultValue = "0")int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -212,7 +212,6 @@ public class PublicController extends BaseConstroller{
 			String json = JSON.toJSONString(map);
 			out.print(json);
 		}
-		
 	}
 	
 	/**

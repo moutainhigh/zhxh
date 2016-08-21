@@ -115,6 +115,10 @@ public class Constants{
 	 * 公共资源
 	 */
 	public static final String SYSPUBLIC = "syspublic";
+	/**
+	 * 公共利益分配表
+	 */
+	public static final String DISCONFIG = "disconfig";
 	
 	
 	
