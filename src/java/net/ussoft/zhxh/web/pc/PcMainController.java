@@ -16,15 +16,19 @@ import net.ussoft.zhxh.model.Brandfirst;
 import net.ussoft.zhxh.model.Brandlist;
 import net.ussoft.zhxh.model.Filesdown;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Product_list;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
+import net.ussoft.zhxh.model.Public_product;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_video;
 import net.ussoft.zhxh.service.IBrandfirstService;
+import net.ussoft.zhxh.service.IProductListService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
+import net.ussoft.zhxh.service.IPublicProductService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.service.IPublicVideoService;
 import net.ussoft.zhxh.service.IPublicfilesdownService;
@@ -67,6 +71,12 @@ public class PcMainController extends BaseConstroller {
 	
 	@Resource
 	private IPublicVideoService videoService;	//视频
+	
+	@Resource
+	private IPublicProductService productService;	//商品
+	
+	@Resource
+	private IProductListService productlistService;	//商品列表
 	
 	@RequestMapping(value="/pcindex")
 	public ModelAndView index (ModelMap modelMap) throws Exception {
@@ -126,10 +136,7 @@ public class PcMainController extends BaseConstroller {
 		PageBean<Public_content> p = new PageBean<Public_content>();
 		p.setPageSize(pageSize);
 		p.setPageNo(page);
-		p.setOrderBy("sort");
-		p.setOrderType("asc");
-		p.setOrderBy("createtime");
-		p.setOrderType("desc");
+		p.setOrderBy("sort asc,createtime desc");
 		
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"hy";
 		p = contentService.list(p,"news", ptype);
@@ -177,10 +184,7 @@ public class PcMainController extends BaseConstroller {
 		PageBean<Public_content> p = new PageBean<Public_content>();
 		p.setPageSize(pageSize);
 		p.setPageNo(page);
-		p.setOrderBy("sort");
-		p.setOrderType("asc");
-		p.setOrderBy("createtime");
-		p.setOrderType("desc");
+		p.setOrderBy("sort asc,createtime desc");
 		
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"mrwz"; //美容文章
 		p = contentService.list(p,"article", ptype);
@@ -229,8 +233,6 @@ public class PcMainController extends BaseConstroller {
 		p.setPageNo(page);
 		p.setOrderBy("sort");
 		p.setOrderType("asc");
-		p.setOrderBy("createtime");
-		p.setOrderType("desc");
 		
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"alk"; //案例库
 		p = contentService.list(p,"case", ptype);
@@ -278,8 +280,6 @@ public class PcMainController extends BaseConstroller {
 		p.setPageNo(page);
 		p.setOrderBy("sort");
 		p.setOrderType("asc");
-		p.setOrderBy("filetime");
-		p.setOrderType("desc");
 		
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"spec";
 		p = filesdownService.list(p,"files", ptype);
@@ -353,6 +353,35 @@ public class PcMainController extends BaseConstroller {
 		return new ModelAndView("/view/pc/brand_series", modelMap);
 	}
 	
+	/**
+	 * 商品列表
+	 * @param id 商品列表ID
+	 * */
+	@RequestMapping(value="/pro")
+	public ModelAndView products (String id,@RequestParam(value="page",defaultValue="1")int page,ModelMap modelMap) throws Exception {
+		//商品列表-对象
+		Product_list prolist = productlistService.getById(id);
+		int pageSize = 10;
+		
+		PageBean<Public_product> p = new PageBean<Public_product>();
+		p.setPageSize(pageSize);
+		p.setPageNo(page);
+		p.setOrderBy("sort");
+		p = productlistService.listLableProduct(p, id);
+		
+		//初始品牌、专题
+		init(modelMap);
+		
+		modelMap.put("newsList", p.getList());
+		
+		modelMap.put("prolist", prolist);
+		modelMap.put("productList", p.getList());
+		modelMap.put("page", page);
+		modelMap.put("pageCount", p.getPageCount());
+		modelMap.put("rowCount", p.getRowCount());
+		
+		return new ModelAndView("/view/pc/products", modelMap);
+	}
 	
 	/**
 	 * 下载

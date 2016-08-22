@@ -24,7 +24,7 @@
 	    var grid;
 	    var editWindow;
 	   	$(function(){
-	   		//mini.parse();
+	   		mini.parse();
 	   		editWindow = mini.get("editWindow");
 	   		
 			grid = mini.get("grid");

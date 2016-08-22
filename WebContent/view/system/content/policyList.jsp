@@ -19,7 +19,7 @@
 		var grid;
 		
        	$(function(){
-       		//mini.parse();
+       		mini.parse();
        		
 			grid = mini.get("grid");
         	grid.set({

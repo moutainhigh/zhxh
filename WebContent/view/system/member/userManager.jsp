@@ -50,6 +50,7 @@
 	    
     
     	$(function(){
+    		mini.parse();
             var leftTree = mini.get("leftTree");
             leftTree.loadList(dataList,"id","pid");
             leftTree.selectNode("member");
