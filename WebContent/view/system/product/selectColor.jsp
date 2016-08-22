@@ -24,6 +24,7 @@
 	    var grid;
 	    var s_color="";
 	    $(function(){
+	    	mini.parse();
 	    	//$("#btn").bigColorpicker("sel_color");
 	    	$("#img").bigColorpicker(function(el,color){
 	    		s_color = color;

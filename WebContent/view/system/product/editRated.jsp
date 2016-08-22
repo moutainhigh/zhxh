@@ -24,6 +24,7 @@
     	var parentid = "";
     	
     	$(function(){
+    		mini.parse();
     		grid_rated = mini.get("grid_rated");
     		grid_rated.set({
 	    		url:"${pageContext.request.contextPath}/product/list.htmls",

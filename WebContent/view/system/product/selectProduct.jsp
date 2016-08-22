@@ -22,6 +22,7 @@
 		var grid_product;
 		
 	    $(function(){
+	    	mini.parse();
 	    	grid_brand = mini.get("grid_brand");
 			grid_brand.set({
         		url:"${pageContext.request.contextPath}/product/list.htmls",

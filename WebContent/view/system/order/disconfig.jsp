@@ -24,6 +24,7 @@
 	
 		var form;
 		$(function() {
+			mini.parse();
 			form = new mini.Form("#form1");
 			$.ajax({
 				async : false,

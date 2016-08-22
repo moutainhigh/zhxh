@@ -20,7 +20,7 @@
 		var grid_label_2;
 		
        	$(function(){
-       		//mini.parse();
+       		mini.parse();
        		
 			grid = mini.get("grid");
         	grid.set({

@@ -21,6 +21,7 @@
     	var parentid = "";
     	
     	$(function(){
+    		mini.parse();
     		grid = mini.get("grid");
     		grid.set({
 	    		url:"${pageContext.request.contextPath}/product/list.htmls",

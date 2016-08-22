@@ -79,6 +79,7 @@
 	    dataList.push(t5);
     
     	$(function(){
+    		mini.parse();
             var leftTree = mini.get("leftTree");
             leftTree.loadList(dataList,"id","pid");
             leftTree.selectNode("account");

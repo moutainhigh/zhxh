@@ -25,7 +25,7 @@
     	var form;
 	    
 	    $(function(){
-	    	
+	    	mini.parse();
 	    })
 	    
 	    //标准方法接口定义

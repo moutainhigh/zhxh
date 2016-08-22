@@ -21,7 +21,7 @@
 		var grid_brandfirst;
 		
        	$(function(){
-       		//mini.parse();
+       		mini.parse();
        		
 			grid_brand = mini.get("grid_brand");
 			grid_brand.set({

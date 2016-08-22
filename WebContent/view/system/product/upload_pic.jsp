@@ -24,6 +24,7 @@
     	var forObj = "";
     	
     	$(function(){
+    		mini.parse();
     		if (result != "") {
     			mini.alert(result);
     			result = "";
