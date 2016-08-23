@@ -401,7 +401,7 @@ public class PcMainController extends BaseConstroller {
 		Public_product product = productService.getById(id);
 		Public_content content = null;
 		List<Public_pic> proPics = null;
-		
+		//判断商品详情类型
 		if(product.getShowtype() == 1){
 			//商品详情-富文本
 			List<Public_content> list = contentService.list(product.getId(), "productrich");
@@ -456,7 +456,6 @@ public class PcMainController extends BaseConstroller {
 		map.put("rowCount", p.getRowCount());
 		
 		String json = JSON.toJSONString(map);
-		System.out.println(json);
 		out.print(json);
 	}
 	

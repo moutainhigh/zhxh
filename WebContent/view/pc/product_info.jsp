@@ -16,54 +16,8 @@
 <script src="${pageContext.request.contextPath}/js/videojs_5.10.4/video.js"></script>
 <script src="${pageContext.request.contextPath}/js/videojs_5.10.4/videojs-mux.js"></script>
 
-<!-- <script src="/js/jpages/jQuery.1.8.2.min.js"></script> -->
-<script src="/js/jpages/jPages.js"></script>
-
-<style type="text/css">
-		h2 a{
-			color: #5DB0E6;
-			text-shadow: 0 0 10px #5DB0E6;
-		}
-		
-        .holder {
-    		margin: 15px 0;
-			text-align:right;
-    	}
-    
-    	.holder a {
-    		font-size: 14px;
-    		cursor: pointer;
-    		margin: 0 5px;
-    		color: #505050;
-    	}
-    
-    	.holder a:hover {
-    		background-color: #222;
-    		color: #fff;
-    	}
-    
-    	.holder a.jp-previous { margin-right: 15px; }
-    	.holder a.jp-next { margin-left: 15px; }
-    
-    	.holder a.jp-current, a.jp-current:hover { 
-    		color: #5DB0E6;
-    		font-weight: bold;
-			text-shadow: 1px 1px #505050;
-    	}
-    
-    	.holder a.jp-disabled, a.jp-disabled:hover {
-    		color: #bbb;
-    	}
-    
-    	.holder a.jp-current, a.jp-current:hover,
-    	.holder a.jp-disabled, a.jp-disabled:hover {
-    		cursor: default; 
-    		background: none;
-    	}
-    
-    	.holder span { margin: 0 5px; }
-	</style>
-	
+<script src="${pageContext.request.contextPath}/js/page/jquery.page.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/js/page/page_css.css">
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
@@ -130,68 +84,65 @@
 	        </div>
 	    </div>
 	    <div class="shop-page-cnter3 clearfix">
-	        <span class="fl">评价  0</span>
+	        <span class="fl">评价  <span id="p_count"></span></span>
 	        <ul id="itemContainer" class="comment fr">
 	           
 	        </ul>
-	        <div class="holder" style="float:left"></div>
-	        <div style="float:left;margin: 15px 2px;">
-				<span id="page-panel"></span>
-				<span id="page-pane2"></span>
-				<span id="page-pane3"></span>
-				<span id="page-pane4"></span>
-			</div>
 	    </div>
 	    <!--分页-->
-	    <ul class="page">
-	       
-	    </ul>
+	    <div class="tcdPageCode" style="text-align: center;"></div>
 	</div>
 	
 	<script>
-	    $(function(){
-	        $("div.holder").jPages({
-	            containerID  : "itemContainer",
-				first: '首页',
-				last: '尾页',
-				previous: '上页',
-				next: '下页',
-				perPage: 2,
-	            startPage: 1,
-	            startRange: 2,
-	            midRange: 3,
-	            endRange: 2,
-				animation: 'wobble',
-				keyBrowse: true,
-				callback    : function( pages, items){
-					pageClick(pages.current);
-				  
-				   $("#page-panel").html("当前页面:" + pages.current);
-				   $("#page-pane2").html("页面总数:" + pages.count);
-				   $("#page-pane3").html("总数量:" + items.count);
-	               $("#page-pane4").html("每页数量:" + items.count/pages.count);
-	
-	
-				}
-	        });
-	    
-	    });
-	    
-	    function pageClick(pageIndex){
+		var pageCount = 0;
+		var	rowCount = 0;
+		var pageSize = 5;
+		$(function(){
+			//初始加載，第一頁
 			$.ajax({
 		    	async:false,
 		        url: "${pageContext.request.contextPath}/pcMain/rated.htmls",
-		        data: {'parentid':'${product.id}','pageIndex':pageIndex,'pageSize':'2'},
+		        data: {'parentid':'${product.id}','pageIndex':1,'pageSize':pageSize},
 		        type: "post",
 		        dataType:"json",
 		        success: function (jsonObj) {
-		        	var pageCount = jsonObj.pageCount;
-		        	var rowCount = jsonObj.rowCount;
+		        	pageCount = jsonObj.pageCount;
+		        	rowCount = jsonObj.rowCount;
+		        	$('#p_count').html(rowCount);
 		        	for(i=0;i<jsonObj.data.length;i++){
 		        		var html = ratedHTML(jsonObj.data[i].username,jsonObj.data[i].ratedmemo,jsonObj.data[i].ratedtime);
 		        		$('#itemContainer').append(html)
 		        	}
-		        	//page(pageIndex,pageCount,rowCount);
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(jqXHR.responseText);
+		        }
+		    });
+			//創建分頁
+			$(".tcdPageCode").createPage({
+		        pageCount:pageCount,
+		        current:1,
+		        backFn:function(p){
+		        	pageClick(p)
+		        }
+		    });
+			
+		});
+		
+		//分頁請求數據
+	    function pageClick(pageIndex){
+			$.ajax({
+		    	async:false,
+		        url: "${pageContext.request.contextPath}/pcMain/rated.htmls",
+		        data: {'parentid':'${product.id}','pageIndex':pageIndex,'pageSize':pageSize},
+		        type: "post",
+		        dataType:"json",
+		        success: function (jsonObj) {
+		        	$('#itemContainer').html('');
+		        	for(i=0;i<jsonObj.data.length;i++){
+		        		var html = ratedHTML(jsonObj.data[i].username,jsonObj.data[i].ratedmemo,jsonObj.data[i].ratedtime);
+		        		$('#itemContainer').append(html)
+		        	}
 		        },
 		        error: function (jqXHR, textStatus, errorThrown) {
 		            alert(jqXHR.responseText);
@@ -212,60 +163,6 @@
 		}
 	</script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	<script type="text/javascript">
-		function page (page,pageCount,rowCount){
-			var pageHtml = "";
-        	pageHtml += '<li><a href="javascript:pageClick(1)" class="'+page==1?"cur":""+'">1</a></li>';
-        	alert(pageHtml);
-			if(pageCount != 1){
-				if(page < 5){
-					for(i=2;i<page;i++){
-						pageHtml += '<li><a href="javascript:pageClick('+i+')" class="'+page==i?"cur":""+'">'+i+'</a></li>';
-					}
-				}else{
-					pageHtml += '<li id="" >...</li>';
-					for(i=page - 1;i<page;i++){
-						pageHtml += '<li><a href="javascript:pageClick('+i+')" class="'+page==i?"cur":""+'">'+i+'</a></li>';
-					}
-				}
-				if(page >= pageCount-4 || pageCount-4 <= 0){
-					for(i=page + 1;i<pageCount;i++){
-						pageHtml += '<li><a href="javascript:pageClick('+i+')" class="'+page==i?"cur":""+'">'+i+'</a></li>';
-					}
-				}else{
-					for(i=page + 1;i<page + 3;i++){
-						pageHtml += '<li><a href="javascript:pageClick('+i+')" class="'+page==i?"cur":""+'">'+i+'</a></li>';
-					}
-					pageHtml += '<li id="" >...</li>';
-					pageHtml += '<li><a href="javascript:pageClick('+pageCount+')" class="'+page==i?"cur":""+'">'+pageCount+'</a></li>';
-				}
-			}
-			alert(pageHtml);
-			pageHtml += '<li>共'+pageCount+'页 当前第'+page+'页 共'+rowCount+'条记录</li>';
-			alert(pageHtml);
-			$('.page').html(pageHtml);
-		}
-
-	</script>
 	<!--页脚-->
 	<%@ include file="/view/pc/bottom.jsp" %>
 </body>
