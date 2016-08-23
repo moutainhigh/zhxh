@@ -5,7 +5,7 @@
 }
 body
 {
-    font-family:Tahoma, Verdana, 宋体;   
+    font-family:Microsoft YaHei,Microsoft YaHei,Tahoma, Verdana, 宋体;   
     font-size:12px;
     line-height:22px;
 }
@@ -87,7 +87,7 @@ html,body{_background-image:url(about:blank);_background-attachment:fixed;}
     left:0;
     top:0;
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;   
+    font-family:Microsoft YaHei,Microsoft YaHei,Tahoma, Verdana, 宋体;   
 }
 
 .mini-proxy
@@ -666,7 +666,7 @@ body .mini-labelfield-checkboxlist
     background:#EBEDF2 url(images/button/button.png) repeat-x 0 0;
     
     font-size:9pt;
-    font-family:Tahoma,Verdana,宋体;
+    font-family:Microsoft YaHei,Tahoma,Verdana,宋体;
     
     line-height:22px;
     
@@ -839,7 +839,7 @@ body .mini-button-disabled *
 .mini-checkbox
 {
     font-size:9pt;
-    font-family:Tahoma,Verdana,宋体;
+    font-family:Microsoft YaHei,Tahoma,Verdana,宋体;
     line-height:22px;
     position:relative;
 }
@@ -1228,7 +1228,7 @@ input.mini-textarea
 .mini-panel
 {
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;
+    font-family:Microsoft YaHei,Tahoma,Verdana,宋体;
     overflow:hidden;
     position:relative;
     outline:none;
@@ -1429,7 +1429,7 @@ input.mini-textarea
 .mini-outlookbar
 {        
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;    
+    font-family:Microsoft YaHei,Tahoma,Verdana,宋体;  
     overflow:hidden;
 }
 .mini-outlookbar-border
@@ -1595,13 +1595,13 @@ input.mini-textarea
 {
     overflow:hidden;
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;   
+    font-family:Microsoft YaHei,Tahoma,Verdana,宋体;
     position:relative;         
 }
 .mini-tabs-table
 {
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;   
+    font-family:Microsoft YaHei,Tahoma,Verdana,宋体;
         
     border-collapse:collapse;
     border-collapse:separate;
@@ -1741,7 +1741,7 @@ body .mini-tabs-position-bottom .mini-tabs-plain .mini-tabs-scrollCt
     color: #201F35;  
     border: 1px solid #999999;
     color: black;
-    font: 9pt Tahoma;
+    font: 9pt Microsoft YaHei,Tahoma;
     padding: 3px 10px 3px 10px;
     text-align: center;
     cursor:pointer;
@@ -2019,7 +2019,7 @@ a:hover.mini-tabs-leftButton,a:hover.mini-tabs-rightButton
     
     overflow:hidden;
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;      
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;        
 }
 .mini-splitter-border
 {
@@ -2141,7 +2141,7 @@ a:hover.mini-tabs-leftButton,a:hover.mini-tabs-rightButton
     overflow:hidden;
     
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
 }
 .mini-layout-border
 {
@@ -2382,7 +2382,7 @@ a:hover.mini-tabs-leftButton,a:hover.mini-tabs-rightButton
     color:#201F35;
     
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;      
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     border-collapse:collapse;
     border-collapse:separate;   
     overflow:hidden;
@@ -2469,7 +2469,7 @@ a:hover.mini-tabs-leftButton,a:hover.mini-tabs-rightButton
 .mini-menuitem-text a
 {
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;   
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     text-decoration:none;    
     color:#201F35;
 }
@@ -2664,7 +2664,7 @@ body .mini-menuitem-icontop .mini-menuitem-text
     border:1px solid #999999;
        
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;      
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;        
     border-collapse:collapse;
     border-collapse:separate;  
     
@@ -2692,7 +2692,7 @@ body .mini-calendar td
     padding:4px;
     border-bottom:solid 1px #CFCFCF;
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;      
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     cursor:default;
     font-weight:400;
     text-align:center;
@@ -2713,7 +2713,7 @@ body .mini-calendar td
     padding-left:4px;
     padding-right:4px;
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;      
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     cursor:default;
 }
 .mini-calendar .mini-calendar-weekend
@@ -2828,7 +2828,7 @@ body .mini-calendar td
     
     display:inline-block;    
     font-size:9pt;
-    font-family:Tahoma,Verdana,宋体;
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     text-decoration:none;
     padding:3px;
     padding-left:0px;
@@ -2884,7 +2884,7 @@ body a:hover.mini-calendar-okButton, body a:hover.mini-calendar-cancelButton
 .mini-calendar-menu-month
 {
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;       
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;         
     display:inline;
     float:left;        
     text-align:center;
@@ -2915,7 +2915,7 @@ a:hover.mini-calendar-menu-month
 .mini-calendar-menu-year
 {
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;       
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;        
     display:inline;
     float:left;
     text-align:center;
@@ -2976,7 +2976,7 @@ a:hover.mini-calendar-menu-year
     padding-top:3px;
     padding-bottom:3px;
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;       
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;         
     text-align:left; 
 }
 .mini-listbox-showColumns .mini-listbox-header td
@@ -3068,7 +3068,7 @@ a:hover.mini-calendar-menu-year
 {    
     overflow:hidden;
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;   
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     position:relative;
 }
 
@@ -3104,7 +3104,7 @@ a:hover.mini-calendar-menu-year
     position:relative;
     overflow:hidden;
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;   
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
 }
 
 .mini-radiobuttonlist-item
@@ -3120,7 +3120,7 @@ a:hover.mini-calendar-menu-year
     line-height:18px;
     display:inline-block;
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;      
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     vertical-align:middle; 
 }
 .mini-radiobuttonlist input
@@ -3352,7 +3352,7 @@ a:hover.mini-calendar-menu-year
     line-height:20px;
     color:#222;
     font-size:9pt;
-    font-family:Tahoma,Verdana,宋体;
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
 }
 
 .mini-grid, .mini-datagrid
@@ -3446,7 +3446,7 @@ a:hover.mini-calendar-menu-year
 .mini-grid-cell-inner, .mini-grid-headerCell-inner
 {
     font-size:9pt;
-    font-family:Tahoma, Verdana, 宋体;
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     line-height:18px;    
     padding:0px;
     padding-top:3px;
@@ -3564,7 +3564,7 @@ body .mini-grid-deleteRow
 .mini-grid-groupTitle
 {
     color:#333;
-    font-family:Tahoma, Verdana, 宋体;
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     font-size:9pt;
     font-weight:bold;    
     padding:4px;
@@ -3868,7 +3868,7 @@ body .mini-grid-row-hover
     padding-top:0;
     padding-bottom:0;
     z-index:1000000;
-    font-family:Tahoma, Verdana, 宋体;
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     font-size:9pt;
     
     background:#E7EBEF url(images/grid/header.png) repeat-x 0 0;
@@ -4275,7 +4275,7 @@ body .mini-tree-showArrows .mini-tree-node-ecicon
     width:auto;    
     overflow:hidden;  
     font-size:9pt;
-    font-family: Tahoma, Verdana;
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;     
     position:relative;
     line-height:24px;
     height:24px;
@@ -4424,7 +4424,7 @@ body .mini-pager-num
 {
     font-size:8pt;
     font-size:9pt\9;
-    font-family: Tahoma, Verdana;    
+    font-family:Microsoft YaHei,Tahoma, Verdana, 宋体;      
     white-space:nowrap;
         
     border:1px solid #A9ACB5; 

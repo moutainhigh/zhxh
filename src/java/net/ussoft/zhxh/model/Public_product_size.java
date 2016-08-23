@@ -10,11 +10,16 @@ public class Public_product_size {
 
 	private String id;
 	private String productid;
+	private String productname;
+	private Integer showtype;
+	private String productpic;
+	private String productmemo;
 	private String productsize;
 	private Float price;
 	private Integer sizesort;
 	private Integer isshow;
 	private Float saleprice;
+	
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -59,6 +64,30 @@ public class Public_product_size {
 	}
 	public void setSaleprice(Float saleprice) {
 		this.saleprice = saleprice;
+	}
+	public String getProductname() {
+		return productname;
+	}
+	public void setProductname(String productname) {
+		this.productname = productname;
+	}
+	public Integer getShowtype() {
+		return showtype;
+	}
+	public void setShowtype(Integer showtype) {
+		this.showtype = showtype;
+	}
+	public String getProductpic() {
+		return productpic;
+	}
+	public void setProductpic(String productpic) {
+		this.productpic = productpic;
+	}
+	public String getProductmemo() {
+		return productmemo;
+	}
+	public void setProductmemo(String productmemo) {
+		this.productmemo = productmemo;
 	}
 	
 	

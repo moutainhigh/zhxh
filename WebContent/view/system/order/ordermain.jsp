@@ -46,16 +46,16 @@
 	    t2.iconPosition = "top";
 	    dataList.push(t2);
 	    
-	    /* var t3 = {};
-	    t3.id = "brandfirst";
+	    var t3 = {};
+	    t3.id = "disstandard";
 	    t3.pid = "right";
-	    t3.text = "品牌综合页";
-	    t3.iconCls = "page";
-	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/brandfirst";
+	    t3.text = "平台直属利益分配详细";
+	    t3.iconCls = "setting";
+	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/order/top_disstandard";
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
 	    
-	    var t4 = {};
+	    /*var t4 = {};
 	    t4.id = "brandlist";
 	    t4.pid = "right";
 	    t4.text = "品牌系列页";

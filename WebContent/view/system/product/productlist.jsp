@@ -171,6 +171,7 @@
                 },
                 ondestroy: function (action) {
                 	if (action == "ok") {
+                		grid_brand.cancelEdit();
                 		grid_brand.reload();
                 		/* var iframe = this.getIFrameEl();
                         var grid_data = iframe.contentWindow.GetData();
@@ -211,6 +212,7 @@
 	   		                     },
 	   		                     ondestroy: function (action) {
 	   		                     	if (action == "ok") {
+	   		                     		grid_product.cancelEdit();
 	   		                     		grid_product.reload();
 	   		                         }
 	   		                     }
@@ -237,6 +239,7 @@
                     },
                     ondestroy: function (action) {
                     	if (action == "ok") {
+                    		grid_product.cancelEdit();
                     		grid_product.reload();
                         }
                     }

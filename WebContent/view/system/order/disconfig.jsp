@@ -15,6 +15,23 @@
 		.labelname {
 			width:100px;
 		}
+		.asLabel .mini-textbox-border,
+	    .asLabel .mini-textbox-input,
+	    .asLabel .mini-buttonedit-border,
+	    .asLabel .mini-buttonedit-input,
+	    .asLabel .mini-textboxlist-border
+	    {
+	        border:0;background:none;cursor:default;
+	    }
+	    .asLabel .mini-buttonedit-button,
+	    .asLabel .mini-textboxlist-close
+	    {
+	        display:none;
+	    }
+	    .asLabel .mini-textboxlist-item
+	    {
+	        padding-right:8px;
+	    }    
 		/* .icon-save:before, .icon-floppy-o:before {
 		    content: "";
 		} */
@@ -41,8 +58,28 @@
 					mini.alert(jqXHR.responseText);
 				}
 			})
+			labelModel();
 			//form.setData(obj, false);
 		})
+		
+		function labelModel() {
+            var fields = form.getFields(); 
+            for (var i = 0, l = fields.length; i < l; i++) {
+                var c = fields[i];
+                if (c.setReadOnly) c.setReadOnly(true);     //只读
+                if (c.setIsValid) c.setIsValid(true);      //去除错误提示
+                if (c.addCls) c.addCls("asLabel");          //增加asLabel外观
+            }
+        }
+        function inputModel() {
+            var fields = form.getFields();
+            for (var i = 0, l = fields.length; i < l; i++) {
+                var c = fields[i];
+                if (c.setReadOnly) c.setReadOnly(false);
+                if (c.removeCls) c.removeCls("asLabel");
+            }
+            mini.repaint(document.body);
+        }
 		
 		function save() {
             form.validate();
@@ -62,6 +99,7 @@
 				dataType : "text",
 				success : function(text) {
 					mini.alert("保存完毕。");
+					labelModel();
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
 					mini.alert(jqXHR.responseText);
@@ -79,6 +117,7 @@
                  	<span id="pid" style="padding-left:5px;">平台利益分配参数设置[如果某些参数如果不设置或设置为0，将不限制]</span>
                  </td>
                  <td style="white-space:nowrap;">
+	         		<a class="mini-button" iconCls="icon-edit" plain="true" onclick="inputModel()">编辑</a>
 	         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save()">保存</a>
                  </td>
              </tr>
@@ -94,8 +133,8 @@
 					<td colspan="3">设置后，全平台代理、店统一利益分配标准。</td>
 				</tr>
 				<tr>
-					<td class="labelname">返利下限</td>
-					<td><input name="rebates_down" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
+					<td class="labelname"><label for="rebates_down$text">返利下限</label></td>
+					<td><input id="rebates_down" name="rebates_down" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
 					<td class="labelname">返利上限</td>
 					<td><input name="rebates_up" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
 				</tr>
@@ -135,7 +174,7 @@
 				</tr>
 				<tr>
 					<td>说明</td>
-					<td colspan="3">
+					<td colspan="3" style="color:#FF8C00">
 						(1)返利:输入返利的百分比。例如0.3表示30%<br>
 						(2)奖励:输入整数。例如50表示50元<br>
 						(3)提现日期:限制每周提现的日期。输入整数。例如2表示每周二。<br>
