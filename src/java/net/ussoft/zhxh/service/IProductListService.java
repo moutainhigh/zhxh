@@ -58,7 +58,8 @@ public interface IProductListService {
 	 * 根据商品列表的id，获取列表对应的商品。
 	 * @param pageBean
 	 * @param productListid
+	 * @param isshow 0:隐藏，1:显示，-1查询所有
 	 * @return
 	 */
-	public PageBean<Public_product> listLableProduct(PageBean<Public_product> pageBean,String productListid);
+	public PageBean<Public_product> listLableProduct(PageBean<Public_product> pageBean,String productListid,int isshow);
 }

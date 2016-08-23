@@ -31,7 +31,7 @@
       	                { field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "brief",name:"brief", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "简介",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
+      	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -73,13 +73,9 @@
         }
        	
 		function addRow() {
-       		
-            var newRow = {
-            		accountcode: "",
-            		accountname:""
-            		};
+            var newRow = {sort:1};
             grid.addRow(newRow, 0);
-            grid.beginEditCell(newRow, "accountcode");
+            grid.beginEditCell(newRow, "title");
         }
 		
 		function delRow() {

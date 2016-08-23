@@ -85,12 +85,9 @@
        	
 		function addRow() {
        		
-            var newRow = {
-            		accountcode: "",
-            		accountname:""
-            		};
+            var newRow = {sort:1};
             grid.addRow(newRow, 0);
-            grid.beginEditCell(newRow, "accountcode");
+            grid.beginEditCell(newRow, "isshow");
         }
 		
 		function delRow() {

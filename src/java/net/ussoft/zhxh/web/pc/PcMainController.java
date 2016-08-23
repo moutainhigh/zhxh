@@ -4,7 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -17,7 +19,7 @@ import net.ussoft.zhxh.model.Brandlist;
 import net.ussoft.zhxh.model.Filesdown;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Product_list;
-import net.ussoft.zhxh.model.Public_brand;
+import net.ussoft.zhxh.model.Product_rated;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
@@ -25,6 +27,7 @@ import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_video;
 import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IProductListService;
+import net.ussoft.zhxh.service.IProductRatedService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
@@ -40,6 +43,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSON;
 
 
 @Controller
@@ -77,6 +82,9 @@ public class PcMainController extends BaseConstroller {
 	
 	@Resource
 	private IProductListService productlistService;	//商品列表
+	
+	@Resource
+	private IProductRatedService ratedService;	//商品评价
 	
 	@RequestMapping(value="/pcindex")
 	public ModelAndView index (ModelMap modelMap) throws Exception {
@@ -357,30 +365,99 @@ public class PcMainController extends BaseConstroller {
 	 * 商品列表
 	 * @param id 商品列表ID
 	 * */
-	@RequestMapping(value="/pro")
+	@RequestMapping(value="/product")
 	public ModelAndView products (String id,@RequestParam(value="page",defaultValue="1")int page,ModelMap modelMap) throws Exception {
 		//商品列表-对象
-		Product_list prolist = productlistService.getById(id);
+		Product_list pro_list = productlistService.getById(id);
 		int pageSize = 10;
 		
 		PageBean<Public_product> p = new PageBean<Public_product>();
 		p.setPageSize(pageSize);
 		p.setPageNo(page);
 		p.setOrderBy("sort");
-		p = productlistService.listLableProduct(p, id);
+		p = productlistService.listLableProduct(p, id,1);	//列表下的商品
 		
 		//初始品牌、专题
 		init(modelMap);
 		
-		modelMap.put("newsList", p.getList());
 		
-		modelMap.put("prolist", prolist);
+		modelMap.put("pro_list", pro_list);
 		modelMap.put("productList", p.getList());
 		modelMap.put("page", page);
 		modelMap.put("pageCount", p.getPageCount());
 		modelMap.put("rowCount", p.getRowCount());
+		modelMap.put("id", id);
 		
 		return new ModelAndView("/view/pc/products", modelMap);
+	}
+	
+	/**
+	 * 商品详情
+	 * @param id 商品ID
+	 * */
+	@RequestMapping(value="/product_c")
+	public ModelAndView products_c (String id,ModelMap modelMap) throws Exception {
+		
+		Public_product product = productService.getById(id);
+		Public_content content = null;
+		List<Public_pic> proPics = null;
+		
+		if(product.getShowtype() == 1){
+			//商品详情-富文本
+			List<Public_content> list = contentService.list(product.getId(), "productrich");
+			content = new Public_content();
+			if(list.size() >0)
+				content = list.get(0);
+		}else{
+			//仅图片
+			proPics = picService.list(product.getId(), "productContentPic", 1);
+		}
+		
+		//相关商品
+		PageBean<Public_product> p = new PageBean<Public_product>();
+		p.setPageSize(10);
+		p.setPageNo(1);
+		p.setOrderBy("sort");
+		List<Public_product> proList = productService.list(p, product.getBrandid(),1);
+		//商品评价
+		
+		
+		//初始品牌、专题
+		init(modelMap);
+		
+		modelMap.put("product", product);
+		modelMap.put("pcontent", content);
+		modelMap.put("proPics", proPics);
+		modelMap.put("proList", proList);
+		
+		return new ModelAndView("/view/pc/product_info", modelMap);
+	}
+	
+	/**
+	 * 商品评价
+	 * */
+	@RequestMapping(value="/rated",method=RequestMethod.POST)
+	public void rated(String parentid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
+		PageBean<Product_rated> p = new PageBean<Product_rated>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("ratedtime");
+		p.setOrderType("desc");
+		p = ratedService.list(p, parentid);
+		
+		map.put("data", p.getList());
+		map.put("pageCount", p.getPageCount());
+		map.put("rowCount", p.getRowCount());
+		
+		String json = JSON.toJSONString(map);
+		System.out.println(json);
+		out.print(json);
 	}
 	
 	/**

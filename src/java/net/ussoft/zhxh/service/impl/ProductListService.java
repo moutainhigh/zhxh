@@ -85,7 +85,7 @@ public class ProductListService implements IProductListService{
 	}
 
 	@Override
-	public PageBean<Public_product> listLableProduct(PageBean<Public_product> pageBean, String productListid) {
+	public PageBean<Public_product> listLableProduct(PageBean<Public_product> pageBean, String productListid,int isshow) {
 		String sql = "select * from label_list where labelid=?";
 		List<Object> values = new ArrayList<Object>();
 		values.add(productListid);
@@ -101,7 +101,11 @@ public class ProductListService implements IProductListService{
 			return pageBean;
 		}
 		StringBuffer sb = new StringBuffer();
-		sb.append("select * from public_product where id in (");
+		if(isshow ==0 || isshow == 1){
+			sb.append("select * from public_product where isshow="+isshow+" and id in (");
+		}else{
+			sb.append("select * from public_product where id in (");
+		}
 		
 		Serializable[] ss=new Serializable[listids.size()];
 		Arrays.fill(ss, "?");

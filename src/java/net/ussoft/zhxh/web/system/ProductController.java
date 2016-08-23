@@ -90,7 +90,7 @@ public class ProductController extends BaseConstroller {
 			
 			p.setIsPage(false);
 			p.setOrderBy("sort");
-			List<Public_product> pList = productService.list(p, parentid);
+			List<Public_product> pList = productService.list(p, parentid,-1);
 			map.put("total", pList.size());
 			map.put("data", pList);
 		}
@@ -139,7 +139,7 @@ public class ProductController extends BaseConstroller {
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex + 1);
 			p.setOrderBy("sort");
-			p = pListService.listLableProduct(p, parentid);
+			p = pListService.listLableProduct(p, parentid,-1);
 			map.put("total", p.getRowCount());
 			map.put("data", p.getList());
 		}

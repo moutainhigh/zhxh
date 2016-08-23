@@ -3,12 +3,15 @@
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
-	
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.11.0.js"></script>	
 	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/js/tinymce4.2.3/upload/plugin.css" />
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/tinymce4.2.3/tinymce.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/tinymce4.2.3/jquery.tinymce.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/tinymce4.2.3/upload/plugin.js"></script>
+	
+	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/js/miniui3.7/themes/default/miniui.css" />
+	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/js/miniui3.7/themes/icons.css" />
+
 	<style type="text/css">
 	    body{
 	        margin:0;padding:0;border:0;width:100%;height:100%;overflow-y:hidden;
@@ -135,8 +138,10 @@
 	            cache: false,
 	            success: function (text) {
 	            	if(text != "success"){
-	            		mini.alert("保存失败！");
+	            		alert("保存失败！");
 	            		return;
+	            	}else{
+	            		alert("保存成功！");
 	            	}
 	            	$('#preview').html(memo);
 	            	//CloseWindow("save");

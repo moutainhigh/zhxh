@@ -28,9 +28,11 @@ public interface IPublicProductService {
 	/**
 	 * 查询所有 分页
 	 * @param pageBean
+	 * @param brandid 
+	 * @param isshow 0:隐藏，1:显示，-1:所有
 	 * @return list
 	 * */
-	public List<Public_product> list(PageBean<Public_product> pageBean,String brandid);
+	public List<Public_product> list(PageBean<Public_product> pageBean,String brandid,int isshow);
 	
 	/**
 	 * 添加

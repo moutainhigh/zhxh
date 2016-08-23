@@ -71,16 +71,6 @@
             });
         }
        	
-		function addRow() {
-       		
-            var newRow = {
-            		accountcode: "",
-            		accountname:""
-            		};
-            grid.addRow(newRow, 0);
-            grid.beginEditCell(newRow, "accountcode");
-        }
-		
 		function add() {
 	    	mini.open({
 	    	    //url: "/view/system/member/EmployeeWindow.html",

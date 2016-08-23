@@ -29,7 +29,7 @@
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
       	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
+      	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -47,37 +47,12 @@
 	            pageSize:2000
 	        });
         	grid.load({act:'public_content',parentid:'service',parenttype:'policy'});
-        	drawcell();
         })
         
-        function drawcell() {
-       		grid.on("drawcell", function (e) {
-                var record = e.record,
-	            column = e.column,
-	            field = e.field,
-	            uid = record._uid,
-	            value = e.value;
-                
-                if (field == "pic_path") {
-   	        		if (value == undefined) {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
-   	        		}
-    	        }
-            });
-        }
-       	
 		function addRow() {
-       		
-            var newRow = {
-            		accountcode: "",
-            		accountname:""
-            		};
+            var newRow = {sort: 1};
             grid.addRow(newRow, 0);
-            grid.beginEditCell(newRow, "accountcode");
+            grid.beginEditCell(newRow, "title");
         }
 		
 		function delRow() {

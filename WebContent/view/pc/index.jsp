@@ -84,7 +84,7 @@
 	<div class="imgbox">
 	    <ul id="banner_img">
 	    <c:forEach var="pic" items="${homePic }">
-			<li><img src="${pageContext.request.contextPath}/${pic.pic_path }" height="600px;" /></li>
+			<li><a href='${pic.pic_url != ""?pic.pic_url:"javascript:;" }' target="_blank"><img src="${pageContext.request.contextPath}/${pic.pic_path }" height="600px;" /></a></li>
 	    </c:forEach>
 	    </ul>
 	    <div class="clearfix"></div>

@@ -33,11 +33,18 @@ public class PublicProductService implements IPublicProductService{
 	}
 
 	@Override
-	public List<Public_product> list(PageBean<Public_product> pageBean,String brandid) {
-		String sql = "select * from public_product where brandid=?";
+	public List<Public_product> list(PageBean<Public_product> pageBean,String brandid,int isshow) {
+		String sql = "";
 		List<Object> values = new ArrayList<Object>();
+		if(isshow == 0 || isshow == 1){
+			sql = "select * from public_product where isshow=? and brandid=?";
+			values.add(isshow);
+			values.add(brandid);
+		}else{
+			sql = "select * from public_product where brandid=?";
+			values.add(brandid);
+		}
 		
-		values.add(brandid);
 		pageBean = productDao.search(sql, values, pageBean);
 		
 		return pageBean.getList();
