@@ -8,16 +8,29 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.ussoft.zhxh.dao.LabelListDao;
+import net.ussoft.zhxh.dao.PublicContentDao;
+import net.ussoft.zhxh.dao.PublicPicDao;
 import net.ussoft.zhxh.dao.PublicProductSizeDao;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.service.IPublicProductSizeService;
+import net.ussoft.zhxh.util.FileOperate;
 
 @Service
 public class PublicProductSizeService implements IPublicProductSizeService{
 
 	@Resource
 	PublicProductSizeDao productSizeDao;
+	@Resource
+	private PublicContentDao contentDao;  //富文本
+	@Resource
+	private PublicPicDao picDao;
+	@Resource
+	private LabelListDao labelListDao;
+	
+	
 	
 	@Override
 	public Public_product_size getById(String id) {
@@ -55,7 +68,32 @@ public class PublicProductSizeService implements IPublicProductSizeService{
 
 	@Transactional("txManager")
 	@Override
-	public int delete(String id) {
+	public int delete(String id,String realPath) {
+		//首先删除规格对应的富文本
+		String sql = "delete from public_content where parentid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(id);
+		contentDao.del(sql, values);
+
+		//删除规格对应的公共图片
+		sql = "select * from public_pic where parentid=?";
+		values.clear();
+		values.add(id);
+		
+		List<Public_pic> pics = picDao.search(sql, values);
+		
+		for (Public_pic pic : pics) {
+			FileOperate.delFile(realPath + pic.getPic_path());
+			picDao.del(pic.getId());
+		}
+		
+		//删除商品规格与商品列表页的关联。
+		sql = "delete from label_list where listid=?";
+		values.clear();
+		values.add(id);
+		labelListDao.del(sql, values);
+		
+		//删除商品规格本身
 		return productSizeDao.del(id);
 	}
 

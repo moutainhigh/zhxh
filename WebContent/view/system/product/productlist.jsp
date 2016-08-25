@@ -18,6 +18,7 @@
 
 		var grid_brand;
 		var grid_product;
+		var grid_product_size;
 		
        	$(function(){
        		mini.parse();
@@ -27,12 +28,14 @@
         		url:"${pageContext.request.contextPath}/product/list.htmls",
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
-      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
-      	                { field: "brandlogo",name:"brandlogo", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "品牌Logo",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onButtonEdit"} },
+      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
+      	                { field: "brandlogo",name:"brandlogo", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "品牌Logo" },
+      	                //{ field: "brandlogo",name:"brandlogo", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "品牌Logo",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onButtonEdit"} },
       	                { field: "brandname",name:"brandname", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "品牌名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	                { field: "brandpath",name:"brandpath",type:"comboboxcolumn", autoEscape:true,width: 100, headerAlign: "center", align:"center",allowSort: false, header: "品牌显示位置",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"PC端展示"},{"id":"2","text":"移动商城展示"}] } },
-      	                { field: "isshow",name:"isshow",type:"comboboxcolumn",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
-      	                { field: "brandcolor",name:"brandcolor", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "品牌颜色",vtype:"required",editor: {  type: "buttonedit",allowInput:false,onbuttonclick:"onBtnColorEdit"  } },
+      	                { field: "isshow",name:"isshow",type:"comboboxcolumn",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"下架"},{"id":"1","text":"上架"}] } },
+      	                { field: "brandcolor",name:"brandcolor", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "品牌颜色",vtype:"required" },
+      	                //{ field: "brandcolor",name:"brandcolor", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "品牌颜色",vtype:"required",editor: {  type: "buttonedit",allowInput:false,onbuttonclick:"onBtnColorEdit"  } },
       	                { field: "sort",name:"sort", width: 40, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
@@ -45,7 +48,7 @@
 	            onselectionchanged:"onSelectionChanged",
 	            //oncellbeginedit:"OnCellBeginEdit",
 	            //oncellcommitedit:"onCellCommitEdit",
-	            //fitColumns:false,
+	            fitColumns:false,
 	            editNextOnEnterKey:true,
 	            showPageSize:false,
 	            pageSize:2000
@@ -59,25 +62,26 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
-      	              	{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
-      	                { field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnProductEdit" } },
+      	              	{ field: "action", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+      	                //{ field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnProductEdit" } },
+      	                //{ field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片"},
       	                { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	                //{ field: "productcode",name:"productcode", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品型号",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
-      	                { field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
-      	                { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "createdate",name:"update",dateFormat:"yyyy-MM-dd", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "上架日期",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "ifdis",name:"ifdis",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "三级分销",editor: { type: "combobox", data: [{"id":"0","text":"否"},{"id":"1","text":"是"}] } },
+      	                //{ field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
+      	                //{ field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"下架"},{"id":"1","text":"上架"}] } },
+      	                //{ field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
+      	                { field: "createdate",name:"update",dateFormat:"yyyy-MM-dd", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "创建日期",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
+      	                //{ field: "ifdis",name:"ifdis",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "三级分销",editor: { type: "combobox", data: [{"id":"0","text":"否"},{"id":"1","text":"是"}] } },
       	                { field: "sort",name:"sort", width: 30, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
 	            allowCellEdit:true,
 	            allowCellValid:true,
-	            multiSelect:true,
+	            multiSelect:false,
 	            allowUnselect:false,
 	            showPager:true,
-	            //onselectionchanged:"onSelectionChanged",
+	            onselectionchanged:"onSelProductChanged",
 	            //oncellbeginedit:"OnCellBeginEdit",
 	            //oncellcommitedit:"onCellCommitEdit",
 	            //fitColumns:false,
@@ -85,6 +89,36 @@
 	            showPageSize:false,
 	            pageSize:2000
 	        });
+			
+			grid_product_size = mini.get("grid_product_size");
+			grid_product_size.set({
+	    		url:"${pageContext.request.contextPath}/product/list.htmls",
+	            columns: [
+	                  { type: "checkcolumn",headerAlign:"center",width: 30},
+					  { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
+					  { field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+					  { field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片"},
+					  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+					  { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
+					  { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+					  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
+					  { field: "saleprice",name:"saleprice", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "特价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25  } },
+					  { field: "sizesort",name:"sizesort", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: {type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
+					  { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
+					  { field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"下架"},{"id":"1","text":"上架"}] } }
+				],
+	            showFilterRow:false,
+	            allowCellSelect:true,
+	            allowCellEdit:true,
+	            allowCellValid:true,
+	            multiSelect:true,
+	            //onselectionchanged:"onSelectionChanged",
+	            allowUnselect:false,
+	            showPager:true,
+	            showPageSize:false,
+	            pageSize:1000
+	        });
+			
         	drawcell();
         })
         
@@ -94,13 +128,24 @@
             var uid = record._uid;
             var id = record.id;
             var rowIndex = e.rowIndex;
-            var productname = record.productname;
-            var showtype = record.showtype;
-
-            var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
-            s += '  <a class="Edit_Button" href="javascript:editSize(\'' + id + '\',\'' + productname + '\')" >售价</a> | ';
-            s += '  <a class="Edit_Button" href="javascript:edit(\'' + id + '\',\'' + showtype + '\')" >详细</a>';
-            s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
+            
+            if (grid.id == "grid_product") {
+            	var productname = record.productname;
+                var showtype = record.showtype;
+                
+                var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
+                //s += '  <a class="Edit_Button" href="javascript:editSize(\'' + id + '\',\'' + productname + '\')" >售价</a> | ';
+                //s += '  <a class="Edit_Button" href="javascript:edit(\'' + id + '\',\'' + showtype + '\')" >详细</a>';
+                //s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
+            }
+            else if (grid.id == "grid_product_size") {
+            	var productname = record.productname;
+                var showtype = record.showtype;
+                
+                var s = '  <a class="Edit_Button" href="javascript:edit(\'' + id + '\',\'' + showtype + '\')" >详细</a>';
+                s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
+            }
+            
             return s;
         }
        	
@@ -117,23 +162,30 @@
 	            value = e.value;
                 
                 if (field == "brandlogo") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+   	        		if (typeof(value) == "undefined" || value == "") {
+                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brand\',\''+record.id+'\',\'logo\',\'brandlog\')" >选择图片</a>';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
+   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brand\',\''+record.id+'\',\'logo\',\'brandlog\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
    	        		}
     	        }
                 if (field == "brandcolor") {
                 	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+                		e.cellHtml = '<a href="javascript:;" onclick="open_sel_color(\''+uid+'\')" >选择颜色</a>';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "";
+   	        			e.cellHtml = '<a href="javascript:;" onclick="open_sel_color(\''+uid+'\')" ><span style="background-color:' + value + ';width:30px;height:30px;display:inline-block"></span></a>';
    	        		}
     	        }
+                
+                if (field == "isshow") {
+                	if (value == 0) {
+                		e.cellStyle = "color:red;text-align:center";
+                	}
+                	else {
+                		e.cellStyle = "color:blue;text-align:center";
+                	}
+                }
             });
        		
        		grid_product.on("drawcell", function (e) {
@@ -143,116 +195,89 @@
 	            uid = record._uid,
 	            value = e.value;
                 
-                if (field == "productpic") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+                /* if (field == "productpic") {
+   	        		if (typeof(value) == "undefined" || value == "") {
+                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product\',\''+record.id+'\',\'pic\',\'productpic\')" >选择图片</a>';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
+   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product\',\''+record.id+'\',\'pic\',\'productpic\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
+   	        		}
+    	        } */
+                if (field == "isshow") {
+                	if (value == 0) {
+                		e.cellStyle = "color:red;text-align:center";
+                	}
+                	else {
+                		e.cellStyle = "color:blue;text-align:center";
+                	}
+                }
+            });
+       		
+       		grid_product_size.on("drawcell", function (e) {
+                var record = e.record,
+	            column = e.column,
+	            field = e.field,
+	            uid = record._uid,
+	            value = e.value;
+                
+                if (field == "productpic") {
+   	        		if (typeof(value) == "undefined" || value == "") {
+                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product_size\',\''+record.id+'\',\'pic\',\'productsize\')" >选择图片</a>';
+       	        	}
+   	        		else {
+   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product_size\',\''+record.id+'\',\'pic\',\'productsize\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
    	        		}
     	        }
-            });
-        }
-       	
-       	function onButtonEdit(e) {
-        	var buttonEdit = e.sender;
-        	var row = grid_brand.getEditorOwnerRow(buttonEdit);
-        	
-        	mini.open({
-                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传品牌Logo", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"logo",forObj:"brandlog"};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	if (action == "ok") {
-                		grid_brand.cancelEdit();
-                		grid_brand.reload();
-                		/* var iframe = this.getIFrameEl();
-                        var grid_data = iframe.contentWindow.GetData();
-                        grid_data = mini.clone(grid_data);    //必须
-                        if (grid_data != "" || grid_data.length > 0) {
-                        	var row = grid_book.getEditorOwnerRow(buttonEdit);
-                            //var row = grid_book.getSelecteds();
-                            grid_book.cancelEdit();
-                            grid_book.updateRow(row, {
-                            	itemid :grid_data.id,
-                            	itemcode: grid_data.itemcode,
-                            	itemtype:grid_data.itemtype
-                            });
-                        } */
-                    }
+                if (field == "isshow") {
+                	if (value == 0) {
+                		e.cellStyle = "color:red;text-align:center";
+                	}
+                	else {
+                		e.cellStyle = "color:blue;text-align:center";
+                	}
                 }
             });
         }
-       	function onBtnProductEdit(e) {
+       	
+       	function open_upload_pic(grid_type,rowid,saveFolder,forObj) {
+       		var tmpGrid;
        		
-       		var objs = grid_product.getChanges();
+       		if (grid_type == "grid_brand") {
+				tmpGrid = grid_brand;
+			}
+			else if (grid_type == "grid_product_size"){
+				tmpGrid = grid_product_size;
+			}
+       		
+       		var objs = tmpGrid.getChanges();
        		if (objs != "") {
-       			mini.confirm("发现有未保存的修改内容，继续上传后将刷新数据，不保存已修改的内容，确认？", "确定？",
-   		            function (action) {
-   		                if (action == "ok") {
-   		                	var buttonEdit = e.sender;
-	   		             	var row = grid_product.getEditorOwnerRow(buttonEdit);
-	   		             	
-	   		             	mini.open({
-	   		                     url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
-	   		                     title: "上传商品主图片", width: 600, height:500,
-	   		                     allowResize:true,
-	   		                     onload: function () {
-	   		                     	var iframe = this.getIFrameEl();
-	   		                    	 	var data = {id:row.id,saveFolder:"pic",forObj:"productpic"};
-	   		                         //var data = rows[0];
-	   		                         iframe.contentWindow.SetData(data);
-	   		                     },
-	   		                     ondestroy: function (action) {
-	   		                     	if (action == "ok") {
-	   		                     		grid_product.cancelEdit();
-	   		                     		grid_product.reload();
-	   		                         }
-	   		                     }
-	   		                 });
-   		                } else {
-   		                	return;
-   		                }
-   		            }
-   		        );
+       			mini.alert("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片。");
+   	 			return;
        		}
        		else {
-       			var buttonEdit = e.sender;
-            	var row = grid_product.getEditorOwnerRow(buttonEdit);
-            	
-            	mini.open({
+       			mini.open({
                     url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
-                    title: "上传商品主图片", width: 600, height:500,
+                    title: "上传图片", width: 600, height:500,
                     allowResize:true,
                     onload: function () {
                     	var iframe = this.getIFrameEl();
-                   	 	var data = {id:row.id,saveFolder:"pic",forObj:"productpic"};
+                   	 	var data = {id:rowid,saveFolder:saveFolder,forObj:forObj};
                         //var data = rows[0];
                         iframe.contentWindow.SetData(data);
                     },
                     ondestroy: function (action) {
                     	if (action == "ok") {
-                    		grid_product.cancelEdit();
-                    		grid_product.reload();
+                    		tmpGrid.cancelEdit();
+                    		tmpGrid.reload();
                         }
                     }
                 });
        		}
        		
-        	
-        }
+       	}
        	
-       	function onBtnColorEdit(e) {
-        	var buttonEdit = e.sender;
-        	
-        	mini.open({
+       	function open_sel_color(uid) {
+       		mini.open({
                 url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/selectColor",
                 title: "选择颜色", width: 600, height:500,
                 allowResize:true,
@@ -265,8 +290,7 @@
                         var color_data = iframe.contentWindow.GetData();
                         color_data = mini.clone(color_data);    //必须
                         if (color_data != "") {
-                        	var row = grid_brand.getEditorOwnerRow(buttonEdit);
-                            //var row = grid_book.getSelecteds();
+                            var row = grid_brand.getRowByUID(uid);
                             grid_brand.cancelEdit();
                             grid_brand.updateRow(row, {
                             	brandcolor:color_data
@@ -275,7 +299,7 @@
                     }
                 }
             });
-        }
+       	}
        	
         function onSelectionChanged(e) {
             var grid = e.sender;
@@ -285,11 +309,31 @@
             if (typeof(record.id) == "undefined" || record.id == "") {
             	grid_product.setData([]);
             	grid_product.setTotalCount(0);
+            	grid_product_size.setData([]);
+            	grid_product_size.setTotalCount(0);
 	      		return;
 	      	}
             
             if (record) {
             	grid_product.load({listtype:'product', parentid: record.id });
+            	grid_product_size.setData([]);
+            	grid_product_size.setTotalCount(0);
+            }
+        }
+        
+        function onSelProductChanged(e) {
+            var grid = e.sender;
+	       	//处理角色对应的帐户
+            var record = grid.getSelected();
+	      	
+            if (typeof(record.id) == "undefined" || record.id == "") {
+            	grid_product_size.setData([]);
+            	grid_product_size.setTotalCount(0);
+	      		return;
+	      	}
+            
+            if (record) {
+            	grid_product_size.load({ listtype:'productsize',parentid: record.id });
             }
         }
         
@@ -334,21 +378,20 @@
         }
         
 		function addRow(grid_type) {
-			
 			var tmpGrid;
 			var editField;
 			var newRow = {};
 			if (grid_type == "grid_brand") {
 				tmpGrid = grid_brand;
-				newRow.brandname = "";
+				newRow.brandname = "新的品牌";
 				newRow.sort = 1;
 				newRow.brandpath = "1";
 				newRow.isshow = "0";
-				newRow.brandcolor = "";
+				newRow.brandcolor = "black";
 				
 				editField = "brandname";
 			}
-			else {
+			else if (grid_type == "grid_product") {
 				tmpGrid = grid_product;
 				
 				var rows = grid_brand.getSelecteds();
@@ -369,10 +412,10 @@
 	       	 	
 	       	 	newRow.productpic = "";
 	       	 	newRow.brandid = brandid;
-				newRow.productname = "";
+				newRow.productname = "新的商品";
 				newRow.productcode = "";
 				newRow.showtype = "1";
-				newRow.isshow = "0";
+				newRow.isshow = "1";
 				newRow.productmemo = "";
 				
 				newRow.ifdis = "0";
@@ -381,6 +424,37 @@
 				var now = new Date();
 	            var nowDate = now.getFullYear()+"-"+((now.getMonth()+1)<10?"0":"")+(now.getMonth()+1)+"-"+(now.getDate()<10?"0":"")+now.getDate();
 		    	newRow.createdate = nowDate;
+				
+				editField = "productname";
+			}
+			else if (grid_type == "grid_product_size") {
+				tmpGrid = grid_product_size;
+				
+				var rows = grid_product.getSelecteds();
+				var productid = "";
+	       	 	if (rows.length == 0) {
+	       	 		mini.alert("请选择要添加商品规格的所属商品.");
+	       		 	return;
+	       	 	}
+	       	 	else {
+	       	 		if (typeof(rows[0].id) == "undefined" || rows[0].id == "") {
+	       	 			mini.alert("当前商品还没有保存。请先保存或刷新商品后再创建商品规格。");
+	       	 			return;
+	       	 		}
+	       	 		else {
+	       	 			productid = rows[0].id;
+	       	 		}
+	       	 	}
+				newRow.productid = productid;
+				newRow.productsize = "新的商品规格";
+				newRow.price = "0";
+				newRow.saleprice = "0";
+				newRow.isshow = "0";
+				newRow.sizesort = "1";
+				newRow.productpic = "";
+				newRow.productname = rows[0].productname;
+				newRow.showtype = "1";
+				newRow.productmemo = "";
 				
 				editField = "productname";
 			}
@@ -397,17 +471,38 @@
 				tmpGrid = grid_brand;
 				cf1 += "<br>注意：删除品牌，将同时删除所属的商品，并删除该品牌下的所有设置。不可恢复，请谨慎操作。";
 			}
-			else {
+			else if (grid_type == "grid_product") {
 				tmpGrid = grid_product;
-				cf1 += "<br>注意：删除商品，将同时删除该商品的所有设置,不可恢复，请谨慎操作";
+				cf1 += "<br>注意：删除商品，将同时删除该商品下的规格及其他所有设置,不可恢复，请谨慎操作";
+			}
+			else if (grid_type == "grid_product_size") {
+				tmpGrid = grid_product_size;
+				cf1 += "<br>注意：删除商品规格，不可恢复，请谨慎操作";
 			}
 			
         	var rows = tmpGrid.getSelecteds();
-          	 
+        	
        	 	if (rows.length == 0) {
        	 		mini.alert("请选择要删除的数据.");
        		 	return;
        	 	}
+       	 	
+       	 	if (grid_type == "grid_brand") {
+				//删除品牌时，判断是否有下级商品
+				var tmpData = grid_product.getData();
+				if (tmpData.length > 0) {
+					mini.alert("要删除的品牌下包含商品，只有空的品牌才可以删除。请先删除商品。");
+					return;
+				}
+			}
+			else if (grid_type == "grid_product") {
+				//删除品牌时，判断是否有下级商品
+				var tmpData = grid_product_size.getData();
+				if (tmpData.length > 0) {
+					mini.alert("要删除的商品下包含规格，只有空的商品才可以删除。请先删除商品规格。");
+					return;
+				}
+			}
        	 	
        	 	mini.confirm(cf1, "确定？",
                  function (action) {
@@ -428,10 +523,13 @@
 			if (grid_type == "grid_brand") {
 				tmpGrid = grid_brand;
 			}
-			else {
+			else if (grid_type == "grid_product") {
 				tmpGrid = grid_product;
-				//url = "${pageContext.request.contextPath}/product/saveProduct.html";
 				savetype = "product";
+			}
+			else if (grid_type == "grid_product_size") {
+				tmpGrid = grid_product_size;
+				savetype = "productsize";
 			}
 			
 			
@@ -527,48 +625,74 @@
 <body>
 	<div class="mini-splitter" style="width:100%;height:100%;" borderStyle="border:0;" vertical="true">
    		<div size="50%" showCollapseButton="false" style="border-width: 1;">
-	    	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
+   			<div class="mini-splitter" style="width:100%;height:100%;" borderStyle="border:0;">
+   				<div size="50%" showCollapseButton="false" style="border-width: 1;">
+			    	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
+				        <table style="width:100%;">
+				            <tbody>
+				             <tr>
+				                 <td style="width:100%;">
+				                 	<span id="pid" style="padding-left:5px;">品牌列表</span>
+				                 </td>
+				                 <td style="white-space:nowrap;">
+				                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_brand')">新增</a>
+				                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brand')">删除</a>
+					                <span class="separator"></span>
+					         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a>
+				                 </td>
+				             </tr>
+				         </tbody>
+				        </table>
+				    </div>
+				    <div class="mini-fit">
+				        <div id="grid_brand" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>
+				    </div>
+				</div>
+				<div showCollapseButton="true">
+					<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
+			            <table style="width:100%;">
+			                <tbody>
+				                <tr>
+				                    <td style="width:100%;">
+				                    	<span id="pid" style="padding-left:5px;">商品列表</span>
+				                    </td>
+				                    <td style="white-space:nowrap;">
+				                    	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_product')">新增</a>
+				                 		<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_product')">删除</a>
+						                <span class="separator"></span>
+						         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_product')">保存</a>
+				                    </td>
+				                </tr>
+				            </tbody>
+			            </table>
+			        </div>
+			        <div class="mini-fit">
+			            <div id="grid_product" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>
+			        </div>
+				</div>
+			</div>
+		</div>
+		<div showCollapseButton="true">
+   			<div class="mini-toolbar" borderStyle="border:0;">
 		        <table style="width:100%;">
 		            <tbody>
 		             <tr>
 		                 <td style="width:100%;">
-		                 	<span id="pid" style="padding-left:5px;">品牌列表</span>
+		                 	<span id="pid" style="padding-left:5px;">商品规格</span>
 		                 </td>
 		                 <td style="white-space:nowrap;">
-		                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_brand')">新增</a>
-		                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brand')">删除</a>
+		                  	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_product_size')">新增</a>
+		                	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_product_size')">删除</a>
 			                <span class="separator"></span>
-			         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a>
+			         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_product_size')">保存</a>
 		                 </td>
 		             </tr>
 		         </tbody>
 		        </table>
 		    </div>
-		    <div class="mini-fit">
-		        <div id="grid_brand" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>
+		    <div class="mini-fit"><!-- border-bottom: 1;border-top: 0;border-left:0;broder-right:0" -->
+		        <div id="grid_product_size" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border-bottom: 1;border-top: 1;border-left:0;border-right:0;"></div>
 		    </div>
-		</div>
-		<div showCollapseButton="true">
-   			<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
-	            <table style="width:100%;">
-	                <tbody>
-		                <tr>
-		                    <td style="width:100%;">
-		                    	<span id="pid" style="padding-left:5px;">商品列表</span>
-		                    </td>
-		                    <td style="white-space:nowrap;">
-		                    	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_product')">新增</a>
-		                 		<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_product')">删除</a>
-				                <span class="separator"></span>
-				         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_product')">保存</a>
-		                    </td>
-		                </tr>
-		            </tbody>
-	            </table>
-	        </div>
-	        <div class="mini-fit">
-	            <div id="grid_product" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>
-	        </div>
    		</div>
 	</div>
 </body>

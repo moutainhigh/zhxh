@@ -156,7 +156,7 @@
             <tbody>
              <tr>
                  <td style="width:100%;">
-                 	<span id="pid" style="padding-left:5px;">编辑商品评价</span>
+                 	<span id="pid" style="padding-left:5px;">商品规格价格</span>
                  </td>
                  <td style="white-space:nowrap;">
                   	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>

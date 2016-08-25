@@ -135,10 +135,11 @@ public class ProductController extends BaseConstroller {
 //			map.put("data", pList);
 //		}
 		else if (listtype.equals(Constants.LABEL_PLIST)) {
-			PageBean<Public_product> p = new PageBean<Public_product>();
+			//获取列表页对应的商品规格信息
+			PageBean<Public_product_size> p = new PageBean<Public_product_size>();
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex + 1);
-			p.setOrderBy("sort");
+			p.setOrderBy("sizesort");
 			p = pListService.listLableProduct(p, parentid,-1);
 			map.put("total", p.getRowCount());
 			map.put("data", p.getList());
@@ -230,6 +231,9 @@ public class ProductController extends BaseConstroller {
 	        			tmpPath = row.get("brandlog");
 	        		}
 	        		else if (savetype.equals(Constants.PRODUCT)) {
+	        			tmpPath = row.get("productpic");
+	        		}
+	        		else if (savetype.equals(Constants.PRODUCTSIZE)) {
 	        			tmpPath = row.get("productpic");
 	        		}
 	        		else if (savetype.equals(Constants.BRANDFIRST)) {
@@ -337,7 +341,7 @@ public class ProductController extends BaseConstroller {
 			num = brandFirstService.deleteBrandList(id);
 		}
 		else if (savetype.equals(Constants.PRODUCTSIZE)) {
-			num = productSizeService.delete(id);
+			num = productSizeService.delete(id,super.getProjectRealPath());
 		}
 		else if (savetype.equals(Constants.PLIST)) {
 			num = pListService.delete(id);

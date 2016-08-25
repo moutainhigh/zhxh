@@ -38,6 +38,7 @@ import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
+import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_video;
 import net.ussoft.zhxh.model.Sys_public;
 import net.ussoft.zhxh.service.IBrandfirstService;
@@ -45,6 +46,7 @@ import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
+import net.ussoft.zhxh.service.IPublicProductSizeService;
 import net.ussoft.zhxh.service.IPublicVideoService;
 import net.ussoft.zhxh.service.IPublicfilesdownService;
 import net.ussoft.zhxh.service.ISysPublicService;
@@ -67,6 +69,8 @@ public class CommonController extends BaseConstroller {
 	private IPublicBrandService brandService;
 	@Resource
 	private IPublicProductService productService;
+	@Resource
+	private IPublicProductSizeService productSizeService;
 	@Resource
 	private IPublicPicService picService;
 	@Resource
@@ -163,6 +167,25 @@ public class CommonController extends BaseConstroller {
         			tmp.setProductpic("");
         		}
         		productService.update(tmp);
+        	}
+        	else if (forObj.equals(Constants.PRODUCTSIZE)) {
+        		//如果是上传的商品规格主图片
+        		//更新内容
+        		Public_product_size tmp = productSizeService.getById(id);
+        		if (null != fileMap && fileMap.size() > 0 && !fileMap.get("newname").isEmpty()) {
+        			//删除原图片
+        			if (null != tmp.getProductpic() && !"".equals(tmp.getProductpic())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getProductpic());
+        			}
+        			tmp.setProductpic(fileMap.get("filepath") + fileMap.get("newname"));
+        		}
+        		else {
+        			if (null != tmp.getProductpic() && !"".equals(tmp.getProductpic())) {
+        				FileOperate.delFile(request.getSession().getServletContext().getRealPath("") + File.separator + tmp.getProductpic());
+        			}
+        			tmp.setProductpic("");
+        		}
+        		productSizeService.update(tmp);
         	}
         	else if (forObj.equals(Constants.FIRSTPIC)) {
         		//如果是上传的品牌综合页主图片

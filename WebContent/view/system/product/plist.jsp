@@ -18,9 +18,7 @@
 
 		var grid_brand;
 		var grid_plist;
-		var grid_product;
-		
-		
+		var grid_product_size;
 		
        	$(function(){
        		mini.parse();
@@ -34,7 +32,7 @@
       	                { field: "brandlogo",name:"brandlogo", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "品牌Logo",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onButtonEdit"} },
       	                { field: "brandname",name:"brandname", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "品牌名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	                { field: "brandpath",name:"brandpath",type:"comboboxcolumn", autoEscape:true,width: 100, headerAlign: "center", align:"center",allowSort: false, header: "品牌显示位置",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"PC端展示"},{"id":"2","text":"移动商城展示"}] } },
-      	                { field: "isshow",name:"isshow",type:"comboboxcolumn",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
+      	              	{ field: "isshow",name:"isshow",type:"comboboxcolumn",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"下架"},{"id":"1","text":"上架"}] } },
       	                { field: "brandcolor",name:"brandcolor", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "品牌颜色",vtype:"required",editor: {  type: "buttonedit",allowInput:false,onbuttonclick:"onBtnColorEdit"  } },
       	                { field: "sort",name:"sort", width: 40, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
@@ -81,21 +79,22 @@
 	            pageSize:2000
 	        });
 			
-			grid_product = mini.get("grid_product");
-			grid_product.set({
+			grid_product_size = mini.get("grid_product_size");
+			grid_product_size.set({
         		url:"${pageContext.request.contextPath}/product/list.htmls",
         		columns: [
-						{ type: "checkcolumn",headerAlign:"center",width: 30},
-      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
-      	                { field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnProductEdit" } },
-      	                { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
-      	                { field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
-      	                { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "createdate",name:"update",dateFormat:"yyyy-MM-dd", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "上架日期",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "ifdis",name:"ifdis",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "三级分销",editor: { type: "combobox", data: [{"id":"0","text":"否"},{"id":"1","text":"是"}] } },
-      	                { field: "sort",name:"sort", width: 30, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
-      	            ],
+    	                  { type: "checkcolumn",headerAlign:"center",width: 30},
+    					  { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
+    					  { field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片"},
+    					  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+    					  { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
+    					  { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+    					  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
+    					  { field: "saleprice",name:"saleprice", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "特价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25  } },
+    					  { field: "sizesort",name:"sizesort", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: {type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
+    					  { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
+    					  { field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"下架"},{"id":"1","text":"上架"}] } }
+    				],
 	            showFilterRow:false,
 	            allowCellSelect:true,
 	            allowCellEdit:false,
@@ -124,24 +123,33 @@
 	            value = e.value;
                 
                 if (field == "brandlogo") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+   	        		if (typeof(value) == "undefined" || value == "") {
+   	        			e.cellStyle = "color:red;text-align:center";
+                		e.cellHtml = '未设置图片';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
+   	        			e.cellHtml = '<img src="${pageContext.request.contextPath}/' + value + '" height="30px" />';
    	        		}
     	        }
                 if (field == "brandcolor") {
                 	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+                		e.cellStyle = "color:red;text-align:center";
+                		e.cellHtml = '未设置颜色';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "";
+   	        			e.cellHtml = '<span style="background-color:' + value + ';width:30px;height:30px;display:inline-block"></span>';
    	        		}
     	        }
-         	});
+                
+                if (field == "isshow") {
+                	if (value == 0) {
+                		e.cellStyle = "color:red;text-align:center";
+                	}
+                	else {
+                		e.cellStyle = "color:blue;text-align:center";
+                	}
+                }
+            });
        		
        		/* grid_plist.on("drawcell", function (e) {
                 var record = e.record,
@@ -161,7 +169,7 @@
     	        }
          	}); */
        		
-       		grid_product.on("drawcell", function (e) {
+       		grid_product_size.on("drawcell", function (e) {
                 var record = e.record,
 	            column = e.column,
 	            field = e.field,
@@ -169,38 +177,25 @@
 	            value = e.value;
                 
                 if (field == "productpic") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+   	        		if (typeof(value) == "undefined" || value == "") {
+   	        			e.cellStyle = "color:red;text-align:center";
+                		e.cellHtml = '未设置图片';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
+   	        			e.cellHtml = '<img src="${pageContext.request.contextPath}/' + value + '" height="30px" />';
    	        		}
     	        }
+                if (field == "isshow") {
+                	if (value == 0) {
+                		e.cellStyle = "color:red;text-align:center";
+                	}
+                	else {
+                		e.cellStyle = "color:blue;text-align:center";
+                	}
+                }
             });
        		
        	}
-       	
-       	function onActionRenderer(e) {
-            var grid = e.sender;
-            var record = e.record;
-            var uid = record._uid;
-            var id = record.id;
-            var rowIndex = e.rowIndex;
-            
-            /* var videoshowpic = record.videoshowpic;
-            var mp4path = record.mp4newname;
-            var webmpath = record.webmnewname; */
-            /* if (typeof(mp4path) == "undefined" || mp4path == "" || typeof(webmpath) == "undefined" || webmpath == "" ) {
-            	mini.alert("请先上传mp4和webm视频文件，在播放视频。")
-            	return;
-            } */
-
-            //var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + videoshowpic + '\',\'' + mp4path + '\',\'' + webmpath + '\')" >播放视频</a>'
-            var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + id + '\')" >播放视频</a>'
-            return s;
-        }
-       	
        	
        	function onSelectionChanged(e) {
             var grid = e.sender;
@@ -211,12 +206,12 @@
             	if (grid.id == 'grid_brand') {
             		grid_plist.setData([]);
                 	grid_plist.setTotalCount(0);
-            		grid_product.setData([]);
-                	grid_product.setTotalCount(0);
+            		grid_product_size.setData([]);
+            		grid_product_size.setTotalCount(0);
             	}
             	else if (grid.id == 'grid_plist') {
-            		grid_product.setData([]);
-                	grid_product.setTotalCount(0);
+            		grid_product_size.setData([]);
+            		grid_product_size.setTotalCount(0);
             	}
 	      		return;
 	      	}
@@ -224,11 +219,11 @@
             if (record) {
             	if (grid.id == 'grid_brand') {
             		grid_plist.load({listtype:'plist', parentid: record.id });
-            		grid_product.setData([]);
-                	grid_product.setTotalCount(0);
+            		grid_product_size.setData([]);
+            		grid_product_size.setTotalCount(0);
             	}
             	else if (grid.id == 'grid_plist') {
-            		grid_product.load({listtype:'label_plist', parentid: record.id });
+            		grid_product_size.load({listtype:'label_plist', parentid: record.id });
             	}
             }
         }
@@ -245,7 +240,7 @@
 			
 			var newRow = {};
 			newRow.parentid = record.id;
-			newRow.brandname = "";
+			newRow.brandname = "新建列表页";
 			
 			grid_plist.addRow(newRow, 0);
 			grid_plist.beginEditCell(newRow, "brandname");
@@ -258,8 +253,8 @@
 			if (grid_type == "grid_plist") {
 				tmpGrid = grid_plist;
 			}
-			else if (grid_type == 'grid_product'){
-				tmpGrid = grid_product;
+			else if (grid_type == 'grid_product_size'){
+				tmpGrid = grid_product_size;
 			}
         	var rows = tmpGrid.getSelecteds();
           	 
@@ -291,7 +286,7 @@
 				pams.savetype = "plist";
 				
 			}
-			else if (gridtype == "grid_product"){
+			else if (gridtype == "grid_product_size"){
 				
 				var record = grid_plist.getSelected();
 		      	
@@ -301,7 +296,7 @@
 		      	}
 
 	            
-				tmpGrid = grid_product;
+				tmpGrid = grid_product_size;
 				url = "${pageContext.request.contextPath}/public/save.htmls";
 				pams.act = "label_plist";
 				//pams.parentid = record.id;
@@ -338,8 +333,8 @@
 	            success: function (text) {
 	            	mini.alert("保存完毕。");
 	            	tmpGrid.reload();
-	            	grid_product.setData([]);
-                	grid_product.setTotalCount(0);
+	            	grid_product_size.setData([]);
+	            	grid_product_size.setTotalCount(0);
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
 	                mini.alert(jqXHR.responseText);
@@ -356,7 +351,7 @@
             return ids;
         }
 		
-		function sel_product(){
+		function sel_product_size(){
 			
 			var record = grid_plist.getSelected();
 			
@@ -368,7 +363,7 @@
 			var pHeight = $(window.parent).height();
 	   		var pWidth = $(window.parent).width();
 	         mini.open({
-	        	 url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/selectProduct",
+	        	 url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/selectProductSize",
 	             title: "选择商品至商品列表", width: pWidth-200, height:pHeight-100,
 	             allowResize:true,
 	             showMaxButton:true,
@@ -384,14 +379,14 @@
                          
                          var ids = getSelectGridid(rows);
                          
-                         grid_product.loading("保存中，请稍后......");
+                         grid_product_size.loading("保存中，请稍后......");
                          $.ajax({
                              url: "${pageContext.request.contextPath}/label/labelListSave.htmls",
                              data: {'objids':ids,'labelid':record.id,'tablename':'product_list'},
                              type: "post",
                              dataType:"text",
                              success: function (text) {
-                             	grid_product.reload();
+                            	 grid_product_size.reload();
                              },
                              error: function (jqXHR, textStatus, errorThrown) {
                                  alert(jqXHR.responseText);
@@ -411,7 +406,7 @@
 	      		return;
 	      	}
 			
-			var rows = grid_product.getSelecteds();
+			var rows = grid_product_size.getSelecteds();
          	 
        	 	if (rows.length == 0) {
        	 		mini.alert("请选择要删除的数据.");
@@ -423,7 +418,7 @@
        	 	mini.confirm("确定删除记录？", "确定？",
                  function (action) {
                      if (action == "ok") {
-                    	 grid_product.loading("保存中，请稍后......");
+                    	 grid_product_size.loading("保存中，请稍后......");
                     	 var url = "${pageContext.request.contextPath}/label/labelListDel.htmls";
 						$.ajax({
 							async:false,
@@ -432,7 +427,7 @@
 						    type: "post",
 						    dataType:"text",
 						    success: function (text) {
-						    	grid_product.reload();
+						    	grid_product_size.reload();
 						    },
 						    error: function (jqXHR, textStatus, errorThrown) {
 						        mini.alert(jqXHR.responseText);
@@ -503,7 +498,7 @@
 				                 	<span id="pid" style="padding-left:5px;">商品列表页显示的商品</span>
 				                 </td>
 				                 <td style="white-space:nowrap;">
-				                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="sel_product()">添加</a>
+				                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="sel_product_size()">添加</a>
 				                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="labelListDel()">移除</a>
 				                 </td>
 				             </tr>
@@ -511,7 +506,7 @@
 				        </table>
 				    </div>
 			        <div class="mini-fit" >
-				         <div id="grid_product" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  
+				         <div id="grid_product_size" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  
 				    </div>
 		   		</div>
 			</div>

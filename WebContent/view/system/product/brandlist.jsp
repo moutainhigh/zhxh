@@ -22,8 +22,6 @@
 		var grid_brandlist_pic;
 		var grid_brandlist_v;
 		
-		
-		
        	$(function(){
        		mini.parse();
        		
@@ -36,7 +34,7 @@
       	                { field: "brandlogo",name:"brandlogo", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "品牌Logo",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onButtonEdit"} },
       	                { field: "brandname",name:"brandname", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "品牌名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	                { field: "brandpath",name:"brandpath",type:"comboboxcolumn", autoEscape:true,width: 100, headerAlign: "center", align:"center",allowSort: false, header: "品牌显示位置",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"PC端展示"},{"id":"2","text":"移动商城展示"}] } },
-      	                { field: "isshow",name:"isshow",type:"comboboxcolumn",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
+      	              	{ field: "isshow",name:"isshow",type:"comboboxcolumn",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"下架"},{"id":"1","text":"上架"}] } },
       	                { field: "brandcolor",name:"brandcolor", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "品牌颜色",vtype:"required",editor: {  type: "buttonedit",allowInput:false,onbuttonclick:"onBtnColorEdit"  } },
       	                { field: "sort",name:"sort", width: 40, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
@@ -64,7 +62,7 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	                { field: "pic",name:"pic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "品牌系列主图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnBrandListEdit" } },
+      	                { field: "pic",name:"pic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "品牌系列主图片" },
       	              	{ field: "listname",name:"listname", width: 250, headerAlign: "center", align:"center",allowSort: false, header: "系列页名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "picurl",name:"picurl", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "图片点击url",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "sort",name:"sort", width: 50, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
@@ -92,7 +90,7 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	                { field: "pic_path",name:"pic_path", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "品牌系列页轮播图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnBrandListLBPicEdit" } },
+      	                { field: "pic_path",name:"pic_path", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "品牌系列页轮播图片"},
       	              	{ field: "pic_active",name:"pic_active",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
       	              	{ field: "pic_url",name:"pic_url", width: 350, headerAlign: "center", align:"center",allowSort: false, header: "图片点击URL",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "pic_sort",name:"pic_sort", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
@@ -122,7 +120,7 @@
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
       	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
-      	                { field: "videoshowpic",name:"videoshowpic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "视频封面图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnVideoPicEdit" } },
+      	                { field: "videoshowpic",name:"videoshowpic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "视频封面图片" },
       	              	{ field: "mp4oldname",name:"mp4oldname", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "本站视频mp4名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnMp4VideoEdit" } },
       	              	{ field: "webmoldname",name:"webmoldname", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "本站视频webm名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnWebmVideoEdit" } },
       	              	{ field: "videopath",name:"videopath", width: 280, headerAlign: "center", align:"center",allowSort: false, header: "外站视频地址",editor: {  type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
@@ -153,7 +151,7 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	                { field: "pic_path",name:"pic_path", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "品牌系列页图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnBrandListPicEdit" } },
+      	                { field: "pic_path",name:"pic_path", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "品牌系列页图片"},
       	              	{ field: "pic_active",name:"pic_active",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
       	              	{ field: "pic_url",name:"pic_url", width: 350, headerAlign: "center", align:"center",allowSort: false, header: "图片点击URL",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "pic_sort",name:"pic_sort", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
@@ -185,24 +183,33 @@
 	            value = e.value;
                 
                 if (field == "brandlogo") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+   	        		if (typeof(value) == "undefined" || value == "") {
+   	        			e.cellStyle = "color:red;text-align:center";
+                		e.cellHtml = '未设置图片';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
+   	        			e.cellHtml = '<img src="${pageContext.request.contextPath}/' + value + '" height="30px" />';
    	        		}
     	        }
                 if (field == "brandcolor") {
                 	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+                		e.cellStyle = "color:red;text-align:center";
+                		e.cellHtml = '未设置颜色';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "";
+   	        			e.cellHtml = '<span style="background-color:' + value + ';width:30px;height:30px;display:inline-block"></span>';
    	        		}
     	        }
-         	});
+                
+                if (field == "isshow") {
+                	if (value == 0) {
+                		e.cellStyle = "color:red;text-align:center";
+                	}
+                	else {
+                		e.cellStyle = "color:blue;text-align:center";
+                	}
+                }
+            });
        		
        		grid_brandlist.on("drawcell", function (e) {
                 var record = e.record,
@@ -212,38 +219,11 @@
 	            value = e.value;
                 
                 if (field == "pic") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+   	        		if (typeof(value) == "undefined" || value == "") {
+                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brandlist\',\''+record.id+'\',\'pic\',\'brandlist\')" >选择图片</a>';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
-   	        		}
-    	        }
-         	});
-       		
-       		grid_brandlist_v.on("drawcell", function (e) {
-                var record = e.record,
-	            column = e.column,
-	            field = e.field,
-	            uid = record._uid,
-	            value = e.value;
-                
-                if (field == "videoshowpic") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
-   	        		}
-    	        }
-                if (field == "videopath") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellHtml = "外站视频地址";
+   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brandlist\',\''+record.id+'\',\'pic\',\'brandlist\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
    	        		}
     	        }
          	});
@@ -256,12 +236,11 @@
 	            value = e.value;
                 
                 if (field == "pic_path") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+   	        		if (typeof(value) == "undefined" || value == "") {
+                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brandlist_lb_pic\',\''+record.id+'\',\'upload\',\'publicpic\')" >选择图片</a>';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
+   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brandlist_lb_pic\',\''+record.id+'\',\'upload\',\'publicpic\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
    	        		}
     	        }
                 
@@ -274,6 +253,33 @@
    	        		}
     	        }
          	});
+       		
+       		grid_brandlist_v.on("drawcell", function (e) {
+                var record = e.record,
+	            column = e.column,
+	            field = e.field,
+	            uid = record._uid,
+	            value = e.value;
+                
+                if (field == "videoshowpic") {
+   	        		if (typeof(value) == "undefined" || value == "") {
+                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brandlist_v\',\''+record.id+'\',\'pic\',\'video\')" >选择图片</a>';
+       	        	}
+   	        		else {
+   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brandlist_v\',\''+record.id+'\',\'pic\',\'video\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
+   	        		}
+    	        }
+                
+                if (field == "videopath") {
+                	if (typeof(value) == "undefined" || value == "") {
+   	        			e.cellhtml = "";
+       	        	}
+   	        		else {
+   	        			e.cellHtml = "外站视频地址";
+   	        		}
+    	        }
+         	});
+       		
        		grid_brandlist_pic.on("drawcell", function (e) {
                 var record = e.record,
 	            column = e.column,
@@ -282,12 +288,11 @@
 	            value = e.value;
                 
                 if (field == "pic_path") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
+   	        		if (typeof(value) == "undefined" || value == "") {
+                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brandlist_pic\',\''+record.id+'\',\'upload\',\'publicpic\')" >选择图片</a>';
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
+   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brandlist_pic\',\''+record.id+'\',\'upload\',\'publicpic\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
    	        		}
     	        }
                 
@@ -310,21 +315,17 @@
             var id = record.id;
             var rowIndex = e.rowIndex;
             
-            /* var videoshowpic = record.videoshowpic;
             var mp4path = record.mp4newname;
-            var webmpath = record.webmnewname; */
-            /* if (typeof(mp4path) == "undefined" || mp4path == "" || typeof(webmpath) == "undefined" || webmpath == "" ) {
-            	mini.alert("请先上传mp4和webm视频文件，在播放视频。")
-            	return;
-            } */
+            var webmpath = record.webmnewname;
+            if (typeof(mp4path) == "undefined" || mp4path == "" || typeof(webmpath) == "undefined" || webmpath == "" ) {
+            	return "";
+            }
 
-            //var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + videoshowpic + '\',\'' + mp4path + '\',\'' + webmpath + '\')" >播放视频</a>'
             var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + id + '\')" >播放视频</a>'
             return s;
         }
        	
        	function showVideo(id) {
-/*        	function showVideo(videoshowpic,mp4path,webmpath) { */
        		
        		var row = grid_brandlist_v.getRow(id);
        		
@@ -335,9 +336,11 @@
             	var webmpath = row.webmnewname;
             	if (typeof(mp4path) == "undefined" || mp4path == "") {
             		mini.alert("缺少mp4文件，可能某些浏览器不能播放视频。");
+            		return;
             	}
             	else if (typeof(webmpath) == "undefined" || webmpath == "") {
             		mini.alert("缺少webm文件，可能某些浏览器不能播放视频。");
+            		return;
             	}
        			mini.open({
                     url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/show_video",
@@ -407,6 +410,13 @@
             if (record) {
             	if (grid.id == 'grid_brand') {
             		grid_brandlist.load({listtype:'brandlist', parentid: record.id });
+            		
+            		grid_brandlist_lb_pic.setData([]);
+                	grid_brandlist_lb_pic.setTotalCount(0);
+                	grid_brandlist_v.setData([]);
+                	grid_brandlist_v.setTotalCount(0);
+                	grid_brandlist_pic.setData([]);
+                	grid_brandlist_pic.setTotalCount(0);
             	}
             	else if (grid.id == "grid_brandlist") {
             		grid_brandlist_lb_pic.load({act:'publicpic', parentid:record.id,parenttype:'brandlist_lb_pic' });
@@ -460,7 +470,7 @@
 			
 			var newRow = {};
 			newRow.parentid = record.id;
-			newRow.listname = "";
+			newRow.listname = "新建系列";
 			newRow.sort = 1;
 			newRow.pic = "";
 			newRow.picurl = "";
@@ -493,7 +503,6 @@
 			newRow.isshow = "0";
 			
 			grid_brandlist_v.addRow(newRow, 0);
-			//grid_brandlist_v.beginEditCell(newRow, "videoshowpic");
         }
 		
 		function delRow(grid_type) {
@@ -641,104 +650,49 @@
             return ids;
         }
 		
-		function onBtnBrandListEdit(e) {
-        	var buttonEdit = e.sender;
-        	var row = grid_brandlist.getEditorOwnerRow(buttonEdit);
-        	mini.open({
-                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传品牌系列页主图片", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"pic",forObj:"brandlist"};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	grid_brandlist.cancelEdit();
-                	grid_brandlist.reload();
-                }
-            });
-        }
-		function onBtnVideoPicEdit(e) {
-        	var buttonEdit = e.sender;
-        	var row = grid_brandlist_v.getEditorOwnerRow(buttonEdit);
-        	
-        	if (typeof(row.id) == "undefined" || row.id == "") {
-        		mini.alert("行记录还没有保存，请先保存后再上传.");
-        		return;
-        	}
-        	
-        	mini.open({
-                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传系列页视频主图片", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"pic",forObj:"video"};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	grid_brandlist_v.cancelEdit();
-                	grid_brandlist_v.reload();
-                }
-            });
-        }
+		function open_upload_pic(grid_type,rowid,saveFolder,forObj) {
+       		var tmpGrid;
+       		
+       		if (grid_type == "grid_brandlist") {
+				tmpGrid = grid_brandlist;
+			}
+			else if (grid_type == "grid_brandlist_lb_pic"){
+				tmpGrid = grid_brandlist_lb_pic;
+			}
+			else if (grid_type == "grid_brandlist_v"){
+				tmpGrid = grid_brandlist_v;
+			}
+			else if (grid_type == "grid_brandlist_pic"){
+				tmpGrid = grid_brandlist_pic;
+			}
+       		
+       		var objs = tmpGrid.getChanges();
+       		if (objs != "") {
+       			mini.alert("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片。");
+   	 			return;
+       		}
+       		else {
+       			mini.open({
+                    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
+                    title: "上传图片", width: 600, height:500,
+                    allowResize:true,
+                    onload: function () {
+                    	var iframe = this.getIFrameEl();
+                   	 	var data = {id:rowid,saveFolder:saveFolder,forObj:forObj};
+                        //var data = rows[0];
+                        iframe.contentWindow.SetData(data);
+                    },
+                    ondestroy: function (action) {
+                    	if (action == "ok") {
+                    		tmpGrid.cancelEdit();
+                    		tmpGrid.reload();
+                        }
+                    }
+                });
+       		}
+       		
+       	}
 		
-		//上传修改系列页轮播图片。单张修改
-		function onBtnBrandListLBPicEdit(e) {
-        	var buttonEdit = e.sender;
-        	var row = grid_brandlist_lb_pic.getEditorOwnerRow(buttonEdit);
-        	
-        	if (typeof(row.id) == "undefined" || row.id == "") {
-        		mini.alert("行记录还没有保存，请先保存后再上传.");
-        		return;
-        	}
-        	
-        	mini.open({
-                url:"${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传修改系列页轮播图片", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"upload",forObj:"publicpic"};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	grid_brandlist_lb_pic.cancelEdit();
-                	grid_brandlist_lb_pic.reload();
-                }
-            });
-        }
-		
-		//上传修改系列页图片。单张修改
-		function onBtnBrandListPicEdit(e) {
-        	var buttonEdit = e.sender;
-        	var row = grid_brandlist_pic.getEditorOwnerRow(buttonEdit);
-        	
-        	if (typeof(row.id) == "undefined" || row.id == "") {
-        		mini.alert("要系列页的行记录还没有保存，请先保存后再上传.");
-        		return;
-        	}
-        	
-        	mini.open({
-                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传修改系列页图片", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"upload",forObj:"publicpic"};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	grid_brandlist_pic.cancelEdit();
-                	grid_brandlist_pic.reload();
-                }
-            });
-        }
 		//上传Mp4文件
 		function onBtnMp4VideoEdit(e) {
         	var buttonEdit = e.sender;
@@ -789,93 +743,6 @@
                 }
             });
         }
-        
-        
-        //以下不确定要
-        
-        /* function onActionRenderer(e) {
-            var grid = e.sender;
-            var record = e.record;
-            var uid = record._uid;
-            var id = record.id;
-            var rowIndex = e.rowIndex;
-            var productname = record.productname;
-
-            var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
-            s += '  <a class="Edit_Button" href="javascript:delete_book(\'' + uid + '\')" >详细</a>';
-            return s;
-        } */
-        
-       		/* grid_product.on("drawcell", function (e) {
-                var record = e.record,
-	            column = e.column,
-	            field = e.field,
-	            uid = record._uid,
-	            value = e.value;
-                
-                if (field == "productpic") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
-   	        		}
-    	        }
-            }); */
-        
-       	
-       	
-       	
-       	function onBtnColorEdit(e) {
-        	var buttonEdit = e.sender;
-        	
-        	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/selectColor",
-                title: "选择颜色", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	
-                },
-                ondestroy: function (action) {
-                	if (action == "ok") {
-                		var iframe = this.getIFrameEl();
-                        var color_data = iframe.contentWindow.GetData();
-                        color_data = mini.clone(color_data);    //必须
-                        if (color_data != "") {
-                        	var row = grid_brand.getEditorOwnerRow(buttonEdit);
-                            //var row = grid_book.getSelecteds();
-                            grid_brand.cancelEdit();
-                            grid_brand.updateRow(row, {
-                            	brandcolor:color_data
-                            });
-                        }
-                    }
-                }
-            });
-        }
-       	
-        function editRated(id,productname) {
-        	
-        	var title = "商品评价";
-        	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/editRated",
-                title: title, width: 800, height:600,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {productid:id,productname:productname};
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	if (action == "ok") {
-                		
-                    }
-                }
-            });
-        }
-        
-		
 		
 </script>
 </head>

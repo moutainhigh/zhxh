@@ -14,10 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import net.ussoft.zhxh.dao.LabelListDao;
 import net.ussoft.zhxh.dao.ProductListDao;
 import net.ussoft.zhxh.dao.PublicProductDao;
+import net.ussoft.zhxh.dao.PublicProductSizeDao;
 import net.ussoft.zhxh.model.Label_list;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Product_list;
 import net.ussoft.zhxh.model.Public_product;
+import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.service.IProductListService;
 
 @Service
@@ -29,6 +31,8 @@ public class ProductListService implements IProductListService{
 	private LabelListDao labelListDao;
 	@Resource
 	private PublicProductDao productDao;
+	@Resource
+	private PublicProductSizeDao productSizeDao;
 	
 	@Override
 	public Product_list getById(String id) {
@@ -85,7 +89,7 @@ public class ProductListService implements IProductListService{
 	}
 
 	@Override
-	public PageBean<Public_product> listLableProduct(PageBean<Public_product> pageBean, String productListid,int isshow) {
+	public PageBean<Public_product_size> listLableProduct(PageBean<Public_product_size> pageBean, String productListid,int isshow) {
 		String sql = "select * from label_list where labelid=?";
 		List<Object> values = new ArrayList<Object>();
 		values.add(productListid);
@@ -102,9 +106,9 @@ public class ProductListService implements IProductListService{
 		}
 		StringBuffer sb = new StringBuffer();
 		if(isshow ==0 || isshow == 1){
-			sb.append("select * from public_product where isshow="+isshow+" and id in (");
+			sb.append("select * from public_product_size where isshow="+isshow+" and id in (");
 		}else{
-			sb.append("select * from public_product where id in (");
+			sb.append("select * from public_product_size where id in (");
 		}
 		
 		Serializable[] ss=new Serializable[listids.size()];
@@ -117,7 +121,7 @@ public class ProductListService implements IProductListService{
 //		sb.append(" and labelid=?");
 //		values.add(productListid);
 		
-		pageBean = productDao.search(sb.toString(), values, pageBean);
+		pageBean = productSizeDao.search(sb.toString(), values, pageBean);
 		
 		return pageBean;
 	}

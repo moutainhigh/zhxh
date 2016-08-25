@@ -5,6 +5,7 @@ import java.util.List;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Product_list;
 import net.ussoft.zhxh.model.Public_product;
+import net.ussoft.zhxh.model.Public_product_size;
 
 /**
  * 商品列表页
@@ -61,5 +62,5 @@ public interface IProductListService {
 	 * @param isshow 0:隐藏，1:显示，-1查询所有
 	 * @return
 	 */
-	public PageBean<Public_product> listLableProduct(PageBean<Public_product> pageBean,String productListid,int isshow);
+	public PageBean<Public_product_size> listLableProduct(PageBean<Public_product_size> pageBean,String productListid,int isshow);
 }

@@ -51,5 +51,5 @@ public interface IPublicProductSizeService {
 	 * @param id
 	 * @return
 	 * */
-	public int delete(String id);
+	public int delete(String id,String realPath);
 }
