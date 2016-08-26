@@ -142,7 +142,8 @@
             	var productname = record.productname;
                 var showtype = record.showtype;
                 
-                var s = '  <a class="Edit_Button" href="javascript:edit(\'' + id + '\',\'' + showtype + '\')" >详细</a>';
+                var s = '  <a class="Edit_Button" href="javascript:edit(\'' + id + '\',\'' + showtype + '\')" title="编辑商品详细信息">详细</a>';
+                s += '  <a class="Edit_Button" href="javascript:setLinkids(\'' + id + '\')" title="设置该商品详细页的推荐商品">设置推荐商品</a>';
                 s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
             }
             
@@ -455,6 +456,7 @@
 				newRow.productname = rows[0].productname;
 				newRow.showtype = "1";
 				newRow.productmemo = "";
+				newRow.linkids = "";
 				
 				editField = "productname";
 			}
@@ -608,6 +610,10 @@
 		        });
 	   		}
 	        
+		}
+		
+		function setLinkids(id) {
+			
 		}
 		
 		

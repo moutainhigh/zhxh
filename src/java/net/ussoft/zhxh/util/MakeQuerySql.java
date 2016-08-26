@@ -6,19 +6,30 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.persistence.Table;
+
+import org.springframework.core.annotation.AnnotationUtils;
+
 import java.util.Set;
 
 public class MakeQuerySql {
 	
-	public static Map<String, Object> search(Class typeClass,Map<String, Object> map){
+	public static <T> Map<String, Object> search(Class<T> typeClass,Map<String, Object> map){
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		String tablename = typeClass.getName().substring(
-                typeClass.getName().lastIndexOf(".") + 1);
+		Table table = AnnotationUtils.findAnnotation(typeClass, Table.class);
+		if(table==null){
+			throw new RuntimeException(typeClass+"没有定义@table");
+		}
+		String tableName = table.name();
+		
+//		String tablename = typeClass.getName().substring(
+//                typeClass.getName().lastIndexOf(".") + 1);
 		
 		StringBuffer sql=new StringBuffer("select * from ");
-        sql.append(tablename);
+        sql.append(tableName);
         if (map.size()!=0) {
             sql.append(" t where 1=1");//后面只需拼接and条件
         }

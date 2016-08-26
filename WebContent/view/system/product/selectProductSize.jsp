@@ -257,9 +257,9 @@
 	    
 	</script>
 	
-	<style type="text/css">
+	<!-- <style type="text/css">
 		#img{width:220px;height:120px;display:block; border:1px solid #d3d3d3;}
-	</style>
+	</style> -->
     
 </head>
 <body>

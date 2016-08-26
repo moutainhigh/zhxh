@@ -19,6 +19,7 @@ public class Public_product_size {
 	private Integer sizesort;
 	private Integer isshow;
 	private Float saleprice;
+	private String linkids;
 	
 	
 	@Id
@@ -89,7 +90,12 @@ public class Public_product_size {
 	public void setProductmemo(String productmemo) {
 		this.productmemo = productmemo;
 	}
-	
+	public String getLinkids() {
+		return linkids;
+	}
+	public void setLinkids(String linkids) {
+		this.linkids = linkids;
+	}
 	
 	
 }
