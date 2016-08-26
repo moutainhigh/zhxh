@@ -19,7 +19,7 @@ p span{ overflow:hidden;}
 .fl{ float: left;}
 .fr{ float: right;}
 .bg{ width: 100%; height: 100%; position:fixed; left:0; background-color:#000; filter:alpha(opacity=30); opacity:0.3; top:0; display: none;}
-.index-header{ position:relative; z-index: 999; background: #fff;}/*首页头部*/
+.index-header{ position:relative; z-index: 999; background: #fff; height:15%;}/*首页头部*/
 .header-width{ margin: auto; height: 100px;}
 .header-one{ height: 100px; width: 100%; background: #040a2b; position: relative; }
 .header-two{ height: 100px; width: 100%; background: #3a6232; position: relative; }
@@ -30,9 +30,10 @@ p span{ overflow:hidden;}
 
 
 /*index header*/
-.indexheader{margin: auto; height: 80px; padding: 34px 0 15px 0; position: relative;}
-.header h1{ width: 80px; height: 80px;}
-ul.header-user{ height:42px; margin-top: 35px;}
+.indexheader{margin: auto; position: relative;padding-top:1.5%; width:75%;}
+.header h1{ width:5%;}
+.header h1 img{ width:100%; display:block}
+ul.header-user{ height:42px; margin-top:1%; }
 ul.header-user li{ float: left; padding: 0 27px; border-right: solid 1px #e0e0e0; height: 42px;}
 ul.header-user li.name a{ width:16px ; height:18px ; background: url(../../images/icon.png) 0 0 no-repeat; display: block; margin-top: 13px;}
 ul.header-user li.shop-cart a{ width:17px ; height:17px ; background: url(../../images/icon.png) 0 -30px no-repeat; display: block; margin-top: 13px;}
@@ -48,21 +49,22 @@ ul.header-user li.del a{ width:16px ; height:16px ; background: url(../../images
 
 
 /*banner*/
-.imgbox{ margin:0 auto; text-align:center; }
-#banner_img li{ float: left;}
-#banner_img li img{ width: 100%;}
-.imgnum{ margin-top: 32px;}
+.imgbox{ margin:0 auto; text-align:center; height:72%; overflow:visible; width:75%; }
+#banner_img{ width:100%; height:85%;}
+#banner_img li{ float: left;width:100%; height:100%; overflow:hidden;}
+#banner_img li img{width:100%; height:auto;}
+.imgnum{ margin-top:1%;}
 .imgnum a,.imgnum-bottom a{ font-size: 16px; margin-right: 42px;}
 .imgnum a.onselect{ color: #000; font-weight: bold;}
-.imgnum-bottom{ margin-top: 20px;}
+.imgnum-bottom{ margin-top: 1%;}
 /*页脚*/
-.footer{ width: 100%; height: 40px; border-top:solid 1px #e0e0e0; position: relative; margin-top: 100px; }
-.index-footer{ margin: auto;}
+.footer{ width: 100%; height:8.5%; border-top:solid 1px #e0e0e0; position: relative; margin-top:3%;  }
+.index-footer{ margin: auto; padding:0 2%;}
 .footer-left a{ line-height: 40px;  border-left:solid 1px #808080; padding: 0 12px; }
 .footer-left a:first-child{ border-left: none; padding-left: 0;}
 .footer-right span{ line-height: 40px; background: url(../../images/chinese-auth.jpg) center right no-repeat; padding-right: 30px;}
-.footer-Itk{position: absolute; left: 50%; margin-left: -40%;}
-.footer-tk{ background: #000; position: absolute; z-index: 9999; display: none; bottom: 40px;}
+.footer-Itk{position: absolute; width:100%;}
+.footer-tk{ background: #000; position: absolute; z-index: 9999; display: none; bottom: 100%;}
 .footer-tk .tit{ width: 90%; margin: auto; height: 60px; border-bottom: solid 1px #ccc; position: relative;}
 .footer-tk .tit h3{ text-align: center;width: 100%; padding-top:20px ; color: #fff; font-size: 24px; font-weight: normal;}
 .footer-tk .close{ width:28px ; height:25px ; display: block; background: url(../../images/icon.png) -22px 0 no-repeat; position: absolute; right: 0; top: 22px; cursor: pointer; }
@@ -145,19 +147,32 @@ a.huoqu{ width:116px ; height:42px; display: inline-block; border: solid 1px #cc
 .wjmm-footer p{ line-height: 30px; text-align: center;}
 
 @media (max-width:1023px) {
-	.indexheader,.header-width,.imgbox,.index-footer,.footer-Itk,.container,.shop-banner,.shop-TXT {
+	.header-width,.container,.shop-banner,.shop-TXT {
 		width:748px;
 	}
+	
 }
 @media (min-width:1362px) {
-	.indexheader,.header-width,.imgbox,.index-footer,.footer-Itk,.container,.shop-banner,.shop-TXT {
+	.header-width,.container,.shop-banner,.shop-TXT {
 		width:1302px;
 	}
 }
 @media (min-width:1600px) {
-	.indexheader,.header-width,.imgbox,.index-footer,.footer-Itk,.container,.shop-banner,.shop-TXT {
+	.header-width,.container,.shop-banner,.shop-TXT {
 		width:1524px;
 	}
 }
 
+@media (max-width:1024px) {
+	.imgnum a,.imgnum-bottom a{   
+	   font-size: 12px;
+	}
+	.header h1{ width:6%;}
+	.indexheader { padding:2% 2% 0 2%;}
+	.imgbox{ height:70%;}
+	.footer{ height:6.5%;}
+	.imgnum{ margin-top:2%;}
+}
+@media (min-width:1280px) {
 
+}
