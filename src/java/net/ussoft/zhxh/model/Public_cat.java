@@ -11,6 +11,7 @@ public class Public_cat {
 	private String id;
 	private String userid;
 	private String productid;
+	private String productsizeid;
 	private Integer buycount;
 	
 	
@@ -40,6 +41,12 @@ public class Public_cat {
 	}
 	public void setBuycount(Integer buycount) {
 		this.buycount = buycount;
+	}
+	public String getProductsizeid() {
+		return productsizeid;
+	}
+	public void setProductsizeid(String productsizeid) {
+		this.productsizeid = productsizeid;
 	}
 	
 	
