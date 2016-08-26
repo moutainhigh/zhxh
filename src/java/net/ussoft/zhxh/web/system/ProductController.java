@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -118,13 +119,24 @@ public class ProductController extends BaseConstroller {
 			List<Brandlist> pList = brandFirstService.getBrandList(parentid);
 			map.put("total", pList.size());
 			map.put("data", pList);
-		}//商品规格列表
+		}
 		else if (listtype.equals(Constants.PRODUCTSIZE)) {
+			//商品规格列表
 			List<Public_product_size> pList = productSizeService.list(parentid);
 			map.put("total", pList.size());
 			map.put("data", pList);
-		}//获取商品列表页内容
+		}
+		else if (listtype.equals(Constants.PRODUCTSIZEALL)) {
+			//商品规格列表全部
+			Map<String, Object> mapPar = new LinkedHashMap<>();
+			//mapPar.put("isshow = ", -1);
+			
+			List<Public_product_size> pList = productSizeService.list(mapPar);
+			map.put("total", pList.size());
+			map.put("data", pList);
+		}
 		else if (listtype.equals(Constants.PLIST)) {
+			//获取商品列表页内容
 			List<Product_list> pList = pListService.list(parentid);
 			map.put("total", pList.size());
 			map.put("data", pList);
@@ -408,5 +420,40 @@ public class ProductController extends BaseConstroller {
 		}
 		return true;
 	}
+	
+	/**
+	 * 保存商品规格对应的推荐商品
+	 * @param id
+	 * @param linkids
+	 * @param response
+	 * @throws IOException 
+	 */
+	@RequestMapping(value="/saveSizeLinkids",method=RequestMethod.POST)
+	public void saveSizeLinkids(String id,String linkids,HttpServletResponse response) throws IOException {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "success";
+		
+		if ("".equals(id) || id == null) {
+			out.print(result);
+			return;
+		}
+		
+		Public_product_size pSize = productSizeService.getById(id);
+		
+		if (null == pSize) {
+			out.print(result);
+			return;
+		}
+		
+		pSize.setLinkids(linkids);
+		productSizeService.update(pSize);
+		
+		out.print(result);
+	}
+	
 	
 }

@@ -19,6 +19,8 @@
 	    //mini.parse();
 	    
 		var grid_product_size;
+		var id = "";
+		var linkids = "";
 		
 	    $(function(){
 	    	mini.parse();
@@ -45,12 +47,13 @@
 	            allowCellValid:true,
 	            multiSelect:true,
 	            //onselectionchanged:"onSelectionChanged",
+	            onload:"onload",
 	            allowUnselect:false,
 	            showPager:true,
 	            showPageSize:false,
 	            pageSize:10000
 	        });
-			grid_product_size.load({ listtype:'productsize',parentid: record.id });
+			grid_product_size.load({ listtype:'productsizeall',parentid: "" });
         	drawcell();
 	    })
 	    
@@ -83,17 +86,31 @@
             });
         }
 	    
+	    function onload() {
+	    	if (linkids != "") {
+				var idArr = linkids.split(",");
+				
+				for(var i=0;i<idArr.length;i++) {
+					var row = grid_product_size.findRow(function(row){
+		    		    if(row.id == idArr[i]) return true;
+		    		});
+					if (row != null && row.id != "") {
+						grid_product_size.select(row);
+					}
+				}
+			}
+	    }
+	    
 	  	//标准方法接口定义
 		function SetData(data) {
+			data = mini.clone(data);    //必须
 			//跨页面传递的数据
 			id = data.id;
-			saveFolder = data.saveFolder;
-			forObj = data.forObj;
+			linkids = data.linkids;
 			
-			$("#id").val(id);
-			$("#saveFolder").val(saveFolder);
-			$("#forObj").val(forObj);
-			
+			/* var rows = grid_product_size.findRow(function(row){
+    		    if(row.noteid == grid_data[i].id) return true;
+    		}); */
 		}
 	    
 	    function GetData() {
@@ -105,14 +122,14 @@
 	        else window.close();
 	    }
 	    function onOk() {
-	    	//判断固定收费的各种日期是否设置。
-	    	var rows = GetData();
+	    	CloseWindow("ok");
+	    	/* var rows = GetData();
 	    	if (rows.length == 0) {
 	    		CloseWindow("cancel");
 	    	}
 	    	else {
 	    		CloseWindow("ok");
-	    	}
+	    	} */
 	    }
 	    function onCancel() {
 	        CloseWindow("cancel");
@@ -126,8 +143,8 @@
     
 </head>
 <body>
-	<div class="mini-toolbar" style="text-align:center;line-height:30px;" borderStyle="border:0;">
-          <label id="memo">请选择商品详细页推荐的同类商品</label>
+	<div class="mini-toolbar" style="text-align:center;line-height:30px;" borderStyle="border-bottom:1;border-top: 0;border-left:0;border-right:0;">
+          <label id="memo">请选择商品详细页推荐的同类商品（选择的商品会显示在商品详细页内的推荐商品滚动中。请选择2-4个。）</label>
     </div>
     <div class="mini-fit">
     	<div class="mini-toolbar" borderStyle="border:0;">
@@ -138,10 +155,6 @@
 	                 	<span id="pid" style="padding-left:5px;">商品规格</span>
 	                 </td>
 	                 <td style="white-space:nowrap;">
-	                  	<!-- <a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_product_size')">新增</a>
-	                	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_product_size')">删除</a>
-		                <span class="separator"></span>
-		         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_product_size')">保存</a> -->
 	                 </td>
 	             </tr>
 	         </tbody>

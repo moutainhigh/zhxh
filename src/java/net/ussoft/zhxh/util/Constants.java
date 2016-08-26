@@ -101,6 +101,10 @@ public class Constants{
 	 * 公共常量。商品规格
 	 */
 	public static final String PRODUCTSIZE = "productsize";
+	/**
+	 * 公共常量。商品规格全部获取
+	 */
+	public static final String PRODUCTSIZEALL = "productsizeall";
 	
 	/**
 	 * 商品列表

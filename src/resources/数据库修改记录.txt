@@ -146,6 +146,10 @@
 	（3）productpic	varchar（500）
 	（4）productmemo	varchar（2000）
 	
+20160826
+1、修改public_product_size 商品规格表。增加如下：
+	（1）linkids varchar（2000） 商品推荐ids
+	
 	
 	
 	

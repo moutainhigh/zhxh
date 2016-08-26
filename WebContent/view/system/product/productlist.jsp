@@ -613,7 +613,55 @@
 		}
 		
 		function setLinkids(id) {
+			if(id == 'undefined' || id == ""){
+				mini.alert("请先保存信息，再添加内容!");
+				return;
+			}
 			
+			var row = grid_product_size.getRow(id);
+			
+			var pWidth = $(window.parent).width();
+			var pHeight = $(window.parent).height();
+			mini.open({
+   				url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/setProductLinkids",
+	            title: "设置商品详细页推荐商品", width: pWidth - 200, height:pHeight-100,
+	            allowResize:true,
+	            showMaxButton:true,
+	            onload: function () {
+	            	var iframe = this.getIFrameEl();
+	    	        var data = { id: id,linkids:row.linkids};
+	    	        iframe.contentWindow.SetData(data);
+	            },
+	            ondestroy: function (action) {
+	            	if (action == "ok") {
+                		var iframe = this.getIFrameEl();
+                        var link_rows = iframe.contentWindow.GetData();
+                        link_rows = mini.clone(link_rows);    //必须
+                        
+                        var ids = "";
+                        
+                        if (link_rows.length > 0) {
+                        	ids = getSelectGridid(link_rows);
+                        }
+                        
+                        //提交到服务器
+                        $.ajax({
+            	        	async:false,
+            	            url: "${pageContext.request.contextPath}/product/saveSizeLinkids.htmls",
+            	            data: {'id':id,'linkids':ids},
+            	            type: "post",
+            	            dataType:"text",
+            	            success: function (text) {
+            	            	mini.alert("保存完毕。");
+            	            	grid_product_size.reload();
+            	            },
+            	            error: function (jqXHR, textStatus, errorThrown) {
+            	                mini.alert(jqXHR.responseText);
+            	            }
+            	        });
+                    }
+	            }
+	        });
 		}
 		
 		
