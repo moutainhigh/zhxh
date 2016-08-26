@@ -27,7 +27,7 @@
 	        background:url(${pageContext.request.contextPath}/images/Notes_Large.png) no-repeat;width:32px;height:32px;
 	    }
 	    .member {
-	        background:url(${pageContext.request.contextPath}/images/icon/member.png) no-repeat;width:32px;height:32px;
+	        background:url(${pageContext.request.contextPath}/images/icon/user.png) no-repeat;width:32px;height:32px;
 	    }
     </style>
     
@@ -42,13 +42,30 @@
 	    var t2 = {};
 	    t2.id = "member";
 	    t2.pid = "right";
-	    t2.text = "会员管理";
+	    t2.text = "代理管理";
 	    t2.iconCls = "member";
-	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userList";
+	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/agentList";
 	    t2.iconPosition = "top";
 	    dataList.push(t2);
 	    
+	    var t3 = {};
+	    t3.id = "member";
+	    t3.pid = "right";
+	    t3.text = "直营店管理";
+	    t3.iconCls = "member";
+	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/shopList";
+	    t3.iconPosition = "top";
+	    dataList.push(t3);
     
+	    var t4 = {};
+	    t4.id = "member";
+	    t4.pid = "right";
+	    t4.text = "普通会员管理";
+	    t4.iconCls = "member";
+	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/memberList";
+	    t4.iconPosition = "top";
+	    dataList.push(t4);
+	    
     	$(function(){
     		mini.parse();
             var leftTree = mini.get("leftTree");

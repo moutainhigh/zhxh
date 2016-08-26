@@ -17,18 +17,21 @@
     	//性别
     	var Genders = [{ id: 1, text: '先生' }, { id: 2, text: '女士'}];
     	//身份
-    	var Userids = [{id:'A',text:'省代'},{id:'B',text:'市代'},{id:'C',text:'门店'},{id:'Z',text:'会员'}];
+    	var Userids = [{id:'A',text:'代理商'},{id:'B',text:'市代'},{id:'C',text:'门店'},{id:'Z',text:'会员'}];
     	//接收分成
     	var Setreturn = [{id:0,text:'不接收'},{id:1,text:'接收'}];
     	
-	    var grid;
+	    var grid_shop;		//店
+	    var grid_memeber;	//普通会员
+	    
 	    var editWindow;
 	   	$(function(){
 	   		mini.parse();
 	   		editWindow = mini.get("editWindow");
 	   		
-			grid = mini.get("grid");
-	    	grid.set({
+	    	//店
+	    	grid_shop = mini.get("grid_shop");
+	    	grid_shop.set({
 	    		url:"${pageContext.request.contextPath}/userManager/list.htmls",
 	    		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
@@ -36,8 +39,10 @@
 	  	              	{ field: "phonenumber",name:"phonenumber", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "手机",vtype:"required" ,editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	                { field: "username",name:"username", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "真实姓名",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	              	{ field: "identity",name:"identity",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "身份",editor: { type: "combobox", data:"Userids"} },
-	  	            	{ field: "tuijianid",name:"tuijianid", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "推荐人",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-	  	            
+	  	            	/* { field: "tuijianid",name:"tuijianid", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "推荐人",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }, */
+	  	            	{ field: "companyname",name:"companyname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构名称",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	  	            	{ field: "companycode",name:"companycode", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构代码",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	  	            	
 	  	            	{ field: "birthday",name:"birthday", width: 80, headerAlign: "center", align:"center",allowSort: false, dateFormat:"yyyy-MM-dd", header: "生日",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
 	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} },
 	  	          	
@@ -47,7 +52,41 @@
 	  	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
-	            allowCellEdit:true,
+	            allowCellEdit:false,
+	            allowCellValid:true,
+	            multiSelect:true,
+	            allowUnselect:false,
+	            showPager:true,
+	            onselectionchanged:"onSelectionChanged",
+	            //oncellbeginedit:"OnCellBeginEdit",
+	            //oncellcommitedit:"onCellCommitEdit",
+	            editNextOnEnterKey:false,
+	            showPageSize:false,
+	            pageSize:50
+	        });
+	    	grid_shop.load({identity:'C'});
+	    	
+	    	//会员
+	    	grid_member = mini.get("grid_member");
+	    	grid_member.set({
+	    		url:"${pageContext.request.contextPath}/userManager/list.htmls",
+	    		columns: [
+						{ type: "checkcolumn",headerAlign:"center",width: 30},
+	  	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
+	  	              	{ field: "phonenumber",name:"phonenumber", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "手机",vtype:"required" ,editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	  	                { field: "username",name:"username", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "真实姓名",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	  	              	{ field: "identity",name:"identity",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "身份",editor: { type: "combobox", data:"Userids"} },
+	  	            	/* { field: "tuijianid",name:"tuijianid", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "推荐人",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	  	            	{ field: "companyname",name:"companyname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构名称",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	  	            	{ field: "companycode",name:"companycode", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构代码",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	  	            	 */
+	  	            	{ field: "birthday",name:"birthday", width: 80, headerAlign: "center", align:"center",allowSort: false, dateFormat:"yyyy-MM-dd", header: "生日",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
+	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} }
+	  	          	
+	  	            ],
+	            showFilterRow:false,
+	            allowCellSelect:true,
+	            allowCellEdit:false,
 	            allowCellValid:true,
 	            multiSelect:true,
 	            allowUnselect:false,
@@ -59,13 +98,14 @@
 	            showPageSize:false,
 	            pageSize:50
 	        });
-	    	grid.load();
+	    	
 	    	drawcell();
 	    });
 	   	
+	   	
 	   	//绘制表格
 	    function drawcell() {
-       		grid.on("drawcell", function (e) {
+       		grid_shop.on("drawcell", function (e) {
                 var record = e.record,
 	            column = e.column,
 	            field = e.field,
@@ -87,41 +127,38 @@
             });
         }
 	   	
-	   	//添加
+	  	//添加
 	    function add() {
 	    	mini.open({
-	    	    //url: "/view/system/member/EmployeeWindow.html",
 	    	    url: "/common/dispatch.htmls?page=/view/system/member/userEdit",
-	    	    title: "新增员工", width: 600, height: 400,
+	    	    title: "会员管理", width: 800, height: 500,
 	    	    onload: function () {
 	    	        var iframe = this.getIFrameEl();
-	    	        var data = { action: "new"};
+	    	        var data = { action: "add",identity:"C"};
 	    	        iframe.contentWindow.SetData(data);
 	    	    },
 	    	    ondestroy: function (action) {
-
-	    	        grid.reload();
+	    	        grid_shop.reload();
 	    	    }
 	    	});
 		}
 	    
 	    //修改
         function edit() {
-            var row = grid.getSelected();	//所选行 单行
-            var rows = grid.getSelecteds();	//所选行数 多行
+            var row = grid_shop.getSelected();	//所选行 单行
+            var rows = grid_shop.getSelecteds();	//所选行数 多行
             if (rows.length == 1) {
                 mini.open({
                 	url: "/common/dispatch.htmls?page=/view/system/member/userEdit",
-                    title: "编辑员工", width: 600, height: 400,
+                    title: "会员管理", width: 800, height: 500,
                     onload: function () {
                         var iframe = this.getIFrameEl();
-                        var data = { action: "edit", row: row };
+                        var data = { action: "update", row: row };
                         iframe.contentWindow.SetData(data);
                         
                     },
                     ondestroy: function (action) {
-                        grid.reload();
-                        
+                        grid_shop.reload();
                     }
                 });
                 
@@ -133,7 +170,7 @@
         
         //删除
         function remove() {
-            var rows = grid.getSelecteds();
+            var rows = grid_shop.getSelecteds();
             if (rows.length > 0) {
             	 mini.confirm("确定删除记录？", "系统消息",
           	     	function (action) {
@@ -144,12 +181,12 @@
 	                            ids.push(r.id);
 	                        }
 	                        var id = ids.join(',');
-	                        grid.loading("操作中，请稍后......");
+	                        grid_shop.loading("操作中，请稍后......");
 	                        $.ajax({
 	                        	url: "${pageContext.request.contextPath}/userManager/delete.htmls?id=" +id,
 	                            dataType:"text",
 	                            success: function (text) {
-	                                grid.reload();
+	                                grid_shop.reload();
 	                            },
 	                            error: function () {
 	                            }
@@ -165,7 +202,7 @@
         //搜索
         function search() {
             var key = mini.get("key").getValue();
-            grid.load({ key: key });
+            grid_shop.load({ identity:'C',mobile: key });
         }
         function onKeyEnter(e) {
             search();
@@ -173,7 +210,7 @@
         
         //查看推荐人
         function referrer(row_uid){
-	        var row = grid.getRowByUID(row_uid);
+	        var row = grid_shop.getRowByUID(row_uid);
 	        if (row) {
 	            editWindow.show();
 	            var form = new mini.Form("#editform");
@@ -196,30 +233,74 @@
 	
 	        }
 	    }
+        
+        //查看代理下的店、会员
+        function onSelectionChanged(e) {
+            var grid = e.sender;
+	       	//处理角色对应的帐户
+            var record = grid.getSelected();
+	      	
+            if (typeof(record.id) == "undefined" || record.id == "") {
+            	grid_member.setData([]);
+            	grid_member.setTotalCount(0);
+	      		return;
+	      	}
+            
+            if (record) {
+            	grid_member.load({belongcode: record.companycode });
+            }
+        }
+        
     </script>
 </head>
 <body>
-	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
-        <table style="width:100%;">
-            <tr>
-                <td style="width:100%;">
-                    <a class="mini-button" iconCls="icon-add" plain="true" onclick="add()">增加</a>
-                    <a class="mini-button" iconCls="icon-add" plain="true" onclick="edit()">编辑</a>
-                    <a class="mini-button" iconCls="icon-remove" plain="true" onclick="remove()">删除</a>       
-                </td>
-                <td style="white-space:nowrap;">
-                    <input id="key" class="mini-textbox" emptyText="请输入手机号" style="width:150px;" onenter="onKeyEnter"/>   
-                    <a class="mini-button mini-button-plain" href="javascript:search()"><span class="mini-button-text  mini-button-icon-text "><span class="mini-button-icon mini-iconfont icon-search" style=""></span>查询</span></a>
-                </td>
-            </tr>
-        </table>           
-    </div>
-	<div class="mini-fit" >
-		<div id="grid" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;">
-	        
-	    </div>
+	<div class="mini-splitter" style="width:100%;height:100%;" borderStyle="border:0;" vertical="true">
+   		<div size="50%" showCollapseButton="false" ><!-- style="border-width: 1;" -->
+	    	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
+		        <table style="width:100%;">
+		            <tbody>
+		             <tr>
+		                 <td style="width:100%;">
+		                 	<span id="pid" style="padding-left:5px;">直营店列表</span>
+		                 </td>
+		                 <td style="white-space:nowrap;">
+		                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="add()">增加</a>
+                    		<a class="mini-button" iconCls="icon-add" plain="true" onclick="edit()">编辑</a>
+		                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="remove()">删除</a>
+			                <span class="separator"></span>
+			         		<!-- <a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a> -->
+		                 </td>
+		                 <td style="white-space:nowrap;">
+		                    <input id="key" class="mini-textbox" emptyText="请输入手机号" style="width:150px;" onenter="onKeyEnter"/>   
+		                    <a class="mini-button mini-button-plain" href="javascript:search()"><span class="mini-button-text  mini-button-icon-text "><span class="mini-button-icon mini-iconfont icon-search" style=""></span>查询</span></a>
+		                </td>
+		             </tr>
+		         	</tbody>
+		        </table>
+		    </div>
+		    <div class="mini-fit">
+		        <div id="grid_shop" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>
+		    </div>
+		</div>
+		<div showCollapseButton="true">
+   			<div id="mainTabs" class="mini-tabs" activeIndex="0" style="width:100%;height:100%;" borderStyle="padding:0;border:0;">
+	            <div name="member" title="会员">
+	                <!-- <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
+				         <a class="mini-button" plain="true" iconCls="icon-addfolder" onclick="addRow()">新增</a>
+				         <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandfirst')">删除</a>
+				         <span class="separator"></span>
+				         <a class="mini-button" iconCls="icon-save" plain="true" onclick="save('meter')">保存</a>
+				         <span class="separator"></span>
+				     </div> -->
+			        <div class="mini-fit" >
+				         <div id="grid_member" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  
+				     </div>
+	            </div>
+	        </div>
+   		</div>
 	</div>
-    
+	
+    <!-- FORM -->
     <div id="editWindow" class="mini-window" title="推荐人信息" style="width:650px;" showModal="true" allowResize="true" allowDrag="true">
 	    <div id="editform" class="form" >
 	        <div style="padding-left:11px;padding-bottom:5px;">

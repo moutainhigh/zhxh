@@ -31,11 +31,14 @@ public class ProductRatedService implements IProductRatedService{
 	}
 
 	@Override
-	public PageBean<Product_rated> list(PageBean<Product_rated> pageBean,String parentid) {
+	public PageBean<Product_rated> list(PageBean<Product_rated> pageBean,String parentid,int isshow) {
 		String sql = "select * from product_rated where parentid=?";
 		List<Object> values = new ArrayList<Object>();
-		
 		values.add(parentid);
+		if(isshow == 0 || isshow == 1){
+			sql += " and isshow = ?";
+			values.add(isshow);
+		}
 		pageBean = ratedDao.search(sql, values, pageBean);
 		
 		return pageBean;

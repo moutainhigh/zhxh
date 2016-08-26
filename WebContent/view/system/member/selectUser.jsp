@@ -21,7 +21,7 @@
     	
 	    var grid;
 	   	$(function(){
-	   		//mini.parse();
+	   		mini.parse();
 			grid = mini.get("grid");
 	    	grid.set({
 	    		url:"${pageContext.request.contextPath}/userManager/list.htmls",
@@ -29,7 +29,7 @@
 	  	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
 	  	              	{ field: "phonenumber",name:"phonenumber", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "手机",vtype:"required" ,editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	                { field: "username",name:"username", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "真实姓名",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-	  	              	{ field: "userid",name:"userid",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "身份",editor: { type: "combobox", data:"userid"} },
+	  	              	{ field: "identity",name:"identity",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "身份",editor: { type: "combobox", data:"userid"} },
 	  	            
 	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} },
 	  	          	
@@ -38,7 +38,7 @@
 	            allowCellSelect:true,
 	            allowCellEdit:false,
 	            allowCellValid:true,
-	            multiSelect:true,
+	            multiSelect:false,
 	            allowUnselect:false,
 	            showPager:true,
 	            //onselectionchanged:"onSelectionChanged",
@@ -48,7 +48,7 @@
 	            showPageSize:false,
 	            pageSize:50
 	        });
-	    	grid.load();
+	    	grid.load({identity:'A'});
 	    });
 	   	
 	   
@@ -76,7 +76,13 @@
         }
 
         function onOk() {
-            CloseWindow("ok");
+        	var row = GetData();
+        	//判断是否已选择
+	    	if (row == undefined) {
+	    		CloseWindow("cancel");
+	    	}else {
+	    		CloseWindow("ok");
+	    	}
         }
         function onCancel() {
             CloseWindow("cancel");

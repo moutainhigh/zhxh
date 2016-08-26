@@ -100,7 +100,7 @@ public class ProductController extends BaseConstroller {
 			p.setPageNo(pageIndex + 1);
 			p.setOrderBy("ratedtime");
 			p.setOrderType("desc");
-			p = ratedService.list(p, parentid);
+			p = ratedService.list(p, parentid,-1);
 			map.put("total", p.getRowCount());
 			map.put("data", p.getList());
 		}

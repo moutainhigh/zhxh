@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,6 +31,7 @@ public class UserManagerController extends BaseConstroller{
 	@Resource
 	IPublicUserService userService;
 	
+	
 	/**
 	 * 根据ID获取会员
 	 * @param id
@@ -49,6 +51,24 @@ public class UserManagerController extends BaseConstroller{
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
+	}
+	
+	/**
+	 * 根据ID查看其账户是否已初始为0
+	 * @param id
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/checkAccount",method=RequestMethod.GET)
+	public void checkAccount(String id,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		Public_user user = userService.getById(id);
+		//public_user_link 到个人中心 账户 关联关系表 查询进行验证
+
+		
 	}
 	
 	/**
@@ -73,31 +93,70 @@ public class UserManagerController extends BaseConstroller{
 	}
 	
 	/**
-	 * 会员列表
-	 * @param response
+	 * 个人中心
+	 * @param identity 身份
+	 * @param parentid 上级
+	 * @param belongcode 所属店代码
+	 * @param mobile 手机号
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/list",method=RequestMethod.POST)
-	public void list(String key,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void list(String identity,String parentid,String belongcode,String mobile,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		System.out.println(key);
 		
+		//分页
 		PageBean<Public_user> pageBean = new PageBean<Public_user>();
-		
 		pageBean.setPageSize(pageSize);
 		pageBean.setPageNo(pageIndex + 1);
 		
-		pageBean = userService.list(key, pageBean);
+		//查询条件
+		Map<String, Object> searchmap = new LinkedHashMap<String, Object>();
+		searchmap.put("identity =", identity);	//身份
+		searchmap.put("parentid =", parentid);	
+		searchmap.put("belongcode =", belongcode);	//所属店代码
+		searchmap.put("phonenumber =", mobile);	//
+		pageBean = userService.list(searchmap, pageBean);
 		
+		//
 		HashMap<String,Object> map = new HashMap<String,Object>();
-		
 		map.put("total", pageBean.getRowCount());
 		map.put("data", pageBean.getList());
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
+	}
+	
+
+	/**
+	 * 修改其上级机构
+	 * @param id
+	 * @param parentid
+	 * @param response
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	@RequestMapping(value="/upParent",method=RequestMethod.POST)
+	public void updateParent(String id,String parentid,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "error";
+		
+		if ("".equals(id) || id == null) {
+			out.print(result);
+			return;
+		}
+		//
+		int num = userService.updateParent(id, parentid);
+		//还没有完成，此处还需要创建新的账户关联关系，需要操作的表public_user_link
+		
+		if(num > 0)
+			result = "success";
+		out.print(result);
 	}
 	
 	/**
@@ -127,7 +186,6 @@ public class UserManagerController extends BaseConstroller{
 		
 		String id = row.get("id") != null ? row.get("id").toString() : "";
 		
-		System.out.println("id="+id);
 		if("".equals(id)){
 			result = insert(row);
 		}else{
@@ -178,8 +236,8 @@ public class UserManagerController extends BaseConstroller{
 		boolean flag = userService.checkPhoneNum(user.getPhonenumber());
 		if(!flag){
 			user.setId(UUID.randomUUID().toString());
-			//生成默认密码md5
-			String pass = MD5.encode("password");
+			//密码md5
+			String pass = MD5.encode(user.getPassword());
 			user.setPassword(pass);
 			user = userService.insert(user);
 			return "success";
@@ -215,6 +273,11 @@ public class UserManagerController extends BaseConstroller{
 		}
 		
 		if(!flag){
+			if(!pUser.getPassword().equals(user.getPassword())){
+				String pass = MD5.encode(user.getPassword());
+				user.setPassword(pass);
+			}
+			
 			int num = userService.update(user);
 			return "success";
 		}else{

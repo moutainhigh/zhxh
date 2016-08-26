@@ -51,10 +51,6 @@
 				<tr>
 					<td>密 &nbsp;&nbsp;&nbsp;&nbsp; 码</td>
 					<td><input name="password" class="mini-password" style="width:100%;" required="true" emptyText="请输入登录密码" /></td>
-					<td>级 &nbsp;&nbsp;&nbsp;&nbsp; 别</td>
-					<td><input name="rank" class="mini-textbox" style="width:100%;" emptyText="请输入级别" /></td>
-				</tr>
-				<tr>
 					<td>身 &nbsp;&nbsp;&nbsp;&nbsp; 份</td>
 					<td>
 						<select id="identity" name="identity" style="width:100%;" class="mini-combobox" enabled="false">
@@ -64,8 +60,6 @@
 	                        <option value="Z">会员</option>
 	                    </select>
 					</td>
-					<td>上 &nbsp;&nbsp;&nbsp;&nbsp; 级</td>
-					<td><input name="parentid" class="mini-textbox" style="width:100%;" /></td>
 				</tr>
 				<tr>
 					<td>性 &nbsp;&nbsp;&nbsp;&nbsp; 别</td>
@@ -81,23 +75,12 @@
 				<tr>
 					<td>出生日期</td>
 					<td><input name="birthday" class="mini-datepicker" style="width:100%;" /></td>
-					<td>是否分利</td>
-					<td>
-						<select name="setreturn" style="width:100%;" class="mini-combobox">
-	                        <option value="0">否</option>
-	                        <option value="1">是</option>
-	                    </select>
-					</td>
+					<td>所属店代码</td>
+					<td><input name="belongcode" class="mini-textbox" style="width:100%;" required="true" emptyText="请输入机构代码" /></td>
 				</tr>
 				<tr>
-					<td>机构名称</td>
-					<td><input name="companyname" class="mini-textbox" style="width:100%;" required="true" emptyText="请输入机构名称" /></td>
-					<td>机构代码</td>
-					<td><input name="companycode" class="mini-textbox" style="width:100%;" required="true" emptyText="请输入机构代码" /></td>
-				</tr>
-				<tr>
-					<td>机构地址</td>
-					<td colspan="3"><input name="companypath" class="mini-textbox" style="width:100%;" required="true" emptyText="请输入机构地址" /></td>
+					<td>地址</td>
+					<td colspan="3"><input name="companypath" class="mini-textbox" style="width:100%;" required="true" emptyText="请输入地址" /></td>
 				</tr>
 			</tbody>
 		</table>

@@ -1,6 +1,7 @@
 package net.ussoft.zhxh.service;
 
 import java.util.List;
+import java.util.Map;
 
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_product_size;
@@ -24,6 +25,12 @@ public interface IPublicProductSizeService {
 	 * @return list
 	 * */
 	public List<Public_product_size> list(String parentid);
+	
+	/**
+	 * 查询所有 
+	 * @return list
+	 * */
+	public List<Public_product_size> list(Map<String, Object> map);
 	
 	/**
 	 * 查询所有 分页

@@ -7,7 +7,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,7 @@ import net.ussoft.zhxh.model.Product_rated;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product;
+import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_video;
 import net.ussoft.zhxh.service.IBrandfirstService;
@@ -32,6 +35,7 @@ import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.IPublicPicService;
 import net.ussoft.zhxh.service.IPublicProductService;
+import net.ussoft.zhxh.service.IPublicProductSizeService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.service.IPublicVideoService;
 import net.ussoft.zhxh.service.IPublicfilesdownService;
@@ -85,6 +89,10 @@ public class PcMainController extends BaseConstroller {
 	
 	@Resource
 	private IProductRatedService ratedService;	//商品评价
+	
+	@Resource
+	private IPublicProductSizeService psizeService;	//商品规格
+	
 	
 	@RequestMapping(value="/pcindex")
 	public ModelAndView index (ModelMap modelMap) throws Exception {
@@ -371,10 +379,10 @@ public class PcMainController extends BaseConstroller {
 		Product_list pro_list = productlistService.getById(id);
 		int pageSize = 10;
 		
-		PageBean<Public_product> p = new PageBean<Public_product>();
+		PageBean<Public_product_size> p = new PageBean<Public_product_size>();
 		p.setPageSize(pageSize);
 		p.setPageNo(page);
-		p.setOrderBy("sort");
+		p.setOrderBy("sizesort");
 		p = productlistService.listLableProduct(p, id,1);	//列表下的商品
 		
 		//初始品牌、专题
@@ -397,11 +405,16 @@ public class PcMainController extends BaseConstroller {
 	 * */
 	@RequestMapping(value="/product_c")
 	public ModelAndView products_c (String id,ModelMap modelMap) throws Exception {
+		Public_product_size product = psizeService.getById(id);
+		//规格
+		Map<String, Object> smap = new LinkedHashMap<String, Object>();
+		smap.put("productid = ", product.getProductid());
+		smap.put("isshow = ", 1);
+		List<Public_product_size> psizeList = psizeService.list(smap);
 		
-		Public_product product = productService.getById(id);
+		//判断商品详情类型
 		Public_content content = null;
 		List<Public_pic> proPics = null;
-		//判断商品详情类型
 		if(product.getShowtype() == 1){
 			//商品详情-富文本
 			List<Public_content> list = contentService.list(product.getId(), "productrich");
@@ -414,11 +427,11 @@ public class PcMainController extends BaseConstroller {
 		}
 		
 		//相关商品
-		PageBean<Public_product> p = new PageBean<Public_product>();
-		p.setPageSize(10);
-		p.setPageNo(1);
-		p.setOrderBy("sort");
-		List<Public_product> proList = productService.list(p, product.getBrandid(),1);
+//		PageBean<Public_product> p = new PageBean<Public_product>();
+//		p.setPageSize(10);
+//		p.setPageNo(1);
+//		p.setOrderBy("sort");
+//		List<Public_product> proList = productService.list(p, product.getBrandid(),1);
 		//商品评价
 		
 		
@@ -428,7 +441,7 @@ public class PcMainController extends BaseConstroller {
 		modelMap.put("product", product);
 		modelMap.put("pcontent", content);
 		modelMap.put("proPics", proPics);
-		modelMap.put("proList", proList);
+		modelMap.put("psizeList", psizeList);
 		
 		return new ModelAndView("/view/pc/product_info", modelMap);
 	}
@@ -449,7 +462,7 @@ public class PcMainController extends BaseConstroller {
 		p.setPageNo(pageIndex);
 		p.setOrderBy("ratedtime");
 		p.setOrderType("desc");
-		p = ratedService.list(p, parentid);
+		p = ratedService.list(p, parentid,1);
 		
 		map.put("data", p.getList());
 		map.put("pageCount", p.getPageCount());
@@ -512,52 +525,4 @@ public class PcMainController extends BaseConstroller {
 		}
 	}
 	
-	/**
-	 * 注册
-	 * @param objs
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/reg",method=RequestMethod.POST)
-	public void register(Public_user user,HttpServletResponse response) throws Exception {
-		
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		String result = "error";
-		Public_user obj = userService.insert(user);
-		if(obj != null)
-			result = "success";
-		out.print(result);
-	}
-	
-	/**
-	 * 登录
-	 * @param phoneNum
-	 * @param password
-	 * @param response
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/login",method=RequestMethod.POST)
-	public void login(String phoneNum,String password,HttpServletResponse response) throws Exception {
-		
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		String result = "error";
-		Public_user obj = userService.getByPhoneNum(phoneNum);
-		if(obj != null){
-			if(obj.getPassword().equals(password)){
-				//.....
-				
-				result = "success";
-			}else{
-				result = "error";
-			}
-		}
-		
-		out.print(result);
-	}
 }

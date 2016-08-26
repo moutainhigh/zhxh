@@ -1,6 +1,7 @@
 package net.ussoft.zhxh.service;
 
 import java.util.List;
+import java.util.Map;
 
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_user;
@@ -32,6 +33,11 @@ public interface IPublicUserService {
 	public List<Public_user> list();
 	
 	/**
+	 * 条件查询 分页
+	 * */
+	public PageBean<Public_user> list(Map<String, Object> map,PageBean<Public_user> pageBean);
+	
+	/**
 	 * 查询所有 分页
 	 * @param pageBean
 	 * @return list
@@ -53,6 +59,15 @@ public interface IPublicUserService {
 	public int update(Public_user user);
 	
 	/**
+	 * 修改其上级机构
+	 * @param id
+	 * @param parentid
+	 * @return 
+	 * */
+	public int updateParent(String id,String parentid);
+	
+	
+	/**
 	 * 删除
 	 * @param id
 	 * @return
@@ -65,5 +80,5 @@ public interface IPublicUserService {
 	 * @return true:存在；false:不存在
 	 * */
 	public boolean checkPhoneNum(String phoneNum);
-	
+
 }

@@ -2,6 +2,7 @@ package net.ussoft.zhxh.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -17,6 +18,7 @@ import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.service.IPublicProductSizeService;
 import net.ussoft.zhxh.util.FileOperate;
+import net.ussoft.zhxh.util.MakeQuerySql;
 
 @Service
 public class PublicProductSizeService implements IPublicProductSizeService{
@@ -45,6 +47,15 @@ public class PublicProductSizeService implements IPublicProductSizeService{
 		return productSizeDao.search(sql, values);
 	}
 
+	@Override
+	public List<Public_product_size> list(Map<String, Object> map) {
+		Map<String, Object> resultmap = MakeQuerySql.search(Public_product_size.class, map);
+		String sql = resultmap.get("sql") + " order by sizesort asc";
+		List<Object> values = (List<Object>) resultmap.get("values");
+		
+		return productSizeDao.search(sql, values);
+	}
+	
 	@Override
 	public PageBean<Public_product_size> list(PageBean<Public_product_size> pageBean,String parentid) {
 		String sql = "select * from public_product_size where productid = ? ";

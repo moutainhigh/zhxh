@@ -27,9 +27,9 @@
 	
 	<div class="width-100">
 	    <div class="container shop-page clearfix">
-	        <h1 class="fl">特润修护肌透精华露</h1>
+	        <h1 class="fl">${product.productname }</h1>
 	        <div class="fr shop-gwc">
-	            <div class="price">价格：￥500</div>
+	            <div class="price">价格：￥${product.saleprice }</div>
 	            <div class="num">
 	                <span>数量：</span>
 	                <div class="num-box">
@@ -41,9 +41,9 @@
 	            <div class="num">
 	                <span>规格：</span>
 	                <div class="fl norms-div">
-	                    <div class="norms cur">15ml</div>
-	                    <div class="norms">40ml</div>
-	                    <div class="norms">60ml</div>
+	                <c:forEach var="item" items="${psizeList }">
+	                	<a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/product_c.htmls?id=${item.id }';"><div class='norms ${product.id eq item.id ?"cur":"" }'>${item.productsize }</div></a>
+	                </c:forEach>
 	                </div>
 	            </div>
 	            <div class="page-gwc-but">
@@ -71,14 +71,14 @@
 	        <h3>相关商品</h3>
 	        <div class="area">
 	            <div class="cons">
-	                <div class="con" style="left:0;"><!--调整第一个显示位置请修改"left:0px;的值" -->
+	                <%-- <div class="con" style="left:0;"><!--调整第一个显示位置请修改"left:0px;的值" -->
 	                    <c:forEach var="item" items="${proList }">
 	                    	<a href="${pageContext.request.contextPath}/pcMain/product_c.htmls?id=${item.id}" target="_blank" class="left">
 	                        	<img src="${pageContext.request.contextPath}/${item.productpic }" />
 	                        	<p>${item.productname }</p>
 	                    	</a>
 	                    </c:forEach>
-	                </div>
+	                </div> --%>
 	            </div>
 	            <div class="btns"><a href="javascript:void(0)" class="up"></a><a href="javascript:void(0)" class="down"></a></div>
 	        </div>
@@ -102,7 +102,7 @@
 			$.ajax({
 		    	async:false,
 		        url: "${pageContext.request.contextPath}/pcMain/rated.htmls",
-		        data: {'parentid':'${product.id}','pageIndex':1,'pageSize':pageSize},
+		        data: {'parentid':'${product.productid}','pageIndex':1,'pageSize':pageSize},
 		        type: "post",
 		        dataType:"json",
 		        success: function (jsonObj) {
@@ -134,7 +134,7 @@
 			$.ajax({
 		    	async:false,
 		        url: "${pageContext.request.contextPath}/pcMain/rated.htmls",
-		        data: {'parentid':'${product.id}','pageIndex':pageIndex,'pageSize':pageSize},
+		        data: {'parentid':'${product.productid}','pageIndex':pageIndex,'pageSize':pageSize},
 		        type: "post",
 		        dataType:"json",
 		        success: function (jsonObj) {
