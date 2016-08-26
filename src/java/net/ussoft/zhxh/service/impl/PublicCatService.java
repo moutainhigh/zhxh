@@ -1,10 +1,12 @@
 package net.ussoft.zhxh.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicCatDao;
 import net.ussoft.zhxh.model.PageBean;
@@ -25,8 +27,15 @@ public class PublicCatService implements IPublicCatService{
 
 	@Override
 	public List<Public_cat> list() {
-		// TODO Auto-generated method stub
-		return null;
+		return catDao.getAll();
+	}
+	
+	@Override
+	public List<Public_cat> list(String userid) {
+		String sql = "select * from public_cat where userid = ?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(userid);
+		return catDao.search(sql, values);
 	}
 
 	@Override
@@ -35,22 +44,26 @@ public class PublicCatService implements IPublicCatService{
 		return null;
 	}
 
+	@Transactional("txManager")
 	@Override
 	public int update(Public_cat cat) {
-		// TODO Auto-generated method stub
-		return 0;
+		Public_cat obj = catDao.save(cat);
+		if(obj == null){
+			return 0;
+		}
+		return 1;
 	}
 
+	@Transactional("txManager")
 	@Override
 	public int delete(String id) {
-		// TODO Auto-generated method stub
-		return 0;
+		return catDao.del(id);
 	}
 
+	@Transactional("txManager")
 	@Override
 	public Public_cat insert(Public_cat cat) {
-		// TODO Auto-generated method stub
-		return null;
+		return catDao.save(cat);
 	}
 
 }

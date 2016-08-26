@@ -8,6 +8,10 @@ public class Constants{
 	 * 用户session变量
 	 */
 	public static final String user_in_session = "CURRENT_USER_IN_SESSION";
+	/**
+	 * pc账号登陆
+	 * */
+	public static final String PC_USER_SESSION = "pc_user_sessiion";
 	
 	//==========商品管理===========
 	/**

@@ -7,13 +7,13 @@
 	    <div class="login">
 	        <h3>登录账号</h3>
 	        <div class="login-ipnut">
-	            <div><input type="text" value="手机或邮箱" class="txt name" /></div>
-	            <div><input type="text" value="密码" class="txt mima" /></div>
+	            <div><input type="text" id="uname" value="" class="txt name" placeholder="手机或邮箱"/></div>
+	            <div><input type="text" id="pwd" value="" class="txt mima" placeholder="密码" /></div>
 	            <div class="clearfix wjmima">
 	                <a href="忘记密码.html" class="fl">忘记密码？</a>
 	                <em class="fr">没有账号 <b class="zhuce">立即注册</b></em>
 	            </div>
-	            <div class="but"><input type="button" value="登 录" class="login-but"></div>
+	            <div class="but"><input type="button" onclick="login()" value="登 录" class="login-but"></div>
 	            <div class="other-login">
 	                <h3></h3>
 	                <span>第三方登录</span>
@@ -42,3 +42,29 @@
 	        </div>
 	    </div>
 	</div>
+	
+	<script type="text/javascript">
+	
+		function login(){
+			var uname = $('#uname').val();
+			var pwd = $('#pwd').val();
+			
+			$.ajax({
+            	url: "${pageContext.request.contextPath}/plogin.htmls",
+            	data:{'uname':uname,'pwd':pwd},
+            	type:"post",
+            	dataType:"text",
+                success: function (text) {
+                    if(text == "success"){
+                    	location.reload();
+                    }else{
+                    	alert(text);
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                }
+            });
+			
+		}
+	</script>

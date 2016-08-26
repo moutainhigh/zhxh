@@ -1,13 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@include file="/view/pc/login.jsp" %>
 
 <div class="header-three">
 	  	<div class="header header-width clearfix">
-	    		<h1 class="logo fl"><a href="pcindex.htmls"><img src="${pageContext.request.contextPath}/images/logo.png" /></a></h1>
+	    		<h1 class="logo fl"><a href="${pageContext.request.contextPath}/pcMain/pcindex.htmls"><img src="${pageContext.request.contextPath}/images/logo.png" /></a></h1>
 	    		<ul class="user-header fr">
-	    			 <li class="name"><a href="javascript:;"></a></li>
-	    			 <li class="shop-cart"><a href="javascript:;"></a></li>
+	    			<c:choose>
+	    				<c:when test="${sessionScope.pc_user_sessiion != null }">
+	    					<li class="name1"><a href="javascript:;">${sessionScope.pc_user_sessiion.phonenumber}</a></li>
+	    				</c:when>
+	    				<c:otherwise>
+	    					<li class="name"><a href="javascript:;"></a></li>
+	    				</c:otherwise>
+	    			</c:choose>
+	    			 <li class="shop-cart"><a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')"></a></li>
 	    			 <li class="search" id="search"><a href="javascript:;"></a></li>
 	    		</ul>
 	        <a href="javascript:;" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" /></a>
@@ -33,4 +41,20 @@
 	</div>
 <script>
 	$('#${id}').addClass('cur');
+	
+	function cat(userid){
+		if(userid == ""){
+			$('.denglu').fadeIn(800);	
+			$('.tan-bg').fadeIn(800);	
+			//$(".box").toggle(); 
+			$('body').one('click',function(){
+		        $('.denglu').fadeOut(800);
+		        $('.tan-bg').fadeOut(800);
+		        $('.add-tan').fadeOut(800);
+			})
+			return;
+		}else{
+			window.location.href = '${pageContext.request.contextPath}/porder/cat.htmls?userid='+userid;
+		}
+	}
 </script>

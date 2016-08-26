@@ -14,6 +14,7 @@ import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.service.IPublicUserService;
+import net.ussoft.zhxh.util.MD5;
 import net.ussoft.zhxh.util.MakeQuerySql;
 
 import org.springframework.stereotype.Service;
@@ -119,7 +120,7 @@ public class PublicUserService implements IPublicUserService{
 	public Public_user getByPhoneNum(String phoneNum) {
 		List<Object> values = new ArrayList<Object>();
 		values.add(phoneNum);
-		String sql = "select id from public_user where phonenumber=?";
+		String sql = "select * from public_user where phonenumber=?";
 		List<Public_user> list = userDao.search(sql, values);
 		if(list.size() > 0){
 			return list.get(0);

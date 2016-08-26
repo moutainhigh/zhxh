@@ -57,7 +57,17 @@ $(document).ready(function(){
 
 	//头部弹框登录
 	$('.header-user .name').click(function(){
-		alert("asdf");
+		$('.denglu').fadeIn(800);	
+		$('.tan-bg').fadeIn(800);	
+		//$(".box").toggle(); 
+		$('body').one('click',function(){
+	        $('.denglu').fadeOut(800);
+	        $('.tan-bg').fadeOut(800);
+	        $('.add-tan').fadeOut(800);
+		})
+		 return false;
+	})
+	$('.user-header .name').click(function(){
 		$('.denglu').fadeIn(800);	
 		$('.tan-bg').fadeIn(800);	
 		//$(".box").toggle(); 

@@ -26,6 +26,11 @@ public interface IPublicCatService {
 	public List<Public_cat> list();
 	
 	/**
+	 * 根据用户ID查询
+	 * */
+	public List<Public_cat> list(String userid);
+	
+	/**
 	 * 查询所有 分页
 	 * @param pageBean
 	 * @return list

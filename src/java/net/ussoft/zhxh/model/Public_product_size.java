@@ -4,6 +4,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Table(name="public_product_size")
 public class Public_product_size {
@@ -21,6 +22,7 @@ public class Public_product_size {
 	private Float saleprice;
 	private String linkids;
 	
+	private int quantity; //临时字段，存放购物车中对应商品的数量
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -97,5 +99,12 @@ public class Public_product_size {
 		this.linkids = linkids;
 	}
 	
+	@Transient
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 	
 }

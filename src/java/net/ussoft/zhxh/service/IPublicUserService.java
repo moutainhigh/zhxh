@@ -80,5 +80,5 @@ public interface IPublicUserService {
 	 * @return true:存在；false:不存在
 	 * */
 	public boolean checkPhoneNum(String phoneNum);
-
+	
 }

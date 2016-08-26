@@ -34,7 +34,7 @@
 	                <span>数量：</span>
 	                <div class="num-box">
 	                    <em class="fl" onclick="jishuan(-1)">-</em>
-	                    <input type="text" value="1" class="txtnum" />
+	                    <input id="quantity" type="text" value="1" class="txtnum" />
 	                    <em class="fr" onclick="jishuan(+1)">+</em>
 	                </div>
 	            </div>
@@ -47,8 +47,8 @@
 	                </div>
 	            </div>
 	            <div class="page-gwc-but">
-	                 <a href="javascript:;" class="buy">在线购买</a>
-	                 <a href="javascript:;">加入购物车</a>
+	                 <a href="${pageContext.request.contextPath}/porder/orderconf.htmls?id=${product.id}" class="buy">在线购买</a>
+	                 <a href="javascript:addCat('${product.id }');">加入购物车</a>
 	            </div>
 	        </div>
 	    </div>
@@ -161,6 +161,25 @@
 				+'</li>';
 			return html;
 		}
+		
+		//加入购物车
+		function addCat(id){
+			var quantity = $('#quantity').val();
+			$.ajax({
+		    	async:false,
+		        url: "${pageContext.request.contextPath}/porder/catAdd.htmls",
+		        data: {'productsizeid':'${product.id}','quantity':quantity},
+		        type: "post",
+		        dataType:"text",
+		        success: function (text) {
+		        	alert(text);
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(jqXHR.responseText);
+		        }
+		    });
+		}
+		
 	</script>
 
 	<!--页脚-->

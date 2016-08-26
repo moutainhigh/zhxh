@@ -15,10 +15,9 @@
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
-	<%@include file="/view/pc/login.jsp" %>
+	
 	<!--头部-->
 	<%@include file="/view/pc/header.jsp" %>
-	
 	
 	<!--banner-->
 	<div class="shop-banner">
