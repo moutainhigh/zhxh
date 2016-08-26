@@ -57,6 +57,7 @@ $(document).ready(function(){
 
 	//头部弹框登录
 	$('.header-user .name').click(function(){
+		alert("asdf");
 		$('.denglu').fadeIn(800);	
 		$('.tan-bg').fadeIn(800);	
 		//$(".box").toggle(); 
