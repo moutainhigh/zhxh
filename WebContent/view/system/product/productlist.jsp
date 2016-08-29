@@ -29,7 +29,7 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
-      	                { field: "brandlogo",name:"brandlogo", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "品牌Logo" },
+      	                { field: "brandlogo",name:"brandlogo", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "品牌Logo(80*80)" },
       	                //{ field: "brandlogo",name:"brandlogo", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "品牌Logo",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onButtonEdit"} },
       	                { field: "brandname",name:"brandname", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "品牌名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	                { field: "brandpath",name:"brandpath",type:"comboboxcolumn", autoEscape:true,width: 100, headerAlign: "center", align:"center",allowSort: false, header: "品牌显示位置",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"PC端展示"},{"id":"2","text":"移动商城展示"}] } },
@@ -150,8 +150,9 @@
             return s;
         }
        	
-       	function getUrl() {
-       		mini.alert("${pageContext.request.contextPath}/id");
+       	function getUrl(id) {
+       		var serv_path = "${pageContext.request.contextPath}";
+       		mini.alert(serv_path + "/pcMain/product_c.htmls?id=" + id);
        	}
         
         function drawcell() {
@@ -624,7 +625,7 @@
 			var pHeight = $(window.parent).height();
 			mini.open({
    				url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/setProductLinkids",
-	            title: "设置商品详细页推荐商品", width: pWidth - 200, height:pHeight-100,
+	            title: "设置商品详细页推荐商品", width: pWidth - 300, height:pHeight-100,
 	            allowResize:true,
 	            showMaxButton:true,
 	            onload: function () {
@@ -633,33 +634,7 @@
 	    	        iframe.contentWindow.SetData(data);
 	            },
 	            ondestroy: function (action) {
-	            	if (action == "ok") {
-                		var iframe = this.getIFrameEl();
-                        var link_rows = iframe.contentWindow.GetData();
-                        link_rows = mini.clone(link_rows);    //必须
-                        
-                        var ids = "";
-                        
-                        if (link_rows.length > 0) {
-                        	ids = getSelectGridid(link_rows);
-                        }
-                        
-                        //提交到服务器
-                        $.ajax({
-            	        	async:false,
-            	            url: "${pageContext.request.contextPath}/product/saveSizeLinkids.htmls",
-            	            data: {'id':id,'linkids':ids},
-            	            type: "post",
-            	            dataType:"text",
-            	            success: function (text) {
-            	            	mini.alert("保存完毕。");
-            	            	grid_product_size.reload();
-            	            },
-            	            error: function (jqXHR, textStatus, errorThrown) {
-            	                mini.alert(jqXHR.responseText);
-            	            }
-            	        });
-                    }
+	            	grid_product_size.reload();
 	            }
 	        });
 		}

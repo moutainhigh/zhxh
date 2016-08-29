@@ -28,7 +28,7 @@
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
       	                { field: "codename",name:"codename", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "名称" },
-      	              	{ field: "pic_path",name:"pic_path", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onButtonEdit"} },
+      	              	{ field: "pic_path",name:"pic_path", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "图片(80*80)" },
       	                { field: "memo",name:"memo", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "内容",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
@@ -58,38 +58,58 @@
 	            value = e.value;
                 
                 if (field == "pic_path") {
+   	        		if (typeof(value) == "undefined" || value == "") {
+                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid\',\''+record.id+'\',\'logo\',\'logo\')" >选择图片</a>';
+       	        	}
+   	        		else {
+   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid\',\''+record.id+'\',\'logo\',\'logo\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
+   	        		}
+    	        }
+                
+                /* if (field == "pic_path") {
                 	if (typeof(value) == "undefined" || value == "") {
    	        			e.cellhtml = "";
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
    	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
    	        		}
-    	        }
+    	        } */
             });
         }
        	
-       	function onButtonEdit(e) {
-        	var buttonEdit = e.sender;
-        	var row = grid.getEditorOwnerRow(buttonEdit);
-        	
-        	mini.open({
-                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传图片", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"logo",forObj:"logo"};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	if (action == "ok") {
-                		grid.reload();
+       	function open_upload_pic(grid_type,rowid,saveFolder,forObj) {
+       		var tmpGrid;
+       		
+       		if (grid_type == "grid") {
+				tmpGrid = grid;
+			}
+       		
+       		var objs = tmpGrid.getChanges();
+       		if (objs != "") {
+       			mini.alert("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片。");
+   	 			return;
+       		}
+       		else {
+       			mini.open({
+                    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
+                    title: "上传图片", width: 600, height:500,
+                    allowResize:true,
+                    onload: function () {
+                    	var iframe = this.getIFrameEl();
+                   	 	var data = {id:rowid,saveFolder:saveFolder,forObj:forObj};
+                        //var data = rows[0];
+                        iframe.contentWindow.SetData(data);
+                    },
+                    ondestroy: function (action) {
+                    	if (action == "ok") {
+                    		tmpGrid.cancelEdit();
+                    		tmpGrid.reload();
+                        }
                     }
-                }
-            });
-        }
+                });
+       		}
+       		
+       	}
        	
 		function save() {
 	    	grid.validate();

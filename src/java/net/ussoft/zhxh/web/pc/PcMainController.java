@@ -157,6 +157,7 @@ public class PcMainController extends BaseConstroller {
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"hy";
 		p = contentService.list(p,"news", ptype);
 		
+		//ptype: hy 行业新闻  qy 企业新闻  sp 商品新闻
 		
 		//初始品牌、专题
 		init(modelMap);

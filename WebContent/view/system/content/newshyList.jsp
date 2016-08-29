@@ -27,8 +27,9 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	              	{ field: "pic_url",name:"pic_url", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnNewsPicEdit"} },
-      	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+      	              	{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+      	                { field: "pic_url",name:"pic_url", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnNewsPicEdit"} },
+      	              	//{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "brief",name:"brief", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "简介",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
@@ -52,6 +53,23 @@
         	drawcell();
         })
         
+        function onActionRenderer(e) {
+            var grid = e.sender;
+            var record = e.record;
+            var uid = record._uid;
+            var id = record.id;
+            var rowIndex = e.rowIndex;
+            
+            var s = ' <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >内容</a> | ';
+            s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
+            return s;
+        }
+       	
+       	function getUrl(id) {
+       		var serv_path = "${pageContext.request.contextPath}";
+       		mini.alert(serv_path + "/pcMain/news-c.htmls?id=" + id);
+       	}
+        
         function drawcell() {
        		grid.on("drawcell", function (e) {
                 var record = e.record,
@@ -65,8 +83,7 @@
    	        			e.cellhtml = "";
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='30px' />";
    	        		}
     	        }
             });
@@ -135,14 +152,6 @@
 	            }
 	        });
 	    }
-		
-		function onActionRenderer(e) {
-            var grid = e.sender;
-            var record = e.record;
-           	var id = record.id;
-            var s = ' <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >内容</a>'
-            return s;
-        }
 		
 		function edit(id){
 			if(id == 'undefined'){

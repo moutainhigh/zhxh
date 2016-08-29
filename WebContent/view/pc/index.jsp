@@ -20,7 +20,7 @@
 	<!--头部 页面头部不一样 程序注意-->
 	<div class="index-header">
 	  	<div class="indexheader header clearfix">
-	    		<h1 class="logo fl"><a href="javascript:;"><img src="../../images/logo.png" /></a></h1>
+	    		<h1 class="logo fl"><a href="javascript:;"><img src="${pageContext.request.contextPath}/images/logo.png" /></a></h1>
 	    		<ul class="header-user fr">
 	    			 <li class="name"><a href="javascript:;"></a></li>
 	    			 <li class="shop-cart"><a href="javascript:;"></a></li>

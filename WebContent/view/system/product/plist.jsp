@@ -60,6 +60,7 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
+      	              	{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	              	{ field: "brandname",name:"brandname", width: 250, headerAlign: "center", align:"center",allowSort: false, header: "列表页名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
 	            showFilterRow:false,
@@ -113,6 +114,27 @@
 			
         	drawcell();
         })
+        
+        function onActionRenderer(e) {
+            var grid = e.sender;
+            var record = e.record;
+            var uid = record._uid;
+            var id = record.id;
+            var rowIndex = e.rowIndex;
+            
+            var s = "";
+            
+			if (grid.id == "grid_plist") {
+                s = '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
+            }
+            
+            return s;
+        }
+       	
+       	function getUrl(id) {
+       		var serv_path = "${pageContext.request.contextPath}";
+       		mini.alert(serv_path + "/pcMain/product.htmls?id=" + id);
+       	}
         
         function drawcell() {
        		grid_brand.on("drawcell", function (e) {

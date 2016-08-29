@@ -62,6 +62,7 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
+      	              	{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	                { field: "pic",name:"pic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "品牌系列主图片" },
       	              	{ field: "listname",name:"listname", width: 250, headerAlign: "center", align:"center",allowSort: false, header: "系列页名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "picurl",name:"picurl", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "图片点击url",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
@@ -173,6 +174,11 @@
 			
         	drawcell();
         })
+        
+       	function getUrl(id) {
+       		var serv_path = "${pageContext.request.contextPath}";
+       		mini.alert(serv_path + "/pcMain/series.htmls?id=" + id);
+       	}
         
         function drawcell() {
        		grid_brand.on("drawcell", function (e) {
@@ -315,13 +321,21 @@
             var id = record.id;
             var rowIndex = e.rowIndex;
             
-            var mp4path = record.mp4newname;
-            var webmpath = record.webmnewname;
-            if (typeof(mp4path) == "undefined" || mp4path == "" || typeof(webmpath) == "undefined" || webmpath == "" ) {
-            	return "";
+            var s = "";
+            
+			if (grid.id == "grid_brandlist") {
+                s = '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
             }
+			else if (grid.id == "grid_brandlist_v") {
+				var mp4path = record.mp4newname;
+	            var webmpath = record.webmnewname;
+	            if (typeof(mp4path) == "undefined" || mp4path == "" || typeof(webmpath) == "undefined" || webmpath == "" ) {
+	            	return "";
+	            }
 
-            var s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + id + '\')" >播放视频</a>'
+	            s = ' <a class="Edit_Button" href="javascript:showVideo(\'' + id + '\')" >播放视频</a>'
+			}
+            
             return s;
         }
        	

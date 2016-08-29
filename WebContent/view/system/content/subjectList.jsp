@@ -27,7 +27,7 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+      	              	{ field: "action", width: 160, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
       	            ],
@@ -139,9 +139,14 @@
             var grid = e.sender;
             var record = e.record;
            	var id = record.id;
-            var s = ' <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >内容</a>'
+            var s = ' <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >内容</a> | ';
+            s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
             return s;
         }
+		function getUrl(id) {
+       		var serv_path = "${pageContext.request.contextPath}";
+       		mini.alert(serv_path + "/pcMain/subject.htmls?id=" + id);
+       	}
 		
 		function edit(id){
 			if(id == 'undefined'){
