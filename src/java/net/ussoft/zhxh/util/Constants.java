@@ -13,6 +13,12 @@ public class Constants{
 	 * */
 	public static final String PC_USER_SESSION = "pc_user_sessiion";
 	
+	/**
+	 * 购物车 商品类数量
+	 * */
+	public static final String CAT_NUM = "cat_num";
+	
+	
 	//==========商品管理===========
 	/**
 	 * 品牌常量。对品牌表的操作。

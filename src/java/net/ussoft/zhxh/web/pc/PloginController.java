@@ -2,13 +2,16 @@ package net.ussoft.zhxh.web.pc;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.Public_cat;
 import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.service.IPublicCatService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
@@ -28,6 +31,8 @@ public class PloginController extends BaseConstroller {
 	
 	@Resource
 	private IPublicUserService userService;
+	@Resource
+	private IPublicCatService catService;
 	
 	@RequestMapping(value="/login_single")
 	public String login_single (ModelMap modelMap) throws Exception {
@@ -77,6 +82,9 @@ public class PloginController extends BaseConstroller {
 			out.print("输入的帐户名 或密码错误，请重新输入。");
 			return;
 		}
+		//初始，购物车商品类数量
+		List<Public_cat> catList = catService.list(res.getId());
+		CommonUtils.setSessionAttribute(request, Constants.CAT_NUM, catList.size());
 		out.print("success");
 	}
 	

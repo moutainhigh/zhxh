@@ -39,7 +39,14 @@
 	    					<li class="name"><a href="javascript:;"></a></li>
 	    				</c:otherwise>
 	    			</c:choose>
-	    			 <li class="shop-cart"><span class="badge bg-red">8</span><a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')"></a></li>
+	    			 <li class="shop-cart">
+	    			 	<div class="cat_div">
+	    			 	<c:if test='${sessionScope.cat_num != null && sessionScope.cat_num != 0  }'>
+	    			 		<span id="catnum" class="badge bg-red">${sessionScope.cat_num }</span>
+	    			 	</c:if>
+	    			 	</div>
+	    			 	<a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')"></a>
+	    			 </li>
 	    			 <li class="search" id="search"><a href="javascript:;"></a></li>
 	    		</ul>
 	        <a href="${pageContext.request.contextPath}/pcMain/story-c.htmls?id=${id}" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" /></a>

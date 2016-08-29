@@ -21,6 +21,13 @@ public interface IPublicProductSizeService {
 	public Public_product_size getById(String id);
 	
 	/**
+	 * 查询所有 ids
+	 * @return list
+	 * */
+	public List<Public_product_size> getByIds(List<String> ids);
+	
+	
+	/**
 	 * 查询所有
 	 * @return list
 	 * */

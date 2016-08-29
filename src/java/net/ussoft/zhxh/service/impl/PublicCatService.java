@@ -37,6 +37,11 @@ public class PublicCatService implements IPublicCatService{
 	}
 	
 	@Override
+	public List<Public_cat> getByIds(List<String> ids) {
+		return catDao.getByIds(ids);
+	}
+	
+	@Override
 	public List<Public_cat> list() {
 		return catDao.getAll();
 	}

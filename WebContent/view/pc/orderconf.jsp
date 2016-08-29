@@ -90,16 +90,16 @@
 		            </div>
 		        </td>
 		        <td>${item.saleprice }</td>
-		        <td>1</td>
-		        <td>${item.saleprice }</td>
+		        <td>${item.quantity }</td>
+		        <td>${item.saleprice * item.quantity}</td>
 		    </tr>
 	      </c:forEach>
 	    </table>
 	    <div class="tatol">
 	        <p>
-	            <em>合计金额：￥300</em>
+	            <em>合计金额：￥${subtotal }</em>
 	            <em>运费：￥0</em>
-	            <em>总价：<b>￥300</b></em>
+	            <em>总价：<b>￥${subtotal }</b></em>
 	        </p>
 	    </div>
 	    <input type="button" value="立即付款" class="shopcart-but" />

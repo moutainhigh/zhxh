@@ -38,6 +38,11 @@ public class PublicProductSizeService implements IPublicProductSizeService{
 	public Public_product_size getById(String id) {
 		return productSizeDao.get(id);
 	}
+	
+	@Override
+	public List<Public_product_size> getByIds(List<String> ids) {
+		return productSizeDao.getByIds(ids);
+	}
 
 	@Override
 	public List<Public_product_size> list(String parentid) {

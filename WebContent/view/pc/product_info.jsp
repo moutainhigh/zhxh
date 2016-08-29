@@ -26,6 +26,8 @@
 	<%@include file="/view/pc/header.jsp" %>
 	
 	<div class="width-100">
+		<form name="form1" action="${pageContext.request.contextPath}/porder/orderbuy.htmls" method="post">
+		<input type="hidden" name="id" value="${product.id }"/>
 	    <div class="container shop-page clearfix">
 	        <h1 class="fl">${product.productname }</h1>
 	        <div class="fr shop-gwc">
@@ -34,7 +36,7 @@
 	                <span>数量：</span>
 	                <div class="num-box">
 	                    <em class="fl" onclick="jishuan(-1)">-</em>
-	                    <input id="quantity" type="text" value="1" class="txtnum" />
+	                    <input id="quantity" name="quantity" type="text" value="1" class="txtnum" />
 	                    <em class="fr" onclick="jishuan(+1)">+</em>
 	                </div>
 	            </div>
@@ -47,11 +49,12 @@
 	                </div>
 	            </div>
 	            <div class="page-gwc-but">
-	                 <a href="${pageContext.request.contextPath}/porder/orderconf.htmls?id=${product.id}" class="buy">在线购买</a>
+	                 <a href="javascript:form1.submit();" class="buy">在线购买</a>
 	                 <a href="javascript:addCat('${sessionScope.pc_user_sessiion.id}');">加入购物车</a>
 	            </div>
 	        </div>
 	    </div>
+	    </form>
 	</div>
 	<div class="">
 	 <c:choose>
@@ -183,7 +186,18 @@
 			        type: "post",
 			        dataType:"text",
 			        success: function (text) {
-			        	alert(text);
+			        	if(text != "error"){
+			        		var cat_div = $("cat_div").html();
+			        		if (typeof(cat_div) == "undefined" || cat_div == "") {
+			        			$(".cat_div").html('<span id="catnum" class="badge bg-red">'+text+'</span>');
+			        		}
+			        		else {
+			        			$('#catnum').html(text);
+			        		}
+			        		
+			        	}else{
+			        		alert(text);
+			        	}
 			        },
 			        error: function (jqXHR, textStatus, errorThrown) {
 			            alert(jqXHR.responseText);

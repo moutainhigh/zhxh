@@ -25,6 +25,11 @@ public interface IPublicCatService {
 	public Public_cat getPublicCat(String userid,String productsizeid);
 	
 	/**
+	 * 根据用户IDS,查询
+	 * */
+	public List<Public_cat> getByIds(List<String> ids);
+	
+	/**
 	 * 查询所有
 	 * @return list
 	 * */
