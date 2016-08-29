@@ -77,7 +77,7 @@
 	            <em>总价：<b>￥<span id="totalprice">0</span></b></em>
 	        </p>
 	    </div>
-	    <form action="">
+	    <form name="form1" action="${pageContext.request.contextPath}/porder/orderconf.htmls" method="post">
 	    	<input type="text" id="ids" name="ids" value="" />
 			<input type="button" value="立即购买" class="shopcart-but" />	    
 	    </form>
@@ -113,7 +113,11 @@
 	        
 	        $('.shopcart-but').click(function(){
 	        	var ids = $("#ids").val();
-	        	alert(ids);
+	        	if(typeof(ids) == "undefined" || ids == ""){
+	        		alert("请至少选中一件商品！");
+	        	}else{
+	        		form1.submit();
+	        	}
 	        });
 	        
 		}) 
@@ -166,13 +170,19 @@
     		        type: "post",
     		        dataType:"text",
     		        success: function (text) {
-    		        	alert(text);
-    		        	if(text == "success"){
+    		        	if(text != "error"){
     		        		var idArr = new Array();
     		        		idArr = ids.split(',');
     		        		for(i=0;i<idArr.length;i++){
-    		        			alert(idArr[i]);
     		        			$("#"+idArr[i]).remove();
+    		        		}
+    		        		//合计
+    			            totalsum();
+    		        		//购物车
+    		        		if(parseInt(text) > 0){
+    		        			$('#catnum').html(text);
+    		        		}else{
+    		        			$('.cat_div').html('');
     		        		}
     		        	}
     		        },
