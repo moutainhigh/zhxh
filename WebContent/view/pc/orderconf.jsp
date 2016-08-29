@@ -82,16 +82,16 @@
 	      	<tr>
 		        <td align="left">
 		            <div class="img-txt" style="margin-left: 31px">
-		                <img src="images/img3.jpg" class="fl" />
+		                <img src="${pageContext.request.contextPath}/${item.productpic }" class="fl" />
 		                <div class="txt fl">
 		                    <h5>${item.productname }</h5>
 		                    <em>${item.productmemo }</em>
 		                </div>
 		            </div>
 		        </td>
-		        <td>300.00</td>
+		        <td>${item.saleprice }</td>
 		        <td>1</td>
-		        <td>30.00</td>
+		        <td>${item.saleprice }</td>
 		    </tr>
 	      </c:forEach>
 	    </table>

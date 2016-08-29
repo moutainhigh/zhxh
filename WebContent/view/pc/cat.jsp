@@ -42,7 +42,7 @@
 	      </tr>
 	      <c:forEach var="item" items="${psizeList }">
 	      	<tr id="${item.productcatid }">
-		      	<td><input type="checkbox" name="id" value="${item.id }" /></td>
+		      	<td><input type="checkbox" name="id" value="${item.productcatid }" /></td>
 		        <td align="left">
 		            <div class="img-txt">
 		                <img src="${pageContext.request.contextPath}/${item.productpic }" class="fl" />
@@ -61,7 +61,7 @@
 		                <em class="fl">+</em>
 		            </div>
 		        </td>
-		        <td>30.00</td>
+		        <td id="subtotal${item.productcatid }">${item.saleprice * item.quantity }</td>
 		        <td><b class="del"><a href="javascript:delCat('${item.productcatid }')">删除</a></b></td>
 		      </tr>
 	      </c:forEach>
@@ -72,12 +72,15 @@
 	    </div>
 	    <div class="tatol">
 	        <p>
-	            <em>合计金额：￥300</em>
-	            <em>运费：￥0</em>
-	            <em>总价：<b>￥300</b></em>
+	            <em>合计金额：￥<span id="total">0</span></em>
+	            <em>运费：￥<span id="freight">10</span></em>
+	            <em>总价：<b>￥<span id="totalprice">0</span></b></em>
 	        </p>
 	    </div>
-	    <input type="button" value="立即购买" class="shopcart-but" />
+	    <form action="">
+	    	<input type="text" id="ids" name="ids" value="" />
+			<input type="button" value="立即购买" class="shopcart-but" />	    
+	    </form>
 	</div>
 	
 	<script type="text/javascript">
@@ -89,6 +92,8 @@
 	            var checked = $('#checkAll').is(':checked');
 	            var unitselect = $('input[name="id"]');
 	            checked?unitselect.prop('checked',true):unitselect.prop('checked',false);
+	            //合计
+	            totalsum();
 	        });
 	        $('.checkall').click(function(){
 	            var checked = $('#checkAll').is(':checked');
@@ -98,9 +103,47 @@
 	            
 	            var unitselect = $('input[name="id"]');
 	            checked?unitselect.prop('checked',false):unitselect.prop('checked',true);
+	            //合计
+	            totalsum();
+	        });
+	        $('input[name="id"]').click(function(){
+	        	//合计
+	            totalsum();
+	        });
+	        
+	        $('.shopcart-but').click(function(){
+	        	var ids = $("#ids").val();
+	        	alert(ids);
 	        });
 	        
 		}) 
+		
+		//合计
+		function totalsum(){
+			var total = 0; //合计
+			var ids = "";
+			$("input[name='id']").each(function(){
+       	        if($(this).prop("checked") == true){
+       	        	var id = $(this).val();
+       	        	var subtotal = $("#subtotal"+id).html();
+       	        	total += parseFloat(subtotal);
+       	        	//
+       	        	ids += $(this).val() + ",";
+       	        }
+       	    });
+			//Form提交
+			ids = ids.substring(0,ids.length-1);
+			$("#ids").val(ids);
+			//合计金额
+			$('#total').html(total);
+			if(total > 0){
+				var freight = $('#freight').html();
+				$('#totalprice').html(parseFloat(total) + parseFloat(freight));
+			}else{
+				$('#totalprice').html(total);
+			}
+			
+		}
 	
 		//删除
 		function delCat(id){
@@ -115,24 +158,31 @@
            	    });
            	 	ids = ids.substring(0,ids.length-1);
     		}
-    		
-			alert(ids);
-			/* $.ajax({
-		    	async:false,
-		        url: "${pageContext.request.contextPath}/porder/catDel.htmls",
-		        data: {'id':id},
-		        type: "post",
-		        dataType:"text",
-		        success: function (text) {
-		        	alert(text);
-		        	if(text == "success"){
-		        		$("#"+id).remove();
-		        	}
-		        },
-		        error: function (jqXHR, textStatus, errorThrown) {
-		            alert(jqXHR.responseText);
-		        }
-		    }); */
+    		if(ids != ""){
+    			$.ajax({
+    		    	async:false,
+    		        url: "${pageContext.request.contextPath}/porder/catDel.htmls",
+    		        data: {'ids':ids},
+    		        type: "post",
+    		        dataType:"text",
+    		        success: function (text) {
+    		        	alert(text);
+    		        	if(text == "success"){
+    		        		var idArr = new Array();
+    		        		idArr = ids.split(',');
+    		        		for(i=0;i<idArr.length;i++){
+    		        			alert(idArr[i]);
+    		        			$("#"+idArr[i]).remove();
+    		        		}
+    		        	}
+    		        },
+    		        error: function (jqXHR, textStatus, errorThrown) {
+    		            alert(jqXHR.responseText);
+    		        }
+    		    });
+    		}else{
+    			alert("请选择一条记录");
+    		}
 		}
 	
 	

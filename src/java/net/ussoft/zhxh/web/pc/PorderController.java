@@ -37,10 +37,25 @@ public class PorderController extends BaseConstroller {
 	@Resource
 	private IPublicCatService catService;
 	
-	@RequestMapping(value="/orderconf")
-	public ModelAndView orderconf (String id,ModelMap modelMap) throws Exception {
+	@RequestMapping(value="/orderbuy")
+	public ModelAndView orderbuy (String id,ModelMap modelMap) throws Exception {
 		
 		Public_product_size psize = psizeService.getById(id);
+		List<Public_product_size> psizeList = new ArrayList<Public_product_size>();
+		psizeList.add(psize);
+		
+		//初始品牌、专题
+		init(modelMap);
+		
+		modelMap.put("psizeList", psizeList);
+		
+		return new ModelAndView("/view/pc/orderconf", modelMap);
+	}
+	
+	@RequestMapping(value="/orderconf")
+	public ModelAndView orderconf (String ids,ModelMap modelMap) throws Exception {
+		
+		Public_product_size psize = psizeService.getById(ids);
 		List<Public_product_size> psizeList = new ArrayList<Public_product_size>();
 		psizeList.add(psize);
 		
