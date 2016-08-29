@@ -20,10 +20,10 @@ p span{ overflow:hidden;}
 .fr{ float: right;}
 .bg{ width: 100%; height: 100%; position:fixed; left:0; background-color:#000; filter:alpha(opacity=30); opacity:0.3; top:0; display: none;}
 .index-header{ position:relative; z-index: 999; background: #fff; height:15%;}/*首页头部*/
-.header-width{ margin: auto; height: 100px; width:1524px;}
+.header-width{ margin: auto; height: 80px; width:1524px;}
 .header-one{ height: 100px; width: 100%; background: #040a2b; position: relative; }
 .header-two{ height: 100px; width: 100%; background: #3a6232; position: relative; }
-.header-three{ height: 100px; width: 100%; background: #000; position: relative; }
+.header-three{ height: 80px; width: 100%; background: #000; position: relative; }
 .HTML-con{ width: 1200px; margin: auto;}
 .tan-bg{ width: 100%; height: 100%; position:fixed; left:0; background-color:#000; filter:alpha(opacity=30); opacity:0.3; top:0; display:none; z-index: 9999;}
 
@@ -73,12 +73,12 @@ ul.header-user li.del a{ width:16px ; height:16px ; background: url(../../images
 
 
 /*其他头部*/
-.header-width h1.logo{ margin-top:10px; width: 80px; height: 80px;}
+.header-width h1.logo{ margin-top:9px; width: 62px; height: 62px;}
 .nav{  text-align: center;}
-.nav a{display: inline-block; line-height: 35px; font-size: 16px; color: #fff; margin: 30px 22px 0 22px;}
+.nav a{display: inline-block; line-height: 25px; font-size: 16px; color: #fff; margin: 30px 22px 0 22px;}
 .nav a.cur,.nav a:hover{ border-bottom: solid 4px #fff;}
-a.header-pic{ margin-top: 33px; display: block; margin-right: 50px;}
-.user-header{ height: 42px; margin-top: 29px;}
+a.header-pic{ margin-top: 32px; display: block; margin-right: 33px;}
+.user-header{ height: 42px; margin-top: 20px;}
 .user-header li{float: left; padding: 0 27px; height: 42px; border-left:solid 1px ;	color: rgba(255, 255, 255, 0.4);}
 .user-header li.name a{ width:16px ; height:18px ; background: url(../../images/icon.png) -22px -80px no-repeat; display: block; margin-top: 13px;}
 .user-header li.shop-cart a{ width:17px ; height:17px ; background: url(../../images/icon.png) -22px -30px no-repeat; display: block; margin-top: 13px;}

@@ -49,7 +49,7 @@
 	    			 </li>
 	    			 <li class="search" id="search"><a href="javascript:;"></a></li>
 	    		</ul>
-	        <a href="${pageContext.request.contextPath}/pcMain/story-c.htmls?id=${id}" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" /></a>
+	        <a href="${pageContext.request.contextPath}/pcMain/story-c.htmls?id=${id}" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" style="width:22;height:22;" /></a>
 	        <div class="nav">
             <c:forEach var="brand" items="${brandList }">
 		    	<a id="${brand.id }" href="${pageContext.request.contextPath}/pcMain/zh.htmls?id=${brand.id}" >${brand.brandname }</a>
