@@ -33,10 +33,10 @@
 	    		<ul class="user-header fr">
 	    			<c:choose>
 	    				<c:when test="${sessionScope.pc_user_sessiion != null }">
-	    					<li class="name1" style="line-height:42px;color:#fff;"><a style="color:#fff;font-weight: bold;" href="javascript:;">${sessionScope.pc_user_sessiion.phonenumber}</a></li>
+	    					<li class="name1" style="line-height:42px;color:#fff;"><a style="color:#fff;font-weight: bold;" href="javascript:;" title="个人中心">${sessionScope.pc_user_sessiion.phonenumber}</a></li>
 	    				</c:when>
 	    				<c:otherwise>
-	    					<li class="name"><a href="javascript:;"></a></li>
+	    					<li class="name"><a href="javascript:;" title="个人中心"></a></li>
 	    				</c:otherwise>
 	    			</c:choose>
 	    			 <li class="shop-cart">
@@ -45,11 +45,11 @@
 	    			 		<span id="catnum" class="badge bg-red">${sessionScope.cat_num }</span>
 	    			 	</c:if>
 	    			 	</div>
-	    			 	<a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')"></a>
+	    			 	<a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')" title="购物车"></a>
 	    			 </li>
-	    			 <li class="search" id="search"><a href="javascript:;"></a></li>
+	    			 <li class="search" id="search"><a href="javascript:;" title="检索"></a></li>
 	    		</ul>
-	        <a href="${pageContext.request.contextPath}/pcMain/story-c.htmls?id=${id}" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" style="width:22px;height:22px;" /></a>
+	        <a href="${pageContext.request.contextPath}/pcMain/story-c.htmls?id=${id}" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" style="width:22px;height:22px;" title="品牌故事"/></a>
 	        <div class="nav">
             <c:forEach var="brand" items="${brandList }">
 		    	<a id="${brand.id }" href="${pageContext.request.contextPath}/pcMain/zh.htmls?id=${brand.id}" >${brand.brandname }</a>
