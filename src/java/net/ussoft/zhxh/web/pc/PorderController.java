@@ -64,6 +64,7 @@ public class PorderController extends BaseConstroller {
 		for(Public_cat obj:catList){
 			Public_product_size psize = psizeService.getById(obj.getProductsizeid());
 			psize.setQuantity(obj.getBuycount());
+			psize.setProductcatid(obj.getId());
 			psizeList.add(psize);
 		}
 		
@@ -77,30 +78,38 @@ public class PorderController extends BaseConstroller {
 	
 	/**
 	 * 购物车-添加
+	 * @param userid
 	 * @param productsizeid
 	 * @param quantity
 	 * */
 	@RequestMapping(value="/catAdd",method=RequestMethod.POST)
-	public void catAdd(String productsizeid,int quantity,HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public void catAdd(String userid,String productsizeid,int quantity,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		
-		Public_cat cat = new Public_cat();
-		HttpSession session = request.getSession();
-		Public_user user = (Public_user) CommonUtils.getSessionAttribute(request, Constants.PC_USER_SESSION);
-		cat.setId(UUID.randomUUID().toString());
-		cat.setUserid(user.getId());
-		cat.setProductsizeid(productsizeid);
-		cat.setBuycount(quantity);
-		
-		Public_cat catObj = catService.insert(cat);
-		if(catObj != null){
-			out.print("success");
-			return;
+		Public_cat resultcat = catService.getPublicCat(userid, productsizeid);
+		if(resultcat != null){
+			int buycount = resultcat.getBuycount() + quantity;
+			resultcat.setBuycount(buycount);
+			int num = catService.update(resultcat);
+			if(num > 0){
+				out.print("success");
+				return;
+			}
+		}else{
+			Public_cat cat = new Public_cat();
+			cat.setId(UUID.randomUUID().toString());
+			cat.setUserid(userid);
+			cat.setProductsizeid(productsizeid);
+			cat.setBuycount(quantity);
+			
+			Public_cat catObj = catService.insert(cat);
+			if(catObj != null){
+				out.print("success");
+				return;
+			}
 		}
 		out.print("error");
-		
 	}
 	
 	/**

@@ -23,6 +23,7 @@ public class Public_product_size {
 	private String linkids;
 	
 	private int quantity; //临时字段，存放购物车中对应商品的数量
+	private String productcatid;	//购物车对应商品ID
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -105,6 +106,13 @@ public class Public_product_size {
 	}
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+	@Transient
+	public String getProductcatid() {
+		return productcatid;
+	}
+	public void setProductcatid(String productcatid) {
+		this.productcatid = productcatid;
 	}
 	
 }

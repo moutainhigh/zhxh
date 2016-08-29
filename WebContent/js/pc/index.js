@@ -97,9 +97,9 @@ $(document).ready(function(){
 	})
 
 	// 购物车 操作 删除
-	$('.del').click(function(){
+	/*$('.del').click(function(){
 	    $(this).parents('.cart-table tr').remove();
-    });
+    });*/
 
     // 订单确认 收货人
     $('.more').click(function(){

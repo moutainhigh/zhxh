@@ -48,7 +48,7 @@
 	            </div>
 	            <div class="page-gwc-but">
 	                 <a href="${pageContext.request.contextPath}/porder/orderconf.htmls?id=${product.id}" class="buy">在线购买</a>
-	                 <a href="javascript:addCat('${product.id }');">加入购物车</a>
+	                 <a href="javascript:addCat('${sessionScope.pc_user_sessiion.id}');">加入购物车</a>
 	            </div>
 	        </div>
 	    </div>
@@ -163,21 +163,33 @@
 		}
 		
 		//加入购物车
-		function addCat(id){
-			var quantity = $('#quantity').val();
-			$.ajax({
-		    	async:false,
-		        url: "${pageContext.request.contextPath}/porder/catAdd.htmls",
-		        data: {'productsizeid':'${product.id}','quantity':quantity},
-		        type: "post",
-		        dataType:"text",
-		        success: function (text) {
-		        	alert(text);
-		        },
-		        error: function (jqXHR, textStatus, errorThrown) {
-		            alert(jqXHR.responseText);
-		        }
-		    });
+		function addCat(userid){
+			if(userid == ""){
+				$('.denglu').fadeIn(800);	
+				$('.tan-bg').fadeIn(800);	
+				//$(".box").toggle(); 
+				$('body').one('click',function(){
+			        $('.denglu').fadeOut(800);
+			        $('.tan-bg').fadeOut(800);
+			        $('.add-tan').fadeOut(800);
+				})
+				return;
+			}else{
+				var quantity = $('#quantity').val();
+				$.ajax({
+			    	async:false,
+			        url: "${pageContext.request.contextPath}/porder/catAdd.htmls",
+			        data: {'userid':userid,'productsizeid':'${product.id}','quantity':quantity},
+			        type: "post",
+			        dataType:"text",
+			        success: function (text) {
+			        	alert(text);
+			        },
+			        error: function (jqXHR, textStatus, errorThrown) {
+			            alert(jqXHR.responseText);
+			        }
+			    });
+			}
 		}
 		
 	</script>

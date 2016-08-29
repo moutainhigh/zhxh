@@ -32,7 +32,7 @@
 	    </div>
 	    <table width="0" border="0" cellpadding="0" cellspacing="0" class="cart-table">
 	      <tr class="tr">
-	        <td width="110"><input name="" type="checkbox" value="" /></td>
+	        <td width="110"><input id="checkAll" type="checkbox" /></td>
 	        <td width="444">商品名称</td>
 	        <td width="156">单价/元</td>
 	        <td width="250">数量/件</td>
@@ -40,8 +40,8 @@
 	        <td width="96">操作</td>
 	      </tr>
 	      <c:forEach var="item" items="${psizeList }">
-	      	<tr>
-		      	<td><input name="" type="checkbox" value="" /></td>
+	      	<tr id="${item.productcatid }">
+		      	<td><input type="checkbox" name="id" value="${item.id }" /></td>
 		        <td align="left">
 		            <div class="img-txt">
 		                <img src="${pageContext.request.contextPath}/${item.productpic }" class="fl" />
@@ -61,12 +61,12 @@
 		            </div>
 		        </td>
 		        <td>30.00</td>
-		        <td><b class="del">删除</b></td>
+		        <td><b class="del"><a href="javascript:delCat('${item.productcatid }')">删除</a></b></td>
 		      </tr>
 	      </c:forEach>
 	    </table>
 	    <div class="Select-all clearfix">
-	        <a href="javascript:;" class="all">选择所有项目</a>
+	        <a href="javascript:;" id="chk_all" class="checkall" >选择所有项目</a>
 	        <a href="javascript:;">删除选中的商品</a>
 	    </div>
 	    <div class="tatol">
@@ -79,6 +79,90 @@
 	    <input type="button" value="立即购买" class="shopcart-but" />
 	</div>
 	
+	<script type="text/javascript">
+	
+		$(function() { 
+			$('#chk_all').click(function(){  
+		        //1.第一种方式，以下两行代码  
+		        //var checkedOfAll=$("#chk_all").prop("checked");   
+		        //$("input[name='chk_list']").prop("checked", checkedOfAll);   
+		        //2.第二种方式，以下代码，官方代码  
+		        $("input[name='id']").prop("checked", function( i, val ) {  
+		             return !val;  
+		          });  
+		    }); 
+			/* 
+			$("#checkAll").click(function() { 
+				var flag = $(this).attr("checked"); 
+				alert(flag);
+				$("[name=id]:checkbox").each(function() { 
+					$(this).attr("checked", flag); 
+				}) 
+			}) 
+			
+			$(".checkall").click(function() {
+				var e = $(this);
+				var name = e.attr("name");
+				var checkfor = e.attr("checkfor");
+				alert(checkfor);
+				var type;
+				if (checkfor != "" && checkfor != null && checkfor != undefined) {
+					type = e.closest("form").find("input[name='" + checkfor + "']")
+				} else {
+					type = e.closest("form").find("input[type='checkbox']")
+					alert(type);
+				}
+				if (name == "checkall") {
+					$(type).each(function(index, element) {
+						element.checked = true
+					});
+					e.attr("name", "ok")
+				} else {
+					$(type).each(function(index, element) {
+						element.checked = false
+					});
+					e.attr("name", "checkall")
+				}
+			}); */
+		}) 
+	
+		//删除
+		function delCat(id){
+			
+			var ids = "";
+    		if (id != "") {
+    			ids = id;
+    		}
+    		else {
+           	    $("input[name='id']").each(function(){
+           	        if($(this).attr("checked") == "checked"){
+           	            ids += $(this).val() + ",";
+           	        }
+           	    });
+           	 	ids = ids.substring(0,ids.length-1);
+    		}
+    		
+			alert(ids);
+			$.ajax({
+		    	async:false,
+		        url: "${pageContext.request.contextPath}/porder/catDel.htmls",
+		        data: {'id':id},
+		        type: "post",
+		        dataType:"text",
+		        success: function (text) {
+		        	alert(text);
+		        	if(text == "success"){
+		        		$("#"+id).remove();
+		        	}
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(jqXHR.responseText);
+		        }
+		    });
+		}
+	
+	
+	</script>
 	<!--页脚-->
 	<%@ include file="/view/pc/bottom.jsp" %>
 </body>

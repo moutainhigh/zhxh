@@ -21,10 +21,21 @@ public class PublicCatService implements IPublicCatService{
 	
 	@Override
 	public Public_cat getById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		return catDao.get(id);
 	}
 
+	@Override
+	public Public_cat getPublicCat(String userid,String productsizeid) {
+		String sql = "select * from public_cat where userid = ? and productsizeid = ?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(userid);
+		values.add(productsizeid);
+		List<Public_cat> list =  catDao.search(sql, values);
+		if(list.size() > 0)
+			return list.get(0);
+		return null;
+	}
+	
 	@Override
 	public List<Public_cat> list() {
 		return catDao.getAll();
@@ -47,7 +58,7 @@ public class PublicCatService implements IPublicCatService{
 	@Transactional("txManager")
 	@Override
 	public int update(Public_cat cat) {
-		Public_cat obj = catDao.save(cat);
+		Public_cat obj = catDao.update(cat);
 		if(obj == null){
 			return 0;
 		}
