@@ -13,6 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Sys_account;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
@@ -66,7 +67,7 @@ public class SystemFilter implements Filter {
             return;
         }
         
-        String[] strs = {"kaptcha","init","page","login","css","js","image","pcMain","porder","mMain","file"};
+        String[] strs = {"kaptcha","init","page","login","css","js","image","pcMain","mMain","file"};
         if (strs != null && strs.length > 0) {  
             for (String str : strs) {
                 if (url.indexOf(str) >= 0) {
@@ -76,7 +77,30 @@ public class SystemFilter implements Filter {
             }  
         }
         
-//        Object object = session.getAttribute(Constants.user_in_session);
+        String[] pc_strs = {"porder"};
+        for (String str : pc_strs) {
+            if (url.indexOf(str) >= 0) {
+                Object pc_o = CommonUtils.getSessionAttribute(httpRequest, Constants.PC_USER_SESSION);
+                Public_user user = pc_o == null ? null : (Public_user) pc_o;
+                
+                if (user == null) {
+                	System.out.println("==================session is no ================");
+                    boolean isAjaxRequest = isAjaxRequest(httpRequest);
+                    if (isAjaxRequest) {
+                    	httpResponse.setHeader("sessionstatus", "timeout");
+                    	httpResponse.sendError(518, "session timeout.");
+                        return;  
+                    }
+                    httpResponse.sendRedirect(path + "/login_single.htmls");
+                    return;  
+                }
+                filterChain.doFilter(servletRequest, servletResponse);
+                return;
+            }
+        }  
+        
+        
+        
         Object object = CommonUtils.getSessionAttribute(httpRequest, Constants.user_in_session);
         Sys_account account = object == null ? null : (Sys_account) object;  
         if (account == null) {

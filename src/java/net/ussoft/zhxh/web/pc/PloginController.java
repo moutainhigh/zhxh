@@ -29,6 +29,11 @@ public class PloginController extends BaseConstroller {
 	@Resource
 	private IPublicUserService userService;
 	
+	@RequestMapping(value="/login_single")
+	public String login_single (ModelMap modelMap) throws Exception {
+		return "view/pc/login_single";
+	}
+	
 	@RequestMapping(value="/plogin",method=RequestMethod.POST)
 	public void onLogin(String uname,String pwd,HttpServletRequest request,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
