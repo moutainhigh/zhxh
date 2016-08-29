@@ -142,6 +142,27 @@ public class PcMainController extends BaseConstroller {
 	}
 	
 	/**
+	 * 品牌故事 内容
+	 * @param id
+	 * */
+	@RequestMapping(value="/story-c")
+	public ModelAndView story_c (String id,ModelMap modelMap) throws Exception {
+		Public_content content = new Public_content();
+		List<Public_content> storys = contentService.list(id, "brandstory");
+		
+		
+		if (storys.size() == 1) {
+			content = storys.get(0);
+		}
+		//初始品牌、专题
+		init(modelMap);
+		
+		modelMap.put("story", content);
+		
+		return new ModelAndView("/view/pc/storycontent", modelMap);
+	}
+	
+	/**
 	 * 新闻
 	 * @param id
 	 * */

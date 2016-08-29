@@ -29,6 +29,7 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
+      	              	{ field: "action", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	                { field: "brandlogo",name:"brandlogo", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "品牌Logo(80*80)" },
       	                //{ field: "brandlogo",name:"brandlogo", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "品牌Logo",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onButtonEdit"} },
       	                { field: "brandname",name:"brandname", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "品牌名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
@@ -129,11 +130,15 @@
             var id = record.id;
             var rowIndex = e.rowIndex;
             
-            if (grid.id == "grid_product") {
+            if (grid.id == "grid_brand") {
+            	var brandname = record.brandname;
+            	var s = ' <a class="Edit_Button" href="javascript:editBrandStory(\'' + id + '\',\'' + brandname + '\')" >品牌故事</a>'
+            }
+            else if (grid.id == "grid_product") {
             	var productname = record.productname;
                 var showtype = record.showtype;
                 
-                var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
+                var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>';
                 //s += '  <a class="Edit_Button" href="javascript:editSize(\'' + id + '\',\'' + productname + '\')" >售价</a> | ';
                 //s += '  <a class="Edit_Button" href="javascript:edit(\'' + id + '\',\'' + showtype + '\')" >详细</a>';
                 //s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
@@ -339,7 +344,34 @@
             }
         }
         
+        function editBrandStory(id,brandname) {
+        	if(id == 'undefined'){
+				mini.alert("请先保存信息，再添加内容!");
+				return;
+			}
+			var pHeight = $(window.parent).height();
+	   		var pWidth = $(window.parent).width();
+	   		
+        	var title = "["+brandname+"]品牌故事";
+        	mini.open({
+	             url: "${pageContext.request.contextPath}/public/edit_o.htmls?parentid="+id +"&parenttype=brandstory",
+	             title: title, width: pWidth-300, height:pHeight-100,
+	             allowResize:true,
+	             showMaxButton:true,
+	             onload: function () {
+	            	 
+	             },
+	             ondestroy: function (action) {
+	            	 
+	             }
+	        });
+        }
         function editRated(id,productname) {
+        	
+        	if(id == 'undefined'){
+				mini.alert("请先保存信息，再添加内容!");
+				return;
+			}
         	
         	var title = "商品评价";
         	mini.open({
