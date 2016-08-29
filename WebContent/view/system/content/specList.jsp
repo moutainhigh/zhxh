@@ -27,7 +27,7 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	              	{ field: "pic",name:"pic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnNewsPicEdit"} },
+      	              	{ field: "pic",name:"pic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "图片(300*300)",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnNewsPicEdit"} },
       	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "file_old_name",name:"file_old_name", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "文件名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnFileEdit" } },
@@ -66,7 +66,7 @@
        	        	}
    	        		else {
    	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='30px' />";
    	        		}
     	        }
             });

@@ -26,7 +26,7 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	              	{ field: "pic_path",name:"pic_path", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "轮播图片",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+      	              	{ field: "pic_path",name:"pic_path", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "轮播图片(1535*600)",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	                { field: "pic_memo",name:"pic_memo", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "图片描述",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "pic_url",name:"pic_url", width: 280, headerAlign: "center", align:"center",allowSort: false, header: "图片点击URL",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	              	{ field: "pic_active",name:"pic_active",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
@@ -64,8 +64,7 @@
    	        			e.cellhtml = "";
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='30px' />";
    	        		}
     	        }
             });
