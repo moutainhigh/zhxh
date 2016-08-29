@@ -73,6 +73,12 @@ public class PublicCatService implements IPublicCatService{
 
 	@Transactional("txManager")
 	@Override
+	public int delete(List<String> ids) {
+		return catDao.delByIds(ids);
+	}
+	
+	@Transactional("txManager")
+	@Override
 	public Public_cat insert(Public_cat cat) {
 		return catDao.save(cat);
 	}

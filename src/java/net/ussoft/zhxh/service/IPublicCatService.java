@@ -62,4 +62,11 @@ public interface IPublicCatService {
 	 * @return
 	 * */
 	public int delete(String id);
+	
+	/**
+	 * 删除
+	 * @param ids
+	 * @return
+	 * */
+	public int delete(List<String> ids);
 }

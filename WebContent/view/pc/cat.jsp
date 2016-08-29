@@ -9,7 +9,8 @@
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/faq.css" />
-<script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
+<%-- <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> --%> 
+<script src="${pageContext.request.contextPath}/js/jquery-1.11.0.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
 
 </head>
@@ -67,7 +68,7 @@
 	    </table>
 	    <div class="Select-all clearfix">
 	        <a href="javascript:;" id="chk_all" class="checkall" >选择所有项目</a>
-	        <a href="javascript:;">删除选中的商品</a>
+	        <a href="javascript:delCat('');">删除选中的商品</a>
 	    </div>
 	    <div class="tatol">
 	        <p>
@@ -82,60 +83,33 @@
 	<script type="text/javascript">
 	
 		$(function() { 
-			$('#chk_all').click(function(){  
-		        //1.第一种方式，以下两行代码  
-		        //var checkedOfAll=$("#chk_all").prop("checked");   
-		        //$("input[name='chk_list']").prop("checked", checkedOfAll);   
-		        //2.第二种方式，以下代码，官方代码  
-		        $("input[name='id']").prop("checked", function( i, val ) {  
-		             return !val;  
-		          });  
-		    }); 
-			/* 
-			$("#checkAll").click(function() { 
-				var flag = $(this).attr("checked"); 
-				alert(flag);
-				$("[name=id]:checkbox").each(function() { 
-					$(this).attr("checked", flag); 
-				}) 
-			}) 
 			
-			$(".checkall").click(function() {
-				var e = $(this);
-				var name = e.attr("name");
-				var checkfor = e.attr("checkfor");
-				alert(checkfor);
-				var type;
-				if (checkfor != "" && checkfor != null && checkfor != undefined) {
-					type = e.closest("form").find("input[name='" + checkfor + "']")
-				} else {
-					type = e.closest("form").find("input[type='checkbox']")
-					alert(type);
-				}
-				if (name == "checkall") {
-					$(type).each(function(index, element) {
-						element.checked = true
-					});
-					e.attr("name", "ok")
-				} else {
-					$(type).each(function(index, element) {
-						element.checked = false
-					});
-					e.attr("name", "checkall")
-				}
-			}); */
+			//选择所有
+	        $('#checkAll').click(function(){
+	            var checked = $('#checkAll').is(':checked');
+	            var unitselect = $('input[name="id"]');
+	            checked?unitselect.prop('checked',true):unitselect.prop('checked',false);
+	        });
+	        $('.checkall').click(function(){
+	            var checked = $('#checkAll').is(':checked');
+	            
+	            var checkAll = $('#checkAll');
+	            checked?checkAll.prop('checked',false):checkAll.prop('checked',true);
+	            
+	            var unitselect = $('input[name="id"]');
+	            checked?unitselect.prop('checked',false):unitselect.prop('checked',true);
+	        });
+	        
 		}) 
 	
 		//删除
 		function delCat(id){
-			
 			var ids = "";
     		if (id != "") {
     			ids = id;
-    		}
-    		else {
+    		}else {
            	    $("input[name='id']").each(function(){
-           	        if($(this).attr("checked") == "checked"){
+           	        if($(this).prop("checked") == true){
            	            ids += $(this).val() + ",";
            	        }
            	    });
@@ -143,7 +117,7 @@
     		}
     		
 			alert(ids);
-			$.ajax({
+			/* $.ajax({
 		    	async:false,
 		        url: "${pageContext.request.contextPath}/porder/catDel.htmls",
 		        data: {'id':id},
@@ -158,7 +132,7 @@
 		        error: function (jqXHR, textStatus, errorThrown) {
 		            alert(jqXHR.responseText);
 		        }
-		    });
+		    }); */
 		}
 	
 	

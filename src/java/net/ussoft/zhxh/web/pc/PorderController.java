@@ -140,12 +140,16 @@ public class PorderController extends BaseConstroller {
 	 * @param id
 	 * */
 	@RequestMapping(value="/catDel",method=RequestMethod.POST)
-	public void catDel(String id,HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public void catDel(String ids,HttpServletRequest request,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		
-		int num = catService.delete(id);
+		List<String> idlist = new ArrayList<String>();
+		String[] idArr = ids.split(",");
+		for(String id:idArr){
+			idlist.add(id);
+		}
+		int num = catService.delete(idlist);
 		if(num > 0){
 			out.print("success");
 			return;
