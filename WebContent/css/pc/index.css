@@ -45,7 +45,7 @@
 .shoplist dl dd a{ display: block; width:80px ; height:24px ; line-height: 24px; text-align: center; color: #fff; margin-top: 40px; font-size: 14px; background: #000;}
 
 /*商品单页*/
-.width-100{ width: 100%;background:rgba(210, 209, 211, 0.8) no-repeat ;padding:25px 0;position: absolute;top:100px; z-index: 9; }
+.width-100{ width: 100%;background:rgba(210, 209, 211, 0.8) no-repeat ;padding:25px 0;position: absolute;top:80px; z-index: 9; }
 .shop-page h1{ font-weight: normal; font-size: 18px; color: #111;}
 .shop-page .shop-gwc > div{ float: left; margin-left: 20px;}
 .shop-page .shop-gwc .price{ font-size: 18px; color: #111;}
