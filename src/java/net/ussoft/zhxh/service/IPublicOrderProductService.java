@@ -1,8 +1,8 @@
 package net.ussoft.zhxh.service;
 
 import java.util.List;
+import java.util.Map;
 
-import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_order_product;
 
 /**
@@ -23,14 +23,7 @@ public interface IPublicOrderProductService {
 	 * 查询所有
 	 * @return list
 	 * */
-	public List<Public_order_product> list();
-	
-	/**
-	 * 查询所有 分页
-	 * @param pageBean
-	 * @return list
-	 * */
-	public List<Public_order_product> list(PageBean<Public_order_product> pageBean);
+	public List<Public_order_product> list(Map<String, Object> map);
 	
 	/**
 	 * 添加

@@ -102,9 +102,22 @@
 	            <em>总价：<b>￥${subtotal }</b></em>
 	        </p>
 	    </div>
-	    <input type="button" value="立即付款" class="shopcart-but" />
+	    <form name="form1" action="${pageContext.request.contextPath}/porder/suborder.htmls" method="post">
+	    	<input type="hidden" name="ids" value="${pids }">
+	    	<input type="hidden" name="addressid" id="address" value="1">
+	    	<input type="button" value="立即付款" onclick="tosubmit()" class="shopcart-but" />
+	    </form>
 	</div>
-	
+	<script type="text/javascript">
+		function tosubmit(){
+			var address = $("#address").val();
+			if(typeof(address) == "undefined" || address == ""){
+				alert("请选择一个地址！");
+				return;
+			}
+			form1.submit();
+		}
+	</script>
 	<!--页脚-->
 	<%@ include file="/view/pc/bottom.jsp" %>
 </body>

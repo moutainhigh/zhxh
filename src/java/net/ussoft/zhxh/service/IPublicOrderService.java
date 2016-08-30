@@ -1,6 +1,7 @@
 package net.ussoft.zhxh.service;
 
 import java.util.List;
+import java.util.Map;
 
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_order;
@@ -26,11 +27,18 @@ public interface IPublicOrderService {
 	public List<Public_order> list();
 	
 	/**
+	 * 按条件查询
+	 * @param map 条件
+	 * */
+	public List<Public_order> list(Map<String, Object> map);
+	
+	/**
 	 * 查询所有 分页
+	 * @param map 条件
 	 * @param pageBean
 	 * @return list
 	 * */
-	public List<Public_order> list(PageBean<Public_order> pageBean);
+	public PageBean<Public_order> list(Map<String, Object> map, PageBean<Public_order> pageBean);
 	
 	/**
 	 * 添加

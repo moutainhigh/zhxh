@@ -10,6 +10,7 @@ import org.springframework.ui.ModelMap;
 
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
+import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Sys_account;
 import net.ussoft.zhxh.service.IAccountService;
 import net.ussoft.zhxh.service.IPublicBrandService;
@@ -48,6 +49,16 @@ public class BaseConstroller {
 	}
 	
 	/**
+	 * 获取session里的帐户实体类
+	 * @return
+	 */
+	public Public_user getSessionUser() {
+		Public_user userSession = (Public_user) CommonUtils.getSessionAttribute(request, Constants.PC_USER_SESSION);
+		return userSession;
+	}
+	
+	
+	/**
 	 * 获取项目根路径  例如 /archive 
 	 * @return
 	 */
@@ -84,5 +95,31 @@ public class BaseConstroller {
 		
 		modelMap.put("brandList", brandList);
 		modelMap.put("subjectList", subjectList);
+	}
+	
+	/**
+	 * 初始化购物车 数量
+	 * @param flag true:减；false:加
+	 * */
+	public int catinit(boolean flag,int num){
+		int catnum = 0;
+		if(flag){
+			int catnum_s = (int) CommonUtils.getSessionAttribute(request, Constants.CAT_NUM);
+			request.getSession().removeAttribute(Constants.CAT_NUM);
+			catnum = catnum_s -num;
+			CommonUtils.setSessionAttribute(request, Constants.CAT_NUM, catnum);
+		}else{
+			int catnum_s = (int) CommonUtils.getSessionAttribute(request, Constants.CAT_NUM);
+			request.getSession().removeAttribute(Constants.CAT_NUM);
+			catnum = catnum_s + num;
+			CommonUtils.setSessionAttribute(request, Constants.CAT_NUM, catnum);
+		}
+		
+		return catnum;
+	}
+	
+	public int getCatnum(){
+		int catnum = (int) CommonUtils.getSessionAttribute(request, Constants.CAT_NUM);
+		return catnum;
 	}
 }
