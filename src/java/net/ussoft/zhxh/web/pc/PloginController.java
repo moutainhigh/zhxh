@@ -11,6 +11,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Public_cat;
 import net.ussoft.zhxh.model.Public_phone_code_log;
@@ -23,11 +28,6 @@ import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.Logger;
 import net.ussoft.zhxh.util.MD5;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @Controller
@@ -118,6 +118,8 @@ public class PloginController extends BaseConstroller {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
+		String phonenumber = request.getParameter("phonenumber");
+		
 		String result = "error";
 		
 		//获取验证码session
@@ -125,7 +127,7 @@ public class PloginController extends BaseConstroller {
 		
 		if (map == null){
 //			CommonUtils.removeSessionAttribute(request, Constants.PC_USER_SESSION);
-			out.print(result);
+			out.print("codeerror");
 			return;
 		}
 		
@@ -154,9 +156,12 @@ public class PloginController extends BaseConstroller {
 		tmp.setId(UUID.randomUUID().toString());
 		tmp.setUsername(user.getUsername());
 		tmp.setPhonenumber(user.getPhonenumber());
-		
+		tmp.setIdentity("Z");
+		tmp.setIdentitymemo("普通会员");
+		tmp.setSetreturn(1);
+		tmp.setIsopen(1);
+		tmp.setSex(1);
 		tmp.setPassword(MD5.encode(user.getPassword()));
-		
 		
 		Public_user obj = userService.insert(tmp);
 		

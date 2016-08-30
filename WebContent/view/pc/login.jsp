@@ -130,22 +130,40 @@
 				$('#sendcode').focus();
 				return;
 			}
+			if (trim(password) == "") {
+				alert("请输入登录密码。");
+				$('#password').val("");
+				$('#password').focus();
+				return;
+			}
 			
-			var user = {
-					username:username,
-					phonenumber:phonenumber,
-					password:password
-			};
-			//var json = JSON.stringify(obj);
+			var user = {};
+			user.username = username;
+			user.phonenumber = phonenumber;
+			user.password = password;
+			user.sendcode = sendcode;
 			
 			$.ajax({
             	url: "${pageContext.request.contextPath}/plogin_reg.htmls",
-            	data:{'user':user,'sendcode':sendcode},
+            	data:user,
             	type:"post",
             	dataType:"text",
                 success: function (text) {
-                    if(text == "success"){
-                    	location.reload();
+                	if (text == "codeerror") {
+                		alert("验证码错误，请重新输入。");
+                	}
+                	else if (text == "phoneerror") {
+                		alert("手机号码错误，请使用正确的手机号码。");
+                	}
+                	else if (text == "timeout") {
+                		alert("验证码超时，请重新获取验证码。");
+                	}
+                	else if(text == "success"){
+                		alert("注册成功。请登录。");
+                		$(".em").val("");
+                		$('.denglu').fadeIn(800);
+                    	$('.add-tan').fadeOut(800);
+                    	//location.reload();
                     }else{
                     	alert(text);
                     }
@@ -156,12 +174,33 @@
             });
 		}
 		
+		function validatemobile(mobile) {
+			if (trim(mobile) == "") {
+		        return false; 
+		    }     
+		    if(mobile.length!=11) {
+		    	return false; 
+		    } 
+		    var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+		    if(!myreg.test(mobile)) {
+		        return false; 
+		    }
+		    return true;
+		} 
+		
 		function getSendCode() {
 			
 			var phonenumber = $('#phonenumber').val();
 			
 			if (trim(phonenumber) == "") {
 				alert("请输入手机号码。");
+				$('#phonenumber').val("");
+				$('#phonenumber').focus();
+				return;
+			}
+			
+			if (!validatemobile(phonenumber) ) {
+				alert("请正确输入手机号码。");
 				$('#phonenumber').val("");
 				$('#phonenumber').focus();
 				return;

@@ -107,7 +107,7 @@
 	    					<li class="name"><a href="javascript:;"></a></li>
 	    				</c:otherwise>
 	    			</c:choose>
-	    			 <li class="shop-cart"><span class="badge bg-red">8</span><a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')"></a></li>
+	    			 <li class="shop-cart"><a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')"></a></li>
 	    			 <li class="search" id="search"><a href="javascript:;"></a></li>
 	    		</ul>
 	        <a href="javascript:;" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" /></a>
