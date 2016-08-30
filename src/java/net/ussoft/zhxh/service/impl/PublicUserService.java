@@ -99,7 +99,6 @@ public class PublicUserService implements IPublicUserService{
 	@Transactional("txManager")
 	@Override
 	public Public_user insert(Public_user user) {
-		// TODO Auto-generated method stub
 		userDao.save(user);
 		return user;
 	}

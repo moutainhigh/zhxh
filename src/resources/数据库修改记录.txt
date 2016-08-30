@@ -150,6 +150,17 @@
 1、修改public_product_size 商品规格表。增加如下：
 	（1）linkids varchar（2000） 商品推荐ids
 	
+20160830
+1、增加短信日志表   public_phone_code_log
+	(1)id			varchar(40)
+	(2)phonenumber	varchar(100)
+	(3)sendtime		varchar(100)
+	(4)sendtimestr	varchar(100)
+	(5)sendcode		varchar(50)
+	(6)sendtype		varchar(50)
+	(7)ip			varchar(100)
+	
+	
 	
 	
 	

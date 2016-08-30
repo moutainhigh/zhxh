@@ -75,6 +75,7 @@
 	
 	function cat(userid){
 		if(userid == ""){
+			$(".em").val("");
 			$('.denglu').fadeIn(800);	
 			$('.tan-bg').fadeIn(800);	
 			//$(".box").toggle(); 

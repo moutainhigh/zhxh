@@ -12,6 +12,10 @@ public class Constants{
 	 * pc账号登陆
 	 * */
 	public static final String PC_USER_SESSION = "pc_user_sessiion";
+	/**
+	 * 手机6位验证码
+	 * */
+	public static final String CODE_SESSION = "code_sessiion";
 	
 	/**
 	 * 购物车 商品类数量

@@ -57,6 +57,7 @@ $(document).ready(function(){
 
 	//头部弹框登录
 	$('.header-user .name').click(function(){
+		$(".em").val("");
 		$('.denglu').fadeIn(800);	
 		$('.tan-bg').fadeIn(800);	
 		//$(".box").toggle(); 
@@ -68,6 +69,7 @@ $(document).ready(function(){
 		 return false;
 	})
 	$('.user-header .name').click(function(){
+		$(".em").val("");
 		$('.denglu').fadeIn(800);	
 		$('.tan-bg').fadeIn(800);	
 		//$(".box").toggle(); 

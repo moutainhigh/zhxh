@@ -2,7 +2,10 @@ package net.ussoft.zhxh.web.pc;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +19,7 @@ import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.Logger;
+import net.ussoft.zhxh.util.MD5;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -102,18 +106,92 @@ public class PloginController extends BaseConstroller {
 	 * @param response
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/reg",method=RequestMethod.POST)
-	public void register(Public_user user,HttpServletResponse response) throws Exception {
+	@RequestMapping(value="/plogin_reg",method=RequestMethod.POST)
+	public void register(Public_user user,String code,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
 		String result = "error";
-		Public_user obj = userService.insert(user);
-		if(obj != null)
+		
+		//获取验证码session
+		HashMap<String,Object> map = (HashMap<String,Object>) CommonUtils.getSessionAttribute(request, Constants.CODE_SESSION);
+		
+		if (map == null){
+//			CommonUtils.removeSessionAttribute(request, Constants.PC_USER_SESSION);
+			out.print(result);
+			return;
+		}
+		
+		Long oldTime = (Long) map.get("codetime");
+		
+		//当前时间戳
+		Long s = (System.currentTimeMillis() - oldTime) / (1000 * 60);
+		
+		if (s > 2) {
+			CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
+			out.print(result);
+			return;
+		}
+		
+		if (!code.equals(map.get("code").toString())) {
+			CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
+			out.print(result);
+			return;
+		}
+		
+		Public_user tmp = new Public_user();
+		tmp.setId(UUID.randomUUID().toString());
+		tmp.setUsername(user.getUsername());
+		tmp.setPhonenumber(user.getPhonenumber());
+		
+		tmp.setPassword(MD5.encode(user.getPassword()));
+		
+		
+		Public_user obj = userService.insert(tmp);
+		
+		if(obj != null) {
 			result = "success";
+		}
 		out.print(result);
+	}
+	
+	/**
+	 * 产生随机的六位数
+	 * @return
+	 */
+	public static String getSix(){
+		Random rad=new Random();
+		String result  = rad.nextInt(1000000) +"";
+		
+		if(result.length()!=6){
+			return getSix();
+		}
+		return result;
+	}
+	
+	@RequestMapping(value="/plogin_getCode",method=RequestMethod.POST)
+	public void getCode(HttpServletRequest request,HttpServletResponse response) throws Exception {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String code = getSix();
+		//当前时间戳
+		Long oldTime = System.currentTimeMillis();
+		
+		//s为原时间戳和当前时间戳中间相隔的分钟数
+//		Long s = (System.currentTimeMillis() - oldTime) / (1000 * 60);
+		CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("code", code);
+		map.put("codetime", oldTime);
+		CommonUtils.setSessionAttribute(request, Constants.CODE_SESSION, map);
+		//TODO 返回值先用code代替。等短信连接上了，更改为success
+		out.print(code);
 	}
 	
 	
