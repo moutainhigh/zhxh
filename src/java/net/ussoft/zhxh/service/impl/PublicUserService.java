@@ -88,7 +88,6 @@ public class PublicUserService implements IPublicUserService{
 	@Transactional("txManager")
 	@Override
 	public int delete(String id) {
-		// TODO Auto-generated method stub
 		String[] ids = id.split(",");
 		for(int i=0;i<ids.length;i++){
 			userDao.del(ids[i]);
@@ -105,7 +104,6 @@ public class PublicUserService implements IPublicUserService{
 
 	@Override
 	public boolean checkPhoneNum(String phoneNum) {
-		// TODO Auto-generated method stub
 		List<Object> values = new ArrayList<Object>();
 		values.add(phoneNum);
 		String sql = "select id from public_user where phonenumber=?";

@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_phone_code_log;
-import net.ussoft.zhxh.model.Public_pic;
 
 /**
  * 短信日志表服务
@@ -22,32 +21,34 @@ public interface IPublicPhoneCodeLogService {
 	
 	/**
 	 * 查询所有
-	 * @param parentid
-	 * @param parenttype
+	 * @param phonenumber		手机号码。可以不传入。
+	 * @param sendtype			发送类型。可以不传入
 	 * @return list
 	 * */
 	public List<Public_phone_code_log> list(String phonenumber,String sendtype);
 	
 	/**
 	 * 查询所有 分页
-	 * @param pageBean
+	 * @param pageBean			bean
+	 * @param phonenumber		手机号码。可不传入
+	 * @param sendtype			发送类型。可不传入
 	 * @return list
 	 * */
-	public PageBean<Public_pic> list(PageBean<Public_pic> pageBean,String parentid,String parenttype);
+	public PageBean<Public_phone_code_log> list(PageBean<Public_phone_code_log> pageBean,String phonenumber,String sendtype);
 	
 	/**
 	 * 添加
-	 * @param Public_pic
+	 * @param Public_phone_code_log
 	 * @return 
 	 * */
-	public Public_pic insert(Public_pic pic);
+	public Public_phone_code_log insert(Public_phone_code_log log);
 	
 	/**
 	 * 修改
-	 * @param Public_pic
+	 * @param Public_phone_code_log
 	 * @return 
 	 * */
-	public int update(Public_pic pic);
+	public int update(Public_phone_code_log log);
 	
 	/**
 	 * 删除

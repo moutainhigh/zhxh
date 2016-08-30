@@ -159,6 +159,9 @@
 	(5)sendcode		varchar(50)
 	(6)sendtype		varchar(50)
 	(7)ip			varchar(100)
+
+2、修改public_order_product 订单商品表，增加
+	（1）productsize varchar(50)  订单商品规格标准
 	
 	
 	

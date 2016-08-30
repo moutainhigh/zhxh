@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+	<script src="${pageContext.request.contextPath}/js/json2.js"></script>
 	<!--登录的弹框  只做了index 每个页面都可以-->
 	<div class="tan-bg"></div>
 	<div class="login-tan denglu">
@@ -31,18 +31,18 @@
 	    <div class="login">
 	        <h3>加入我们</h3>
 	        <div class="login-ipnut">
-	            <div><input type="text" value="" class="txt em" placeholder="真实姓名"/></div>
-	            <div><input type="text" value="" class="txt em" placeholder="手机号码"/></div>
-	            <div><input type="text" value="" class="txt em" placeholder="密码" /></div>
+	            <div><input id="username" name="username" type="text" value="" class="txt em" placeholder="真实姓名"/></div>
+	            <div><input id="phonenumber" name="phonenumber" type="text" value="" class="txt em" placeholder="手机号码"/></div>
+	            <div><input id="password" name="password" type="password" value="" class="txt em" placeholder="密码" /></div>
 	            <div>
-	            	<input type="text" value="" class="yzm em" placeholder="验证码" />
-	            	<input type="button" value="获取验证码" class="huoqu login-but2" onclick="getCode()" />
+	            	<input id="sendcode" name="sendcode" type="text" value="" class="yzm em" placeholder="验证码" />
+	            	<input type="button" value="获取验证码" class="huoqu login-but2" onclick="getSendCode()" />
 	            	<!-- <a href="javascript:;" class="huoqu" onclick="getCode()">获取验证码</a> -->
 	            </div>
 	            <div class="clearfix wjmima">
 	                <em class="fr">已有账号 <b class="lidenglu">立即登录</b></em>
 	            </div>
-	            <div class="but"><input type="button" value="注 册" class="login-but"></div>
+	            <div class="but"><input type="button" value="注 册" class="login-but" onclick="reg()"></div>
 	        </div>
 	    </div>
 	</div>
@@ -106,26 +106,96 @@
 			
 		}
 		
-		function getCode() {
-			//获取
+		function reg(){
+			var username = $('#username').val();
+			var phonenumber = $('#phonenumber').val();
+			var password = $('#password').val();
+			var sendcode = $('#sendcode').val();
+			
+			if (trim(username) == "") {
+				alert("请输入真实姓名。");
+				$('#username').val("")
+				$('#username').focus();
+				return;
+			}
+			if (trim(phonenumber) == "") {
+				alert("请输入手机号码。");
+				$('#phonenumber').val("");
+				$('#phonenumber').focus();
+				return;
+			}
+			if (trim(sendcode) == "") {
+				alert("请输入短信验证码。");
+				$('#sendcode').val("");
+				$('#sendcode').focus();
+				return;
+			}
+			
+			var user = {
+					username:username,
+					phonenumber:phonenumber,
+					password:password
+			};
+			//var json = JSON.stringify(obj);
+			
 			$.ajax({
-            	url: "${pageContext.request.contextPath}/plogin_getCode.htmls",
-            	data:{},
+            	url: "${pageContext.request.contextPath}/plogin_reg.htmls",
+            	data:{'user':user,'sendcode':sendcode},
             	type:"post",
             	dataType:"text",
                 success: function (text) {
                     if(text == "success"){
                     	location.reload();
                     }else{
-                    	alert("测试的验证码:" + text);
+                    	alert(text);
                     }
                 },
                 error: function () {
                     alert("失败");
                 }
             });
+		}
+		
+		function getSendCode() {
 			
-			opentime();
+			var phonenumber = $('#phonenumber').val();
+			
+			if (trim(phonenumber) == "") {
+				alert("请输入手机号码。");
+				$('#phonenumber').val("");
+				$('#phonenumber').focus();
+				return;
+			}
+			
+			//获取
+			$.ajax({
+            	url: "${pageContext.request.contextPath}/plogin_getCode.htmls",
+            	data:{'phonenumber':phonenumber},
+            	type:"post",
+            	dataType:"text",
+                success: function (text) {
+                	if (text == "empty") {
+                		alert("未获取到手机号码，请重新输入手机号码，再获取短信验证码.");
+        				$('#phonenumber').focus();
+        				return;
+                	}
+                	else if (text == "exist") {
+                		alert("手机号码已注册过，请重新输入手机号码，再获取短信验证码.");
+        				$('#phonenumber').focus();
+        				return;
+                	}
+                	else if(text == "success"){
+                    	location.reload();
+                    }else{
+                    	alert("测试的验证码:" + text);
+                    	opentime();
+                    }
+                },
+                error: function () {
+                    alert("失败");
+                    return;
+                }
+            });
 		}
 		
 		var wait=120;

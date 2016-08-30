@@ -13,11 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Public_cat;
+import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.service.IPublicCatService;
+import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
+import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.Logger;
 import net.ussoft.zhxh.util.MD5;
 
@@ -37,6 +40,8 @@ public class PloginController extends BaseConstroller {
 	private IPublicUserService userService;
 	@Resource
 	private IPublicCatService catService;
+	@Resource
+	private IPublicPhoneCodeLogService codeLogService;
 	
 	@RequestMapping(value="/login_single")
 	public String login_single (ModelMap modelMap) throws Exception {
@@ -107,7 +112,7 @@ public class PloginController extends BaseConstroller {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/plogin_reg",method=RequestMethod.POST)
-	public void register(Public_user user,String code,HttpServletRequest request,HttpServletResponse response) throws Exception {
+	public void register(Public_user user,String sendcode,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
@@ -124,6 +129,16 @@ public class PloginController extends BaseConstroller {
 			return;
 		}
 		
+		if (!user.getPhonenumber().equals(map.get("phonenumber").toString())) {
+			out.print("phoneerror");
+			return;
+		}
+		
+		if (!sendcode.equals(map.get("sendCode").toString())) {
+			out.print("codeerror");
+			return;
+		}
+		
 		Long oldTime = (Long) map.get("codetime");
 		
 		//当前时间戳
@@ -131,13 +146,7 @@ public class PloginController extends BaseConstroller {
 		
 		if (s > 2) {
 			CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
-			out.print(result);
-			return;
-		}
-		
-		if (!code.equals(map.get("code").toString())) {
-			CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
-			out.print(result);
+			out.print("timeout");
 			return;
 		}
 		
@@ -172,13 +181,31 @@ public class PloginController extends BaseConstroller {
 	}
 	
 	@RequestMapping(value="/plogin_getCode",method=RequestMethod.POST)
-	public void getCode(HttpServletRequest request,HttpServletResponse response) throws Exception {
+	public void getCode(String phonenumber,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		String code = getSix();
+		if (null == phonenumber || "".equals(phonenumber)) {
+			out.print("empty");
+			return;
+		}
+		
+		//判断手机号码是否重复
+		boolean isok = userService.checkPhoneNum(phonenumber);
+		
+		if (isok) {
+			out.print("exist");
+			return;
+		}
+		
+		String sendCode = getSix();
+		
+		//TODO 发送短信验证码到手机
+		
+		
+		
 		//当前时间戳
 		Long oldTime = System.currentTimeMillis();
 		
@@ -187,12 +214,52 @@ public class PloginController extends BaseConstroller {
 		CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
-		map.put("code", code);
+		map.put("sendCode", sendCode);
+		map.put("phonenumber", phonenumber);
 		map.put("codetime", oldTime);
 		CommonUtils.setSessionAttribute(request, Constants.CODE_SESSION, map);
+		
+		//将发送情况写入日志
+		Public_phone_code_log codeLog = new Public_phone_code_log();
+		codeLog.setId(UUID.randomUUID().toString());
+		codeLog.setPhonenumber(phonenumber);
+		codeLog.setSendcode(sendCode);
+		codeLog.setSendtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		codeLog.setSendtimestr(oldTime.toString());
+		codeLog.setSendtype("PCREG");
+		codeLog.setIp(getRemoteIp(request));
+		codeLogService.insert(codeLog);
+		
 		//TODO 返回值先用code代替。等短信连接上了，更改为success
-		out.print(code);
+		out.print(sendCode);
 	}
+	
+	protected String getRemoteIp(HttpServletRequest request){
+		
+		String remoteIp = request.getHeader("x-forwarded-for");
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("X-Real-IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("Proxy-Client-IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getRemoteAddr();
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getRemoteHost();
+        }
+        return remoteIp;
+    }
 	
 	
 	

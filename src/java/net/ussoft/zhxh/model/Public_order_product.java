@@ -21,6 +21,7 @@ public class Public_order_product {
 	private String productmemo;
 	private String ordertime;
 	private Integer status;
+	private String productsize;
 	
 	
 	@Id
@@ -102,6 +103,12 @@ public class Public_order_product {
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	public String getProductsize() {
+		return productsize;
+	}
+	public void setProductsize(String productsize) {
+		this.productsize = productsize;
 	}
 	
 	
