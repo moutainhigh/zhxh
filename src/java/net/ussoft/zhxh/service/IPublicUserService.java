@@ -81,4 +81,11 @@ public interface IPublicUserService {
 	 * */
 	public boolean checkPhoneNum(String phoneNum);
 	
+	/**
+	 * 登录验证密码
+	 * @param userame
+	 * @param password
+	 * */
+	public Public_user login(String username,String password);
+	
 }

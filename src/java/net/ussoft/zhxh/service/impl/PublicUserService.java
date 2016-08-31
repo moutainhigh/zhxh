@@ -1,12 +1,8 @@
 package net.ussoft.zhxh.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -126,32 +122,17 @@ public class PublicUserService implements IPublicUserService{
 		return null;
 	}
 
-	/*private Map<String, Object> search(Class typeClass,Map<String, Object> map){
-		
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
-		String tablename = typeClass.getName().substring(
-                typeClass.getName().lastIndexOf(".") + 1);
-		
-		StringBuffer sql=new StringBuffer("select * from ");
-        sql.append(tablename);
-        if (map.size()!=0) {
-            sql.append(" t where 1=1");//后面只需拼接and条件
-        }
-        List<Object> values = new ArrayList<Object>();
-        
-        Set<Entry<String, Object>> set=map.entrySet();
-        Iterator iterator=set.iterator();
-        for (int i = 0; i < set.size(); i++) {
-            Map.Entry mapEntry=(Entry) iterator.next();
-            if (null != mapEntry.getValue() && !"".equals(mapEntry.getValue().toString())) {
-            	sql.append(" and t."+mapEntry.getKey()+" ?");
-            	values.add(mapEntry.getValue());
-            }
-        }
-        resultMap.put("sql", sql.toString());
-        resultMap.put("values", values);
-        return resultMap;
-	}*/
+	@Override
+	public Public_user login(String username,String password) {
+		Public_user user = getByPhoneNum(username);
+		if (user == null ) {
+			return null;
+		}
+		// 将输入的密码与Pojo里的密码MD5后对比，如果不匹配，说明密码不对
+		if (!MD5.encode(password).equals(user.getPassword())) {
+			return null;
+		}
+		return user;
+	}
 	
 }

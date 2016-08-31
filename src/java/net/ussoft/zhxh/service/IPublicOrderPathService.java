@@ -2,7 +2,6 @@ package net.ussoft.zhxh.service;
 
 import java.util.List;
 
-import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_order_path;
 
 /**
@@ -20,17 +19,16 @@ public interface IPublicOrderPathService {
 	public Public_order_path getById(String id);
 	
 	/**
-	 * 查询所有
-	 * @return list
+	 * 根据orderid查询
 	 * */
-	public List<Public_order_path> list();
+	public Public_order_path getByOrderId(String orderid);
 	
 	/**
-	 * 查询所有 分页
-	 * @param pageBean
+	 * 查询所有
+	 * @param orderid 订单ID
 	 * @return list
 	 * */
-	public List<Public_order_path> list(PageBean<Public_order_path> pageBean);
+	public List<Public_order_path> list(String orderid);
 	
 	/**
 	 * 添加

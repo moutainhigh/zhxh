@@ -45,7 +45,7 @@ public interface IPublicOrderService {
 	 * @param Public_order
 	 * @return 
 	 * */
-	public Public_order insert(Public_order order);
+	public Public_order insert(List<String> ids,String userid,String addressid);
 	
 	/**
 	 * 修改

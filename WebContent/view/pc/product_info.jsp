@@ -49,7 +49,7 @@
 	                </div>
 	            </div>
 	            <div class="page-gwc-but">
-	                 <a href="javascript:form1.submit();" class="buy">在线购买</a>
+	                 <!-- <a href="javascript:form1.submit();" class="buy">在线购买</a> -->
 	                 <a href="javascript:addCat('${sessionScope.pc_user_sessiion.id}');">加入购物车</a>
 	            </div>
 	        </div>

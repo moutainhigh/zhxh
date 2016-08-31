@@ -24,9 +24,7 @@ import net.ussoft.zhxh.model.Product_list;
 import net.ussoft.zhxh.model.Product_rated;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
-import net.ussoft.zhxh.model.Public_product;
 import net.ussoft.zhxh.model.Public_product_size;
-import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_video;
 import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IProductListService;
@@ -120,6 +118,7 @@ public class PcMainController extends BaseConstroller {
 		
 		modelMap.put("content", content);
 		modelMap.put("id", id);
+		modelMap.put("ptype", "0"); //表示专题，用于隐藏品牌故事
 		return new ModelAndView("/view/pc/subject", modelMap);
 	}
 	
@@ -249,7 +248,6 @@ public class PcMainController extends BaseConstroller {
 	public ModelAndView article_c (String id,ModelMap modelMap) throws Exception {
 		Public_content content = contentService.getById(id);
 		
-		
 		//初始品牌、专题
 		init(modelMap);
 		
@@ -356,9 +354,8 @@ public class PcMainController extends BaseConstroller {
 		modelMap.put("brandPicList", brandPicList);
 		modelMap.put("bfList", bfList);
 		
-		
 		modelMap.put("id", id);
-		
+		modelMap.put("ptype", "1"); //表示专题，用于隐藏品牌故事
 		return new ModelAndView("/view/pc/brand_zh", modelMap);
 	}
 	

@@ -2,7 +2,6 @@ package net.ussoft.zhxh.service;
 
 import java.util.List;
 
-import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_user_path;
 
 /**
@@ -23,14 +22,7 @@ public interface IPublicUserPathService {
 	 * 查询所有
 	 * @return list
 	 * */
-	public List<Public_user_path> list();
-	
-	/**
-	 * 查询所有 分页
-	 * @param pageBean
-	 * @return list
-	 * */
-	public List<Public_user_path> list(PageBean<Public_user_path> pageBean);
+	public List<Public_user_path> list(String userid);
 	
 	/**
 	 * 添加

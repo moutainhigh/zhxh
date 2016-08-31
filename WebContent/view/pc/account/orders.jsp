@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>新闻</title>
+<title>个人中心-我的订单</title>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/faq.css" />
@@ -44,16 +44,10 @@
 	
 	<div class="HTML-con user-con clearfix">
 	    <!--左侧-->
-	    <div class="user-l fl">
-	        <span>欢迎回来，孙俪！</span>
-	        <div class="user-nav">
-	            <a href="个人中心.html"><b></b>我的账户</a>
-	            <a href="javascript:;" class="cur"><b></b>我的订单</a>
-	            <a href="我的信息.html"><b></b>我的信息</a>
-	            <a href="我的提现.html"><b></b>我的提现</a>
-	            <a href="我的提问.html"><b></b>我的提问</a>
-	        </div>
-	    </div>
+	    <%@include file="/view/pc/account/left.jsp" %>
+	    <script>
+			$('#myorder').addClass('cur');
+		</script>
 	    <!--右侧-->
 	    <div class="user-r fr">
 	        <h3>我的订单</h3>
@@ -62,108 +56,75 @@
 	            <ul class="indent-tit">
 	                <li class="dingdan-xq">订单详情</li>
 	                <li class="dingdan-num">数量</li>
-	                <li class="dingdan-Consignee">收货人</li>
+	                <li class="dingdan-Consignee">&nbsp;</li>
 	                <li class="dingdan-zt">订单状态</li>
 	                <li class="dingdan-cz">操作</li>
 	            </ul>
 	            <ul class="indent_message">
-	                <li class="clearfix">
+	            <c:forEach var="item" items="${orderList }">
+	            	<li class="clearfix">
 	                    <p>
-	                      <span>2016-07-14</span>
-	                      <span class="color">订单号： 1234567890</span>
-	                      <span class="color">订单金额：￥300</span>
+	                      <span>${item.ordertime }</span>
+	                      <span class="color">订单号： <a href="${pageContext.request.contextPath}/porder/orderinfo.htmls?id=${item.id}" target="_blank">${item.ordernumber }</a></span>
+	                      <span class="color">订单金额：￥${item.ordertotal }</span>
 	                    </p>
-	                    <div class="text-bottom clearfix">
+	                    <c:forEach var="pro" items="${item.orderProList }">
+	                    	<div class="text-bottom clearfix">
 	                        <div class="img-txt dingdan-xq">
-	                            <img src="images/img3.jpg" class="fl" />
+	                            <img src="${pageContext.request.contextPath}/${pro.productpic }" class="fl" />
 	                            <div class="txt fl">
-	                                <a href="javascript:;">紧致毛孔柔肤精华液</a>
-	                                <em>Tighten The Pores Soft Skin Essence</em>
+	                                <a href="javascript:;">${pro.productname }</a>
+	                                <em>${pro.productmemo }</em>
 	                                <span>40ml</span>
 	                            </div>
 	                        </div>
-	                        <div class="dingdan-num line-height">1</div>
-	                        <div class="dingdan-Consignee line-height">孙俪</div>
+	                        <div class="dingdan-num line-height">${pro.productnum }</div>
+	                        <div class="dingdan-Consignee line-height">&nbsp;</div>
 	                        <div class="dingdan-zt line-height">待付款</div>
 	                        <div class="dingdan-cz">
-	                            <b class="del">删除</b>
-	                            <em class="pj">评价</em>
+	                            <!-- <b class="del">删除</b> -->
+	                            <!-- <em class="pj">评价</em> -->
 	                        </div>
 	                    </div>
+	                    </c:forEach>
 	                </li>
-	                <li class="clearfix">
-	                    <p>
-	                      <span>2016-07-14</span>
-	                      <span class="color">订单号： 1234567890</span>
-	                      <span class="color">订单金额：￥300</span>
-	                    </p>
-	                    <div class="text-bottom clearfix">
-	                        <div class="img-txt dingdan-xq">
-	                            <img src="images/img3.jpg" class="fl" />
-	                            <div class="txt fl">
-	                                <a href="javascript:;">紧致毛孔柔肤精华液</a>
-	                                <em>Tighten The Pores Soft Skin Essence</em>
-	                                <span>40ml</span>
-	                            </div>
-	                        </div>
-	                        <div class="dingdan-num line-height">1</div>
-	                        <div class="dingdan-Consignee line-height">孙俪</div>
-	                        <div class="dingdan-zt line-height">待发货</div>
-	                        <div class="dingdan-cz">
-	                            <b class="del">删除</b>
-	                            <em class="pj">评价</em>
-	                        </div>
-	                    </div>
-	                </li>
-	                <li class="clearfix">
-	                    <p>
-	                      <span>2016-07-14</span>
-	                      <span class="color">订单号： 1234567890</span>
-	                      <span class="color">订单金额：￥300</span>
-	                    </p>
-	                    <div class="text-bottom clearfix">
-	                        <div class="img-txt dingdan-xq">
-	                            <img src="images/img3.jpg" class="fl" />
-	                            <div class="txt fl">
-	                                <a href="javascript:;">紧致毛孔柔肤精华液</a>
-	                                <em>Tighten The Pores Soft Skin Essence</em>
-	                                <span>40ml</span>
-	                            </div>
-	                        </div>
-	                        <div class="dingdan-num line-height">1</div>
-	                        <div class="dingdan-Consignee line-height">孙俪</div>
-	                        <div class="dingdan-zt line-height">已发货</div>
-	                        <div class="dingdan-cz">
-	                            <b class="del">删除</b>
-	                            <em class="pj">评价</em>
-	                        </div>
-	                    </div>
-	                </li>
-	                <li class="clearfix">
-	                    <p>
-	                      <span>2016-07-14</span>
-	                      <span class="color">订单号： 1234567890</span>
-	                      <span class="color">订单金额：￥300</span>
-	                    </p>
-	                    <div class="text-bottom clearfix">
-	                        <div class="img-txt dingdan-xq">
-	                            <img src="images/img3.jpg" class="fl" />
-	                            <div class="txt fl">
-	                                <a href="javascript:;">紧致毛孔柔肤精华液</a>
-	                                <em>Tighten The Pores Soft Skin Essence</em>
-	                                <span>40ml</span>
-	                            </div>
-	                        </div>
-	                        <div class="dingdan-num line-height">1</div>
-	                        <div class="dingdan-Consignee line-height">孙俪</div>
-	                        <div class="dingdan-zt line-height">已签收</div>
-	                        <div class="dingdan-cz">
-	                            <b class="del">删除</b>
-	                            <em class="pj">评价</em>
-	                        </div>
-	                    </div>
-	                </li>
+	            </c:forEach>
 	            </ul>
+	            
+	            <!--分页-->
+	        <ul class="page">
+            	<li><a href="javascript:window.location.href='${pageContext.request.contextPath}/porder/orders.htmls?page=1'" class="${page == 1?'cur':'' }">1</a></li>
+				<c:if test="${pageCount != 1}">  
+				    <c:choose>  
+				        <c:when test="${page <= 5}">  
+				            <c:forEach var="i" begin="2" end="${page}">  
+				                <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/porder/orders.htmls?page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
+				            </c:forEach>
+				        </c:when>  
+				        <c:otherwise>
+				        	<li id="" >...</li>
+				            <c:forEach var="i" begin="${page-3}" end="${page}">  
+				                <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/porder/orders.htmls?page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
+				            </c:forEach>  
+				        </c:otherwise>  
+				    </c:choose>
+				    <c:choose>
+				        <c:when test="${page >= pageCount-4 || pageCount-4 <= 0}">  
+				            <c:forEach var="i" begin="${page + 1}" end="${pageCount}">  
+				               <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/porder/orders.htmls?page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
+				            </c:forEach>  
+				        </c:when>  
+				        <c:otherwise>  
+				            <c:forEach var="i" begin="${page + 1}" end="${page + 3}">  
+				                <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/porder/orders.htmls?page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
+				            </c:forEach>  
+				            <li id="" >...</li>
+				            <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/porder/orders.htmls?page=${pageCount }'" class="${page == i?'cur':'' }">${pageCount }</a></li>
+				        </c:otherwise>  
+				    </c:choose>  
+				</c:if>
+				<li>共${pageCount }页 当前第${page }页 共${rowCount }条记录</li>
+			</ul>
 	        </div>
 	    </div>
 	</div>

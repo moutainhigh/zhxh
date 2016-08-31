@@ -6,7 +6,7 @@
 	<div class="login-tan denglu">
 	    <div class="login">
 	        <h3>登录账号</h3>
-	        <div class="login-ipnut">
+	        <div id="loginform" class="login-ipnut">
 	            <div><input type="text" id="uname" value="" class="txt name em" placeholder="手机或邮箱"/></div>
 	            <div><input type="password" id="pwd" value="" class="txt mima em" placeholder="密码" /></div>
 	            <div class="clearfix wjmima">
@@ -105,6 +105,14 @@
             });
 			
 		}
+		$("#loginform").keydown(function(e){
+			var e = e || event,
+			keycode = e.which || e.keyCode;
+			if (keycode==13) {
+				login();
+			}
+		});
+			
 		
 		function reg(){
 			var username = $('#username').val();

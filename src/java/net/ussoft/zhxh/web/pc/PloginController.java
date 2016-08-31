@@ -75,7 +75,7 @@ public class PloginController extends BaseConstroller {
 			return;
 		}
 		
-		Public_user res = userService.getByPhoneNum(uname);
+		Public_user res = userService.login(uname,pwd);
 		
 		if (null != res) {
 //			//这里要判断帐户的状态，如果为不启用，就拒绝访问
@@ -97,11 +97,11 @@ public class PloginController extends BaseConstroller {
 		out.print("success");
 	}
 	
-	@RequestMapping(value="/plogout")
+	@RequestMapping(value="/pcMain/plogout")
 	public String logout(HttpServletRequest request,ModelMap modelMap) {
 		request.getSession().removeAttribute(Constants.PC_USER_SESSION);
 		request.getSession().invalidate();
-		return "redirect:/";
+		return "redirect:/pcMain/pcindex.htmls";
 	}
 	
 	

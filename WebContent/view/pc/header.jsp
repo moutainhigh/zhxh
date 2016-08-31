@@ -49,7 +49,9 @@
 	    			 </li>
 	    			 <li class="search" id="search"><a href="javascript:;" title="检索"></a></li>
 	    		</ul>
-	        <a href="${pageContext.request.contextPath}/pcMain/story-c.htmls?id=${id}" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" style="width:22px;height:22px;" title="品牌故事"/></a>
+	    	<c:if test='${ptype eq "1" }'>
+	    		<a href="${pageContext.request.contextPath}/pcMain/story-c.htmls?id=${id}" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" style="width:22px;height:22px;" title="品牌故事"/></a>
+	    	</c:if>
 	        <div class="nav">
             <c:forEach var="brand" items="${brandList }">
 		    	<a id="${brand.id }" href="${pageContext.request.contextPath}/pcMain/zh.htmls?id=${brand.id}" >${brand.brandname }</a>
@@ -72,7 +74,7 @@
 	</div>
 <script>
 	$('#${id}').addClass('cur');
-	
+	//购车-登录框
 	function cat(userid){
 		if(userid == ""){
 			$(".em").val("");
@@ -84,6 +86,7 @@
 		        $('.tan-bg').fadeOut(800);
 		        $('.add-tan').fadeOut(800);
 			})
+			$("#uname").focus();
 			return;
 		}else{
 			window.location.href = '${pageContext.request.contextPath}/porder/cat.htmls?userid='+userid;

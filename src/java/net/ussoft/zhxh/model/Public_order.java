@@ -1,9 +1,12 @@
 package net.ussoft.zhxh.model;
 
+import java.util.List;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Table(name="public_order")
 public class Public_order {
@@ -19,6 +22,7 @@ public class Public_order {
 	private String identity;
 	private String deliverynum;
 	
+	private List<Public_order_product> orderProList;
 	
 	
 	@Id
@@ -108,6 +112,12 @@ public class Public_order {
 		this.deliverynum = deliverynum;
 	}
 	
-	
+	@Transient
+	public List<Public_order_product> getOrderProList() {
+		return orderProList;
+	}
+	public void setOrderProList(List<Public_order_product> orderProList) {
+		this.orderProList = orderProList;
+	}
 	
 }

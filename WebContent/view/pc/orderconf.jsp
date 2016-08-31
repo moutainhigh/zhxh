@@ -6,6 +6,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>订单确认</title>
+<style type="text/css">
+.tan-bg1{ width: 100%; height: 100%; position:fixed; left:0; background-color:#000; filter:alpha(opacity=30); opacity:0.3; top:0; display:none; z-index: 9999;}
+</style>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/faq.css" />
@@ -16,6 +19,33 @@
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
 	
+	<!--添加新地址弹框-->
+	<div class="tan-bg1"></div>
+	<form id="address_form" action="" method="post">
+	<div class="add-address-tan">
+	    <span>新地址</span>
+	    <ul class="con">
+	        <li class="clearfix">
+	            <em class="fl">收货人</em>
+	            <div class="input fl"><input type="text" name="username" id="usname" class="txt" /></div>
+	        </li>
+	        <li class="clearfix">
+	            <em class="fl">手机号码</em>
+	            <div class="input fl"><input type="text" name="userphone" id="userphone" class="txt" /></div>
+	        </li>
+	        <li class="clearfix">
+	            <em class="fl">邮政编码</em>
+	            <div class="input fl"><input type="text" name="postcode" id="postcode" class="txt" /></div>
+	        </li>
+	        <li class="clearfix">
+	            <em class="fl">收货地址</em>
+	            <div class="input fl"><input type="text" name="userpath" id="userpath" class="txt" /></div>
+	        </li>
+	    </ul>
+	    <input type="button" value="保 存" onclick="saveAddress()" class="hold" />
+	    
+	</div>
+	</form>
 	<!--头部-->
 	<%@include file="/view/pc/header.jsp" %>
 	
@@ -38,30 +68,20 @@
 	        </div>
 	        <div class="address">
 	            <ul class="address-ul">
-	                <li class="clearfix">
+	            <c:forEach var="item" items="${userPathList }">
+	            	<li class="clearfix">
 	                    <div class="address-x fl">
-	                        <input name="" type="radio" value="" />
-	                        <span>孙俪</span>
-	                        <em>(100000)  北京市北京市西城区 马家堡路蓝光云鼎511室</em>
-	                        <b>1371158327</b>
+	                        <input name="ad_id" type="radio" value="${item.id }" />
+	                        <span>${item.username }</span>
+	                        <em>${item.userpath }</em>
+	                        <b>${item.userphone }</b>
 	                    </div>
 	                    <div class="address-but fl">
-	                        <a href="javascript:;">修改</a>
-	                        <a href="javascript:;" class="del">删除</a>
+	                        <!-- <a href="javascript:;">修改</a>
+	                        <a href="javascript:;" class="del">删除</a> -->
 	                    </div>
 	                </li>
-	                <li class="clearfix">
-	                    <div class="address-x fl">
-	                        <input name="" type="radio" value="" />
-	                        <span>孙俪</span>
-	                        <em>(100000)  北京市北京市西城区 马家堡路蓝光云鼎511室</em>
-	                        <b>1371158327</b>
-	                    </div>
-	                    <div class="address-but fl">
-	                        <a href="javascript:;">修改</a>
-	                        <a href="javascript:;" class="del">删除</a>
-	                    </div>
-	                </li>
+	            </c:forEach>
 	            </ul>
 	            <em class="more">+ 更多</em>
 	        </div>
@@ -104,18 +124,83 @@
 	    </div>
 	    <form name="form1" action="${pageContext.request.contextPath}/porder/suborder.htmls" method="post">
 	    	<input type="hidden" name="ids" value="${pids }">
-	    	<input type="hidden" name="addressid" id="address" value="1">
+	    	<input type="hidden" name="addressid" id="address" value="">
 	    	<input type="button" value="立即付款" onclick="tosubmit()" class="shopcart-but" />
 	    </form>
 	</div>
 	<script type="text/javascript">
+		//form序列化
+		$.fn.serializeObject = function()  
+		{  
+		   var o = {};  
+		   var a = this.serializeArray();  
+		   $.each(a, function() {  
+		       if (o[this.name]) {  
+		           if (!o[this.name].push) {  
+		               o[this.name] = [o[this.name]];  
+		           }  
+		           o[this.name].push(this.value || '');  
+		       } else {  
+		           o[this.name] = this.value || '';  
+		       }  
+		   });  
+		   return o;  
+		};
+		
 		function tosubmit(){
+			$("input[name='ad_id']").each(function(){
+       	        if($(this).prop("checked") == true){
+       	        	var id = $(this).val();
+       	        	$("#address").val(id);
+       	        	//alert(id);
+       	        }
+       	    });
 			var address = $("#address").val();
 			if(typeof(address) == "undefined" || address == ""){
 				alert("请选择一个地址！");
 				return;
 			}
 			form1.submit();
+		}
+		//
+		function saveAddress(){
+			var username = $("#usname").val();
+			var userphone = $("#userphone").val();
+			var postcode = $("#postcode").val();
+			var userpath = $("#userpath").val();
+			if(typeof(username) == "undefined" || username == ""){
+				alert("请输入收货人");
+				return false;
+			}else if(typeof(userphone) == "undefined" || userphone == ""){
+				alert("请输入手机号码");
+				return false;
+			}else if(typeof(postcode) == "undefined" || postcode == ""){
+				alert("请输入邮编");
+				return false;
+			}else if(typeof(userpath) == "undefined" || userpath == ""){
+				alert("请输入收货地址");
+				return false;
+			}
+			var obj = $("#address_form").serializeObject();
+			var fdata = $.param(obj);
+			$.ajax({
+		    	async:false,
+		        url: "${pageContext.request.contextPath}/porder/newaddress.htmls",
+		        data: fdata,
+		        type: "post",
+		        dataType:"text",
+		        success: function (text) {
+		        	if(text != "error"){
+		        		location.reload();
+		        	}else{
+		        		alert("添加失败！");
+		        	}
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(jqXHR.responseText);
+		        }
+		    });
+			
 		}
 	</script>
 	<!--页脚-->

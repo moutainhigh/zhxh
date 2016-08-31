@@ -10,7 +10,28 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
-
+<style type="text/css">
+<!--
+.badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 2px 3px;
+    font-size: 12px;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: #999;
+    border-radius: 2em;
+    float: right;
+    margin-right: -10px;
+}
+.bg-red {
+    background-color: #e33;
+}
+-->
+</style>
 </head>
 <body style="height:100%; position:relative; overflow:hidden">
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
@@ -22,8 +43,22 @@
 	  	<div class="indexheader header clearfix">
 	    		<h1 class="logo fl"><a href="javascript:;"><img src="${pageContext.request.contextPath}/images/logo.png" /></a></h1>
 	    		<ul class="header-user fr">
-	    			 <li class="name"><a href="javascript:;"></a></li>
-	    			 <li class="shop-cart"><a href="javascript:;"></a></li>
+	    			 <c:choose>
+	    				<c:when test="${sessionScope.pc_user_sessiion != null }">
+	    					<li class="name1" style="line-height:42px;color:#fff;"><a style="color:#000;font-weight: bold;" href="${pageContext.request.contextPath}/porder/orders.htmls" title="个人中心">${sessionScope.pc_user_sessiion.phonenumber}</a></li>
+	    				</c:when>
+	    				<c:otherwise>
+	    					<li class="name"><a href="javascript:;" title="个人中心"></a></li>
+	    				</c:otherwise>
+	    			</c:choose>
+	    			 <li class="shop-cart">
+	    			 	<div class="cat_div">
+	    			 	<c:if test='${sessionScope.cat_num != null && sessionScope.cat_num != 0  }'>
+	    			 		<span id="catnum" class="badge bg-red">${sessionScope.cat_num }</span>
+	    			 	</c:if>
+	    			 	</div>
+	    			 	<a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')" title="购物车"></a>
+	    			 </li>
 	    			 <li class="search" id="search"><a href="javascript:;"></a></li>
 	    		</ul>
 	  	</div>
@@ -61,22 +96,40 @@
 	</div>
 	<!--banner jquery-->
 	<script type="text/javascript">
-	         var time = "";
-	         var index = 0;
-	         $(function () {
-	             showimg();
-	
-	         });
-	
-	         function showimg() {       
-	            index++;
-	            if (index >= $('#banner_img li').length ) {
-	                index = 0
-	            }  
-	
-	            $("#banner_img li").hide().stop(true,true).eq(index).fadeIn("slow");
-	            time = setTimeout(showimg, 3000);
-	         }
+         var time = "";
+         var index = 0;
+         $(function () {
+             showimg();
+
+         });
+
+         function showimg() {       
+            index++;
+            if (index >= $('#banner_img li').length ) {
+                index = 0
+            }  
+
+            $("#banner_img li").hide().stop(true,true).eq(index).fadeIn("slow");
+            time = setTimeout(showimg, 3000);
+         }
+         //购车-登录框
+         function cat(userid){
+         	if(userid == ""){
+         		$(".em").val("");
+         		$('.denglu').fadeIn(800);	
+         		$('.tan-bg').fadeIn(800);	
+         		//$(".box").toggle(); 
+         		$('body').one('click',function(){
+         	        $('.denglu').fadeOut(800);
+         	        $('.tan-bg').fadeOut(800);
+         	        $('.add-tan').fadeOut(800);
+         		})
+         		$("#uname").focus();
+         		return;
+         	}else{
+         		window.location.href = '${pageContext.request.contextPath}/porder/cat.htmls?userid='+userid;
+         	}
+         }
 	</script>
 	
 	<!--页脚-->

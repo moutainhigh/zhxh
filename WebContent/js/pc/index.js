@@ -66,6 +66,7 @@ $(document).ready(function(){
 	        $('.tan-bg').fadeOut(800);
 	        $('.add-tan').fadeOut(800);
 		})
+		$("#uname").focus();
 		 return false;
 	})
 	$('.user-header .name').click(function(){
@@ -78,6 +79,7 @@ $(document).ready(function(){
 	        $('.tan-bg').fadeOut(800);
 	        $('.add-tan').fadeOut(800);
 		})
+		$("#uname").focus();
 		 return false;
 	})
 	$('.denglu,.add-tan').click(function(){
@@ -133,11 +135,11 @@ $(document).ready(function(){
 	//订单管理 新加地址 弹框
 	$('.add-address').click(function(){
 		$('.add-address-tan').fadeIn(800);	
-		$('.tan-bg').fadeIn(800);	
+		$('.tan-bg1').fadeIn(800);	
 		//$(".box").toggle(); 
 		$('body').one('click',function(){
 	        $('.add-address-tan').fadeOut(800);
-	        $('.tan-bg').fadeOut(800);
+	        $('.tan-bg1').fadeOut(800);
 		})
 		 return false;
 	})
@@ -253,3 +255,4 @@ $(document).ready(function(){
       $(this).siblings('.txt-mima').css("display","none");
     });
 })  
+
