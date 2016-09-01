@@ -8,20 +8,22 @@
 	        <h3>登录账号</h3>
 	        <div id="loginform" class="login-ipnut">
 	            <div><input type="text" id="uname" value="" class="txt name em" placeholder="手机或邮箱"/></div>
+	            <br/>
 	            <div><input type="password" id="pwd" value="" class="txt mima em" placeholder="密码" /></div>
+	            <br/>
 	            <div class="clearfix wjmima">
 	                <a href="忘记密码.html" class="fl">忘记密码？</a>
 	                <em class="fr">没有账号 <b class="zhuce">立即注册</b></em>
 	            </div>
 	            <div class="but"><input type="button" onclick="login()" value="登 录" class="login-but"></div>
-	            <div class="other-login">
+	            <%-- <div class="other-login">
 	                <h3></h3>
 	                <span>第三方登录</span>
 	                <div class="login-bottom">
-	                    <%-- <a href="javascript:;"><img src="${pageContext.request.contextPath}/images/qq.jpg" /></a>
-	                    <a href="javascript:;"><img src="${pageContext.request.contextPath}/images/weixin.jpg" /></a> --%>
+	                    <a href="javascript:;"><img src="${pageContext.request.contextPath}/images/qq.jpg" /></a>
+	                    <a href="javascript:;"><img src="${pageContext.request.contextPath}/images/weixin.jpg" /></a> 
 	                </div>
-	            </div>    
+	            </div>   --%>  
 	        </div>
 	    </div>
 	</div>
@@ -75,13 +77,13 @@
 			var pwd = $('#pwd').val();
 			
 			if (trim(uname) == "") {
-				alert("请输入登录帐户。");
+				layer.msg("请输入登录帐户");
 				$('#uname').val("")
 				$('#uname').focus();
 				return;
 			}
 			if (trim(pwd) == "") {
-				alert("请输入登录密码。");
+				layer.msg("请输入登录密码。");
 				$('#pwd').val("");
 				$('#pwd').focus();
 				return;
@@ -96,11 +98,11 @@
                     if(text == "success"){
                     	location.reload();
                     }else{
-                    	alert(text);
+                    	layer.msg(text);
                     }
                 },
                 error: function () {
-                    alert("失败");
+                    layer.msg("失败");
                 }
             });
 			
@@ -121,25 +123,25 @@
 			var sendcode = $('#sendcode').val();
 			
 			if (trim(username) == "") {
-				alert("请输入真实姓名。");
+				layer.msg("请输入真实姓名。");
 				$('#username').val("")
 				$('#username').focus();
 				return;
 			}
 			if (trim(phonenumber) == "") {
-				alert("请输入手机号码。");
+				layer.msg("请输入手机号码。");
 				$('#phonenumber').val("");
 				$('#phonenumber').focus();
 				return;
 			}
 			if (trim(sendcode) == "") {
-				alert("请输入短信验证码。");
+				layer.msg("请输入短信验证码。");
 				$('#sendcode').val("");
 				$('#sendcode').focus();
 				return;
 			}
 			if (trim(password) == "") {
-				alert("请输入登录密码。");
+				layer.msg("请输入登录密码。");
 				$('#password').val("");
 				$('#password').focus();
 				return;
@@ -158,26 +160,26 @@
             	dataType:"text",
                 success: function (text) {
                 	if (text == "codeerror") {
-                		alert("验证码错误，请重新输入。");
+                		layer.msg("验证码错误，请重新输入。");
                 	}
                 	else if (text == "phoneerror") {
-                		alert("手机号码错误，请使用正确的手机号码。");
+                		layer.msg("手机号码错误，请使用正确的手机号码。");
                 	}
                 	else if (text == "timeout") {
-                		alert("验证码超时，请重新获取验证码。");
+                		layer.msg("验证码超时，请重新获取验证码。");
                 	}
                 	else if(text == "success"){
-                		alert("注册成功。请登录。");
+                		layer.msg("注册成功。请登录。");
                 		$(".em").val("");
                 		$('.denglu').fadeIn(800);
                     	$('.add-tan').fadeOut(800);
                     	//location.reload();
                     }else{
-                    	alert(text);
+                    	layer.msg(text);
                     }
                 },
                 error: function () {
-                    alert("失败");
+                    layer.msg("失败");
                 }
             });
 		}
@@ -201,14 +203,14 @@
 			var phonenumber = $('#phonenumber').val();
 			
 			if (trim(phonenumber) == "") {
-				alert("请输入手机号码。");
+				layer.msg("请输入手机号码。");
 				$('#phonenumber').val("");
 				$('#phonenumber').focus();
 				return;
 			}
 			
 			if (!validatemobile(phonenumber) ) {
-				alert("请正确输入手机号码。");
+				layer.msg("请正确输入手机号码。");
 				$('#phonenumber').val("");
 				$('#phonenumber').focus();
 				return;
@@ -222,24 +224,24 @@
             	dataType:"text",
                 success: function (text) {
                 	if (text == "empty") {
-                		alert("未获取到手机号码，请重新输入手机号码，再获取短信验证码.");
+                		layer.msg("未获取到手机号码，请重新输入手机号码，再获取短信验证码.");
         				$('#phonenumber').focus();
         				return;
                 	}
                 	else if (text == "exist") {
-                		alert("手机号码已注册过，请重新输入手机号码，再获取短信验证码.");
+                		layer.msg("手机号码已注册过，请重新输入手机号码，再获取短信验证码.");
         				$('#phonenumber').focus();
         				return;
                 	}
                 	else if(text == "success"){
                     	location.reload();
                     }else{
-                    	alert("测试的验证码:" + text);
+                    	layer.msg("测试的验证码:" + text);
                     	opentime();
                     }
                 },
                 error: function () {
-                    alert("失败");
+                    layer.msg("失败");
                     return;
                 }
             });

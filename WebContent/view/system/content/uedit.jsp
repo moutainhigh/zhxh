@@ -12,6 +12,8 @@
 	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/js/miniui3.7/themes/default/miniui.css" />
 	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/js/miniui3.7/themes/icons.css" />
 
+	<script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
+	
 	<style type="text/css">
 	    body{
 	        margin:0;padding:0;border:0;width:100%;height:100%;overflow-y:hidden;
@@ -77,7 +79,7 @@
         </table>
     </div>
     <div class="mini-fit">
-		<form id="form1" method="post">
+		<form id="form" method="post">
 			<input type="hidden" id="id" name="id" value="${content.id }"/>
 			<div>
 			    <textarea id="memo" name="memo">${content.memo }</textarea>
@@ -85,37 +87,6 @@
 		</form>
     </div>                
     
-	<%-- <div class="mini-splitter" style="width:100%;height:100%;">
-	    <div>
-	    	<div class="mini-toolbar" borderStyle="border:0;">
-		        <table style="width:100%;">
-		            <tbody>
-		             <tr>
-		                 <td style="width:100%;">
-		                 	<span id="pid" style="padding-left:5px;">内容编辑</span>
-		                 </td>
-		                 <td style="white-space:nowrap;">
-		                  	<!-- <a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>
-		                	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow()">删除</a>
-			                <span class="separator"></span> -->
-			         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="onOk()">保存</a>
-		                 </td>
-		             </tr>
-		         </tbody>
-		        </table>
-		    </div>
-		    <div class="mini-fit"><!-- border-bottom: 1;border-top: 0;border-left:0;broder-right:0" -->
-		    	<form id="form1" method="post">
-					<input type="hidden" id="id" name="id" value="${content.id }"/>
-					<div>
-					    <textarea id="memo" name="memo">${content.memo }</textarea>
-					</div>
-				</form>
-		    </div>
-	        
-	    </div>        
-	</div> --%>
-	
 	<script type="text/javascript">
 		$(function(){
 			/* var pHeight = $(window.parent).height();
@@ -138,16 +109,15 @@
 	            cache: false,
 	            success: function (text) {
 	            	if(text != "success"){
-	            		alert("保存失败！");
+	            		parent.parent.layer.msg("保存失败！",{icon:6});
 	            		return;
 	            	}else{
-	            		alert("保存成功！");
+	            		parent.parent.layer.msg("保存完毕！",{icon:6});
 	            	}
-	            	$('#preview').html(memo);
 	            	//CloseWindow("save");
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                alert(jqXHR.responseText);
+	            	layer.msg(jqXHR.responseText,{icon:6});
 	                CloseWindow();
 	            }
 	        });

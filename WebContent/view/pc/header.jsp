@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css"> --%>
+<script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
 <%@include file="/view/pc/login.jsp" %>
 
 <style>

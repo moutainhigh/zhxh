@@ -129,7 +129,6 @@
            	var id = record.id;
            	var s = ' <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >内容</a>'
            	if(ptype == "subject" || ptype == "mrwz" || ptype == "case" || ptype == "news_hy" || ptype == "news_qy" || ptype == "news_sp"){
-           		s = ' <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >内容</a> | ';
                 s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
            	}
             return s;
@@ -197,7 +196,7 @@
 	            	grid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                alert(jqXHR.responseText);
+	            	parent.parent.layer.msg(jqXHR.responseText,{icon:6});
 	            }
 	        });
 	    }

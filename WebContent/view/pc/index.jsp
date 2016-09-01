@@ -10,6 +10,7 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
+<script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
 <style type="text/css">
 <!--
 .badge {
