@@ -163,6 +163,10 @@
 2、修改public_order_product 订单商品表，增加
 	（1）productsize varchar(50)  订单商品规格标准
 	
+20160901
+1、修改表public_content
+	(1)增加isshow int 11  是否显示
+	
 	
 	
 	

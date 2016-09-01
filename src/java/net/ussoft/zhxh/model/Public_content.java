@@ -19,6 +19,7 @@ public class Public_content {
 	private Integer top;
 	private Integer sort;
 	private String brief;
+	private Integer isshow;
 	
 	
 	
@@ -89,6 +90,12 @@ public class Public_content {
 	}
 	public void setBrief(String brief) {
 		this.brief = brief;
+	}
+	public Integer getIsshow() {
+		return isshow;
+	}
+	public void setIsshow(Integer isshow) {
+		this.isshow = isshow;
 	}
 	
 }

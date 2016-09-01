@@ -123,6 +123,9 @@ public class AccountController extends BaseConstroller {
 		if (id == null || id.equals("") ) {
 			return false;
 		}
+		if (id.equals("1")) {
+			return true;
+		}
 		int num = accountService.delete(id);
 		
 		if (num <= 0 ) {
