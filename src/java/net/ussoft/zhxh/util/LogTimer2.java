@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import net.ussoft.zhxh.service.ILoginlogService;
-import net.ussoft.zhxh.service.IOperlogService;
+//import net.ussoft.zhxh.service.ILoginlogService;
+//import net.ussoft.zhxh.service.IOperlogService;
 import net.ussoft.zhxh.service.impl.SpringContextUtils;
 
 public class LogTimer2 {
@@ -20,16 +20,16 @@ public class LogTimer2 {
     		return;
     	}
 //    	final IDocService docService = SpringContextUtils.getBean("docService");
-    	final ILoginlogService loginlogService = SpringContextUtils.getBean("loginlogService");
-    	final IOperlogService operlogService = SpringContextUtils.getBean("operlogService");
+//    	final ILoginlogService loginlogService = SpringContextUtils.getBean("loginlogService");
+//    	final IOperlogService operlogService = SpringContextUtils.getBean("operlogService");
     	
     	logtask = new TimerTask() {
             @Override
             public void run() {
                 ++count;
                 try {
-                	loginlogService.delete();
-                	operlogService.delete();
+//                	loginlogService.delete();
+//                	operlogService.delete();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

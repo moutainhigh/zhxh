@@ -199,11 +199,11 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            	//onOk();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                mini.alert(jqXHR.responseText);
+	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
 	            }
 	        });
 	    }

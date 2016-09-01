@@ -177,7 +177,7 @@
         
        	function getUrl(id) {
        		var serv_path = "${pageContext.request.contextPath}";
-       		mini.alert(serv_path + "/pcMain/series.htmls?id=" + id);
+       		parent.parent.layer.msg(serv_path + "/pcMain/series.htmls?id=" + id,{icon:6,time:5000});
        	}
         
         function drawcell() {
@@ -349,11 +349,11 @@
             	var mp4path = row.mp4newname;
             	var webmpath = row.webmnewname;
             	if (typeof(mp4path) == "undefined" || mp4path == "") {
-            		mini.alert("缺少mp4文件，可能某些浏览器不能播放视频。");
+            		parent.parent.layer.msg("缺少mp4文件，可能某些浏览器不能播放视频。",{icon:6});
             		return;
             	}
             	else if (typeof(webmpath) == "undefined" || webmpath == "") {
-            		mini.alert("缺少webm文件，可能某些浏览器不能播放视频。");
+            		parent.parent.layer.msg("缺少webm文件，可能某些浏览器不能播放视频。",{icon:6});
             		return;
             	}
        			mini.open({
@@ -373,7 +373,7 @@
        		else if (row.islocal == "1") {
        			var videopath = row.videopath;
             	if (typeof(videopath) == "undefined" || videopath == "") {
-            		mini.alert("缺少外站视频地址，不能播放视频。");
+            		parent.parent.layer.msg("缺少外站视频地址，不能播放视频。",{icon:6});
             		return;
             	}
             	
@@ -455,7 +455,7 @@
        		var record = grid_brandlist.getSelected();
 	      	
             if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	mini.alert("请先选择品牌系列，在上传品牌系列页图片.");
+            	parent.parent.layer.msg("请先选择品牌系列，在上传品牌系列页图片。",{icon:6});
 	      		return;
 	      	}
 	    	mini.open({
@@ -478,7 +478,7 @@
        		var record = grid_brand.getSelected();
 			
             if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	mini.alert("请先选择品牌，再添加品牌系列页内容.");
+            	parent.parent.layer.msg("请先选择品牌，再添加品牌系列页内容。",{icon:6});
 	      		return;
 	      	}
 			
@@ -499,7 +499,7 @@
        		var record = grid_brandlist.getSelected();
 			
             if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	mini.alert("请先选择系列，再添加视频内容.");
+            	parent.parent.layer.msg("请请先选择系列，再添加视频内容。",{icon:6});
 	      		return;
 	      	}
 			
@@ -539,24 +539,19 @@
         	var rows = tmpGrid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要删除的数据.");
+       	 		parent.parent.layer.msg("请选择要删除的数据。",{icon:6});
        		 	return;
        	 	}
+       	 	parent.parent.layer.msg(cf1, {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认删除', '取消']
+    	  		,yes: function(index){
+    	  			tmpGrid.removeRows(rows, false);
+    	    		parent.parent.layer.close(index);
+    	  		}
+    		});
        	 	
-       	 	mini.confirm("确定删除记录？", "确定？",
-                 function (action) {
-                     if (action == "ok") {
-                    	 tmpGrid.removeRows(rows, false);
-                     } else {
-                         
-                     }
-                 }
-             );
-       	 
-          	/* if (confirm(cf1)) {
-          		tmpGrid.removeRows(rows, false);
-   		 	} */
-			
         }
        	
 		function save(gridtype) {
@@ -576,7 +571,7 @@
 				var record = grid_brandlist.getSelected();
 		      	
 	            if (typeof(record.id) == "undefined" || record.id == "") {
-	            	mini.alert("请先选择系列，再保存品牌系列页图片.");
+	            	parent.parent.layer.msg("请先选择系列，再保存品牌系列页图片。",{icon:6});
 		      		return;
 		      	}
 
@@ -591,7 +586,7 @@
 				var record = grid_brandlist.getSelected();
 		      	
 	            if (typeof(record.id) == "undefined" || record.id == "") {
-	            	mini.alert("请先选择系列，再保存品牌系列页轮播图片.");
+	            	parent.parent.layer.msg("请先选择系列，再保存品牌系列页轮播图片。",{icon:6});
 		      		return;
 		      	}
 	            
@@ -605,7 +600,7 @@
 				var record = grid_brandlist.getSelected();
 		      	
 	            if (typeof(record.id) == "undefined" || record.id == "") {
-	            	mini.alert("请先选择系列，再处理品牌系列页视频.");
+	            	parent.parent.layer.msg("请先选择系列，再处理品牌系列页视频。",{icon:6});
 		      		return;
 		      	}
 	            
@@ -618,20 +613,21 @@
 			
 			tmpGrid.validate();
 	        if (tmpGrid.isValid() == false) {
-	        	mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		//alert(action);
-	            		var error = tmpGrid.getCellErrors()[0];
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = tmpGrid.getCellErrors()[0];
 	            		tmpGrid.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        		}
+	        	);
 	            return;
 	        }
 	    	
 	        var objs = tmpGrid.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:6});
 	        	return;
 	        }
 	        
@@ -646,11 +642,11 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            	tmpGrid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                mini.alert(jqXHR.responseText);
+	            	parent.parent.layer.msg(jqXHR.responseText,{icon:2});
 	            }
 	        });
 	    }
@@ -682,7 +678,7 @@
        		
        		var objs = tmpGrid.getChanges();
        		if (objs != "") {
-       			mini.alert("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片。");
+       			parent.parent.layer.msg("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片.",{icon:6});
    	 			return;
        		}
        		else {
@@ -711,8 +707,8 @@
 		function onBtnMp4VideoEdit(e) {
         	var buttonEdit = e.sender;
         	var record = grid_brandlist_v.getEditorOwnerRow(buttonEdit);
-        	if (typeof(record.id) == "undefined" || record.id == "") {
-        		mini.alert("要上传视频的行记录还没有保存，请先保存后再上传视频.");
+        	if (null == record || typeof(record.id) == "undefined" || record.id == "") {
+        		parent.parent.layer.msg("要上传视频的行记录还没有保存，请先保存后再上传视频.",{icon:6});
         		return;
         	}
         	
@@ -737,7 +733,7 @@
         	var buttonEdit = e.sender;
         	var record = grid_brandlist_v.getEditorOwnerRow(buttonEdit);
         	if (typeof(record.id) == "undefined" || record.id == "") {
-        		mini.alert("要上传视频的行记录还没有保存，请先保存后再上传视频.");
+        		parent.parent.layer.msg("要上传视频的行记录还没有保存，请先保存后再上传视频.",{icon:6});
         		return;
         	}
         	

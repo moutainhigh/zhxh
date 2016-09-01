@@ -26,7 +26,7 @@
     	$(function(){
     		mini.parse();
     		if (result != "") {
-    			mini.alert(result);
+    			parent.parent.layer.msg(result,{icon:6});
     			result = "";
     			$("#id").val(result_id);
     			$("#saveFolder").val(result_saveFolder);
@@ -70,7 +70,7 @@
 						return;
 					}
 					if (!rFilter.test(aFiles[0].type)) {
-						mini.alert("您选择的文件并不是图片格式。请重新选择!");
+						parent.parent.layer.msg("您选择的文件并不是图片格式。请重新选择!",{icon:5});
 						return;
 					}
 					oFReader.readAsDataURL(aFiles[0]);

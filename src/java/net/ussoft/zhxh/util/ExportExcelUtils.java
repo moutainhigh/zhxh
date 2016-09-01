@@ -18,7 +18,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-import net.ussoft.zhxh.model.Sys_templetfield;
 
 public class ExportExcelUtils {
 	
@@ -34,120 +33,120 @@ public class ExportExcelUtils {
 	}
 	
 	//导出档案
-	public static void exportArchive(List<Sys_templetfield> fields,String title,List<Map<String, Object>> rowList,HttpServletResponse response,HttpServletRequest request) throws Exception {
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		
-		Vector<String> tableHeader = new Vector<String>();
-		tableHeader.add("序号");
-//		String[] columnArr = new String[];
-		Vector<String> columnArr = new Vector<String>();
-		for (Sys_templetfield field : fields) {
-			if (field.getSort() > 0) {
-				tableHeader.add(field.getChinesename());
-				columnArr.add(field.getEnglishname());
-			}
-		}
-		
-		short cellNumber = (short) tableHeader.size();// 表的列数
-		workbook = new HSSFWorkbook(); // 创建一个excel
-		HSSFCell cell = null; // Excel的列
-		HSSFRow row = null; // Excel的行
-		
-		
-		
-		HSSFFont font = workbook.createFont(); // 设置字体
-		font.setFontName("宋体");
-		font.setFontHeightInPoints((short) 12);// 设置字体
-		
-		HSSFCellStyle style = workbook.createCellStyle(); // 设置表头的类型
-		style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直
-		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);//水平
-		style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
-		style.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
-		style.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
-		style.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
-		style.setFont(font);// 设置字体风格
-		
-		HSSFSheet sheet = workbook.createSheet("sheet1"); // 创建一个sheet
-		HSSFHeader header = sheet.getHeader();// 设置sheet的头
-		
-		try {
-			header.setCenter(title);
-			row = sheet.createRow(0);
-			row.setHeight((short) 500);
-			
-			//设置序号列
-			setCell(sheet,row,cell,0,2000,tableHeader.get(0),style);
-			
-			for (int k = 1; k < cellNumber; k++) {
-				setCell(sheet,row,cell,k,5000,tableHeader.get(k),style);
-			}
-			
-			int num = 1;
-			for (Map map : rowList) {
-				row = sheet.createRow((short) (num));// 创建第num+1行
-				row.setHeight((short) 500);// 设置行高
-				
-				//插入序号
-				setCell(sheet,row,cell,0,0,String.valueOf(num),style);
-				
-				int c_num = 1;
-				for (String columnName : columnArr) {
-					//插入单元名称
-					if (null != map.get(columnName) && !"".equals(map.get(columnName))) {
-						String columnTxt = map.get(columnName).toString();
-						setCell(sheet,row,cell,c_num,0,columnTxt,style);
-					}
-					else {
-						setCell(sheet,row,cell,c_num,0,"",style);
-					}
-					c_num += 1;
-				}
-				
-				
-				num += 1;
-			}
-			
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		OutputStream out = null;// 创建一个输出流对象
-		try {
-			out = response.getOutputStream();
-//				String headerStr = "";
-			title += ".xls";
-			response.setContentType("application/vnd.ms-excel;charset=utf-8");
-			
-			String userAgent = request.getHeader("User-Agent");
-			response.reset();
-			if(userAgent != null && userAgent.indexOf("MSIE") == -1) {
-				// FF
-				String enableFileName = "=?UTF-8?B?" + (new String(org.apache.commons.codec.binary.Base64.encodeBase64(title.getBytes("UTF-8")))) + "?=";  
-				response.setHeader("Content-Disposition", "attachment; filename=" + enableFileName); 
-			}else{
-				// IE   
-				String enableFileName = new String(title.getBytes("GBK"), "ISO-8859-1");   
-				response.setHeader("Content-Disposition", "attachment; filename=" + enableFileName);
-			}
-			
-			request.setCharacterEncoding("UTF-8");  
-			
-			workbook.write(out);
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (out != null) {
-					out.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+//	public static void exportArchive(List<Sys_templetfield> fields,String title,List<Map<String, Object>> rowList,HttpServletResponse response,HttpServletRequest request) throws Exception {
+//		HSSFWorkbook workbook = new HSSFWorkbook();
+//		
+//		Vector<String> tableHeader = new Vector<String>();
+//		tableHeader.add("序号");
+////		String[] columnArr = new String[];
+//		Vector<String> columnArr = new Vector<String>();
+//		for (Sys_templetfield field : fields) {
+//			if (field.getSort() > 0) {
+//				tableHeader.add(field.getChinesename());
+//				columnArr.add(field.getEnglishname());
+//			}
+//		}
+//		
+//		short cellNumber = (short) tableHeader.size();// 表的列数
+//		workbook = new HSSFWorkbook(); // 创建一个excel
+//		HSSFCell cell = null; // Excel的列
+//		HSSFRow row = null; // Excel的行
+//		
+//		
+//		
+//		HSSFFont font = workbook.createFont(); // 设置字体
+//		font.setFontName("宋体");
+//		font.setFontHeightInPoints((short) 12);// 设置字体
+//		
+//		HSSFCellStyle style = workbook.createCellStyle(); // 设置表头的类型
+//		style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直
+//		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);//水平
+//		style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+//		style.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+//		style.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+//		style.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+//		style.setFont(font);// 设置字体风格
+//		
+//		HSSFSheet sheet = workbook.createSheet("sheet1"); // 创建一个sheet
+//		HSSFHeader header = sheet.getHeader();// 设置sheet的头
+//		
+//		try {
+//			header.setCenter(title);
+//			row = sheet.createRow(0);
+//			row.setHeight((short) 500);
+//			
+//			//设置序号列
+//			setCell(sheet,row,cell,0,2000,tableHeader.get(0),style);
+//			
+//			for (int k = 1; k < cellNumber; k++) {
+//				setCell(sheet,row,cell,k,5000,tableHeader.get(k),style);
+//			}
+//			
+//			int num = 1;
+//			for (Map map : rowList) {
+//				row = sheet.createRow((short) (num));// 创建第num+1行
+//				row.setHeight((short) 500);// 设置行高
+//				
+//				//插入序号
+//				setCell(sheet,row,cell,0,0,String.valueOf(num),style);
+//				
+//				int c_num = 1;
+//				for (String columnName : columnArr) {
+//					//插入单元名称
+//					if (null != map.get(columnName) && !"".equals(map.get(columnName))) {
+//						String columnTxt = map.get(columnName).toString();
+//						setCell(sheet,row,cell,c_num,0,columnTxt,style);
+//					}
+//					else {
+//						setCell(sheet,row,cell,c_num,0,"",style);
+//					}
+//					c_num += 1;
+//				}
+//				
+//				
+//				num += 1;
+//			}
+//			
+//			
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		
+//		OutputStream out = null;// 创建一个输出流对象
+//		try {
+//			out = response.getOutputStream();
+////				String headerStr = "";
+//			title += ".xls";
+//			response.setContentType("application/vnd.ms-excel;charset=utf-8");
+//			
+//			String userAgent = request.getHeader("User-Agent");
+//			response.reset();
+//			if(userAgent != null && userAgent.indexOf("MSIE") == -1) {
+//				// FF
+//				String enableFileName = "=?UTF-8?B?" + (new String(org.apache.commons.codec.binary.Base64.encodeBase64(title.getBytes("UTF-8")))) + "?=";  
+//				response.setHeader("Content-Disposition", "attachment; filename=" + enableFileName); 
+//			}else{
+//				// IE   
+//				String enableFileName = new String(title.getBytes("GBK"), "ISO-8859-1");   
+//				response.setHeader("Content-Disposition", "attachment; filename=" + enableFileName);
+//			}
+//			
+//			request.setCharacterEncoding("UTF-8");  
+//			
+//			workbook.write(out);
+//			out.flush();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				if (out != null) {
+//					out.close();
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 	
 	
 	//============以下没有用到，等待删除

@@ -78,19 +78,19 @@
         	var rows = grid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要删除的数据.");
+       	 		parent.parent.layer.msg("请选择要删除的数据.",{icon:6});
        		 	return;
        	 	}
        	 	
-       	 	mini.confirm(cf1, "确定？",
-                 function (action) {
-                     if (action == "ok") {
-                    	 grid.removeRows(rows, false);
-                     } else {
-                         
-                     }
-                 }
-            );
+       	 	parent.parent.layer.msg(cf1, {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认删除', '取消']
+    	  		,yes: function(index){
+    	  			grid.removeRows(rows, false);
+    	    		parent.parent.layer.close(index);
+    	  		}
+    		});
         }
        	
 		function save() {
@@ -100,20 +100,21 @@
 			
 			grid.validate();
 	        if (grid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		//alert(action);
-	            		var error = grid.getCellErrors()[0];
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = grid.getCellErrors()[0];
 	            		grid.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        		}
+	        	);  
 	            return;
 	        }
 	    	
 	        var objs = grid.getChanges();
 	        var json = mini.encode(objs,"yyyy-MM-dd");
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:6});
 	        	return;
 	        }
 	        grid.loading("保存中，请稍后......");
@@ -129,7 +130,7 @@
 	            	grid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                mini.alert(jqXHR.responseText);
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            }
 	        });
 	    }

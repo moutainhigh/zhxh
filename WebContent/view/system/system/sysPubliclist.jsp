@@ -65,15 +65,6 @@
    	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid\',\''+record.id+'\',\'logo\',\'logo\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
    	        		}
     	        }
-                
-                /* if (field == "pic_path") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
-   	        		}
-    	        } */
             });
         }
        	
@@ -86,7 +77,7 @@
        		
        		var objs = tmpGrid.getChanges();
        		if (objs != "") {
-       			mini.alert("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片。");
+       			parent.parent.layer.msg("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片。",{icon:3});
    	 			return;
        		}
        		else {
@@ -114,19 +105,21 @@
 		function save() {
 	    	grid.validate();
 	        if (grid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		var error = grid.getCellErrors()[0];
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = grid.getCellErrors()[0];
 	            		grid.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        		}
+	        	);  
 	            return;
 	        }
 	    	
 	        var objs = grid.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:3});
 	        	return;
 	        }
 	        grid.loading("保存中，请稍后......");
@@ -138,11 +131,11 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            	grid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                mini.alert(jqXHR.responseText);
+	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
 	            }
 	        });
 	    }

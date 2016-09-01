@@ -133,7 +133,7 @@
        	
        	function getUrl(id) {
        		var serv_path = "${pageContext.request.contextPath}";
-       		mini.alert(serv_path + "/pcMain/product.htmls?id=" + id);
+       		parent.parent.layer.msg(serv_path + "/pcMain/product.htmls?id=" + id,{icon:6,time:5000});
        	}
         
         function drawcell() {
@@ -172,24 +172,6 @@
                 	}
                 }
             });
-       		
-       		/* grid_plist.on("drawcell", function (e) {
-                var record = e.record,
-	            column = e.column,
-	            field = e.field,
-	            uid = record._uid,
-	            value = e.value;
-                
-                if (field == "pic") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
-   	        		}
-    	        }
-         	}); */
        		
        		grid_product_size.on("drawcell", function (e) {
                 var record = e.record,
@@ -256,7 +238,7 @@
        		var record = grid_brand.getSelected();
 			
             if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	mini.alert("请先选择品牌，再添加品牌列表页内容.");
+            	parent.parent.layer.msg("请先选择品牌，再添加品牌列表页内容。",{icon:6});
 	      		return;
 	      	}
 			
@@ -281,19 +263,19 @@
         	var rows = tmpGrid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要删除的数据.");
+       	 		parent.parent.layer.msg("请选择要删除的数据。",{icon:6});
        		 	return;
        	 	}
        	 	
-       	 	mini.confirm("确定删除记录？", "确定？",
-                 function (action) {
-                     if (action == "ok") {
-                    	 tmpGrid.removeRows(rows, false);
-                     } else {
-                         
-                     }
-                 }
-             );
+       	 	parent.parent.layer.msg(cf1, {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认删除', '取消']
+    	  		,yes: function(index){
+    	  			tmpGrid.removeRows(rows, false);
+    	    		parent.parent.layer.close(index);
+    	  		}
+    		});
         }
        	
 		function save(gridtype) {
@@ -313,34 +295,31 @@
 				var record = grid_plist.getSelected();
 		      	
 	            if (typeof(record.id) == "undefined" || record.id == "") {
-	            	mini.alert("请先选择列表页内容，再处理列表商品数据.");
+	            	parent.parent.layer.msg("请先选择列表页内容，再处理列表商品数据。",{icon:6});
 		      		return;
 		      	}
-
-	            
 				tmpGrid = grid_product_size;
 				url = "${pageContext.request.contextPath}/public/save.htmls";
 				pams.act = "label_plist";
-				//pams.parentid = record.id;
-				//pams.parenttype = "brandlist_pic"
 			}
 			
 			tmpGrid.validate();
 	        if (tmpGrid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		//alert(action);
-	            		var error = tmpGrid.getCellErrors()[0];
-	            		tmpGrid.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = tmpGrid.getCellErrors()[0];
+	        			tmpGrid.beginEditCell(error.record, error.column);
+	        		}
+	        	);  
 	            return;
 	        }
 	        
 	        var objs = tmpGrid.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:6});
 	        	return;
 	        }
 	        
@@ -353,13 +332,13 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            	tmpGrid.reload();
 	            	grid_product_size.setData([]);
 	            	grid_product_size.setTotalCount(0);
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                mini.alert(jqXHR.responseText);
+	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
 	            }
 	        });
 	    }
@@ -378,7 +357,7 @@
 			var record = grid_plist.getSelected();
 			
 			if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	mini.alert("请先选择要选择商品的列表页.");
+				parent.parent.layer.msg("请先选择要选择商品的列表页",{icon:6});
 	      		return;
 	      	}
          	 
@@ -411,7 +390,7 @@
                             	 grid_product_size.reload();
                              },
                              error: function (jqXHR, textStatus, errorThrown) {
-                                 alert(jqXHR.responseText);
+                            	 parent.parent.layer.msg(jqXHR.responseText,{icon:5});
                              }
                          });
                      }
@@ -424,42 +403,42 @@
 			var record = grid_plist.getSelected();
 			
 			if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	mini.alert("请先选择要移除商品的列表页.");
+				parent.parent.layer.msg("请先选择要移除商品的列表页。",{icon:6});
 	      		return;
 	      	}
 			
 			var rows = grid_product_size.getSelecteds();
          	 
        	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要删除的数据.");
+       	 		parent.parent.layer.msg("请选择要删除的数据。",{icon:6});
        		 	return;
        	 	}
        	 	
        	 	var ids = getSelectGridid(rows);
        	 	
-       	 	mini.confirm("确定删除记录？", "确定？",
-                 function (action) {
-                     if (action == "ok") {
-                    	 grid_product_size.loading("保存中，请稍后......");
-                    	 var url = "${pageContext.request.contextPath}/label/labelListDel.htmls";
-						$.ajax({
-							async:false,
-						    url: url,
-						    data: {'objids':ids,'labelid':record.id},
-						    type: "post",
-						    dataType:"text",
-						    success: function (text) {
-						    	grid_product_size.reload();
-						    },
-						    error: function (jqXHR, textStatus, errorThrown) {
-						        mini.alert(jqXHR.responseText);
-						    }
-						});
-                     } else {
-                         
-                     }
-                 }
-             );
+       	 	parent.parent.layer.msg("确定删除记录？", {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认删除', '取消']
+    	  		,yes: function(index){
+    	  			grid_product_size.loading("保存中，请稍后......");
+               	 	var url = "${pageContext.request.contextPath}/label/labelListDel.htmls";
+					$.ajax({
+						async:false,
+					    url: url,
+					    data: {'objids':ids,'labelid':record.id},
+					    type: "post",
+					    dataType:"text",
+					    success: function (text) {
+					    	grid_product_size.reload();
+					    },
+					    error: function (jqXHR, textStatus, errorThrown) {
+					    	parent.parent.layer.msg(jqXHR.responseText,{icon:2});
+					    }
+					});
+    	  		}
+    		});
+       	 	
        	 	
 		}
 		

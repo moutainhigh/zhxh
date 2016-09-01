@@ -11,7 +11,7 @@
     <title>众恒信和综合管理平台</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css">
     <script src="${pageContext.request.contextPath}/js/boot.js" type="text/javascript"></script> 
-    
+    <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
     
     <style type="text/css">
 	    body{
@@ -42,11 +42,11 @@
     	
     	function updatepass(id) {
     		
-    		var url = "${pageContext.request.contextPath}/common/dispatch.do?page=/view/account/updateAccount";
+    		var url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/system/updateAccount";
     		var title = "修改帐户信息";
         	mini.open({
                 url: url,
-                title: title, width:500, height:400,
+                title: title, width:600, height:400,
                 allowResize:true,
                 onload: function () {
                 	

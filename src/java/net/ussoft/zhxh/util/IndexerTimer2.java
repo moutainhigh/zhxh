@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import net.ussoft.zhxh.service.IDocService;
-import net.ussoft.zhxh.service.impl.DocService;
+//import net.ussoft.zhxh.service.IDocService;
+//import net.ussoft.zhxh.service.impl.DocService;
 import net.ussoft.zhxh.service.impl.SpringContextUtils;
-import net.ussoft.zhxh.util.lucene.Indexer;
+//import net.ussoft.zhxh.util.lucene.Indexer;
 
 public class IndexerTimer2 {
     static int count = 0;
@@ -30,31 +30,31 @@ public class IndexerTimer2 {
 //    	}
 //    	final IDocService docService = SpringContextUtils.getBean("docService");
 //    	final IDocService docService = (IDocService) ApplicationContextUtil.getBean("docService");
-    	final Logger log = new Logger(DocService.class);
+//    	final Logger log = new Logger(DocService.class);
     	
         task = new TimerTask() {
             @Override
             public void run() {
-            	log.info("******索引定时任务于["+DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss")+"]启动运行。");
-                ++count;
-                try {
-                	IDocService docService = SpringContextUtils.getBean("docService");
-					docService.indexer("");
-					//合并索引文件，真正删除标记为删除的
-					try {
-						Indexer indexer = new Indexer();
-						indexer.indexAfterMerge();
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-                log.info("******索引定时任务于["+DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss")+"]运行完毕。");
-                System.out.println("时间=" + new Date() + " 执行了" + count + "次"); // 1次
+//            	log.info("******索引定时任务于["+DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss")+"]启动运行。");
+//                ++count;
+//                try {
+//                	IDocService docService = SpringContextUtils.getBean("docService");
+//					docService.indexer("");
+//					//合并索引文件，真正删除标记为删除的
+//					try {
+//						Indexer indexer = new Indexer();
+//						indexer.indexAfterMerge();
+//					} catch (Exception e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//					
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//                log.info("******索引定时任务于["+DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss")+"]运行完毕。");
+//                System.out.println("时间=" + new Date() + " 执行了" + count + "次"); // 1次
             }
         };
 

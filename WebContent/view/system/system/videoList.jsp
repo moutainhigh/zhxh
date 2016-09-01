@@ -27,12 +27,12 @@
         		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 50},
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+      	              	{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
       	                { field: "videoshowpic",name:"videoshowpic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "视频封面图片",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnVideoPicEdit" } },
       	              	{ field: "mp4oldname",name:"mp4oldname",id:"mp4", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "本站视频mp4名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnMp4VideoEdit" } },
       	              	{ field: "webmoldname",name:"webmoldname",id:"webm", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "本站视频webm名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnWebmVideoEdit" } },
       	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } }
+      	              	{ field: "isshow",name:"isshow",type:"comboboxcolumn", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } }
       	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -53,6 +53,28 @@
         	drawcell();
         })
         
+        function onActionRenderer(e) {
+            var grid = e.sender;
+            var record = e.record;
+           	var mp4 = record.mp4newname;
+        	var webm = record.webmnewname;
+        	if(mp4 != undefined && mp4 != ""){
+        		mp4 = mp4.replace(/\\/g,'/');
+        	}
+        	else {
+        		return "";
+        	}
+        	if(webm != undefined && mp4 != ""){
+        		webm = webm.replace(/\\/g,'/');
+        	}
+        	else {
+        		return "";
+        	}
+        	
+            var s = ' <a class="Edit_Button" href="javascript:copypath(\''+mp4+'\',\''+webm+'\')" >获取视频地址</a>';
+            return s;
+        }
+        
         function drawcell() {
        		grid.on("drawcell", function (e) {
                 var record = e.record,
@@ -62,71 +84,69 @@
 	            value = e.value;
                 
                 if (field == "videoshowpic") {
-   	        		if (value == undefined) {
+   	        		if (value == undefined || value == "") {
    	        			e.cellhtml = "";
        	        	}
    	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
    	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
    	        		}
     	        }
-                /* if(field == "videopath"){
-                	var mp4 = record.mp4newname;
-                	var webm = record.webmnewname;
-                	var path = ''
-                		+'&lt;video id="preview-player" class="video-js vjs-fluid placeholder vjs-big-play-centered" controls preload="auto" poster=""  data-setup="{}">'
-        		    	+'<source src="'+mp4+'" type="video/mp4"></source>'
-        		    	+'<source src="'+webm+'" type="video/webm"></source>'
-        				+'</video>';
-                	e.cellHtml = path;
-                } */
             });
         }
        	
 		function addRow() {
        		
-            var newRow = {sort:1};
+            var newRow = {
+            		sort:1,
+            		isshow:0,
+            		videoshowpic:"",
+            		mp4oldname:"",
+            		webmoldname:""
+            };
             grid.addRow(newRow, 0);
-            grid.beginEditCell(newRow, "isshow");
+            grid.beginEditCell(newRow);
+            //grid.beginEditCell(newRow, "isshow");
         }
 		
 		function delRow() {
-        	var cf1 = "确定要删除选中的帐户吗？<br>&nbsp;&nbsp;&nbsp;&nbsp;注意：不可恢复，请谨慎操作。";
+        	var cf1 = "确定要删除选中的数据吗？<br><p style='font-size:12px; color:red'>注意：不可恢复，请谨慎操作。</p>";
         	
         	var rows = grid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要删除的数据");
+       	 		parent.parent.layer.msg("请选择要删除的数据.",{icon:3});
        		 	return;
        	 	}
-       	 
-       	 	mini.confirm(cf1, "系统提示",
-                 function (action) {
-                     if (action == "ok") {
-                    	 grid.removeRows(rows, false);
-                     }
-                 }
-             );
-       	 
+       	 	
+       	 	parent.parent.layer.msg(cf1, {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认删除', '取消']
+    	  		,yes: function(index){
+    	  			grid.removeRows(rows, false);
+    	    		parent.parent.layer.close(index);
+    	  		}
+    		});
         }
        	
 		function save() {
 	    	grid.validate();
 	        if (grid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		//alert(action);
-	            		var error = grid.getCellErrors()[0];
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = grid.getCellErrors()[0];
 	            		grid.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        		}
+	        	);
 	            return;
 	        }
 	    	
 	        var objs = grid.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:3});
 	        	return;
 	        }
 	        grid.loading("保存中，请稍后......");
@@ -138,29 +158,14 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            	grid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                alert(jqXHR.responseText);
+	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
 	            }
 	        });
 	    }
-		
-		function onActionRenderer(e) {
-            var grid = e.sender;
-            var record = e.record;
-           	var mp4 = record.mp4newname;
-        	var webm = record.webmnewname;
-        	if(mp4 != undefined){
-        		mp4 = mp4.replace(/\\/g,'/');
-        	}
-        	if(webm != undefined){
-        		webm = webm.replace(/\\/g,'/');
-        	}
-            var s = ' <a class="Edit_Button" href="javascript:copypath(\''+mp4+'\',\''+webm+'\')" >视频地址</a>';
-            return s;
-        }
 		
 		//复制视频地址标签
 		function copypath(mp4,webm){
@@ -182,7 +187,6 @@
 	            html: html,
 	            showModal: false,
 	            callback: function (action) {
-	                //alert(action);
 	            }
 	        });
 		}
@@ -193,12 +197,12 @@
         	var row = grid.getEditorOwnerRow(buttonEdit);
         	
         	if (null == row || typeof(row.id) == "undefined" || row.id == "") {
-        		mini.alert("行记录还没有保存，请先保存后再上传.");
+        		parent.parent.layer.msg("行记录还没有保存，请先保存后再上传。",{icon:3});
 	      		return;
 	      	}
         	
         	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
+                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/upload_pic",
                 title: "上传新闻图片", width: 600, height:500,
                 allowResize:true,
                 onload: function () {
@@ -219,7 +223,7 @@
         	var buttonEdit = e.sender;
         	var record = grid.getEditorOwnerRow(buttonEdit);
         	if (typeof(record.id) == "undefined" || record.id == "") {
-        		mini.alert("要上传视频的行记录还没有保存，请先保存后再上传视频.");
+        		parent.parent.layer.msg("要上传视频的行记录还没有保存，请先保存后再上传视频。",{icon:3});
         		return;
         	}
         	
@@ -244,7 +248,7 @@
         	var buttonEdit = e.sender;
         	var record = grid.getEditorOwnerRow(buttonEdit);
         	if (typeof(record.id) == "undefined" || record.id == "") {
-        		mini.alert("要上传视频的行记录还没有保存，请先保存后再上传视频.");
+        		parent.parent.layer.msg("要上传视频的行记录还没有保存，请先保存后再上传视频。",{icon:3});
         		return;
         	}
         	

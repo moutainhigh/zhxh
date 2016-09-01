@@ -159,16 +159,6 @@
 	            uid = record._uid,
 	            value = e.value;
                 
-                /* if (field == "pic_path") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='30px' />";
-   	        		}
-    	        } */
-                
                 if (field == "pic_path") {
    	        		if (typeof(value) == "undefined" || value == "") {
                 		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brandpic\',\''+record.id+'\',\'upload\',\'publicpic\')" >选择图片</a>';
@@ -202,16 +192,6 @@
    	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brandfirst\',\''+record.id+'\',\'pic\',\'firstpic\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
    	        		}
     	        }
-                
-                /* if (field == "firstpic") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='60px' />";
-   	        		}
-    	        } */
          	});
        	}
        	
@@ -240,7 +220,7 @@
        		var record = grid_brand.getSelected();
 	      	
             if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	mini.alert("请先选择品牌，在上传品牌综合页轮播图片.");
+            	parent.parent.layer.msg("请先选择品牌，在上传品牌综合页轮播图片。",{icon:6});
 	      		return;
 	      	}
 	    	mini.open({
@@ -263,7 +243,7 @@
        		var record = grid_brand.getSelected();
 			
             if (null == record || typeof(record.id) == "undefined" || record.id == "") {
-            	mini.alert("请先选择品牌，再添加品牌综合页内容.");
+            	parent.parent.layer.msg("请先选择品牌，再添加品牌综合页内容。",{icon:6});
 	      		return;
 	      	}
 			
@@ -295,14 +275,19 @@
         	var rows = tmpGrid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要删除的数据.");
+       	 		parent.parent.layer.msg("请选择要删除的数据。",{icon:6});
        		 	return;
        	 	}
        	 
-          	if (confirm(cf1)) {
-          		tmpGrid.removeRows(rows, false);
-   		 	}
-			
+       	 	parent.parent.layer.msg(cf1, {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认删除', '取消']
+    	  		,yes: function(index){
+    	  			tmpGrid.removeRows(rows, false);
+    	    		parent.parent.layer.close(index);
+    	  		}
+    		});
         }
        	
 		function save() {
@@ -312,20 +297,21 @@
 			
 			grid_brandfirst.validate();
 	        if (grid_brandfirst.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		//alert(action);
-	            		var error = grid_brandfirst.getCellErrors()[0];
-	            		grid_brandfirst.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = grid_brandfirst.getCellErrors()[0];
+	        			grid_brandfirst.beginEditCell(error.record, error.column);
+	        		}
+	        	);  
 	            return;
 	        }
 	    	
 	        var objs = grid_brandfirst.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:3});
 	        	return;
 	        }
 	        grid_brandfirst.loading("保存中，请稍后......");
@@ -337,11 +323,11 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            	grid_brandfirst.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                mini.alert(jqXHR.responseText);
+	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
 	            }
 	        });
 	    }
@@ -351,8 +337,8 @@
 			//获取品牌
        		var record = grid_brand.getSelected();
 	      	
-            if (typeof(record.id) == "undefined" || record.id == "") {
-            	mini.alert("请先选择品牌，再添加品牌综合页内容.");
+            if (null == record || typeof(record.id) == "undefined" || record.id == "") {
+            	parent.parent.layer.msg("请先选择品牌，再添加品牌综合页内容.",{icon:6});
 	      		return;
 	      	}
 			
@@ -360,20 +346,21 @@
 			
 			grid_brandpic.validate();
 	        if (grid_brandpic.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		//alert(action);
-	            		var error = grid_brandpic.getCellErrors()[0];
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = grid_brandpic.getCellErrors()[0];
 	            		grid_brandpic.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        		}
+	        	);  
 	            return;
 	        }
 	    	
 	        var objs = grid_brandpic.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:3});
 	        	return;
 	        }
 	        grid_brandpic.loading("保存中，请稍后......");
@@ -385,11 +372,11 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            	grid_brandpic.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                mini.alert(jqXHR.responseText);
+	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
 	            }
 	        });
 	    }
@@ -415,7 +402,7 @@
        		
        		var objs = tmpGrid.getChanges();
        		if (objs != "") {
-       			mini.alert("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片。");
+       			parent.parent.layer.msg("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片。",{icon:6});
    	 			return;
        		}
        		else {
@@ -440,94 +427,6 @@
        		
        	}
 		
-        
-        
-        //以下不确定要
-        
-        function onActionRenderer(e) {
-            var grid = e.sender;
-            var record = e.record;
-            var uid = record._uid;
-            var id = record.id;
-            var rowIndex = e.rowIndex;
-            var productname = record.productname;
-
-            var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>'
-            s += '  <a class="Edit_Button" href="javascript:delete_book(\'' + uid + '\')" >详细</a>';
-            return s;
-        }
-        
-       		/* grid_product.on("drawcell", function (e) {
-                var record = e.record,
-	            column = e.column,
-	            field = e.field,
-	            uid = record._uid,
-	            value = e.value;
-                
-                if (field == "productpic") {
-                	if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellStyle = "background-color:"+value+";text-align:center";
-   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
-   	        		}
-    	        }
-            }); */
-        
-       	
-       	
-       	
-       	function onBtnColorEdit(e) {
-        	var buttonEdit = e.sender;
-        	
-        	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/selectColor",
-                title: "选择颜色", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	
-                },
-                ondestroy: function (action) {
-                	if (action == "ok") {
-                		var iframe = this.getIFrameEl();
-                        var color_data = iframe.contentWindow.GetData();
-                        color_data = mini.clone(color_data);    //必须
-                        if (color_data != "") {
-                        	var row = grid_brand.getEditorOwnerRow(buttonEdit);
-                            //var row = grid_book.getSelecteds();
-                            grid_brand.cancelEdit();
-                            grid_brand.updateRow(row, {
-                            	brandcolor:color_data
-                            });
-                        }
-                    }
-                }
-            });
-        }
-       	
-        function editRated(id,productname) {
-        	
-        	var title = "商品评价";
-        	mini.open({
-                url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/editRated",
-                title: title, width: 800, height:600,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {productid:id,productname:productname};
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	if (action == "ok") {
-                		
-                    }
-                }
-            });
-        }
-        
-		
-		
 </script>
 </head>
 <body>
@@ -542,9 +441,6 @@
 		                 </td>
 		                 <td style="white-space:nowrap;">
 		                 	<a class="mini-button" iconCls="icon-tip" plain="true" onclick="addRow('grid_brand')">查看综合页效果</a>
-		                 	<!-- <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brand')">删除</a>
-			                <span class="separator"></span>
-			         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a> -->
 		                 </td>
 		             </tr>
 		         	</tbody>

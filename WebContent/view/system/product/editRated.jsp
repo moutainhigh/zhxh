@@ -15,9 +15,6 @@
 	    }    
     </style>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
-    <%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css">
-    <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
-    <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script> --%>
     <script>
     
     	var grid_rated;
@@ -83,19 +80,19 @@
         	var rows = grid_rated.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要删除的数据.");
+       	 		parent.parent.layer.msg("请选择要删除的数据.",{icon:6});
        		 	return;
        	 	}
        	 	
-       	 	mini.confirm(cf1, "确定？",
-                 function (action) {
-                     if (action == "ok") {
-                    	 grid_rated.removeRows(rows, false);
-                     } else {
-                         
-                     }
-                 }
-            );
+       	 	parent.parent.layer.msg(cf1, {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认删除', '取消']
+    	  		,yes: function(index){
+    	  			grid_rated.removeRows(rows, false);
+    	    		parent.parent.layer.close(index);
+    	  		}
+    		});
         }
        	
 		function save() {
@@ -105,20 +102,21 @@
 			
 			grid_rated.validate();
 	        if (grid_rated.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		//alert(action);
-	            		var error = grid_rated.getCellErrors()[0];
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = grid_rated.getCellErrors()[0];
 	            		grid_rated.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        		}
+	        	);
 	            return;
 	        }
 	    	
 	        var objs = grid_rated.getChanges();
 	        var json = mini.encode(objs,"yyyy-MM-dd");
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:6});
 	        	return;
 	        }
 	        grid_rated.loading("保存中，请稍后......");
@@ -130,11 +128,11 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            	grid_rated.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                mini.alert(jqXHR.responseText);
+	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
 	            }
 	        });
 	    }

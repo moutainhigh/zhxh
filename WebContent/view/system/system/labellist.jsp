@@ -91,26 +91,6 @@
             }
         }
         
-        /* function drawcell() {
-       		grid.on("drawcell", function (e) {
-                var record = e.record,
-	            column = e.column,
-	            field = e.field,
-	            uid = record._uid,
-	            value = e.value;
-                
-                if (field == "password") {
-   	        		if (value == "") {
-   	        			e.cellhtml = "";
-       	        	}
-   	        		else {
-   	        			e.cellStyle = "color:red;text-align:center";
-   	        			e.cellHtml = "********";
-   	        		}
-    	        }
-            });
-        } */
-       	
 		function addRow(grid_type,parentid) {
 			
 			var tmpGrid;
@@ -123,12 +103,12 @@
 				var rows = grid.getSelecteds();
 	          	 
 	       	 	if (rows.length == 0) {
-	       	 		mini.alert("请选择要添加二级标签的所属一级标签.");
+	       	 		parent.parent.layer.msg("请选择要添加二级标签的所属一级标签.",{icon:3});
 	       		 	return;
 	       	 	}
 	       	 	else {
 	       	 		if (typeof(rows[0].id) == "undefined" || rows[0].id == "") {
-	       	 			mini.alert("当前一级标签还没有保存。请先保存一级标签后再创建二级标签。");
+	       	 			parent.parent.layer.msg("当前一级标签还没有保存。请先保存一级标签后再创建二级标签.",{icon:5});
 	       	 			return;
 	       	 		}
 	       	 		else {
@@ -152,24 +132,29 @@
 			var tmpGrid;
 			if (grid_type == "grid") {
 				tmpGrid = grid;
-				cf1 += "<br>注意：删除一级分类，将同时删除所属的二级分类，并同时取消二级分类与其他商品之间的关联关系。不可恢复，请谨慎操作。";
+				cf1 += "<br><p style='font-size:12px; color:red'>注意：删除一级分类，将同时删除所属的二级分类，并同时取消二级分类与其他商品之间的关联关系。不可恢复，请谨慎操作。</p>";
 			}
 			else {
 				tmpGrid = grid_label_2;
-				cf1 += "<br>注意：删除二级分类，将同时取消二级分类与其他商品之间的关联关系,不可恢复，请谨慎操作";
+				cf1 += "<br><p style='font-size:12px; color:red'>注意：删除二级分类，将同时取消二级分类与其他商品之间的关联关系,不可恢复，请谨慎操作</p>";
 			}
 			
         	var rows = tmpGrid.getSelecteds();
           	 
        	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要删除的标签.");
+       	 		parent.parent.layer.msg("请选择要删除的标签.",{icon:3});
        		 	return;
        	 	}
        	 
-          	if (confirm(cf1)) {
-          		tmpGrid.removeRows(rows, false);
-   		 	}
-			
+       	 	parent.parent.layer.msg(cf1, {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认删除', '取消']
+    	  		,yes: function(index){
+    	  			tmpGrid.removeRows(rows, false);
+    	    		parent.parent.layer.close(index);
+    	  		}
+    		});
         }
        	
 		function save(grid_type) {
@@ -185,20 +170,21 @@
 			
 			tmpGrid.validate();
 	        if (tmpGrid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		//alert(action);
-	            		var error = tmpGrid.getCellErrors()[0];
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = tmpGrid.getCellErrors()[0];
 	            		tmpGrid.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        		}
+	        	);
 	            return;
 	        }
 	    	
 	        var objs = tmpGrid.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:3});
 	        	return;
 	        }
 	        tmpGrid.loading("保存中，请稍后......");
@@ -210,52 +196,14 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            	tmpGrid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
-	                mini.alert(jqXHR.responseText);
+	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
 	            }
 	        });
 	    }
-		
-		/* function updatePass() {
-			var cf1 = "确定要初始化选中的帐户吗？注意：初始化密码为【123456】，请谨慎操作。";
-        	
-        	var rows = grid.getSelecteds();
-          	 
-       	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要初始化密码的帐户.");
-       		 	return;
-       	 	}
-       	 	
-       	 	var ids = getSelectGridid(rows);
-       	 
-          	if (confirm(cf1)) {
-          		grid.loading("初始化密码中，请稍后......");
-    	        
-    	        $.ajax({
-    	        	async:false,
-    	            url: "${pageContext.request.contextPath}/account/initUpdatePass.html",
-    	            data: {'ids':ids},
-    	            type: "post",
-    	            dataType:"text",
-    	            success: function (text) {
-    	            	if (text == "success") {
-    	            		mini.alert("保存完毕。");
-    	            		grid.reload();
-    	            	}
-    	            	else {
-    	            		mini.alert("初始化密码失败。请重新登录再尝试或与开发人员联系。")
-    	            	}
-    	            	
-    	            },
-    	            error: function (jqXHR, textStatus, errorThrown) {
-    	                mini.alert(jqXHR.responseText);
-    	            }
-    	        });
-   		 	}
-		} */
 		
 		function getSelectGridid(rows) {
         	var ids = "";

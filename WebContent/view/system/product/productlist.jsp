@@ -157,7 +157,7 @@
        	
        	function getUrl(id) {
        		var serv_path = "${pageContext.request.contextPath}";
-       		mini.alert(serv_path + "/pcMain/product_c.htmls?id=" + id);
+       		parent.parent.layer.msg(serv_path + "/pcMain/product_c.htmls?id=" + id,{icon:6,time:5000});
        	}
         
         function drawcell() {
@@ -258,7 +258,7 @@
        		
        		var objs = tmpGrid.getChanges();
        		if (objs != "") {
-       			mini.alert("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片。");
+       			parent.parent.layer.msg("发现列表中有未保存的数据。请先保存数据或刷新后再上传图片。",{icon:6});
    	 			return;
        		}
        		else {
@@ -346,7 +346,7 @@
         
         function editBrandStory(id,brandname) {
         	if(id == 'undefined'){
-				mini.alert("请先保存信息，再添加内容!");
+        		parent.parent.layer.msg("请先保存信息，再添加内容。",{icon:6});
 				return;
 			}
 			var pHeight = $(window.parent).height();
@@ -369,7 +369,7 @@
         function editRated(id,productname) {
         	
         	if(id == 'undefined'){
-				mini.alert("请先保存信息，再添加内容!");
+        		parent.parent.layer.msg("请先保存信息，再添加内容。",{icon:6});
 				return;
 			}
         	
@@ -431,12 +431,12 @@
 				var rows = grid_brand.getSelecteds();
 				var brandid = "";
 	       	 	if (rows.length == 0) {
-	       	 		mini.alert("请选择要添加商品的所属品牌.");
+	       	 		parent.parent.layer.msg("请选择要添加商品的所属品牌.",{icon:6});
 	       		 	return;
 	       	 	}
 	       	 	else {
 	       	 		if (typeof(rows[0].id) == "undefined" || rows[0].id == "") {
-	       	 			mini.alert("当前品牌还没有保存。请先保存品牌后再创建商品。");
+	       	 			parent.parent.layer.msg("当前品牌还没有保存。请先保存品牌后再创建商品.",{icon:6});
 	       	 			return;
 	       	 		}
 	       	 		else {
@@ -467,12 +467,12 @@
 				var rows = grid_product.getSelecteds();
 				var productid = "";
 	       	 	if (rows.length == 0) {
-	       	 		mini.alert("请选择要添加商品规格的所属商品.");
+	       	 		parent.parent.layer.msg("请选择要添加商品规格的所属商品.",{icon:6});
 	       		 	return;
 	       	 	}
 	       	 	else {
 	       	 		if (typeof(rows[0].id) == "undefined" || rows[0].id == "") {
-	       	 			mini.alert("当前商品还没有保存。请先保存或刷新商品后再创建商品规格。");
+	       	 			parent.parent.layer.msg("当前商品还没有保存。请先保存或刷新商品后再创建商品规格.",{icon:6});
 	       	 			return;
 	       	 		}
 	       	 		else {
@@ -504,21 +504,21 @@
 			var tmpGrid;
 			if (grid_type == "grid_brand") {
 				tmpGrid = grid_brand;
-				cf1 += "<br>注意：删除品牌，将同时删除所属的商品，并删除该品牌下的所有设置。不可恢复，请谨慎操作。";
+				cf1 += "<br><p style='font-size:12px; color:red'>注意：删除品牌，将同时删除所属的商品，并删除该品牌下的所有设置。不可恢复，请谨慎操作。</p>";
 			}
 			else if (grid_type == "grid_product") {
 				tmpGrid = grid_product;
-				cf1 += "<br>注意：删除商品，将同时删除该商品下的规格及其他所有设置,不可恢复，请谨慎操作";
+				cf1 += "<br><p style='font-size:12px; color:red'>注意：删除商品，将同时删除该商品下的规格及其他所有设置,不可恢复，请谨慎操作.</p>";
 			}
 			else if (grid_type == "grid_product_size") {
 				tmpGrid = grid_product_size;
-				cf1 += "<br>注意：删除商品规格，不可恢复，请谨慎操作";
+				cf1 += "<br><p style='font-size:12px; color:red'>注意：删除商品规格，不可恢复，请谨慎操作.</p>";
 			}
 			
         	var rows = tmpGrid.getSelecteds();
         	
        	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要删除的数据.");
+       	 		parent.parent.layer.msg("请选择要删除的数据.",{icon:6});
        		 	return;
        	 	}
        	 	
@@ -526,7 +526,7 @@
 				//删除品牌时，判断是否有下级商品
 				var tmpData = grid_product.getData();
 				if (tmpData.length > 0) {
-					mini.alert("要删除的品牌下包含商品，只有空的品牌才可以删除。请先删除商品。");
+					parent.parent.layer.msg("要删除的品牌下包含商品，只有空的品牌才可以删除。请先删除商品.",{icon:6});
 					return;
 				}
 			}
@@ -534,20 +534,21 @@
 				//删除品牌时，判断是否有下级商品
 				var tmpData = grid_product_size.getData();
 				if (tmpData.length > 0) {
-					mini.alert("要删除的商品下包含规格，只有空的商品才可以删除。请先删除商品规格。");
+					parent.parent.layer.msg("要删除的商品下包含规格，只有空的商品才可以删除。请先删除商品规格.",{icon:6});
 					return;
 				}
 			}
        	 	
-       	 	mini.confirm(cf1, "确定？",
-                 function (action) {
-                     if (action == "ok") {
-                    	 tmpGrid.removeRows(rows, false);
-                     } else {
-                         
-                     }
-                 }
-            );
+       	 	parent.parent.layer.msg(cf1, {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认删除', '取消']
+    	  		,yes: function(index){
+    	  			tmpGrid.removeRows(rows, false);
+    	    		parent.parent.layer.close(index);
+    	  		}
+    		});
+       	 	
         }
        	
 		function save(grid_type) {
@@ -570,20 +571,21 @@
 			
 			tmpGrid.validate();
 	        if (tmpGrid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		//alert(action);
-	            		var error = tmpGrid.getCellErrors()[0];
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = tmpGrid.getCellErrors()[0];
 	            		tmpGrid.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        		}
+	        	);
 	            return;
 	        }
 	    	
 	        var objs = tmpGrid.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:3});
 	        	return;
 	        }
 	        tmpGrid.loading("保存中，请稍后......");
@@ -595,7 +597,7 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕。",{icon:6});
 	            	tmpGrid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {
@@ -606,7 +608,7 @@
 		
 		function edit(id,showtype){
 			if(id == 'undefined'){
-				mini.alert("请先保存信息，再添加内容!");
+				parent.parent.layer.msg("请先保存信息，再添加内容。",{icon:6});
 				return;
 			}
 			var pHeight = $(window.parent).height();
@@ -647,7 +649,7 @@
 		
 		function setLinkids(id) {
 			if(id == 'undefined' || id == ""){
-				mini.alert("请先保存信息，再添加内容!");
+				parent.parent.layer.msg("请先保存信息，再添加内容。",{icon:6});
 				return;
 			}
 			
