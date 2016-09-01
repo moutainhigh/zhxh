@@ -23,9 +23,9 @@
 	<div class="HTML-con case">
 	    <h3>新闻中心</h3>
 	    <ul class="new-tab">
-	        <li id="hy" class="${ptype == 'hy'?'cur':'' }" onclick="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=hy'">行业新闻</li>
-	        <li id="qy" class="${ptype == 'qy'?'cur':'' }" onclick="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=qy'">企业新闻</li>
-	        <li id="sp" class="${ptype == 'sp'?'cur':'' }" onclick="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=sp'">商品新闻</li>
+	        <li id="hy" class="${ptype == 'news_hy'?'cur':'' }" onclick="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=news_hy'">行业新闻</li>
+	        <li id="qy" class="${ptype == 'news_qy'?'cur':'' }" onclick="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=news_qy'">企业新闻</li>
+	        <li id="sp" class="${ptype == 'news_sp'?'cur':'' }" onclick="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=news_sp'">商品新闻</li>
 	    </ul>
 	    <!--行业新闻-->
 	    <div class="case-box new" style="display:block">

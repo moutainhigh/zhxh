@@ -90,7 +90,7 @@
 	    t3.pid = "right";
 	    t3.text = "制作专题";
 	    t3.iconCls = "subject";
-	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/subjectList";
+	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'subject'}";
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
     
@@ -99,7 +99,7 @@
 	    t4.pid = "right";
 	    t4.text = "FAQ";
 	    t4.iconCls = "faq";
-	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/faqList";
+	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'faq'}";
 	    t4.iconPosition = "top";
 	    dataList.push(t4);
     
@@ -108,7 +108,7 @@
 	    t5.pid = "right";
 	    t5.text = "联系我们";
 	    t5.iconCls = "linkus";
-	    t5.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/contactusList";
+	    t5.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'lxwm'}";
 	    t5.iconPosition = "top";
 	    dataList.push(t5);
 	    
@@ -117,7 +117,7 @@
 	    t6.pid = "right";
 	    t6.text = "工作招聘";
 	    t6.iconCls = "job";
-	    t6.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/jobList";
+	    t6.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'job'}";
 	    t6.iconPosition = "top";
 	    dataList.push(t6);
 	    
@@ -126,7 +126,7 @@
 	    t7.pid = "right";
 	    t7.text = "区域合作";
 	    t7.iconCls = "join";
-	    t7.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/joinList";
+	    t7.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'join'}";
 	    t7.iconPosition = "top";
 	    dataList.push(t7);
 	    
@@ -135,7 +135,7 @@
 	    t8.pid = "right";
 	    t8.text = "隐私政策";
 	    t8.iconCls = "policy";
-	    t8.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/policyList";
+	    t8.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'policy'}";
 	    t8.iconPosition = "top";
 	    dataList.push(t8);
 	    
@@ -144,7 +144,7 @@
 	    t9.pid = "right";
 	    t9.text = "合作伙伴";
 	    t9.iconCls = "partner";
-	    t9.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/partnerList";
+	    t9.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'partner'}";
 	    t9.iconPosition = "top";
 	    dataList.push(t9);
 	    
@@ -153,7 +153,7 @@
 	    t10.pid = "right";
 	    t10.text = "法律声明";
 	    t10.iconCls = "law";
-	    t10.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/lawList";
+	    t10.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'law'}";
 	    t10.iconPosition = "top";
 	    dataList.push(t10);
 
@@ -162,7 +162,7 @@
 	    t11.pid = "right";
 	    t11.text = "行业新闻";
 	    t11.iconCls = "news";
-	    t11.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/newshyList";
+	    t11.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'news_hy'}";
 	    t11.iconPosition = "top";
 	    dataList.push(t11);
         
@@ -171,7 +171,7 @@
 	    t12.pid = "right";
 	    t12.text = "企业新闻";
 	    t12.iconCls = "news";
-	    t12.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/newsqyList";
+	    t12.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'news_qy'}";
 	    t12.iconPosition = "top";
 	    dataList.push(t12);
         
@@ -180,7 +180,7 @@
 	    t13.pid = "right";
 	    t13.text = "商品新闻";
 	    t13.iconCls = "news";
-	    t13.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/newsspList";
+	    t13.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'news_sp'}";
 	    t13.iconPosition = "top";
 	    dataList.push(t13);
         
@@ -189,7 +189,7 @@
 	    t14.pid = "right";
 	    t14.text = "美容文章";
 	    t14.iconCls = "text";
-	    t14.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/articleList";
+	    t14.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'mrwz'}";
 	    t14.iconPosition = "top";
 	    dataList.push(t14);
         
@@ -198,7 +198,7 @@
 	    t15.pid = "right";
 	    t15.text = "案例库";
 	    t15.iconCls = "case";
-	    t15.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/caseList";
+	    t15.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/publicList&param={'ptype':'case'}";
 	    t15.iconPosition = "top";
 	    dataList.push(t15);
         

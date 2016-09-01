@@ -15,24 +15,67 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
     
 <script type="text/javascript">
-
+		//页面分类
+		var ptype = '${ptype}';
 		var grid;
-		
+		var columns = [];
        	$(function(){
-       		mini.parse();
+       		//
+       		columns= [
+ 						{ type: "checkcolumn",headerAlign:"center",width: 50},
+       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
+       	              	{ field: "action", width: 160, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+       	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+       	              	{ field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
+       	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
+       	            ];
+
+       		//
+       		if(ptype == "subject"){
+    			$("#ptitle").html("专题制作");
+       		}else if(ptype == "faq"){
+    			$("#ptitle").html("FAQ");
+    		}else if(ptype == "lxwm"){
+    			$("#ptitle").html("联系我们");
+    		}else if(ptype == "job"){
+    			$("#ptitle").html("工作招聘");
+    		}else if(ptype == "join"){
+    			$("#ptitle").html("区域合作");
+    		}else if(ptype == "policy"){
+    			$("#ptitle").html("隐私政策 ");
+    		}else if(ptype == "partner"){
+    			$("#ptitle").html("合作伙伴 ");
+    		}else if(ptype == "law"){
+    			$("#ptitle").html("法律声明 ");
+    		}else if(ptype == "mrwz" || ptype == "case" || ptype == "news_hy" || ptype == "news_qy" || ptype == "news_sp"){
+    			if(ptype == "mrwz")
+    				$("#ptitle").html("美容文章 ");
+    			else if(ptype == "case")
+    				$("#ptitle").html("案例库");
+    			else if(ptype == "news_hy")
+    				$("#ptitle").html("行业新闻");
+    			else if(ptype == "news_hy")
+    				$("#ptitle").html("企业新闻");
+    			else if(ptype == "news_hy")
+    				$("#ptitle").html("商品新闻");
+    			columns =[
+  							{ type: "checkcolumn",headerAlign:"center",width: 50},
+        	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
+        	              	{ field: "action", width: 160, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+        	                { field: "pic_url",name:"pic_url", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "图片(300*200)",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnNewsPicEdit"} },
+        	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+        	              	{ field: "brief",name:"brief", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "简介",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+        	              	{ field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否显示",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"隐藏"},{"id":"1","text":"显示"}] } },
+        	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
+        	            ];
+    		}
        		
+    		//初始化
+       		mini.parse();
 			grid = mini.get("grid");
         	grid.set({
         		url:"${pageContext.request.contextPath}/public/list.htmls",
-        		columns: [
-						{ type: "checkcolumn",headerAlign:"center",width: 50},
-      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-      	              	{ field: "pic",name:"pic", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "图片(300*300)",editor: { type:"buttonedit",allowInput:false,onbuttonclick:"onBtnNewsPicEdit"} },
-      	              	{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
-      	              	{ field: "title",name:"title", width: 380, headerAlign: "center", align:"center",allowSort: false, header: "标题",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "file_old_name",name:"file_old_name", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "文件名称",editor: {  type:"buttonedit",allowInput:false,onbuttonclick:"onBtnFileEdit" } },
-      	              	{ field: "sort",name:"sort", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
-      	            ],
+        		columns: columns,
 	            showFilterRow:false,
 	            allowCellSelect:true,
 	            allowCellEdit:true,
@@ -48,7 +91,7 @@
 	            showPageSize:false,
 	            pageSize:2000
 	        });
-        	grid.load({act:'public_file',parentid:'files',parenttype:'spec'});
+        	grid.load({act:'public_content',parentid:'content',parenttype:ptype});
         	drawcell();
         })
         
@@ -60,11 +103,18 @@
 	            uid = record._uid,
 	            value = e.value;
                 
-                if (field == "pic") {
+                if (field == "pic_path") {
+   	        		if (value == "") {
+   	        			e.cellhtml = "";
+       	        	}else {
+   	        			e.cellStyle = "background-color:"+value+";text-align:center";
+   	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' width='60px' />";
+   	        		}
+    	        }
+                if (field == "pic_url") {
    	        		if (value == undefined) {
    	        			e.cellhtml = "";
-       	        	}
-   	        		else {
+       	        	}else {
    	        			e.cellStyle = "background-color:"+value+";text-align:center";
    	        			e.cellHtml = "<img src='${pageContext.request.contextPath}/" + value + "' height='30px' />";
    	        		}
@@ -72,13 +122,29 @@
             });
         }
        	
+      	//表格渲染
+		function onActionRenderer(e) {
+            var grid = e.sender;
+            var record = e.record;
+           	var id = record.id;
+           	var s = ' <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >内容</a>'
+           	if(ptype == "subject" || ptype == "mrwz" || ptype == "case" || ptype == "news_hy" || ptype == "news_qy" || ptype == "news_sp"){
+           		s = ' <a class="Edit_Button" href="javascript:edit(\'' + id + '\')" >内容</a> | ';
+                s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
+           	}
+            return s;
+        }
+      
+       	//添加行
 		function addRow() {
-       		
-            var newRow = {sort:1};
+            var newRow = {
+            		sort: 1,
+            		isshow:0
+            		};
             grid.addRow(newRow, 0);
             grid.beginEditCell(newRow, "title");
         }
-		
+		//删除行
 		function delRow() {
 			var cf1 = "确定要删除选中的数据吗？<br><p style='font-size:12px; color:red'>注意：删除后，不可恢复，请谨慎操作.</p>";
         	var rows = grid.getSelecteds();
@@ -87,7 +153,7 @@
        		 	return;
        	 	}
        	 
-       	 	parent.parent.layer.msg(cf1, {
+	       	parent.parent.layer.msg(cf1, {
 	 	 		icon:3
 	 	 		,time: 0 //不自动关闭
 	 	  		,btn: ['确认删除', '取消']
@@ -97,7 +163,7 @@
 	 	  		}
 	 		});
         }
-       	
+       	//保存
 		function save() {
 	    	grid.validate();
 	        if (grid.isValid() == false) {
@@ -123,7 +189,7 @@
 	        $.ajax({
 	        	async:false,
 	            url: "${pageContext.request.contextPath}/public/save.htmls",
-	            data: {'objs':json,'act':'public_file','parentid':'files','parenttype':'spec'},
+	            data: {'objs':json,'act':'public_content','parentid':'content','parenttype':ptype},
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
@@ -136,19 +202,7 @@
 	        });
 	    }
 		
-		function onActionRenderer(e) {
-            var grid = e.sender;
-            var record = e.record;
-           	var id = record.id;
-           	var filePath = record.file_path;
-           	var s = "";
-           	if(filePath != undefined){
-           		s = ' <a class="Edit_Button" href="${pageContext.request.contextPath}/pcMain/downloadfile.htmls?id=' + id + '" >下载</a>'
-           	}
-            		
-            return s;
-        }
-		
+		//富文本-编辑内容
 		function edit(id){
 			if(id == 'undefined'){
 				parent.parent.layer.msg("请先保存数据，再操作!",{icon:6});
@@ -173,7 +227,13 @@
 	         });
 		}
 		
-		//上传文件图片
+		//获取URL
+		function getUrl(id) {
+       		var serv_path = "${pageContext.request.contextPath}";
+       		parent.parent.layer.msg(serv_path + "/pcMain/product_c.htmls?id=" + id,{icon:6,time:5000});
+       	}
+		
+		//上传文章图片
 		function onBtnNewsPicEdit(e) {
         	var buttonEdit = e.sender;
         	var row = grid.getEditorOwnerRow(buttonEdit);
@@ -185,44 +245,17 @@
         	
         	mini.open({
                 url: bootPATH + "../common/dispatch.htmls?page=/view/system/product/upload_pic",
-                title: "上传图片", width: 600, height:500,
+                title: "上传文章图片", width: 600, height:500,
                 allowResize:true,
                 onload: function () {
                 	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id,saveFolder:"upload",forObj:"public_file_pic"};
+               	 	var data = {id:row.id,saveFolder:"upload",forObj:"public_content_pic"};
                     //var data = rows[0];
                     iframe.contentWindow.SetData(data);
                 },
                 ondestroy: function (action) {
                 	grid.cancelEdit();
             		grid.reload();
-                }
-            });
-        }
-        
-		//上传文件
-		function onBtnFileEdit(e) {
-        	var buttonEdit = e.sender;
-			var row = grid.getEditorOwnerRow(buttonEdit);
-        	
-        	if (null == row || typeof(row.id) == "undefined" || row.id == "") {
-        		parent.parent.layer.msg("行记录还没有保存，请先保存后再上传.",{icon:6});
-	      		return;
-	      	}
-        	
-        	mini.open({
-                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/upload_file",
-                title: "上传文件", width: 600, height:500,
-                allowResize:true,
-                onload: function () {
-                	var iframe = this.getIFrameEl();
-               	 	var data = {id:row.id};
-                    //var data = rows[0];
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	grid.cancelEdit();
-                	grid.reload();
                 }
             });
         }
@@ -234,7 +267,7 @@
             <tbody>
              <tr>
                  <td style="width:100%;">
-                 	<span id="pid" style="padding-left:5px;">行业新闻</span>
+                 	<span id="ptitle" style="padding-left:5px;"></span>
                  </td>
                  <td style="white-space:nowrap;">
                  	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>

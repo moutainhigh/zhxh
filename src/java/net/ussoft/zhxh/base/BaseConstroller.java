@@ -1,10 +1,13 @@
 package net.ussoft.zhxh.base;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.xmlbeans.impl.jam.mutable.MPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 
@@ -12,9 +15,11 @@ import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Sys_account;
+import net.ussoft.zhxh.model.Sys_public;
 import net.ussoft.zhxh.service.IAccountService;
 import net.ussoft.zhxh.service.IPublicBrandService;
 import net.ussoft.zhxh.service.IPublicContentService;
+import net.ussoft.zhxh.service.ISysPublicService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 
@@ -35,6 +40,9 @@ public class BaseConstroller {
 	
 	@Resource
 	IPublicContentService contentService;  //富文本
+	
+	@Resource
+	ISysPublicService publicService;	//LOGO
 	
 	@Autowired  
 	private  HttpServletRequest request; 
@@ -87,11 +95,18 @@ public class BaseConstroller {
 	}
 	
 	public void init(ModelMap modelMap){
+		//首页logo
+		Sys_public logo = publicService.getById("1");
+		modelMap.put("logo", logo);
 		//品牌
 		List<Public_brand> brandList = brandService.list(1);
 		
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("parentid = ", "content");
+		map.put("parenttype = ", "subject");	//专题-
+		map.put("isshow = ", 1);			//显示
 		//专题
-		List<Public_content> subjectList = contentService.list("zt", "dzyf");
+		List<Public_content> subjectList = contentService.list(map);
 		
 		modelMap.put("brandList", brandList);
 		modelMap.put("subjectList", subjectList);

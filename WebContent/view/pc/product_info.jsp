@@ -69,23 +69,24 @@
 	 </c:choose>
 	</div>
 	<div class="HTML-con">
-	   
+	   <c:if test="${linkPros.size() > 0 }">
 	    <div class="shop-page-cnter2">
 	        <h3>相关商品</h3>
 	        <div class="area">
 	            <div class="cons">
-	                <%-- <div class="con" style="left:0;"><!--调整第一个显示位置请修改"left:0px;的值" -->
-	                    <c:forEach var="item" items="${proList }">
+	                <div class="con" style="left:0;"><!--调整第一个显示位置请修改"left:0px;的值" -->
+	                    <c:forEach var="item" items="${linkPros }">
 	                    	<a href="${pageContext.request.contextPath}/pcMain/product_c.htmls?id=${item.id}" target="_blank" class="left">
 	                        	<img src="${pageContext.request.contextPath}/${item.productpic }" />
 	                        	<p>${item.productname }</p>
 	                    	</a>
 	                    </c:forEach>
-	                </div> --%>
+	                </div>
 	            </div>
 	            <div class="btns"><a href="javascript:void(0)" class="up"></a><a href="javascript:void(0)" class="down"></a></div>
 	        </div>
 	    </div>
+	    </c:if>
 	    <div class="shop-page-cnter3 clearfix">
 	        <span class="fl">评价  <span id="p_count"></span></span>
 	        <ul id="itemContainer" class="comment fr">

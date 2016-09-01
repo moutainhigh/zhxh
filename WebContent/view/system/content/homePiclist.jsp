@@ -88,42 +88,42 @@
 		}
 		
 		function delRow() {
-        	var cf1 = "确定要删除吗？<br>&nbsp;&nbsp;&nbsp;&nbsp;注意：不可恢复，请谨慎操作。";
-        	
+			var cf1 = "确定要删除选中的数据吗？<br><p style='font-size:12px; color:red'>注意：删除后，不可恢复，请谨慎操作.</p>";
         	var rows = grid.getSelecteds();
-          	 
        	 	if (rows.length == 0) {
-       	 		mini.alert("请选择要删除的数据");
+       	 		parent.parent.layer.msg("请选择要删除的数据.",{icon:6});
        		 	return;
        	 	}
        	 
-       	 	mini.confirm(cf1, "系统提示",
-                 function (action) {
-                     if (action == "ok") {
-                    	 grid.removeRows(rows, false);
-                     }
-                 }
-             );
-       	 
+       	 	parent.parent.layer.msg(cf1, {
+	 	 		icon:3
+	 	 		,time: 0 //不自动关闭
+	 	  		,btn: ['确认删除', '取消']
+	 	  		,yes: function(index){
+	 	  			grid.removeRows(rows, false);
+	 	    		parent.parent.layer.close(index);
+	 	  		}
+	 		});
         }
        	
 		function save() {
 	    	grid.validate();
 	        if (grid.isValid() == false) {
-	            mini.alert("输入有误，请校验输入单元格内容","系统提示",
-	            	function(action){
-	            		//alert(action);
-	            		var error = grid.getCellErrors()[0];
+	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+	        		  icon: 5,
+	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	        		}, function(){
+	        			var error = grid.getCellErrors()[0];
 	            		grid.beginEditCell(error.record, error.column);
-		            }
-	            );
+	        		}
+	        	);
 	            return;
 	        }
 	    	
 	        var objs = grid.getChanges();
 	        var json = mini.encode(objs);
 	        if (json.length == 2) {
-	        	mini.alert("没有发现修改的内容，请直接修改，然后再保存");
+	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存",{icon:6});
 	        	return;
 	        }
 	        grid.loading("保存中，请稍后......");
@@ -135,7 +135,7 @@
 	            type: "post",
 	            dataType:"text",
 	            success: function (text) {
-	            	mini.alert("保存完毕。");
+	            	parent.parent.layer.msg("保存完毕",{icon:6});
 	            	grid.reload();
 	            },
 	            error: function (jqXHR, textStatus, errorThrown) {

@@ -1,6 +1,7 @@
 package net.ussoft.zhxh.service;
 
 import java.util.List;
+import java.util.Map;
 
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_content;
@@ -23,14 +24,17 @@ public interface IPublicContentService {
 	 * 查询所有
 	 * @return list
 	 * */
-	public List<Public_content> list(String parentid,String parenttype);
+	public List<Public_content> list(Map<String, Object> map);
 	
 	/**
 	 * 查询所有 分页
 	 * @param pageBean
+	 * @param parentid
+	 * @param parenttype
+	 * @param isshow
 	 * @return list
 	 * */
-	public PageBean<Public_content> list(PageBean<Public_content> pageBean,String parentid,String parenttype);
+	public PageBean<Public_content> list(PageBean<Public_content> pageBean,String parentid,String parenttype,int isshow);
 	
 	/**
 	 * 添加

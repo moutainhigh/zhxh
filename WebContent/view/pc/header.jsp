@@ -29,7 +29,7 @@
 
 <div class="header-three">
 	  	<div class="header header-width clearfix">
-	    		<h1 class="logo fl"><a href="${pageContext.request.contextPath}/pcMain/pcindex.htmls"><img src="${pageContext.request.contextPath}/images/logo.png" /></a></h1>
+	    		<h1 class="logo fl"><a href="${pageContext.request.contextPath}/pcMain/pcindex.htmls"><img src='${pageContext.request.contextPath}/${logo.pic_path == null ? brand.brandlogo:logo.pic_path}' /></a></h1>
 	    		<ul class="user-header fr">
 	    			<c:choose>
 	    				<c:when test="${sessionScope.pc_user_sessiion != null }">

@@ -41,7 +41,7 @@
 	<!--头部 页面头部不一样 程序注意-->
 	<div class="index-header">
 	  	<div class="indexheader header clearfix">
-	    		<h1 class="logo fl"><a href="javascript:;"><img src="${pageContext.request.contextPath}/images/logo.png" /></a></h1>
+	    		<h1 class="logo fl"><a href="javascript:;"><img src="${pageContext.request.contextPath}/${logo.pic_path}" /></a></h1>
 	    		<ul class="header-user fr">
 	    			 <c:choose>
 	    				<c:when test="${sessionScope.pc_user_sessiion != null }">
@@ -87,9 +87,12 @@
 	    <c:forEach var="brand" items="${brandList }">
 	    	<a href="${pageContext.request.contextPath}/pcMain/zh.htmls?id=${brand.id}" >${brand.brandname }</a>
 	    </c:forEach>
+	    <c:forEach var="subject" items="${subjectList }" begin="0" end="0">
+	    	<a href="${pageContext.request.contextPath}/pcMain/subject.htmls?id=${subject.id}">${subject.title }</a>
+	    </c:forEach>
 	    </div>
 	    <div class="imgnum-bottom">
-	    <c:forEach var="subject" items="${subjectList }">
+	    <c:forEach var="subject" items="${subjectList }" begin="1" end="100">
 	    	<a href="${pageContext.request.contextPath}/pcMain/subject.htmls?id=${subject.id}">${subject.title }</a>
 	    </c:forEach>
 	    </div>

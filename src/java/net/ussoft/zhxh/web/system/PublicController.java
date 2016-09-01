@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -86,7 +87,10 @@ public class PublicController extends BaseConstroller{
 	 */
 	@RequestMapping(value="/edit_o",method=RequestMethod.GET)
 	public ModelAndView edit(String parentid,String parenttype,ModelMap modelMap) throws IOException {
-		List<Public_content> list = contentService.list(parentid, parenttype);
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("parentid = ", parentid);
+		map.put("parenttype = ", parenttype);
+		List<Public_content> list = contentService.list(map);
 		Public_content content = new Public_content();
 		if(list.size() >0){
 			content = list.get(0);
@@ -182,7 +186,7 @@ public class PublicController extends BaseConstroller{
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex + 1);
 			p.setOrderBy("sort asc ,createtime desc");
-			p = contentService.list(p,parentid,parenttype);
+			p = contentService.list(p,parentid,parenttype,-1);
 			
 			HashMap<String,Object> map = new HashMap<String,Object>();
 			

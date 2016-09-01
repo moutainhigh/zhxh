@@ -32,33 +32,33 @@
 	    </div>
 	    <!--分页-->
         <ul class="page">
-           	<li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=${ptype }&page=1'" class="${page == 1?'cur':'' }">1</a></li>
+           	<li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/spec.htmls?ptype=${ptype }&page=1'" class="${page == 1?'cur':'' }">1</a></li>
 			<c:if test="${pageCount != 1}">  
 			    <c:choose>  
 			        <c:when test="${page <= 5}">  
 			            <c:forEach var="i" begin="2" end="${page}">  
-			                <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=${ptype }&page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
+			                <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/spec.htmls?ptype=${ptype }&page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
 			            </c:forEach>
 			        </c:when>  
 			        <c:otherwise>
 			        	<li id="" >...</li>
 			            <c:forEach var="i" begin="${page-3}" end="${page}">  
-			                <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=${ptype }&page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
+			                <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/spec.htmls?ptype=${ptype }&page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
 			            </c:forEach>  
 			        </c:otherwise>  
 			    </c:choose>
 			    <c:choose>
 			        <c:when test="${page >= pageCount-4 || pageCount-4 <= 0}">  
 			            <c:forEach var="i" begin="${page + 1}" end="${pageCount}">  
-			               <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=${ptype }&page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
+			               <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/spec.htmls?ptype=${ptype }&page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
 			            </c:forEach>  
 			        </c:when>  
 			        <c:otherwise>  
 			            <c:forEach var="i" begin="${page + 1}" end="${page + 3}">  
-			                <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=${ptype }&page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
+			                <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/spec.htmls?ptype=${ptype }&page=${i }'" class="${page == i?'cur':'' }">${i }</a></li>
 			            </c:forEach>  
 			            <li id="" >...</li>
-			            <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/news.htmls?ptype=${ptype }&page=${pageCount }'" class="${page == i?'cur':'' }">${pageCount }</a></li>
+			            <li><a href="javascript:window.location.href='${pageContext.request.contextPath}/pcMain/spec.htmls?ptype=${ptype }&page=${pageCount }'" class="${page == i?'cur':'' }">${pageCount }</a></li>
 			        </c:otherwise>  
 			    </c:choose>  
 			</c:if>

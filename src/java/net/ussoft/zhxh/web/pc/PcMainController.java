@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,10 +23,13 @@ import net.ussoft.zhxh.model.Filesdown;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Product_list;
 import net.ussoft.zhxh.model.Product_rated;
+import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
+import net.ussoft.zhxh.model.Public_product;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_video;
+import net.ussoft.zhxh.model.Sys_public;
 import net.ussoft.zhxh.service.IBrandfirstService;
 import net.ussoft.zhxh.service.IProductListService;
 import net.ussoft.zhxh.service.IProductRatedService;
@@ -37,6 +41,7 @@ import net.ussoft.zhxh.service.IPublicProductSizeService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.service.IPublicVideoService;
 import net.ussoft.zhxh.service.IPublicfilesdownService;
+import net.ussoft.zhxh.service.impl.SysPublicService;
 import net.ussoft.zhxh.util.Logger;
 
 import org.springframework.stereotype.Controller;
@@ -91,17 +96,20 @@ public class PcMainController extends BaseConstroller {
 	@Resource
 	private IPublicProductSizeService psizeService;	//商品规格
 	
+	@Resource
+	private SysPublicService publicService;
 	
 	@RequestMapping(value="/pcindex")
 	public ModelAndView index (ModelMap modelMap) throws Exception {
-		
+		//首页logo
+		Sys_public logo = publicService.getById("1");
 		//首页轮播图
 		List<Public_pic> homePicList = picService.list("home_pic","lbt",1);
 		//初始品牌、专题
 		init(modelMap);
 		
+		modelMap.put("logo", logo);
 		modelMap.put("homePic", homePicList);
-		
 		return new ModelAndView("/view/pc/index", modelMap);
 	}
 	
@@ -129,7 +137,11 @@ public class PcMainController extends BaseConstroller {
 	@RequestMapping(value="/service")
 	public ModelAndView footer (String ptype,ModelMap modelMap) throws Exception {
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"faq";
-		List<Public_content> serviceList = contentService.list("service", ptype);	//专题
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("parentid = ", "content");
+		map.put("parenttype = ", ptype);
+		map.put("isshow = ", 1);			//显示
+		List<Public_content> serviceList = contentService.list(map);
 		
 		//初始品牌、专题
 		init(modelMap);
@@ -147,17 +159,24 @@ public class PcMainController extends BaseConstroller {
 	@RequestMapping(value="/story-c")
 	public ModelAndView story_c (String id,ModelMap modelMap) throws Exception {
 		Public_content content = new Public_content();
-		List<Public_content> storys = contentService.list(id, "brandstory");
-		
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("parentid = ", id);
+		map.put("parenttype = ", "brandstory");
+		map.put("isshow = ", 0);  //此处 isshow赋值0 不代表隐藏
+		List<Public_content> storys = contentService.list(map);
 		
 		if (storys.size() == 1) {
 			content = storys.get(0);
 		}
+		//品牌
+		Public_brand brand = brandService.getById(id);
+				
 		//初始品牌、专题
 		init(modelMap);
 		
 		modelMap.put("story", content);
-		
+		modelMap.put("id", id);
+		modelMap.put("brand", brand);
 		return new ModelAndView("/view/pc/storycontent", modelMap);
 	}
 	
@@ -174,10 +193,10 @@ public class PcMainController extends BaseConstroller {
 		p.setPageNo(page);
 		p.setOrderBy("sort asc,createtime desc");
 		
-		ptype = !"".equals(ptype) && ptype != null ?ptype:"hy";
-		p = contentService.list(p,"news", ptype);
+		ptype = !"".equals(ptype) && ptype != null ?ptype:"news_hy";
+		p = contentService.list(p,"content", ptype,1);
 		
-		//ptype: hy 行业新闻  qy 企业新闻  sp 商品新闻
+		//ptype: news_hy 行业新闻  news_qy 企业新闻  news_sp 商品新闻
 		
 		//初始品牌、专题
 		init(modelMap);
@@ -224,7 +243,7 @@ public class PcMainController extends BaseConstroller {
 		p.setOrderBy("sort asc,createtime desc");
 		
 		ptype = !"".equals(ptype) && ptype != null ?ptype:"mrwz"; //美容文章
-		p = contentService.list(p,"article", ptype);
+		p = contentService.list(p,"content", ptype,1);
 		
 		//初始品牌、专题
 		init(modelMap);
@@ -270,8 +289,8 @@ public class PcMainController extends BaseConstroller {
 		p.setOrderBy("sort");
 		p.setOrderType("asc");
 		
-		ptype = !"".equals(ptype) && ptype != null ?ptype:"alk"; //案例库
-		p = contentService.list(p,"case", ptype);
+		ptype = !"".equals(ptype) && ptype != null ?ptype:"case"; //案例库
+		p = contentService.list(p,"content", ptype,1);
 		
 		//初始品牌、专题
 		init(modelMap);
@@ -342,13 +361,12 @@ public class PcMainController extends BaseConstroller {
 	 * */
 	@RequestMapping(value="/zh")
 	public ModelAndView zh (String id,ModelMap modelMap) throws Exception {
-		
 		//品牌 轮播图
 		List<Public_pic> brandPicList = picService.list(id,"brandfirst_lb_pic",1);
-		
 		//品牌综合页内容
 		List<Brandfirst> bfList = bfService.list(id);
-		
+		//品牌
+		Public_brand brand = brandService.getById(id);
 		//初始品牌、专题
 		init(modelMap);
 		modelMap.put("brandPicList", brandPicList);
@@ -356,6 +374,7 @@ public class PcMainController extends BaseConstroller {
 		
 		modelMap.put("id", id);
 		modelMap.put("ptype", "1"); //表示专题，用于隐藏品牌故事
+		modelMap.put("brand", brand);
 		return new ModelAndView("/view/pc/brand_zh", modelMap);
 	}
 	
@@ -375,6 +394,8 @@ public class PcMainController extends BaseConstroller {
 		List<Public_video> videoList = videoService.list(id, "brandlist_video",1);
 		//底部图片
 		List<Public_pic> brandlist_pic = picService.list(id,"brandlist_pic",1);
+		//品牌
+		Public_brand brand = brandService.getById(series.getParentid());
 		
 		//初始品牌、专题
 		init(modelMap);
@@ -382,8 +403,8 @@ public class PcMainController extends BaseConstroller {
 		modelMap.put("brandlistPic", brandlistPic);
 		modelMap.put("videoList", videoList);
 		modelMap.put("brandlist_pic", brandlist_pic);
-		
-		modelMap.put("id", id);
+		modelMap.put("brand", brand);
+		modelMap.put("id", series.getParentid()); //品牌ID，用于头部菜单选中
 		
 		return new ModelAndView("/view/pc/brand_series", modelMap);
 	}
@@ -404,6 +425,9 @@ public class PcMainController extends BaseConstroller {
 		p.setOrderBy("sizesort");
 		p = productlistService.listLableProduct(p, id,1);	//列表下的商品
 		
+		//品牌
+		Public_brand brand = brandService.getById(pro_list.getParentid());
+				
 		//初始品牌、专题
 		init(modelMap);
 		
@@ -413,8 +437,9 @@ public class PcMainController extends BaseConstroller {
 		modelMap.put("page", page);
 		modelMap.put("pageCount", p.getPageCount());
 		modelMap.put("rowCount", p.getRowCount());
-		modelMap.put("id", id);
-		
+		modelMap.put("brand", brand);
+		modelMap.put("id", pro_list.getParentid());	//品牌ID，用于头部菜单选中
+		modelMap.put("plid", id);	//分页用
 		return new ModelAndView("/view/pc/products", modelMap);
 	}
 	
@@ -436,7 +461,11 @@ public class PcMainController extends BaseConstroller {
 		List<Public_pic> proPics = null;
 		if(product.getShowtype() == 1){
 			//商品详情-富文本
-			List<Public_content> list = contentService.list(product.getId(), "productrich");
+			Map<String, Object> map = new LinkedHashMap<String, Object>();
+			map.put("parentid = ", product.getId());
+			map.put("parenttype = ", "productrich");
+			map.put("isshow = ", 0);  //此处 isshow赋值0 不代表隐藏
+			List<Public_content> list = contentService.list(map);
 			content = new Public_content();
 			if(list.size() >0)
 				content = list.get(0);
@@ -444,13 +473,20 @@ public class PcMainController extends BaseConstroller {
 			//仅图片
 			proPics = picService.list(product.getId(), "productContentPic", 1);
 		}
-		
+		//查找商品表
+		Public_product pPro = productService.getById(product.getProductid());
+		//品牌
+		Public_brand brand = brandService.getById(pPro.getBrandid());
 		//相关商品
-//		PageBean<Public_product> p = new PageBean<Public_product>();
-//		p.setPageSize(10);
-//		p.setPageNo(1);
-//		p.setOrderBy("sort");
-//		List<Public_product> proList = productService.list(p, product.getBrandid(),1);
+		List<String> idlist = new ArrayList<String>();
+		if(!"".equals(product.getLinkids()) && null != product.getLinkids()){
+			String[] ids = product.getLinkids().split(",");
+			for(String obj:ids){
+				idlist.add(obj);
+			}
+		}
+		List<Public_product_size> linkPros = psizeService.getByIds(idlist);
+		
 		//商品评价
 		
 		
@@ -462,6 +498,9 @@ public class PcMainController extends BaseConstroller {
 		modelMap.put("proPics", proPics);
 		modelMap.put("psizeList", psizeList);
 		
+		modelMap.put("linkPros", linkPros);
+		modelMap.put("brand", brand);
+		modelMap.put("id", brand.getId());
 		return new ModelAndView("/view/pc/product_info", modelMap);
 	}
 	
