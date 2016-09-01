@@ -20,6 +20,7 @@ public class Filesdown {
 	private String pic;
 	private Integer sort;
 	private String parenttype;
+	private Integer isshow;
 	
 	
 	@Id
@@ -95,6 +96,12 @@ public class Filesdown {
 	}
 	public void setParenttype(String parenttype) {
 		this.parenttype = parenttype;
+	}
+	public Integer getIsshow() {
+		return isshow;
+	}
+	public void setIsshow(Integer isshow) {
+		this.isshow = isshow;
 	}
 	
 	

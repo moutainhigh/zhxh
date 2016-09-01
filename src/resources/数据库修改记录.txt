@@ -166,6 +166,8 @@
 20160901
 1、修改表public_content
 	(1)增加isshow int 11  是否显示
+2、修改表filesdown
+	（1）增加isshow int 11 是否显示
 	
 	
 	
