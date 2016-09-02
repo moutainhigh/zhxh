@@ -19,13 +19,13 @@
 		//解决视频在移动端100%显示
 		if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
 			//手机
-			$("#my-video").addClass("vjs-fluid");
-			$("#my-video").addClass("placeholder");
+			$("#preview-player").addClass("vjs-fluid");
+			$("#preview-player").addClass("placeholder");
 			
 		}else {
 			//PC	
-			$("#my-video").removeClass("vjs-fluid");
-			$("#my-video").removeClass("placeholder");
+			$("#preview-player").removeClass("vjs-fluid");
+			$("#preview-player").removeClass("placeholder");
 		}
 	});
 </script>
