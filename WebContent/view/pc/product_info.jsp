@@ -97,7 +97,7 @@
 	                <div class="con" style="left:0;"><!--调整第一个显示位置请修改"left:0px;的值" -->
 	                    <c:forEach var="item" items="${linkPros }">
 	                    	<a href="${pageContext.request.contextPath}/pcMain/product_c.htmls?id=${item.id}" target="_blank" class="left">
-	                        	<img src="${pageContext.request.contextPath}/${item.productpic }" />
+	                        	<img src="${pageContext.request.contextPath}/${item.productpic }" height="200px;" />
 	                        	<p>${item.productname }</p>
 	                    	</a>
 	                    </c:forEach>
