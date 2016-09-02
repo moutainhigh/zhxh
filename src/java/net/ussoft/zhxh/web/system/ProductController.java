@@ -455,5 +455,34 @@ public class ProductController extends BaseConstroller {
 		out.print(result);
 	}
 	
+	/**
+	 * 克隆一个商品规格
+	 * @param cloneid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/clonesave",method=RequestMethod.POST)
+	public void clonesave(String cloneid,HttpServletResponse response) throws IOException {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "success";
+		
+		if ("".equals(cloneid) || cloneid == null) {
+			out.print(result);
+			return;
+		}
+		
+		boolean b = productSizeService.cloneSize(cloneid,super.getProjectRealPath());
+		
+		if (!b) {
+			out.print("error");
+		}
+		else {
+			out.print(result);
+		}
+	}
 	
 }

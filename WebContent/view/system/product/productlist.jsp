@@ -499,6 +499,52 @@
             tmpGrid.beginEditCell(newRow, editField);
         }
 		
+		function addCopyRow() {
+			var rows = grid_product_size.getSelecteds();
+			var cloneid = "";
+			if (rows.length > 1) {
+				parent.parent.layer.msg("只能选择一个商品规格进行克隆新增。",{icon:6});
+				return;
+			}
+			else if (rows.length == 0) {
+       	 		parent.parent.layer.msg("请选择一个商品规格进行克隆新增.",{icon:6});
+       		 	return;
+       	 	}
+       	 	else {
+       	 		if (typeof(rows[0].id) == "undefined" || rows[0].id == "") {
+       	 			parent.parent.layer.msg("当前商品还没有保存。请先保存或刷新商品后再克隆创建商品规格.",{icon:6});
+       	 			return;
+       	 		}
+       	 		else {
+       	 			cloneid = rows[0].id;
+       	 		}
+       	 	}
+			
+			parent.parent.layer.msg("确定克隆该商品规格吗？", {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认', '取消']
+    	  		,yes: function(index){
+    	  			grid_product_size.loading("保存中，请稍后......");
+    		        
+    		        $.ajax({
+    		        	async:false,
+    		            url: "${pageContext.request.contextPath}/product/clonesave.htmls",
+    		            data: {'cloneid':cloneid},
+    		            type: "post",
+    		            dataType:"text",
+    		            success: function (text) {
+    		            	parent.parent.layer.msg("克隆完毕。",{icon:6});
+    		            	grid_product_size.reload();
+    		            },
+    		            error: function (jqXHR, textStatus, errorThrown) {
+    		                mini.alert(jqXHR.responseText);
+    		            }
+    		        });
+    	  		}
+    		});
+        }
+		
 		function delRow(grid_type) {
 			
 			var cf1 = "确定要删除选中的数据吗？";
@@ -746,6 +792,7 @@
 		                 </td>
 		                 <td style="white-space:nowrap;">
 		                  	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_product_size')">新增</a>
+		                  	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addCopyRow()">新增[克隆]</a>
 		                	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_product_size')">删除</a>
 			                <span class="separator"></span>
 			         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_product_size')">保存</a>

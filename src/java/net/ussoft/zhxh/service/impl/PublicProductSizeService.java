@@ -1,8 +1,10 @@
 package net.ussoft.zhxh.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -14,6 +16,7 @@ import net.ussoft.zhxh.dao.PublicContentDao;
 import net.ussoft.zhxh.dao.PublicPicDao;
 import net.ussoft.zhxh.dao.PublicProductSizeDao;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_pic;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.service.IPublicProductSizeService;
@@ -117,6 +120,82 @@ public class PublicProductSizeService implements IPublicProductSizeService{
 	@Override
 	public Public_product_size insert(Public_product_size product_size) {
 		return productSizeDao.save(product_size);
+	}
+
+	@Transactional("txManager")
+	@Override
+	public boolean cloneSize(String cloneid,String realPath) {
+		//克隆出规格、详细页、推荐商品、规格图标都一样的。
+		//获取本尊
+		Public_product_size pSize = productSizeDao.get(cloneid);
+		
+		//复制一个新的
+		String oldid = pSize.getId();
+		pSize.setId(UUID.randomUUID().toString());
+		//处理商品主图
+		if (null != pSize.getProductpic() && !"".equals(pSize.getProductpic())) {
+			File f = new File(realPath + pSize.getProductpic());
+			if (f.exists()) {
+				String fileName=f.getName();
+				String prefix=fileName.substring(fileName.lastIndexOf(".")+1);
+				
+				String newname = UUID.randomUUID().toString() + "." + prefix.toLowerCase();
+				
+				FileOperate.copyFile(realPath + pSize.getProductpic(), realPath + "file/pic/" + newname);
+				
+				pSize.setProductpic("file/pic/" + newname);
+			}
+		}
+		
+		productSizeDao.save(pSize);
+		
+		String sql = "";
+		List<Object> values = new ArrayList<Object>();
+		
+		//复制详细页 富文本
+		sql = "select * from public_content where parentid = ? and parenttype = ?";
+		values.add(oldid);
+		values.add("productrich");
+		List<Public_content> tmpList = contentDao.search(sql, values);
+		
+		if (tmpList.size() == 1) {
+			Public_content tmpCon = tmpList.get(0);
+			
+			tmpCon.setId(UUID.randomUUID().toString());
+			tmpCon.setParentid(pSize.getId());
+			contentDao.save(tmpCon);
+		}
+		
+		//复制详细页 公共图片
+		sql = "select * from public_pic where parentid=? and parenttype = ?";
+		values.clear();
+		values.add(oldid);
+		values.add("productContentPic");
+		
+		List<Public_pic> tmpPicsList = picDao.search(sql, values);
+		
+		if (tmpPicsList.size() > 0) {
+			for (Public_pic pic : tmpPicsList) {
+				File f = new File(realPath + pic.getPic_path());
+				
+				if (f.exists()) {
+					String fileName=f.getName();
+					String prefix=fileName.substring(fileName.lastIndexOf(".")+1);
+					
+					String newname = UUID.randomUUID().toString() + "." + prefix.toLowerCase();
+					
+					FileOperate.copyFile(realPath + pic.getPic_path(), realPath + "file/upload/" + newname);
+					
+					pic.setId(UUID.randomUUID().toString());
+					pic.setParentid(pSize.getId());
+					pic.setPic_path("file/upload/" + newname);
+					picDao.save(pic);
+				}
+			}
+		}
+		
+		
+		return true;
 	}
 
 }

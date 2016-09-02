@@ -66,4 +66,11 @@ public interface IPublicProductSizeService {
 	 * @return
 	 * */
 	public int delete(String id,String realPath);
+	
+	/**
+	 * 克隆一个新的商品规格
+	 * @param cloneid
+	 * @return
+	 */
+	public boolean cloneSize(String cloneid,String realPath);
 }
