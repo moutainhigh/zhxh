@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
     
 <div class="user-l fl">
-    <span>欢迎回来，孙俪！</span>
+    <span>${sessionScope.pc_user_sessiion.phonenumber}</span>
     <div class="user-nav">
         <!-- <a id="" href="个人中心.html"><b></b>我的账户</a> -->
         <a id="myorder" href="${pageContext.request.contextPath}/porder/orders.htmls"><b></b>我的订单</a>

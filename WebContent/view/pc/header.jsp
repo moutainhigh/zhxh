@@ -28,7 +28,7 @@
 -->
 </style>
 
-<div class="header-three">
+<div class="header-three" style="background: ${brand.brandcolor}">
 	  	<div class="header header-width clearfix">
 	    		<h1 class="logo fl"><a href="${pageContext.request.contextPath}/pcMain/pcindex.htmls"><img src='${pageContext.request.contextPath}/${brand.brandlogo == null ? logo.pic_path:brand.brandlogo}' /></a></h1>
 	    		<ul class="user-header fr">

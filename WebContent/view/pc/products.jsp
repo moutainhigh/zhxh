@@ -27,7 +27,7 @@
 	            <dt class="fl"><img src="${pageContext.request.contextPath}/${item.productpic }" /></dt>
 	            <dd class="fl">
 	                <span>${item.productname }</span>
-	                <em>Essence lotion, lip repair muscles</em>
+	                <em>${item.productmemo }</em>
 	                <a href="${pageContext.request.contextPath}/pcMain/product_c.htmls?id=${item.id }" target="_blank">查看详情</a>
 	            </dd>
 	        </dl>
