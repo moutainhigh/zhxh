@@ -12,9 +12,6 @@
 <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/js/videojs_5.10.4/video-js.css">
-<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/video.js"></script>
-<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/videojs-mux.js"></script>
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
@@ -35,5 +32,9 @@
 	
 	<!--页脚-->
 	<%@ include file="/view/pc/bottom.jsp" %>
+	<!-- 看到这里我就想骂人，在苹果手机中（垃圾苹果），加载视频的 js要放在页面底部最后加载 -->
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/js/videojs_5.10.4/video-js.css">
+	<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/video.js"></script>
+	<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/videojs-mux.js"></script>
 </body>
 </html>

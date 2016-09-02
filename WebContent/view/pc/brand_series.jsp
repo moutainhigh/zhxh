@@ -13,10 +13,6 @@
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/pc/koala.min.1.5.js"></script>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/js/videojs_5.10.4/video-js.css">
-<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/video.js"></script>
-<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/videojs-mux.js"></script>
-
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
@@ -82,5 +78,9 @@
 	</c:forEach>
 	<!--页脚-->
 	<%@ include file="/view/pc/bottom.jsp" %>
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/js/videojs_5.10.4/video-js.css">
+	<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/video.js"></script>
+	<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/videojs-mux.js"></script>
 </body>
 </html>
