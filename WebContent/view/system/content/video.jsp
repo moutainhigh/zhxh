@@ -9,9 +9,24 @@
 
 	<style type="text/css">
 	    body{
-	        margin:0;padding:0;border:0;width:50%;overflow:hidden;
+	        margin:0;padding:0;border:0;width:100%;overflow:hidden;
 	    }    
     </style>
+    <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
+    <script type="text/javascript">
+		$(function(){
+			if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+				//手机
+				$("#my-video").addClass("vjs-fluid");
+				$("#my-video").addClass("placeholder");
+				
+			}else {
+				//PC	
+				$("#my-video").removeClass("vjs-fluid");
+				$("#my-video").removeClass("placeholder");
+			}
+		});
+	</script>
     
 	<%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/js/videojs_5.10.4/video-js.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
@@ -38,11 +53,13 @@
 		  poster="http://192.168.31.167:8080/file/pic/b22fe640-3d87-4e68-87cd-d33cd0f0f007.jpg" data-setup="{}">
 		    <source src="http://vjs.zencdn.net/v/oceans.mp4" type='video/mp4'>
 		    <source src="http://vjs.zencdn.net/v/oceans.webm" type='video/webm'>
-		    <!-- <p class="vjs-no-js">
+		    <p class="vjs-no-js">
 		      To view this video please enable JavaScript, and consider upgrading to a web browser that
 		      <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-		    </p> -->
+		    </p>
 		  </video>
 	</div>
+	
+	
 </body>
 </html>
