@@ -167,7 +167,7 @@
 		
 		//复制视频地址标签
 		function copypath(mp4,webm,vpic){
-			//video-js vjs-fluid placeholder vjs-big-play-centered 
+			//video-js vjs-fluid placeholder vjs-big-play-centered  视频100%
 			var path = '&lt;video id="preview-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" poster="${pageContext.request.contextPath}/'+vpic+'"  data-setup="{}">'
 		    	+ '&lt;source src="${pageContext.request.contextPath}/'+mp4+'" type="video/mp4"></source>'
 		    	+ '&lt;source src="${pageContext.request.contextPath}/'+webm+'" type="video/webm"></source>'

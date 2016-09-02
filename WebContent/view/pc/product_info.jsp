@@ -12,10 +12,6 @@
 <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/js/videojs_5.10.4/video-js.css">
-<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/video.js"></script>
-<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/videojs-mux.js"></script>
-
 <script src="${pageContext.request.contextPath}/js/page/jquery.page.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/js/page/page_css.css">
 </head>
@@ -220,5 +216,9 @@
 
 	<!--页脚-->
 	<%@ include file="/view/pc/bottom.jsp" %>
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/js/videojs_5.10.4/video-js.css">
+	<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/video.js"></script>
+	<script src="${pageContext.request.contextPath}/js/videojs_5.10.4/videojs-mux.js"></script>
 </body>
 </html>
