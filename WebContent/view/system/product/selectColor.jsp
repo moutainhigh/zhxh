@@ -29,10 +29,12 @@
 	    	$("#img").bigColorpicker(function(el,color){
 	    		s_color = color;
 	    		$(el).css("background-color",color);
+	    		$("#s_color").val(color);
 	    	});
 	    })
 	    
 	    function GetData() {
+	    	s_color = $("#s_color").val();
 	    	return s_color;
 	    }
 	    function CloseWindow(action) {
@@ -59,11 +61,13 @@
 </head>
 <body>
 	<div class="mini-toolbar" style="text-align:center;line-height:30px;" borderStyle="border:0;">
-          <label id="memo">请选择颜色</label>
+          <label id="memo">请选择颜色[两种方式：<br>1、点击取色区域，选择颜色。2、自主输入颜色代码，输入标准为 #000000  颜色代码可以在网上查到]</label>
     </div>
-    <div class="mini-fit">
-		<!-- <input name="name" id="sel_color" class="mini-textbox" /><a id="btn" class="mini-button " plain="true" iconCls="icon-add" onclick="onClick">选色</a> -->
-		<a href="javascript:void(0)" id="img" style="margin-left: 100px;margin-top: 20px"></a>
+    <div class="mini-fit" style="text-align: center;">
+    	<div style="width: 80%;margin:auto; margin-top: 50px">
+	    	颜色代码：<input name="s_color" id="s_color" type="text" value="" />
+			<a href="javascript:void(0)" id="img" style="margin-left: 140px;margin-top: 20px;"></a>
+    	</div>
     </div>                
     <div class="mini-toolbar" style="text-align:center;padding-top:8px;padding-bottom:8px;" borderStyle="border:0;">
         <a class="mini-button" style="width:60px;" onclick="onOk()">选择</a>

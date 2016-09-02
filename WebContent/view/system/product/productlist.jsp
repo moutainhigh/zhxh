@@ -129,7 +129,10 @@
             var uid = record._uid;
             var id = record.id;
             var rowIndex = e.rowIndex;
-            
+			
+            if (typeof(id) == "undefined" || id == "") {
+            	return;
+            }
             if (grid.id == "grid_brand") {
             	var brandname = record.brandname;
             	var s = ' <a class="Edit_Button" href="javascript:editBrandStory(\'' + id + '\',\'' + brandname + '\')" >品牌故事</a>'
@@ -168,14 +171,17 @@
 	            uid = record._uid,
 	            value = e.value;
                 
-                if (field == "brandlogo") {
-   	        		if (typeof(value) == "undefined" || value == "") {
-                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brand\',\''+record.id+'\',\'logo\',\'brandlog\')" >选择图片</a>';
-       	        	}
-   	        		else {
-   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brand\',\''+record.id+'\',\'logo\',\'brandlog\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
-   	        		}
-    	        }
+                if (typeof(record.id) != "undefined" && record.id != "") {
+                	if (field == "brandlogo") {
+       	        		if (typeof(value) == "undefined" || value == "") {
+                    		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brand\',\''+record.id+'\',\'logo\',\'brandlog\')" >选择图片</a>';
+           	        	}
+       	        		else {
+       	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brand\',\''+record.id+'\',\'logo\',\'brandlog\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
+       	        		}
+        	        }
+                }
+                
                 if (field == "brandcolor") {
                 	if (typeof(value) == "undefined" || value == "") {
                 		e.cellHtml = '<a href="javascript:;" onclick="open_sel_color(\''+uid+'\')" >选择颜色</a>';
@@ -202,14 +208,6 @@
 	            uid = record._uid,
 	            value = e.value;
                 
-                /* if (field == "productpic") {
-   	        		if (typeof(value) == "undefined" || value == "") {
-                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product\',\''+record.id+'\',\'pic\',\'productpic\')" >选择图片</a>';
-       	        	}
-   	        		else {
-   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product\',\''+record.id+'\',\'pic\',\'productpic\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
-   	        		}
-    	        } */
                 if (field == "isshow") {
                 	if (value == 0) {
                 		e.cellStyle = "color:red;text-align:center";
@@ -227,14 +225,17 @@
 	            uid = record._uid,
 	            value = e.value;
                 
-                if (field == "productpic") {
-   	        		if (typeof(value) == "undefined" || value == "") {
-                		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product_size\',\''+record.id+'\',\'pic\',\'productsize\')" >选择图片</a>';
-       	        	}
-   	        		else {
-   	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product_size\',\''+record.id+'\',\'pic\',\'productsize\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
-   	        		}
-    	        }
+                if (typeof(record.id) != "undefined" && record.id != "") {
+                	if (field == "productpic") {
+       	        		if (typeof(value) == "undefined" || value == "") {
+                    		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product_size\',\''+record.id+'\',\'pic\',\'productsize\')" >选择图片</a>';
+           	        	}
+       	        		else {
+       	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product_size\',\''+record.id+'\',\'pic\',\'productsize\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
+       	        		}
+        	        }
+                }
+                
                 if (field == "isshow") {
                 	if (value == 0) {
                 		e.cellStyle = "color:red;text-align:center";

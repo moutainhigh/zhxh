@@ -10,6 +10,7 @@ import net.ussoft.zhxh.dao.PublicContentDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.service.IPublicContentService;
+import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.MakeQuerySql;
 
 import org.springframework.stereotype.Service;
@@ -73,6 +74,8 @@ public class PublicContentService implements IPublicContentService{
 	@Override
 	public Public_content insert(Public_content content) {
 		content.setIsshow(0);	//初始隐藏
+		String createtime = DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss");
+		content.setCreatetime(createtime);
 		return contentDao.save(content);
 	}
 
