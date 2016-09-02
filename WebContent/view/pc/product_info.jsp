@@ -112,7 +112,7 @@
 		        success: function (jsonObj) {
 		        	pageCount = jsonObj.pageCount;
 		        	rowCount = jsonObj.rowCount;
-		        	$('#p_count').html(rowCount);
+		        	//$('#p_count').html(rowCount);
 		        	for(i=0;i<jsonObj.data.length;i++){
 		        		var html = ratedHTML(jsonObj.data[i].username,jsonObj.data[i].ratedmemo,jsonObj.data[i].ratedtime);
 		        		$('#itemContainer').append(html)
