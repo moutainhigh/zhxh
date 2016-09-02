@@ -23,21 +23,21 @@
 	    <div class="text5_3_box7 clearfix">
 	        <div class="text5_3_box7_1">
 	            <b class="cur"></b>
-	            <h2></h2><h3></h3>
+	            <h2></h2><c:if test="${order.orderstatus >= 1}"><h3></h3></c:if>
 	            <p>待支付</p>
 	        </div>
 	        <div class="text5_3_box7_1">
-	            <b class="cur"></b>
-	            <h2></h2><h3></h3>
+	            <b class='${order.orderstatus >= 1?"cur":"" }'></b>
+	            <h2></h2><c:if test="${order.orderstatus >= 2}"><h3></h3></c:if>
 	            <p>待发货</p>
 	        </div>
 	        <div class="text5_3_box7_1">
-	            <b class="cur"></b>
-	            <h2></h2>
-	            <p class="cur">已发货</p>
+	            <b class='${order.orderstatus >= 2?"cur":"" }'></b>
+	            <h2></h2><c:if test="${order.orderstatus >= 3}"><h3></h3></c:if>
+	            <p>已发货</p>
 	        </div>
 	        <div class="text5_3_box7_1 text5_3_box7_w">
-	            <b></b>
+	            <b class='${order.orderstatus >= 3?"cur":"" }'></b>
 	            <p>完成</p>
 	        </div>
 	    </div>
@@ -105,7 +105,7 @@
 	            <li class="dingdansp">商品</li>
 	            <li class="dingdannum">数量</li>
 	            <li class="dingdanprice">价格</li>
-	            <li class="dingdanzt">订单状态</li>
+	            <!-- <li class="dingdanzt">订单状态</li> -->
 	            <li class="dingdancz">操作</li>
 	        </ul>
 	        <ul class="dingdanxq-message">
@@ -121,16 +121,16 @@
 		                </div>
 		                <div class="dingdannum line-height">${item.productnum }</div>
 		                <div class="dingdanprice line-height">${item.price }</div>
-		                <div class="dingdanzt line-height">已完成</div>
+		                <!-- <div class="dingdanzt line-height">已完成</div> -->
 		                <div class="dingdancz">
-		                    <b>确认收货</b>
+		                    <!-- <b>确认收货</b> -->
 		                    <!-- <em class="pj">评价</em> -->
 		                </div>
 		            </li>
 	        	</c:forEach>
 	        </ul>
 	    </div>
-	    <a href="javascript:;" class="back">返回</a>
+	    <!-- <a href="javascript:;" class="back">返回</a> -->
 	</div>
 	
 	<!--页脚-->

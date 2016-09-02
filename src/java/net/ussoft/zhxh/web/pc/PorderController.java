@@ -28,11 +28,7 @@ import net.ussoft.zhxh.service.IPublicOrderService;
 import net.ussoft.zhxh.service.IPublicProductSizeService;
 import net.ussoft.zhxh.service.IPublicUserPathService;
 import net.ussoft.zhxh.service.IPublicUserService;
-import net.ussoft.zhxh.util.CommonUtils;
-import net.ussoft.zhxh.util.Constants;
-import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.MD5;
-import net.ussoft.zhxh.util.OrderNO;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -575,7 +571,8 @@ public class PorderController extends BaseConstroller {
 	 * */
 	@RequestMapping(value="/orderinfo")
 	public ModelAndView orderinfo (String id,ModelMap modelMap) throws Exception {
-		
+		//订单
+		Public_order order = orderService.getById(id);
 		//收货地址
 		Public_order_path orderPath = orderPathService.getByOrderId(id);
 		//订单商品
@@ -587,6 +584,7 @@ public class PorderController extends BaseConstroller {
 		init(modelMap);
 		modelMap.put("orderPath", orderPath);
 		modelMap.put("proList", proList);
+		modelMap.put("order", order);
 		
 		return new ModelAndView("/view/pc/account/orderinfo", modelMap);
 	}

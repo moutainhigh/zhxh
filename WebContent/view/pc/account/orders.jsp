@@ -68,7 +68,7 @@
 	                      <span class="color">订单号： <a href="${pageContext.request.contextPath}/porder/orderinfo.htmls?id=${item.id}" target="_blank">${item.ordernumber }</a></span>
 	                      <span class="color">订单金额：￥${item.ordertotal }</span>
 	                    </p>
-	                    <c:forEach var="pro" items="${item.orderProList }">
+	                    <c:forEach var="pro" items="${item.orderProList }" varStatus="status" >
 	                    	<div class="text-bottom clearfix">
 	                        <div class="img-txt dingdan-xq">
 	                            <img src="${pageContext.request.contextPath}/${pro.productpic }" class="fl" />
@@ -80,11 +80,14 @@
 	                        </div>
 	                        <div class="dingdan-num line-height">${pro.productnum }</div>
 	                        <div class="dingdan-Consignee line-height">&nbsp;</div>
-	                        <div class="dingdan-zt line-height">待付款</div>
-	                        <div class="dingdan-cz">
-	                            <!-- <b class="del">删除</b> -->
-	                            <!-- <em class="pj">评价</em> -->
-	                        </div>
+	                        <div class="dingdan-zt line-height">${item.orderstatusmemo }</div>
+	                        <c:if test="${status.index == 0 }">
+	                        	<div class="dingdan-cz">
+	                        		<a href="${pageContext.request.contextPath}/porder/orderinfo.htmls?id=${item.id}" target="_blank">订单详情</a>
+		                            <!-- <b class="del">删除</b> -->
+		                            <!-- <em class="pj">评价</em> -->
+		                        </div>
+	                        </c:if>
 	                    </div>
 	                    </c:forEach>
 	                </li>
