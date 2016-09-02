@@ -14,6 +14,21 @@
 
 <script src="${pageContext.request.contextPath}/js/page/jquery.page.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/js/page/page_css.css">
+<script type="text/javascript">
+	$(function(){
+		//解决视频在移动端100%显示
+		if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+			//手机
+			$("#my-video").addClass("vjs-fluid");
+			$("#my-video").addClass("placeholder");
+			
+		}else {
+			//PC	
+			$("#my-video").removeClass("vjs-fluid");
+			$("#my-video").removeClass("placeholder");
+		}
+	});
+</script>
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->

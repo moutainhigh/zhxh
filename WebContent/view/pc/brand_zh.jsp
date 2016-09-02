@@ -23,7 +23,7 @@
 	<div class="shop-banner">
 	    <ul id="banner_img">
 	    <c:forEach var="item" items="${brandPicList }">
-	    	<li><img src="${pageContext.request.contextPath}/${item.pic_path }" height="580px;"/></li>
+	    	<li><img src="${pageContext.request.contextPath}/${item.pic_path }"/></li>
 	    </c:forEach>
 	    </ul>
 	    <div class="clearfix"></div>
