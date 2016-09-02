@@ -24,7 +24,7 @@
 	    <div class="shoplist clearfix">
 	    <c:forEach var="item" items="${productList}">
 	    	<dl>
-	            <dt class="fl"><img src="${pageContext.request.contextPath}/${item.productpic }" /></dt>
+	            <dt class="fl"><img src="${pageContext.request.contextPath}/${item.productpic }" height="200px;" /></dt>
 	            <dd class="fl">
 	                <span>${item.productname }</span>
 	                <em>${item.productmemo }</em>

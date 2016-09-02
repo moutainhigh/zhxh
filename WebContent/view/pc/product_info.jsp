@@ -56,7 +56,7 @@
 	                <span>数量：</span>
 	                <div class="num-box">
 	                    <em class="fl" onclick="jishuan(-1)">-</em>
-	                    <input id="quantity" name="quantity" type="text" value="1" class="txtnum" />
+	                    <input id="quantity" name="quantity" type="text" value="1" class="txtnum" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')" />
 	                    <em class="fr" onclick="jishuan(+1)">+</em>
 	                </div>
 	            </div>
