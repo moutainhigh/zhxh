@@ -31,7 +31,16 @@
 	    <div class="container shop-page clearfix">
 	        <h1 class="fl">${product.productname }</h1>
 	        <div class="fr shop-gwc">
-	            <div class="price">价格：￥${product.saleprice }</div>
+	        	<c:choose>
+	        		<c:when test="${product.saleprice == 0 }">
+	        			<div class="price">价格：￥${product.price }</div>
+	        		</c:when>
+	        		<c:otherwise>
+	        			<div class="price">原价：￥${product.price }</div>
+	        			<div class="price">特价：￥${product.saleprice }</div>
+	        		</c:otherwise>
+	        	</c:choose>
+	            
 	            <div class="num">
 	                <span>数量：</span>
 	                <div class="num-box">

@@ -58,20 +58,18 @@
             var record = e.record;
            	var mp4 = record.mp4newname;
         	var webm = record.webmnewname;
+        	var vpic = record.videoshowpic;
         	if(mp4 != undefined && mp4 != ""){
         		mp4 = mp4.replace(/\\/g,'/');
         	}
-        	else {
-        		return "";
-        	}
-        	if(webm != undefined && mp4 != ""){
+        	if(webm != undefined && webm != ""){
         		webm = webm.replace(/\\/g,'/');
         	}
-        	else {
-        		return "";
+        	if(vpic != undefined && vpic != ""){
+        		vpic = vpic.replace(/\\/g,'/');
         	}
         	
-            var s = ' <a class="Edit_Button" href="javascript:copypath(\''+mp4+'\',\''+webm+'\')" >获取视频地址</a>';
+            var s = ' <a class="Edit_Button" href="javascript:copypath(\''+mp4+'\',\''+webm+'\',\''+vpic+'\')" >获取视频地址</a>';
             return s;
         }
         
@@ -168,9 +166,9 @@
 	    }
 		
 		//复制视频地址标签
-		function copypath(mp4,webm){
-
-			var path = '&lt;video id="preview-player" class="video-js vjs-fluid placeholder vjs-big-play-centered" controls preload="auto" poster=""  data-setup="{}">'
+		function copypath(mp4,webm,vpic){
+			//video-js vjs-fluid placeholder vjs-big-play-centered 
+			var path = '&lt;video id="preview-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" poster="${pageContext.request.contextPath}/'+vpic+'"  data-setup="{}">'
 		    	+ '&lt;source src="${pageContext.request.contextPath}/'+mp4+'" type="video/mp4"></source>'
 		    	+ '&lt;source src="${pageContext.request.contextPath}/'+webm+'" type="video/webm"></source>'
 				+ '&lt;/video>';

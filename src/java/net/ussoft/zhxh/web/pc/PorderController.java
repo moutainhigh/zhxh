@@ -253,6 +253,10 @@ public class PorderController extends BaseConstroller {
 			Public_product_size psize = psizeService.getById(obj.getProductsizeid());
 			psize.setQuantity(obj.getBuycount());
 			psize.setProductcatid(obj.getId());
+			//如果特价没有，把售价给它-前台统一使用特价
+			if(psize.getSaleprice() == 0){
+				psize.setSaleprice(psize.getPrice());
+			}
 			psizeList.add(psize);
 		}
 		

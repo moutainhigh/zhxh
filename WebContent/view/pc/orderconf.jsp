@@ -14,7 +14,7 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/faq.css" />
 <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
-
+<script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
@@ -157,7 +157,7 @@
        	    });
 			var address = $("#address").val();
 			if(typeof(address) == "undefined" || address == ""){
-				alert("请选择一个地址！");
+				layer.msg("请选择一个地址！");
 				return;
 			}
 			form1.submit();
@@ -169,16 +169,16 @@
 			var postcode = $("#postcode").val();
 			var userpath = $("#userpath").val();
 			if(typeof(username) == "undefined" || username == ""){
-				alert("请输入收货人");
+				layer.msg("请输入收货人");
 				return false;
 			}else if(typeof(userphone) == "undefined" || userphone == ""){
-				alert("请输入手机号码");
+				layer.msg("请输入手机号码");
 				return false;
 			}else if(typeof(postcode) == "undefined" || postcode == ""){
-				alert("请输入邮编");
+				layer.msg("请输入邮编");
 				return false;
 			}else if(typeof(userpath) == "undefined" || userpath == ""){
-				alert("请输入收货地址");
+				layer.msg("请输入收货地址");
 				return false;
 			}
 			var obj = $("#address_form").serializeObject();
@@ -193,11 +193,11 @@
 		        	if(text != "error"){
 		        		location.reload();
 		        	}else{
-		        		alert("添加失败！");
+		        		layer.msg("添加失败！");
 		        	}
 		        },
 		        error: function (jqXHR, textStatus, errorThrown) {
-		            alert(jqXHR.responseText);
+		            layer.msg(jqXHR.responseText);
 		        }
 		    });
 			

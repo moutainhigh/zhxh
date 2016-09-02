@@ -149,7 +149,8 @@ public class PublicOrderService implements IPublicOrderService{
 			orderPro.setProductsize(psize.getProductsize());
 			orderPro.setProductnum(obj.getBuycount());		//购买数量
 			orderPro.setIsoknum(obj.getBuycount());			//可结算数量（退货时冲减）
-			orderPro.setPrice(psize.getSaleprice());		//此处存放的是特价（值已处理-如果特价没有，把售价给它-前台统一使用特价）
+			float price = psize.getSaleprice() == 0?psize.getPrice():psize.getSaleprice();
+			orderPro.setPrice(price);
 			orderPro.setProductmemo(psize.getProductmemo());
 			orderPro.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 			orderPro.setStatus(0);	//已购买
