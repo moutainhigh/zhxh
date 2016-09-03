@@ -80,7 +80,7 @@
 	              </tr>
 	              <tr>
 	                <td> </td>
-	                <td><a id="info" href="javascript:;">编 辑</a></td>
+	                <td><a id="info" href="javascript:;">保 存</a></td>
 	              </tr>
 	            </table>
 	            </form>

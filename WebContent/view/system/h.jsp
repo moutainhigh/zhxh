@@ -448,7 +448,7 @@
 				<div class="panel border-back">
 					<div class="panel-body text-center">
 						<img src="${pageContext.request.contextPath}/images/user_man.png" width="120" class="radius-circle">
-						<br> <a href="#" title="点击修改帐户信息" style="color: #0ae;" onclick="updatepass('${sessionScope.CURRENT_USER_IN_SESSION.id }')">${sessionScope.CURRENT_USER_IN_SESSION.accountname == ""?sessionScope.CURRENT_USER_IN_SESSION.accountcode:sessionScope.CURRENT_USER_IN_SESSION.accountname  } </a>
+						<br> <a href="#" title="点击修改帐户信息" style="color: #0ae;" onclick="parent.updatepass('${sessionScope.CURRENT_USER_IN_SESSION.id }')">${sessionScope.CURRENT_USER_IN_SESSION.accountname == ""?sessionScope.CURRENT_USER_IN_SESSION.accountcode:sessionScope.CURRENT_USER_IN_SESSION.accountname  } </a>
 					</div>
 					<div class="panel-foot bg-back border-back">您好，${sessionScope.CURRENT_USER_IN_SESSION.accountname == ""?sessionScope.CURRENT_USER_IN_SESSION.accountcode:sessionScope.CURRENT_USER_IN_SESSION.accountname  }，欢迎使用后台管理系统。</div>
 				</div>
@@ -499,25 +499,19 @@
 								<td width="110" align="right">操作系统：</td>
 								<td>Windows 2008</td>
 								<td width="90" align="right">系统开发：</td>
-								<td><a href="http://www.pintuer.com" target="_blank">框架</a></td>
+								<td>JAVA</td>
 							</tr>
 							<tr>
 								<td align="right">Web服务器：</td>
-								<td>Apache</td>
+								<td>Tomcat7</td>
 								<td align="right">主页：</td>
-								<td><a href="http://www.pintuer.com" target="_blank">http://www.pintuer.com</a></td>
+								<td></td>
 							</tr>
 							<tr>
 								<td align="right">程序语言：</td>
-								<td>PHP</td>
-								<td align="right">演示：</td>
-								<td><a href="http://www.pintuer.com/demo/" target="_blank">demo/</a></td>
-							</tr>
-							<tr>
+								<td>java</td>
 								<td align="right">数据库：</td>
 								<td>MySQL</td>
-								<td align="right">群交流：</td>
-								<td><a href="http://shang.qq.com/wpa/qunwpa?idkey=a08e4d729d15d32cec493212f7672a6a312c7e59884a959c47ae7a846c3fadc1" target="_blank">201916085</a> (点击加入)</td>
 							</tr>
 						</tbody>
 					</table>

@@ -251,6 +251,13 @@ public class PorderController extends BaseConstroller {
 		List<Public_cat> catList = catService.list(userid);
 		for(Public_cat obj:catList){
 			Public_product_size psize = psizeService.getById(obj.getProductsizeid());
+			
+			if (null == psize) {
+				//如果商品已不存在.就删除购物车里的
+				catService.delete(obj.getId());
+				continue;
+			}
+			
 			psize.setQuantity(obj.getBuycount());
 			psize.setProductcatid(obj.getId());
 			//如果特价没有，把售价给它-前台统一使用特价

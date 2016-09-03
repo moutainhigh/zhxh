@@ -9,7 +9,8 @@
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/index.css" />
-<script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
+<script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
 
 <style>
 <!--
@@ -50,6 +51,14 @@
 	    	$('.denglu').fadeIn(200);
 	    	
 	    })
+	    
+	    $("#loginform").keydown(function(e){
+			var e = e || event,
+			keycode = e.which || e.keyCode;
+			if (keycode==13) {
+				login();
+			}
+		});
 	})
 	
 	/*function cat(userid){
@@ -68,9 +77,27 @@
 		}
 	}*/
 	
+	function trim(str){
+		//删除字符串2端空格
+		return str.replace(/(^\s*)|(\s*$)/g, "");
+	}
+	
 	function login(){
 		var uname = $('#uname').val();
 		var pwd = $('#pwd').val();
+		
+		if (trim(uname) == "") {
+			layer.msg("请输入登录帐户");
+			$('#uname').val("")
+			$('#uname').focus();
+			return;
+		}
+		if (trim(pwd) == "") {
+			layer.msg("请输入登录密码。");
+			$('#pwd').val("");
+			$('#pwd').focus();
+			return;
+		}
 		
 		$.ajax({
         	url: "${pageContext.request.contextPath}/plogin.htmls",
@@ -82,11 +109,11 @@
                 	window.location.href = '${pageContext.request.contextPath}/pcMain/pcindex.htmls';
                 	//location.reload();
                 }else{
-                	alert(text);
+                	layer.msg(text);
                 }
             },
             error: function () {
-                alert("失败");
+            	layer.msg("失败");
             }
         });
 		
@@ -133,14 +160,14 @@
 	</div>
 	
 	<div class="login-tan2 denglu" style="display: block;">
-	    <div class="login">
+	    <div id="loginform" class="login">
 	        <h3>登录账号</h3>
 	        <div class="login-ipnut">
 	            <div><input type="text" id="uname" value="" class="txt name" placeholder="手机或邮箱"/></div>
 	            <div><input type="text" id="pwd" value="" class="txt mima" placeholder="密码" /></div>
 	            <div class="clearfix wjmima">
-	                <a href="忘记密码.html" class="fl">忘记密码？</a>
-	                <em class="fr">没有账号 <b class="zhuce">立即注册</b></em>
+	                <a href="忘记密码.html" class="fr">忘记密码？</a>
+	                <!-- <em class="fr">没有账号 <b class="zhuce">立即注册</b></em> -->
 	            </div>
 	            <div class="but"><input type="button" onclick="login()" value="登 录" class="login-but"></div>
 	            <div class="other-login">

@@ -18,12 +18,20 @@
 	
 	<!--头部-->
 	<%@include file="/view/pc/header.jsp" %>
-	<div class="shop-IMG"><img src="${pageContext.request.contextPath}/${series.pic }" /></div>		
+	<div class="shop-IMG">
+		<a href='${series.picurl != ""?series.picurl:"javascript:;" }' target="_blank">
+			<img src="${pageContext.request.contextPath}/${series.pic }" />
+		</a>		
+	</div>		
 	<!--轮播图-->
 	<div id="fsD1" class="focus">  
 	    <div id="D1pic1" class="fPic">
 	    <c:forEach var="item" items="${brandlistPic }">
-	    	<div class="fcon" style="display: none;"><a href="javascript:;"><img src="${pageContext.request.contextPath}/${item.pic_path }" style="opacity: 1; "></a></div>
+	    	<div class="fcon" style="display: none;">
+	    		<a href='${item.pic_url != ""?item.pic_url:"javascript:;" }' target="_blank">
+	    			<img src="${pageContext.request.contextPath}/${item.pic_path }" style="opacity: 1; /">
+	    		</a>
+	    	</div>
 	    </c:forEach>
 	    </div>
 	    <div class="fbg">  
@@ -73,7 +81,11 @@
 	</div>
 	<!-- 图片 -->
 	<c:forEach var="item" items="${brandlist_pic }">
-		<div class="shop-IMG"><img src="${pageContext.request.contextPath}/${item.pic_path }" /></div>
+		<div class="shop-IMG">
+			<a href='${item.pic_url != ""?item.pic_url:"javascript:;" }' target="_blank">
+				<img src="${pageContext.request.contextPath}/${item.pic_path }" />
+			</a>
+		</div>
 	</c:forEach>
 	<!--页脚-->
 	<%@ include file="/view/pc/bottom.jsp" %>

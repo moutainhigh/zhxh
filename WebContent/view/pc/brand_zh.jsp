@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>首页</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>${brand.brandname }-综合展示</title>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/index.css" />
@@ -23,7 +23,11 @@
 	<div class="shop-banner">
 	    <ul id="banner_img">
 	    <c:forEach var="item" items="${brandPicList }">
-	    	<li><img src="${pageContext.request.contextPath}/${item.pic_path }"/></li>
+	    	<li>
+	    		<a href='${item.pic_url != ""?item.pic_url:"javascript:;" }' target="_blank">
+	    			<img src="${pageContext.request.contextPath}/${item.pic_path }" />
+	    		</a>
+	    	</li>
 	    </c:forEach>
 	    </ul>
 	    <div class="clearfix"></div>

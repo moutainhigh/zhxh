@@ -12,6 +12,12 @@
 <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
 
+<style type="text/css">
+	.shoplist img {
+		width:160px
+	}
+</style>
+
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
@@ -24,7 +30,11 @@
 	    <div class="shoplist clearfix">
 	    <c:forEach var="item" items="${productList}">
 	    	<dl>
-	            <dt class="fl"><img src="${pageContext.request.contextPath}/${item.productpic }" height="200px;" /></dt>
+	            <dt class="fl">
+	            	<a href="${pageContext.request.contextPath}/pcMain/product_c.htmls?id=${item.id }" target="_blank">
+	            		<img src="${pageContext.request.contextPath}/${item.productpic }" />
+	            	</a>
+	            </dt>
 	            <dd class="fl">
 	                <span>${item.productname }</span>
 	                <em>${item.productmemo }</em>
