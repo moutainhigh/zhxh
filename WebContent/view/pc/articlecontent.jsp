@@ -27,7 +27,7 @@
 	        <SCRIPT src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh" type=text/javascript charset="utf-8"></SCRIPT>
 	        <SCRIPT src="http://static.bshare.cn/b/bshareC0.js" type=text/javascript charset="utf-8"></SCRIPT>
 	    </div>
-	    <div class="new-content">${article.memo}</div>
+	    <div class="new-content" style="line-height:20px;text-indent:2em">${article.memo}</div>
 	</div>
 	
 	<!--页脚-->

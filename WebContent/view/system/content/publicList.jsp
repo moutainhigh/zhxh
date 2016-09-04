@@ -178,7 +178,7 @@
 	        }
 	    	
 	        var objs = grid.getChanges();
-	        var json = mini.encode(objs);
+	        var json = mini.encode(objs,"yyyy-MM-dd HH:mm:ss");
 	        if (json.length == 2) {
 	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存",{icon:6});
 	        	return;
@@ -228,8 +228,30 @@
 		
 		//获取URL
 		function getUrl(id) {
-       		var serv_path = "${pageContext.request.contextPath}";
-       		parent.parent.layer.msg(serv_path + "/pcMain/product_c.htmls?id=" + id,{icon:6,time:5000});
+       		var serv_path = "${pageContext.request.contextPath}/pcMain/";
+       		//if(ptype == "subject" || ptype == "mrwz" || ptype == "case" || ptype == "news_hy" || ptype == "news_qy" || ptype == "news_sp"){
+       		if (ptype == "subject") {
+       			//如果是专题
+       			serv_path += "subject.htmls";
+       		}
+       		else if (ptype == "mrwz") {
+       			//如果是美容文章
+       			serv_path += "article-c.htmls";
+       		}
+       		else if (ptype == "case") {
+       			//如果是案例库
+       			serv_path += "cases-c.htmls";
+       		}
+       		else if (ptype == "news_hy" || ptype == "news_qy" || ptype == "news_sp") {
+       			serv_path += "news-c.htmls";
+       		}
+       		else {
+       			parent.parent.layer.msg("获取错误。请与开发商联系。",{icon:6});
+       			return;
+       			//这里不应该获取商品详情       			
+       			//serv_path += "product_c.htmls";
+       		}
+       		parent.parent.layer.msg(serv_path + "?id=" + id,{icon:6,time:5000});
        	}
 		
 		//上传文章图片

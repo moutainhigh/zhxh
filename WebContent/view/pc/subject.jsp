@@ -19,7 +19,7 @@
 	<!--头部-->
 	<%@include file="/view/pc/header.jsp" %>
 	
-	<div class="container">
+	<div class="container" style="line-height:20px;text-indent:2em">
 	    ${content.memo }
 	</div>
 	

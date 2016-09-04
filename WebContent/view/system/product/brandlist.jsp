@@ -754,6 +754,19 @@
             });
         }
 		
+		function showStyle() {
+			var record = grid_brandlist.getSelected();
+	      	
+            if (null == record || typeof(record.id) == "undefined" || record.id == "") {
+            	parent.parent.layer.msg("请先选择系列，再预览。",{icon:6});
+	      		return;
+	      	}
+			
+			var url = "${pageContext.request.contextPath}/pcMain/series.htmls?id=" + record.id;
+			
+			window.open(url);
+		}
+		
 </script>
 </head>
 <body>
@@ -795,7 +808,8 @@
 			                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandlist')">删除</a>
 				                <span class="separator"></span>
 				         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brandlist')">保存</a>
-				         		<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showRow('grid_brand')">查看系列页效果</a>
+				         		<span class="separator"></span>
+				         		<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showStyle()">预览系列页效果</a>
 			                 </td>
 			             </tr>
 			         	</tbody>

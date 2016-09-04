@@ -427,6 +427,19 @@
        		
        	}
 		
+		function showStyle() {
+			var record = grid_brand.getSelected();
+	      	
+            if (null == record || typeof(record.id) == "undefined" || record.id == "") {
+            	parent.parent.layer.msg("请先选择品牌，再预览.",{icon:6});
+	      		return;
+	      	}
+			
+			var url = "${pageContext.request.contextPath}/pcMain/zh.htmls?id=" + record.id;
+			
+			window.open(url);
+		}
+		
 </script>
 </head>
 <body>
@@ -440,7 +453,7 @@
 		                 	<span id="pid" style="padding-left:5px;">品牌列表</span>
 		                 </td>
 		                 <td style="white-space:nowrap;">
-		                 	<a class="mini-button" iconCls="icon-tip" plain="true" onclick="addRow('grid_brand')">查看综合页效果</a>
+		                 	<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showStyle()">预览综合页效果</a>
 		                 </td>
 		             </tr>
 		         	</tbody>

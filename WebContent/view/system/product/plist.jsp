@@ -442,6 +442,19 @@
        	 	
 		}
 		
+		function showStyle() {
+			var record = grid_plist.getSelected();
+	      	
+            if (null == record || typeof(record.id) == "undefined" || record.id == "") {
+            	parent.parent.layer.msg("请先选择列表，再预览。",{icon:6});
+	      		return;
+	      	}
+			
+			var url = "${pageContext.request.contextPath}/pcMain/product.htmls?id=" + record.id;
+			
+			window.open(url);
+		}
+		
 		
 </script>
 </head>
@@ -480,7 +493,7 @@
 				                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_plist')">删除</a>
 					                <span class="separator"></span>
 					         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_plist')">保存</a>
-					         		<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showRow('grid_brand')">查看系列页效果</a>
+					         		<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showStyle()">预览列表页效果</a>
 				                 </td>
 				             </tr>
 				         	</tbody>

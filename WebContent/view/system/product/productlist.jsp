@@ -730,6 +730,44 @@
             return ids;
         }
 		
+		function showStyle_size() {
+			
+			var rows = grid_product_size.getSelecteds();
+        	
+       	 	if (rows.length == 0) {
+       	 		parent.parent.layer.msg("请选择要预览的商品规格.",{icon:6});
+       		 	return;
+       	 	}
+       	 	else if (rows.length != 1) {
+	       	 	parent.parent.layer.msg("请选择一个要预览的商品规格.",{icon:6});
+	   		 	return;
+       	 	}
+       	 	
+			var record = rows[0];
+	      	
+            if (null == record || typeof(record.id) == "undefined" || record.id == "") {
+            	parent.parent.layer.msg("请先选择商品规格，再预览。",{icon:6});
+	      		return;
+	      	}
+			
+			var url = "${pageContext.request.contextPath}/pcMain/product_c.htmls?id=" + record.id;
+			
+			window.open(url);
+		}
+		
+		function showStyle_brand() {
+			var record = grid_brand.getSelected();
+	      	
+            if (null == record || typeof(record.id) == "undefined" || record.id == "") {
+            	parent.parent.layer.msg("请先选择品牌，再预览。",{icon:6});
+	      		return;
+	      	}
+			
+			var url = "${pageContext.request.contextPath}/pcMain/story-c.htmls?id=" + record.id;
+			
+			window.open(url);
+		}
+		
 </script>
 </head>
 <body>
@@ -749,6 +787,8 @@
 				                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brand')">删除</a>
 					                <span class="separator"></span>
 					         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a>
+					         		<span class="separator"></span>
+			         				<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showStyle_brand()">预览品牌故事效果</a>
 				                 </td>
 				             </tr>
 				         </tbody>
@@ -796,6 +836,8 @@
 		                	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_product_size')">删除</a>
 			                <span class="separator"></span>
 			         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_product_size')">保存</a>
+			         		<span class="separator"></span>
+			         		<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showStyle_size()">预览商品详细页效果</a>
 		                 </td>
 		             </tr>
 		         </tbody>
