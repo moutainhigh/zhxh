@@ -54,22 +54,18 @@
                 ondestroy: function (action) {
                 }
             });
-    		
-			/* mini.open({
-	            url: bootPATH + "../common/dispatch.do?page=/view/auth/account/updateAccount",
-	            title: "修改帐户信息", width: 400, height:300,
-	            allowResize:true,
-	            onload: function () {
-	            },
-	            ondestroy: function (action) {
-	            }
-	        }); */
 		}
     	
     	function quit() {
-			if(confirm("真的要退出系统吗?")) {
-	            window.location.href = "${pageContext.request.contextPath}/logout.htmls";
-	        };
+    		layer.msg("真的要退出系统吗?", {
+    	 		icon:3
+    	 		,time: 0 //不自动关闭
+    	  		,btn: ['确认', '取消']
+    	  		,yes: function(index){
+    	  			window.location.href = "${pageContext.request.contextPath}/logout.htmls";
+    	    		parent.parent.layer.close(index);
+    	  		}
+    		});
 	    }
     	
     </script>

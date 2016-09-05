@@ -33,6 +33,12 @@
 		);
 	</script> 
 	<style>
+		html,body{height:100%}
+		body {
+		    background: url(${pageContext.request.contextPath}/images/login_back.jpg) no-repeat scroll center center transparent;
+		    background-size: cover;
+		    height:100%;
+	    }
 		.doc-footer {
 		    position:fixed;
 			bottom:50px;
@@ -58,7 +64,7 @@
 	    <div class="line">
 	        <div class="xs6 xm4 xs3-move xm4-move">
 	            <br /><br /><br />
-	            <div class="media media-y">
+	            <div class="media media-y" style="margin-top: 60px;">
 	                <div class="container xs6 xm4 xs3-move xm4-move text-gray">
 	                	<span class="icon-bank" style="font-size: 45px;"></span>
 	                	<%-- <img src="${pageContext.request.contextPath}/images/logo.png" width="64px" height="64px" class="radius" alt="" /> --%>
@@ -70,7 +76,7 @@
 	            <br /><br /><br />
 	            <form action="onlogin.htmls" method="post">
 	            <div class="panel">
-	                <div class="panel-head text-center"><strong>登录众恒信和管理后台</strong></div>
+	                <div class="panel-head text-center"><strong>登录众恒信和综合管理后台</strong></div>
 	                <div class="panel-body" style="padding:30px;">
 	                    <div class="form-group">
 	                        <div class="field field-icon-right">
