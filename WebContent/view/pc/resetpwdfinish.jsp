@@ -13,7 +13,7 @@
 <body>
 	
 <div class="wjmm-logo">
-    <h1><a href="${pageContext.request.contextPath}/pcMain/pcindex.htmls"><img src="${pageContext.request.contextPath}/${logo.pic_path }" /></a></h1>
+    <h1><a href="${pageContext.request.contextPath}/pcMain/pcindex.htmls"><img src="${pageContext.request.contextPath}/images/wjmima-logo.png" /></a></h1>
 </div>
 
 <div class="wjmm-con">
