@@ -12,7 +12,7 @@
 	            <div><input type="password" id="pwd" value="" class="txt mima em" placeholder="密码" /></div>
 	            <br/>
 	            <div class="clearfix wjmima">
-	                <a href="忘记密码.html" class="fl">忘记密码？</a>
+	                <a href="javascript:;" onclick="javascript:location.href='${pageContext.request.contextPath}/plogin_reset.htmls'" target="_blank">忘记密码？</a>
 	                <em class="fr">没有账号 <b class="zhuce">立即注册</b></em>
 	            </div>
 	            <div class="but"><input type="button" onclick="login()" value="登 录" class="login-but"></div>
@@ -52,7 +52,7 @@
 	<style>
 	<!--
 		.login-but2 {
-		    width: 132px;
+		    width: 130px;
 		    height: 42px;
 		    background: #666;
 		    text-align: center;

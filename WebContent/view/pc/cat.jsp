@@ -55,12 +55,12 @@
 			                </div>
 			            </div>
 			        </td>
-			        <td>${item.saleprice }</td>
-			        <td>
-			            <div class="num">
-			                <em class="fl">-</em>
-			                <input type="text" value="${item.quantity }" class="txtnum fl" />
-			                <em class="fl">+</em>
+			        <td id="price${item.productcatid }">${item.saleprice }</td>
+			        <td align="center">
+			            <div class="num" style="margin: 0 auto;width: 85px;">
+			                <em class="fl" onclick="jishuan_c(-1,'${item.productcatid }')">-</em>
+			                <input id="quantity" type="text" value="${item.quantity }" class="txtnum fl" onchange="setCatQuantity('${item.productcatid }')" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  />
+			                <em class="fl" onclick="jishuan_c(+1,'${item.productcatid }')">+</em>
 			            </div>
 			        </td>
 			        <td id="subtotal${item.productcatid }">${item.saleprice * item.quantity }</td>
@@ -216,7 +216,47 @@
     		}
 		}
 	
-	
+		// 购物车 加减
+		function jishuan_c(num,id){
+		    var nums = parseInt($(".txtnum").val());
+		    if(parseInt(num)+nums<1){
+		       $(".txtnum").val(1);
+		    }else{
+		       $(".txtnum").val(parseInt(num)+nums);
+		    }
+		    //
+		    edditCat(id);
+		}
+		//
+		function edditCat(id){
+			var quantity = $('#quantity').val().replace(/[^0-9]/g,'');
+			$.ajax({
+		    	async:false,
+		        url: "${pageContext.request.contextPath}/porder/catEdit.htmls",
+		        data: {'id':id,'quantity':quantity},
+		        type: "post",
+		        dataType:"text",
+		        success: function (text) {
+		        	if(text != "error"){
+		        		$('#quantity').val(quantity);	//数量,防止输入法切换输入字母
+		     		    var price = $('#price'+id).html();		//单价
+		     		    $('#subtotal'+id).html(parseInt(quantity) * parseFloat(price));	//小计
+		     		  	//合计
+		                 totalsum();
+		        	}else{
+		        		//alert(text);
+		        	}
+		        },
+		        error: function (jqXHR, textStatus, errorThrown) {
+		            alert(jqXHR.responseText);
+		        }
+		    });
+		}
+		
+		//编辑数量
+		function setCatQuantity(id){
+			edditCat(id);
+		}
 	</script>
 	<!--页脚-->
 	<%@ include file="/view/pc/bottom.jsp" %>

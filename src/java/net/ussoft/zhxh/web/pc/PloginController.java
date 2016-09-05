@@ -11,23 +11,26 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Public_cat;
 import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.model.Sys_public;
 import net.ussoft.zhxh.service.IPublicCatService;
 import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUserService;
+import net.ussoft.zhxh.service.ISysPublicService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.Logger;
 import net.ussoft.zhxh.util.MD5;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
@@ -42,6 +45,9 @@ public class PloginController extends BaseConstroller {
 	private IPublicCatService catService;
 	@Resource
 	private IPublicPhoneCodeLogService codeLogService;
+	
+	@Resource
+	ISysPublicService publicService;	//LOGO
 	
 	@RequestMapping(value="/login_single")
 	public String login_single (ModelMap modelMap) throws Exception {
@@ -172,6 +178,148 @@ public class PloginController extends BaseConstroller {
 	}
 	
 	/**
+	 * 忘记密码-密码重置
+	 * */
+	@RequestMapping(value="/plogin_reset")
+	public ModelAndView resetpwd(HttpServletRequest request,ModelMap modelMap) {
+		//首页logo
+		Sys_public logo = publicService.getById("1");
+		modelMap.put("logo", logo);
+		return new ModelAndView("/view/pc/resetpwd", modelMap);
+	}
+	
+	/**
+	 * 忘记密码-密码重置
+	 * */
+	@RequestMapping(value="/plogin_pwdfinish")
+	public ModelAndView resetpwdfinish(HttpServletRequest request,ModelMap modelMap) {
+		//首页logo
+		Sys_public logo = publicService.getById("1");
+		modelMap.put("logo", logo);
+		return new ModelAndView("/view/pc/resetpwdfinish", modelMap);
+	}
+	
+	/**
+	 * 找回密码-验证
+	 * */
+	@RequestMapping(value="/plogin_resetGetCode",method=RequestMethod.POST)
+	public void resetGetCode(String phonenumber,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		if (null == phonenumber || "".equals(phonenumber)) {
+			out.print("empty");
+			return;
+		}
+		
+		//判断手机号码是否重复
+		boolean isok = userService.checkPhoneNum(phonenumber);
+		
+		if (!isok) {
+			out.print("exist");
+			return;
+		}
+		
+		String sendCode = getSix();
+		
+		//TODO 发送短信验证码到手机
+		savePhoneCodeLog(phonenumber, sendCode, "RESET", request);
+		
+		//TODO 返回值先用code代替。等短信连接上了，更改为success
+		out.print(sendCode);
+	}
+	
+	/**
+	 * 重置密码
+	 * @param objs
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/plogin_resetpwd",method=RequestMethod.POST)
+	public void resetpassword(Public_user user,String sendcode,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "error";
+		
+		//获取验证码session
+		HashMap<String,Object> map = (HashMap<String,Object>) CommonUtils.getSessionAttribute(request, Constants.CODE_SESSION);
+		
+		if (map == null){
+//			CommonUtils.removeSessionAttribute(request, Constants.PC_USER_SESSION);
+			out.print("codeerror");
+			return;
+		}
+		
+		if (!user.getPhonenumber().equals(map.get("phonenumber").toString())) {
+			out.print("phoneerror");
+			return;
+		}
+		
+		if (!sendcode.equals(map.get("sendCode").toString())) {
+			out.print("codeerror");
+			return;
+		}
+		
+		Long oldTime = (Long) map.get("codetime");
+		
+		//当前时间戳
+		Long s = (System.currentTimeMillis() - oldTime) / (1000 * 60);
+		
+		if (s > 2) {
+			CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
+			out.print("timeout");
+			return;
+		}
+		//重置密码
+		Public_user userObj = userService.getByPhoneNum(user.getPhonenumber());
+		String pass = MD5.encode(user.getPassword());
+		userObj.setPassword(pass);
+		int num = userService.update(userObj);
+		if(num == 1) {
+			result = "success";
+		}
+		out.print(result);
+	}
+	
+	/**
+	 * 验证码发送日志
+	 * @param phonenumber
+	 * @param sendCode
+	 * @param sendType
+	 * @param request
+	 * */
+	private void savePhoneCodeLog(String phonenumber,String sendCode,String sendType,HttpServletRequest request){
+
+		//当前时间戳
+		Long oldTime = System.currentTimeMillis();
+		
+		//s为原时间戳和当前时间戳中间相隔的分钟数
+//		Long s = (System.currentTimeMillis() - oldTime) / (1000 * 60);
+		CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("sendCode", sendCode);
+		map.put("phonenumber", phonenumber);
+		map.put("codetime", oldTime);
+		CommonUtils.setSessionAttribute(request, Constants.CODE_SESSION, map);
+		
+		//将发送情况写入日志
+		Public_phone_code_log codeLog = new Public_phone_code_log();
+		codeLog.setId(UUID.randomUUID().toString());
+		codeLog.setPhonenumber(phonenumber);
+		codeLog.setSendcode(sendCode);
+		codeLog.setSendtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		codeLog.setSendtimestr(oldTime.toString());
+		codeLog.setSendtype(sendType);	//类型
+		codeLog.setIp(getRemoteIp(request));
+		codeLogService.insert(codeLog);
+	}
+	
+	/**
 	 * 产生随机的六位数
 	 * @return
 	 */
@@ -209,8 +357,8 @@ public class PloginController extends BaseConstroller {
 		
 		//TODO 发送短信验证码到手机
 		
-		
-		
+		savePhoneCodeLog(phonenumber, sendCode, "PCREG", request);
+		/*
 		//当前时间戳
 		Long oldTime = System.currentTimeMillis();
 		
@@ -233,7 +381,7 @@ public class PloginController extends BaseConstroller {
 		codeLog.setSendtimestr(oldTime.toString());
 		codeLog.setSendtype("PCREG");
 		codeLog.setIp(getRemoteIp(request));
-		codeLogService.insert(codeLog);
+		codeLogService.insert(codeLog);*/
 		
 		//TODO 返回值先用code代替。等短信连接上了，更改为success
 		out.print(sendCode);

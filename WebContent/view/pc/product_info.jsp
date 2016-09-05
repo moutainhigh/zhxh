@@ -217,7 +217,7 @@
 			        		}
 			        		
 			        	}else{
-			        		alert(text);
+			        		//alert(text);
 			        	}
 			        },
 			        error: function (jqXHR, textStatus, errorThrown) {

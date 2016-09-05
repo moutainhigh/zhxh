@@ -62,11 +62,11 @@
 	              </tr>
 	              <tr>
 	                <td>手机号码</td>
-	                <td><input type="text" value="${userPath.userphone }" name="userphone" id="userphone" class="xx-txt" /></td>
+	                <td><input type="text" value="${userPath.userphone }" name="userphone" id="userphone" class="xx-txt" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  /></td>
 	              </tr>
 	              <tr>
 	                <td>邮编号码</td>
-	                <td><input type="text" value="${userPath.postcode }" name="postcode" id="postcode" class="xx-txt" /></td>
+	                <td><input type="text" value="${userPath.postcode }" name="postcode" id="postcode" class="xx-txt" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  /></td>
 	              </tr>
 	              <tr>
 	                <td>收货地址</td>
@@ -122,6 +122,12 @@
 				}else if(typeof(userpath) == "undefined" || userpath == ""){
 					layer.msg("请输入收货地址");
 					return false;
+				}else{
+					var flag = validatemobile(userphone);
+					if(!flag){
+						layer.msg("请输入正确的手机号");
+						return false;
+					}
 				}
 				form1.submit();
 			});
@@ -138,6 +144,20 @@
 				});
 			
 		}
+		//
+		function validatemobile(mobile) {
+			if (trim(mobile) == "") {
+		        return false; 
+		    }     
+		    if(mobile.length!=11) {
+		    	return false; 
+		    } 
+		    var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+		    if(!myreg.test(mobile)) {
+		        return false; 
+		    }
+		    return true;
+		} 
 	</script>
 	<!--页脚-->
 	<%@ include file="/view/pc/bottom.jsp" %>

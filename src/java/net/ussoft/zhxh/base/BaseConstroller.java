@@ -7,10 +7,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.xmlbeans.impl.jam.mutable.MPackage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
-
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_user;
@@ -22,6 +18,9 @@ import net.ussoft.zhxh.service.IPublicContentService;
 import net.ussoft.zhxh.service.ISysPublicService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 
 /**
  * 控制器父类
@@ -36,13 +35,13 @@ public class BaseConstroller {
 	private IAccountService accountService;
 	
 	@Resource
-	IPublicBrandService brandService;	//品牌
+	private IPublicBrandService brandService;	//品牌
 	
 	@Resource
-	IPublicContentService contentService;  //富文本
+	private IPublicContentService contentService;  //富文本
 	
 	@Resource
-	ISysPublicService publicService;	//LOGO
+	private ISysPublicService publicService;	//LOGO
 	
 	@Autowired  
 	private  HttpServletRequest request; 

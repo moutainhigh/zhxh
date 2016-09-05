@@ -73,7 +73,8 @@ public class PublicContentService implements IPublicContentService{
 	@Transactional("txManager")
 	@Override
 	public Public_content insert(Public_content content) {
-		content.setIsshow(0);	//初始隐藏
+		if(content.getIsshow() != 1)
+			content.setIsshow(0);	//初始隐藏
 		String createtime = DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss");
 		content.setCreatetime(createtime);
 		return contentDao.save(content);
