@@ -37,6 +37,7 @@
 	    		columns: [
 						{ type: "checkcolumn",headerAlign:"center",width: 30},
 	  	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
+	  	              	/* { field: "action", width: 160, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"}, */
 	  	              	{ field: "phonenumber",name:"phonenumber", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "手机",vtype:"required" ,editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	                { field: "username",name:"username", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "真实姓名",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	              	{ field: "identity",name:"identity",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "身份",editor: { type: "combobox", data:"Userids"} },
@@ -44,8 +45,8 @@
 	  	            	{ field: "companyname",name:"companyname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构名称",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	            	{ field: "companycode",name:"companycode", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构代码",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	            	
-	  	            	{ field: "birthday",name:"birthday", width: 80, headerAlign: "center", align:"center",allowSort: false, dateFormat:"yyyy-MM-dd", header: "生日",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
-	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} },
+	  	            	/* { field: "birthday",name:"birthday", width: 80, headerAlign: "center", align:"center",allowSort: false, dateFormat:"yyyy-MM-dd", header: "生日",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
+	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} }, */
 	  	          	
 	  	                { field: "setreturn",name:"setreturn", type:"comboboxcolumn",width: 80, headerAlign: "center", align:"center",allowSort: false, header: "接收分成",editor: { type: "combobox", data:"Setreturn"} }
 	  	          		
@@ -82,8 +83,8 @@
 	  	            	{ field: "companyname",name:"companyname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构名称",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	            	{ field: "companycode",name:"companycode", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构代码",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	            	
-	  	            	{ field: "birthday",name:"birthday", width: 80, headerAlign: "center", align:"center",allowSort: false, dateFormat:"yyyy-MM-dd", header: "生日",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
-	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} },
+	  	            	/* { field: "birthday",name:"birthday", width: 80, headerAlign: "center", align:"center",allowSort: false, dateFormat:"yyyy-MM-dd", header: "生日",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
+	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} }, */
 	  	          	
 	  	                { field: "setreturn",name:"setreturn", type:"comboboxcolumn",width: 80, headerAlign: "center", align:"center",allowSort: false, header: "接收分成",editor: { type: "combobox", data:"Setreturn"} }
 	  	          		
@@ -201,7 +202,7 @@
                 });
                 
             } else {
-                mini.alert("请选中一条记录");
+                parent.parent.layer.msg("请选中一条记录",{icon:6});
             }
             
         }
@@ -210,30 +211,36 @@
         function remove() {
             var rows = grid_agent.getSelecteds();
             if (rows.length > 0) {
-            	 mini.confirm("确定删除记录？", "系统消息",
-          	     	function (action) {
-	         	    	if (action == "ok") {
-	         	    		var ids = [];
-	                        for (var i = 0, l = rows.length; i < l; i++) {
-	                            var r = rows[i];
-	                            ids.push(r.id);
-	                        }
-	                        var id = ids.join(',');
-	                        grid_agent.loading("操作中，请稍后......");
-	                        $.ajax({
-	                        	url: "${pageContext.request.contextPath}/userManager/delete.htmls?id=" +id,
-	                            dataType:"text",
-	                            success: function (text) {
-	                                grid_agent.reload();
-	                            },
-	                            error: function () {
-	                            }
-	                        });
-	          	       	}
-          	    	}
-         	    );
+            	var cf1 = "确定要删除选中的数据吗？<br><p style='font-size:12px; color:red'>注意：删除后，不可恢复，请谨慎操作.</p>";
+            	parent.parent.layer.msg(cf1, {
+    	 	 		icon:3
+    	 	 		,time: 0 //不自动关闭
+    	 	  		,btn: ['确认删除', '取消']
+    	 	  		,yes: function(index){
+    	 	    		var ids = [];
+                        for (var i = 0, l = rows.length; i < l; i++) {
+                            var r = rows[i];
+                            if(r.id != "1"){ //平台账户不允许删除
+                            	ids.push(r.id);
+                            }
+                        }
+                        var id = ids.join(',');
+                        grid_agent.loading("操作中，请稍后......");
+                        $.ajax({
+                        	url: "${pageContext.request.contextPath}/userManager/delete.htmls?id=" +id,
+                            dataType:"text",
+                            success: function (text) {
+                                grid_agent.reload();
+                            },
+                            error: function () {
+                            }
+                        });
+                        
+                        parent.parent.layer.close(index);
+    	 	  		}
+    	 		});
             } else {
-                mini.alert("请选中一条记录");
+            	parent.parent.layer.msg("请选中一条记录",{icon:6});
             }
         }
         
@@ -264,7 +271,7 @@
 	                    form.setData(o.data);
 	                },
 	                error: function () {
-	                    mini.alert("表单加载错误");
+	                    parent.parent.layer.msg("表单加载错误",{icon:2});
 	                    form.unmask();
 	                }
 	            });
@@ -287,8 +294,8 @@
 	      	}
             
             if (record) {
-            	grid_shop.load({parentid: record.id });
-            	grid_member.load({belongcode: record.companycode });
+            	grid_shop.load({identity:"A" , parentid: record.id });
+            	grid_member.load({identity:"Z" , belongcode: record.companycode });
             }
         }
         
@@ -297,9 +304,13 @@
             var grid = e.sender;
             var record = e.record;
            	var id = record.id;
-           	var filePath = record.file_path;
-           	var s = s = ' <a class="Edit_Button" href="javascript:move(\''+id+'\')" >移动</a>'
-            		
+           	var s = "";
+           	if(grid.id == "grid_agent"){
+           		//s = ' <a class="Edit_Button" href="javascript:addShop(\''+id+'\')" >添加店</a>';
+           	}else if(grid.id == "grid_shop"){
+           		s = ' <a class="Edit_Button" href="javascript:move(\''+id+'\')" >移动</a>';
+           	}
+            
             return s;
         }
         //把店移动到其它代理或平台下面
@@ -357,7 +368,58 @@
                         
                     }
                 });
-            
+        }
+        
+        //给代理添加店,建立关联关系和账户
+        function setLink(){
+        	var row = grid_agent.getSelected();		//所选行 单行
+        	var rows = grid_agent.getSelecteds();	//所选行数 多行
+            if (rows.length == 1) {
+                mini.open({
+                	url: "/common/dispatch.htmls?page=/view/system/member/selShop",
+                    title: "查找店", width: 800, height: 500,
+                    onload: function () {
+                        /* var iframe = this.getIFrameEl();
+                        var data = { action: "update", row: row };
+                        iframe.contentWindow.SetData(data); */
+                    },
+                    ondestroy: function (action) {
+                    	if (action == "ok") {
+                            var iframe = this.getIFrameEl();
+                            var data = iframe.contentWindow.GetData();
+                            data = mini.clone(data);    //必须
+    						if (data) {
+    							$.ajax({
+    				                url: "${pageContext.request.contextPath}/userManager/addShop.htmls",
+    				                data: {'userid':data.id,'parentid':row.id},
+    				                type: "post",
+    				                dataType:"text",
+    				                success: function (text) {
+	    				               	if(text != 'error'){
+	    				               		if(text == "1"){
+	    				               			parent.parent.layer.msg("操作成功",{icon:6});
+	    				               			grid_shop.reload();
+	    				               		}else if(text == "0"){
+	    				               			parent.parent.layer.msg("操作失败，请重新操作",{icon:6});
+	    				               		}else{
+	    				               			parent.parent.layer.msg("已存在关联关系",{icon:6});
+	    				               		}
+	    				               	}else{
+	    				               		parent.parent.layer.msg("操作失败！",{icon:6});
+	    				               	}
+    				                },
+    				                error: function (jqXHR, textStatus, errorThrown) {
+    				                	parent.parent.layer.msg(jqXHR.responseText);
+    				                }
+    				            }); 
+                            }
+                        }
+                    }
+                });
+                
+            } else {
+                parent.parent.layer.msg("请选中一条记录",{icon:6});
+            }
         }
     </script>
 </head>
@@ -392,18 +454,15 @@
 		</div>
 		<div showCollapseButton="true">
    			<div id="mainTabs" class="mini-tabs" activeIndex="0" style="width:100%;height:100%;" borderStyle="padding:0;border:0;">
-	        	<div name="shop" title="美容院">
-	                <!-- <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
-			    		 <a class="mini-button" plain="true" iconCls="icon-addfolder" onclick="upload_brandfirstpic()">上传</a>
-				     	 <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandpic')">删除</a>
-				     	 <span class="separator"></span>
-				         <a class="mini-button" iconCls="icon-save" plain="true" onclick="saveBrandpic()">保存</a>
-				     </div> -->
+	        	<div name="shop" title="店-美容院">
+	                <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
+			    		 <a class="mini-button" plain="true" iconCls="icon-addnew" onclick="setLink()">关联</a>
+				     </div>
 			        <div class="mini-fit" >
 				         <div id="grid_shop" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  
 				    </div>
 	            </div>
-	            <div name="member" title="会员">
+	            <div name="member" title="普通会员">
 	                <!-- <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
 				         <a class="mini-button" plain="true" iconCls="icon-addfolder" onclick="addRow()">新增</a>
 				         <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandfirst')">删除</a>

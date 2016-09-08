@@ -450,7 +450,7 @@ public abstract class BaseDaoMysqlImpl<T,ID> extends JdbcDaoSupport implements B
 		String regex = "(?<=from)";
         String[] strs = sql.toLowerCase().split(regex);
         
-        StringBuilder sb=new StringBuilder("select count(id) from ");
+        StringBuilder sb=new StringBuilder("select count(0) from ");
 		sb.append(strs[1]);
 		
 //		StringBuilder sb = new StringBuilder();

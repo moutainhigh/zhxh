@@ -25,7 +25,7 @@
             <tbody>
              <tr>
                  <td style="width:100%;">
-                 	<span id="ftitle" style="padding-left:5px;">添加/修改</span>
+                 	<span id="pid" style="padding-left:5px;">添加代理商</span>
                  </td>
                  <td style="white-space:nowrap;">
 	         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save()">保存</a>
@@ -40,17 +40,17 @@
 			<tbody>
 				<tr>
 					<td class="labelname">账户信息</td>
-					<td colspan="3" style="color: #f60">手机号作为登录账户，唯一的。<br>【注：请填写真实有效的手机号，否则会影响后期的订货,系统消息的接受。】</td>
+					<td colspan="3">手机号作为登录账户，唯一的。</td>
 				</tr>
 				<tr>
 					<td class="labelname"><label for="rebates_down$text">手 机 &nbsp;号</label></td>
-					<td><input id="phonenumber" name="phonenumber" class="mini-textbox" style="width:100%;" required="true" vtype="int" onvaluechanged="setCompanyCode" emptyText="请输入手机号" /></td>
+					<td><input id="phonenumber" name="phonenumber" class="mini-textbox" style="width:100%;" required="true" vtype="int" emptyText="请输入手机号" /></td>
 					<td class="labelname">姓 &nbsp;&nbsp;&nbsp;&nbsp; 名</td>
-					<td><input id="username" name="username" class="mini-textbox" style="width:100%;" required="true"  emptyText="请输入姓名" /></td>
+					<td><input name="username" class="mini-textbox" style="width:100%;" required="true"  emptyText="请输入姓名" /></td>
 				</tr>
 				<tr>
 					<td>密 &nbsp;&nbsp;&nbsp;&nbsp; 码</td>
-					<td><input name="password" class="mini-password" style="width:100%;" required="true" emptyText="请输入登录密码" /></td>
+					<td><input name="passwowrd" class="mini-textbox" style="width:100%;" required="true" emptyText="请输入登录密码" /></td>
 					<td>级 &nbsp;&nbsp;&nbsp;&nbsp; 别</td>
 					<td><input name="rank" class="mini-textbox" style="width:100%;" emptyText="请输入级别" /></td>
 				</tr>
@@ -65,9 +65,7 @@
 	                    </select>
 					</td>
 					<td>上 &nbsp;&nbsp;&nbsp;&nbsp; 级</td>
-					<td>
-						<input id="parentid" name="parentid" required="true" allowInput="false" property="editor" class="mini-buttonedit" onbuttonclick="onButtonEdit" style="width:100%;"  />
-					</td>
+					<td><input name="parentid" class="mini-textbox" style="width:100%;" /></td>
 				</tr>
 				<tr>
 					<td>性 &nbsp;&nbsp;&nbsp;&nbsp; 别</td>
@@ -95,7 +93,7 @@
 					<td>机构名称</td>
 					<td><input name="companyname" class="mini-textbox" style="width:100%;" required="true" emptyText="请输入机构名称" /></td>
 					<td>机构代码</td>
-					<td><input id="companycode" name="companycode" class="mini-textbox" style="width:100%;" allowInput="false" required="true" /></td>
+					<td><input name="companycode" class="mini-textbox" style="width:100%;" required="true" emptyText="请输入机构代码" /></td>
 				</tr>
 				<tr>
 					<td>机构地址</td>
@@ -112,9 +110,6 @@
 
         //添加
         function save() {
-        	/* var data = form.getData(true, false);
-            var s = mini.encode(data);
-            alert(s); */
             var o = form.getData();            
             form.validate();
             if (form.isValid() == false) return;
@@ -141,35 +136,20 @@
 
         //修改
         function SetData(data) {
-        	//跨页面传递的数据对象，克隆后才可以安全使用
         	var data = mini.clone(data);
         	var action = data.action;
-            if (action == "update") {
+            if (action == "edit") {
+                //跨页面传递的数据对象，克隆后才可以安全使用
+                data = mini.clone(data);
                 var rowData = data.row;
                 form.setData(rowData);
                 form.setChanged(false);
-                //身份
-                var identity = rowData.identity;
-            	if(identity == 'A'){
-            		//代理的上级是平台（平台也是个代理ID为1）
-            		var parentid = mini.get("parentid");
-            		parentid.setValue("1");
-            		parentid.setText("平台");
-            		parentid.setShowButton(false);
-            	} 
             }
-            else if (action == "add") {
-            	//设置身份
-            	var identity = data.identity;
-            	var obj = mini.get("identity");
-                obj.setValue(identity);
-            	if(identity == 'A'){
-            		//代理的上级是平台（平台也是个代理ID为1）
-            		var parentid = mini.get("parentid");
-            		parentid.setValue("1");
-            		parentid.setText("平台");
-            		parentid.setShowButton(false);
-            	} 
+            else if (action == "new") {
+            	var atype = data.atype;
+            	 var obj = mini.get("identity");
+                 obj.setValue(atype);
+            	
             }
         }
 
@@ -213,21 +193,19 @@
                         var data = iframe.contentWindow.GetData();
                         data = mini.clone(data);    //必须
 						if (data) {
-							alert(data.id);
-                            btnEdit.setValue(data.id);//操蛋
-                            btnEdit.setText(data.username);
+                            btnEdit.setValue(data.id);
+                            btnEdit.setText(data.id);
                         }
+						
+						/* var o = form.getData();
+						o.tuijianid = data.id;
+						form.setData(o);
+		                form.setChanged(false); */
                     }
                 }
             });
         }
-		
-        //机构代码-为手机号
-        function setCompanyCode(e) {
-            var mobile = e.sender;
-            var companycode = mini.get("companycode");
-            companycode.setValue(mobile.getValue());
-        }
+
     </script>
 </body>
 </html>

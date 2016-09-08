@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.service.IPublicUserBankService;
+import net.ussoft.zhxh.service.IPublicUserLinkService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.MD5;
 
@@ -30,8 +32,11 @@ public class UserManagerController extends BaseConstroller{
 
 	@Resource
 	IPublicUserService userService;
-	
-	
+	@Resource
+	IPublicUserLinkService userlinkService;	//个人中心关联关系
+	/*@Resource
+	IPublicUserBankService bankService;	//账户
+*/	
 	/**
 	 * 根据ID获取会员
 	 * @param id
@@ -96,12 +101,13 @@ public class UserManagerController extends BaseConstroller{
 	 * 个人中心
 	 * @param identity 身份
 	 * @param parentid 上级
-	 * @param belongcode 所属店代码
+	 * @param belongcode 所属机构代码
+	 * @param companycode 机构代码
 	 * @param mobile 手机号
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/list",method=RequestMethod.POST)
-	public void list(String identity,String parentid,String belongcode,String mobile,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void list(String identity,String parentid,String belongcode,String companycode,String mobile,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -110,14 +116,19 @@ public class UserManagerController extends BaseConstroller{
 		PageBean<Public_user> pageBean = new PageBean<Public_user>();
 		pageBean.setPageSize(pageSize);
 		pageBean.setPageNo(pageIndex + 1);
-		
-		//查询条件
-		Map<String, Object> searchmap = new LinkedHashMap<String, Object>();
-		searchmap.put("identity =", identity);	//身份
-		searchmap.put("parentid =", parentid);	
-		searchmap.put("belongcode =", belongcode);	//所属店代码
-		searchmap.put("phonenumber =", mobile);	//
-		pageBean = userService.list(searchmap, pageBean);
+		//查看代理下店、会员
+		if("A".equals(identity) && null != parentid){
+			//代理下的店 - 通过关联关系查询其下的店
+			pageBean = userService.listByParentid(parentid, pageBean);
+		}else{
+			//查询条件
+			Map<String, Object> searchmap = new LinkedHashMap<String, Object>();
+			searchmap.put("identity =", identity);	//身份
+			searchmap.put("belongcode =", belongcode);	//所属机构代码
+			searchmap.put("companycode =", companycode);	//机构代码
+			searchmap.put("phonenumber =", mobile);	//
+			pageBean = userService.list(searchmap, pageBean);
+		}
 		
 		//
 		HashMap<String,Object> map = new HashMap<String,Object>();
@@ -153,11 +164,38 @@ public class UserManagerController extends BaseConstroller{
 		//
 		int num = userService.updateParent(id, parentid);
 		//还没有完成，此处还需要创建新的账户关联关系，需要操作的表public_user_link
+		// userid,parentid
+		//userlinkService.update(userlink);
 		
 		if(num > 0)
 			result = "success";
 		out.print(result);
 	}
+	
+	/**
+	 * 给代理添加店
+	 * @param id
+	 * @param parentid
+	 * @param response
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	@RequestMapping(value="/addShop",method=RequestMethod.POST)
+	public void addShop(String userid,String parentid,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		String result = "error";
+		if ("".equals(userid) || userid == null || "".equals(parentid) || parentid == null) {
+			out.print(result);
+			return;
+		}
+		//num:	-1:已存在关联关系，0:创建失败，1:创建成功
+		int num = userService.addShop(userid, parentid);
+		out.print(num);
+	}
+	
 	
 	/**
 	 * 保存
@@ -239,7 +277,12 @@ public class UserManagerController extends BaseConstroller{
 			//密码md5
 			String pass = MD5.encode(user.getPassword());
 			user.setPassword(pass);
-			user = userService.insert(user);
+			if(!"".equals(user.getParentid()) && null != user.getParentid()){
+				user = userService.insert(user, user.getParentid());	//添加代理、店
+			}else{
+				user = userService.insert(user);	//添加普通会员
+			}
+			
 			return "success";
 		}else{
 			return "isPhoneNum";
@@ -284,4 +327,6 @@ public class UserManagerController extends BaseConstroller{
 			return "isPhoneNum";
 		}
 	}
+	
+	 
 }

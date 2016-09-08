@@ -2,7 +2,6 @@ package net.ussoft.zhxh.service;
 
 import java.util.List;
 
-import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_user_bank;
 
 /**
@@ -20,17 +19,19 @@ public interface IPublicUserBankService {
 	public Public_user_bank getById(String id);
 	
 	/**
-	 * 查询所有
-	 * @return list
+	 * 查询会员，所在其上级的关联账户
+	 * @param userid
+	 * @param parentid
+	 * @return public_user_bank
 	 * */
-	public List<Public_user_bank> list();
+	public Public_user_bank getUserBank(String userid,String parentid);
 	
 	/**
-	 * 查询所有 分页
-	 * @param pageBean
+	 * 查询会员所有账户
+	 * @param userid
 	 * @return list
 	 * */
-	public List<Public_user_bank> list(PageBean<Public_user_bank> pageBean);
+	public List<Public_user_bank> list(String userid);
 	
 	/**
 	 * 添加
