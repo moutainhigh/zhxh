@@ -130,7 +130,7 @@
 	  	//添加
 	    function add() {
 	    	mini.open({
-	    	    url: "/common/dispatch.htmls?page=/view/system/member/userEdit",
+	    	    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
 	    	    title: "会员管理", width: 800, height: 500,
 	    	    onload: function () {
 	    	        var iframe = this.getIFrameEl();
@@ -149,7 +149,7 @@
             var rows = grid_shop.getSelecteds();	//所选行数 多行
             if (rows.length == 1) {
                 mini.open({
-                	url: "/common/dispatch.htmls?page=/view/system/member/userEdit",
+                	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
                     title: "会员管理", width: 800, height: 500,
                     onload: function () {
                         var iframe = this.getIFrameEl();
