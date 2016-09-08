@@ -61,11 +61,14 @@ public class PublicUserService implements IPublicUserService{
 	}
 
 	@Override
-	public PageBean<Public_user> listByParentid(String parentid,PageBean<Public_user> pageBean) {
-//		String sql = "SELECT * FROM public_user WHERE id IN(SELECT userid FROM public_user_link WHERE parentid = ?)";
+	public PageBean<Public_user> list(String parentid,String identity,PageBean<Public_user> pageBean) {
 		String sql = "SELECT u.* FROM public_user u,public_user_link k WHERE u.id = k.userid AND k.parentid = ?";
 		List<Object> values = new ArrayList<Object>();
 		values.add(parentid);
+		if(!"".equals(identity) && null != identity){
+			sql += " AND u.identity= ?";
+			values.add(identity);
+		}
 		return userDao.search(sql, values, pageBean);
 	}
 	
@@ -96,7 +99,9 @@ public class PublicUserService implements IPublicUserService{
 		 移动店时
 		 1.删除目前的关联关系
 		 2.冻结店和上级的账户
-		 3.和新的上级创建关联关系和账户（创建账户时要验证下是否已创建过，如创建过则不用再创建设置为冻结状态） 
+		 3.和新的上级创建关联关系和账户 
+		 3.1、添加关系时判断是否存在，存在不做任何操作；（出现的情况-代理A和代理B同时应有店X，操作把代理A下的店X移动到代理B下）
+		 3.2、账户创建时要验证下是否已创建过，如创建过则不用再创建设置为冻结状态
 		 */
 		//删除关系
 		String del_linkSql = "DELETE FROM public_user_link WHERE parentid=? AND userid=?";
@@ -111,13 +116,18 @@ public class PublicUserService implements IPublicUserService{
 		userBank.setBankstatetxt("冻结");
 		userBank = bankDao.update(userBank);
 		
-		//创建新的关系
-		Public_user_link userlink = addlink(userid, newparentid);
-		//创建账户
-		Public_user_bank userbank = createbank(userid, newparentid);
-		if(num > 0 && userBank != null && userlink != null && userbank != null){
-			return 1;
+		//创建新的关系和账户
+		Public_user_link userlink = getUserLink(userid, newparentid);
+		if(userlink == null){
+			//创建新的关系
+			 userlink = addlink(userid, newparentid);
+			//创建账户
+			Public_user_bank userbank = createbank(userid, newparentid);
+			if(num > 0 && userBank != null && userlink != null && userbank != null){
+				return 1;
+			}
 		}
+		
 		return 0;
 	}
 	
@@ -164,24 +174,23 @@ public class PublicUserService implements IPublicUserService{
 	
 	@Transactional("txManager")
 	@Override
-	public Public_user insert(Public_user user,String parentid) {
+	public int insert(Public_user user,String parentid) {
 		//创建会员信息
-		userDao.save(user);
+		user = userDao.save(user);
+		
 		//创建个人中心关联关系 （代理、店）
 		Public_user_link userLink = new Public_user_link();
 		userLink.setId(UUID.randomUUID().toString());
 		userLink.setUserid(user.getId());
 		userLink.setParentid(parentid);
-		linkDao.save(userLink);
-		//创建个人账户-（代理、店）
-		Public_user_bank userBank = new Public_user_bank();
-		userBank.setId(UUID.randomUUID().toString());
-		userBank.setUserid(user.getId());
-		userBank.setParentid(parentid);
-		//
-		bankDao.save(userBank);
+		userLink = linkDao.save(userLink);
 		
-		return user;
+		//创建个人账户-（代理、店）
+		Public_user_bank userBank = createbank(user.getId(), parentid);
+		if(user != null && userLink != null && userBank != null){
+			return 1;
+		}
+		return 0;
 	}
 
 	@Override
@@ -242,7 +251,7 @@ public class PublicUserService implements IPublicUserService{
 	 * @param parentid
 	 * */
 	private Public_user_bank getUserBank(String userid,String parentid){
-		String sql = "SELECT * FROM public_user_link WHERE parentid = ? AND userid = ?";
+		String sql = "SELECT * FROM public_user_bank WHERE parentid = ? AND userid = ?";
 		List<Object> values = new ArrayList<Object>();
 		values.add(parentid);
 		values.add(userid);
@@ -273,18 +282,16 @@ public class PublicUserService implements IPublicUserService{
 	 * */
 	private Public_user_bank createbank(String userid,String parentid){
 		Public_user_bank userbank = getUserBank(userid, parentid);
+		//不存在就创建
 		if(userbank == null){
 			//创建账户-（代理、店）
 			userbank = new Public_user_bank();
 			userbank.setId(UUID.randomUUID().toString());
 			userbank.setUserid(userid);
 			userbank.setParentid(parentid);
+			userbank.setBankstate(1); //账户启用
+			userbank.setBankstatetxt("正常");
 			userbank = bankDao.save(userbank);
-		}else{
-			//账户冻结，由平台去处理进行开启账户
-			userbank.setBankstate(0); //冻结账户
-			userbank.setBankstatetxt("冻结");
-			userbank = bankDao.update(userbank);
 		}
 		return userbank;
 	}

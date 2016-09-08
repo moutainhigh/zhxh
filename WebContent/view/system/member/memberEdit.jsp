@@ -2,6 +2,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+	<!-- 编辑--普通会员 -->
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title></title>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>

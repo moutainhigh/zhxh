@@ -59,24 +59,6 @@ public class UserManagerController extends BaseConstroller{
 	}
 	
 	/**
-	 * 根据ID查看其账户是否已初始为0
-	 * @param id
-	 * @param response
-	 * @throws IOException
-	 */
-	@RequestMapping(value="/checkAccount",method=RequestMethod.GET)
-	public void checkAccount(String id,HttpServletResponse response) throws IOException {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		Public_user user = userService.getById(id);
-		//public_user_link 到个人中心 账户 关联关系表 查询进行验证
-
-		
-	}
-	
-	/**
 	 * 搜索手机号
 	 * @param phoneNum
 	 * @param response
@@ -119,7 +101,7 @@ public class UserManagerController extends BaseConstroller{
 		//查看代理下店、会员
 		if("A".equals(identity) && null != parentid){
 			//代理下的店 - 通过关联关系查询其下的店
-			pageBean = userService.listByParentid(parentid, pageBean);
+			pageBean = userService.list(parentid,"C", pageBean);
 		}else{
 			//查询条件
 			Map<String, Object> searchmap = new LinkedHashMap<String, Object>();
@@ -142,38 +124,33 @@ public class UserManagerController extends BaseConstroller{
 
 	/**
 	 * 修改其上级机构
-	 * @param id
-	 * @param parentid
+	 * @param userid
+	 * @param oldparentid
+	 * @param newparentid
 	 * @param response
 	 * @throws IOException
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
 	@RequestMapping(value="/upParent",method=RequestMethod.POST)
-	public void updateParent(String id,String parentid,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+	public void updateParent(String userid,String oldparentid,String newparentid,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		
 		String result = "error";
-		
-		if ("".equals(id) || id == null) {
+		if ("".equals(userid) || userid == null) {
 			out.print(result);
 			return;
 		}
 		//
-		int num = userService.updateParent(id, parentid);
-		//还没有完成，此处还需要创建新的账户关联关系，需要操作的表public_user_link
-		// userid,parentid
-		//userlinkService.update(userlink);
-		
+		int num = userService.updateParent(userid, oldparentid,newparentid);
 		if(num > 0)
 			result = "success";
 		out.print(result);
 	}
 	
 	/**
-	 * 给代理添加店
+	 * 给代理添加已存在的店，建立关系和账户
 	 * @param id
 	 * @param parentid
 	 * @param response
@@ -181,8 +158,8 @@ public class UserManagerController extends BaseConstroller{
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	@RequestMapping(value="/addShop",method=RequestMethod.POST)
-	public void addShop(String userid,String parentid,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+	@RequestMapping(value="/createlink",method=RequestMethod.POST)
+	public void createlink(String userid,String parentid,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -192,7 +169,7 @@ public class UserManagerController extends BaseConstroller{
 			return;
 		}
 		//num:	-1:已存在关联关系，0:创建失败，1:创建成功
-		int num = userService.addShop(userid, parentid);
+		int num = userService.createlink(userid, parentid);
 		out.print(num);
 	}
 	
@@ -207,29 +184,23 @@ public class UserManagerController extends BaseConstroller{
 	 */
 	@RequestMapping(value="/save",method=RequestMethod.POST)
 	public void save(String objs,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
-		
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
 		String result = "error";
-		
 		if ("".equals(objs) || objs == null) {
 			out.print(result);
 			return;
 		}
-		
 		//
 		Map<String,String> row = (Map<String,String>)JSON.parse(objs);
-		
 		String id = row.get("id") != null ? row.get("id").toString() : "";
-		
 		if("".equals(id)){
-			result = insert(row);
+			result = insert(row);	//添加
 		}else{
-			result = update(row);
+			result = update(row);	//修改
 		}
-		
 		out.print(result);
 	}
 	
@@ -278,12 +249,15 @@ public class UserManagerController extends BaseConstroller{
 			String pass = MD5.encode(user.getPassword());
 			user.setPassword(pass);
 			if(!"".equals(user.getParentid()) && null != user.getParentid()){
-				user = userService.insert(user, user.getParentid());	//添加代理、店
+				int num = userService.insert(user, user.getParentid());	//添加代理、店
+				return num > 0 ? "success":"error";
 			}else{
 				user = userService.insert(user);	//添加普通会员
+				if(user != null){
+					return "success";
+				}
+				return "error";
 			}
-			
-			return "success";
 		}else{
 			return "isPhoneNum";
 		}
@@ -298,13 +272,11 @@ public class UserManagerController extends BaseConstroller{
 	 * @throws InvocationTargetException
 	 */
 	private String update(Map<String,String> row) throws IOException, IllegalAccessException, InvocationTargetException {
-		
 		if (null == row) {
 			return "error";
 		}
 		Public_user user = new Public_user();
 		BeanUtils.populate(user, row);
-		
 		//
 		boolean flag = true;
 		Public_user pUser = userService.getById(user.getId());
@@ -320,9 +292,11 @@ public class UserManagerController extends BaseConstroller{
 				String pass = MD5.encode(user.getPassword());
 				user.setPassword(pass);
 			}
-			
 			int num = userService.update(user);
-			return "success";
+			if(num > 0){
+				return "success";
+			}
+			return "error";
 		}else{
 			return "isPhoneNum";
 		}

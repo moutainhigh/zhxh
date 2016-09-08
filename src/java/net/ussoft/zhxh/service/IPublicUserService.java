@@ -38,7 +38,7 @@ public interface IPublicUserService {
 	 * @param pageBean
 	 * @return
 	 * */
-	public PageBean<Public_user> listByParentid(String parentid,PageBean<Public_user> pageBean);
+	public PageBean<Public_user> list(String parentid,String identity,PageBean<Public_user> pageBean);
 	
 	/**
 	 * 条件查询 分页
@@ -65,7 +65,7 @@ public interface IPublicUserService {
 	 * @param parentid
 	 * @return 
 	 * */
-	public Public_user insert(Public_user user,String parentid);
+	public int insert(Public_user user,String parentid);
 	
 	/**
 	 * 修改
@@ -76,12 +76,12 @@ public interface IPublicUserService {
 	
 	/**
 	 * 修改其上级机构
-	 * @param id
+	 * @param userid
 	 * @param oldparentid
 	 * @param newparentid
 	 * @return 
 	 * */
-	public int updateParent(String id,String oldparentid,String newparentid);
+	public int updateParent(String userid,String oldparentid,String newparentid);
 	
 	/**
 	 * 代理添加店-创建关联关系

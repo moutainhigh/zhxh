@@ -43,8 +43,8 @@
 	  	            	{ field: "companyname",name:"companyname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构名称",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	            	{ field: "companycode",name:"companycode", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构代码",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	            	
-	  	            	{ field: "birthday",name:"birthday", width: 80, headerAlign: "center", align:"center",allowSort: false, dateFormat:"yyyy-MM-dd", header: "生日",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
-	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} },
+	  	            	/* { field: "birthday",name:"birthday", width: 80, headerAlign: "center", align:"center",allowSort: false, dateFormat:"yyyy-MM-dd", header: "生日",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
+	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} }, */
 	  	          	
 	  	                { field: "setreturn",name:"setreturn", type:"comboboxcolumn",width: 80, headerAlign: "center", align:"center",allowSort: false, header: "接收分成",editor: { type: "combobox", data:"Setreturn"} }
 	  	          		
@@ -64,7 +64,7 @@
 	            showPageSize:false,
 	            pageSize:50
 	        });
-	    	grid_shop.load({identity:'C'});
+	    	grid_shop.load({identity:'A',parentid:'1'});	//直营店
 	    	
 	    	//会员
 	    	grid_member = mini.get("grid_member");

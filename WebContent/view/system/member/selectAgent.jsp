@@ -10,10 +10,8 @@
 	        margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
 	    }    
     </style>
-    
+    <!-- 个人中心-选择代理 -->
     <script type="text/javascript">
-    
-
     	//性别
     	var Genders = [{ id: 1, text: '先生' }, { id: 2, text: '女士'}];
     	//身份
@@ -26,12 +24,12 @@
 	    	grid.set({
 	    		url:"${pageContext.request.contextPath}/userManager/list.htmls",
 	    		columns: [
+						{ type: "checkcolumn",headerAlign:"center",width: 30},
 	  	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
 	  	              	{ field: "phonenumber",name:"phonenumber", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "手机",vtype:"required" ,editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	                { field: "username",name:"username", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "真实姓名",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	              	{ field: "identity",name:"identity",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "身份",editor: { type: "combobox", data:"userid"} },
-	  	            
-	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} },
+	  	              	{ field: "companyname",name:"companyname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构名称",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
 	  	          	
 	  	            ],
 	            showFilterRow:false,
@@ -56,7 +54,7 @@
         //搜索
         function search() {
             var key = mini.get("key").getValue();
-            grid.load({ key: key });
+            grid.load({identity:'A',mobile:key });
         }
         function onKeyEnter(e) {
             search();
@@ -79,7 +77,7 @@
         	var row = GetData();
         	//判断是否已选择
 	    	if (row == undefined) {
-	    		CloseWindow("cancel");
+	    		parent.parent.layer.msg("请选择一条数据",{icon:6});
 	    	}else {
 	    		CloseWindow("ok");
 	    	}

@@ -194,7 +194,6 @@
                         var iframe = this.getIFrameEl();
                         var data = { action: "update", row: row };
                         iframe.contentWindow.SetData(data);
-                        
                     },
                     ondestroy: function (action) {
                         grid_agent.reload();
@@ -275,7 +274,6 @@
 	                    form.unmask();
 	                }
 	            });
-	
 	        }
 	    }
         
@@ -284,7 +282,6 @@
             var grid = e.sender;
 	       	//处理角色对应的帐户
             var record = grid.getSelected();
-	      	
             if (typeof(record.id) == "undefined" || record.id == "") {
             	grid_shop.setData([]);
             	grid_shop.setTotalCount(0);
@@ -292,7 +289,6 @@
             	grid_member.setTotalCount(0);
 	      		return;
 	      	}
-            
             if (record) {
             	grid_shop.load({identity:"A" , parentid: record.id });
             	grid_member.load({identity:"Z" , belongcode: record.companycode });
@@ -313,61 +309,39 @@
             
             return s;
         }
+        
         //把店移动到其它代理或平台下面
         function move(id) {
-        	//判断其下账户（可支配账户、可提现账户、奖励可提现账户）是否已初始为0
-        	/* $.ajax({
-               url: "${pageContext.request.contextPath}/userManager/upParent.htmls",
-               data: {'id':id,'parentid':row.id},
-               type: "post",
-               dataType:"text",
-               success: function (text) {
-              	 if(text == 'success'){
-              		 mini.alert("操作成功！");
-              		 grid_agent.reload();
-              	 }else{
-              		 mini.alert('操作失败！');
-              	 }
-               },
-               error: function (jqXHR, textStatus, errorThrown) {
-                   alert(jqXHR.responseText);
-               }
-           }); */
-        	
-        	
-                mini.open({
-                	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectUser",
-                    title: "机构列表", width: 800, height: 500,
-                    onload: function () {
-                        
-                    },
-                    ondestroy: function (action) {
-                    	if(action == 'ok'){
-                    		 var iframe = this.getIFrameEl();
-                             var row = iframe.contentWindow.GetData(); //选择的机构ID
-                             
-                             grid_agent.loading("保存中，请稍后......");
-                             $.ajax({
-                                 url: "${pageContext.request.contextPath}/userManager/upParent.htmls",
-                                 data: {'id':id,'parentid':row.id},
-                                 type: "post",
-                                 dataType:"text",
-                                 success: function (text) {
-                                	 if(text == 'success'){
-                                		 mini.alert("操作成功！");
-                                		 grid_agent.reload();
-                                	 }else{
-                                		 mini.alert('操作失败！');
-                                	 }
-                                 },
-                                 error: function (jqXHR, textStatus, errorThrown) {
-                                     alert(jqXHR.responseText);
-                                 }
-                             });
-                    	}
-                        
-                    }
-                });
+        	var agent_row = grid_agent.getSelected();	//代理
+	        mini.open({
+	        	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectAgent",
+	            title: "机构列表", width: 800, height: 500,
+	            onload: function () {
+	            },
+	            ondestroy: function (action) {
+	            	if(action == 'ok'){
+	            		 var iframe = this.getIFrameEl();
+	                     var row = iframe.contentWindow.GetData(); //选择的机构
+	                     $.ajax({
+	                         url: "${pageContext.request.contextPath}/userManager/upParent.htmls",
+	                         data: {'userid':id,'oldparentid':agent_row.id,'newparentid':row.id},
+	                         type: "post",
+	                         dataType:"text",
+	                         success: function (text) {
+	                        	 if(text == 'success'){
+	                        		 parent.parent.layer.msg("操作成功",{icon:6});
+	                        		 grid_shop.reload();
+	                        	 }else{
+	                        		 parent.parent.layer.msg("操作失败,请重新操作或联系管理员",{icon:2});
+	                        	 }
+	                         },
+	                         error: function (jqXHR, textStatus, errorThrown) {
+	                             alert(jqXHR.responseText);
+	                         }
+	                     });
+	            	}
+	            }
+	        });
         }
         
         //给代理添加店,建立关联关系和账户
@@ -376,7 +350,7 @@
         	var rows = grid_agent.getSelecteds();	//所选行数 多行
             if (rows.length == 1) {
                 mini.open({
-                	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selShop",
+                	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectShop",
                     title: "查找店", width: 800, height: 500,
                     onload: function () {
                         /* var iframe = this.getIFrameEl();
@@ -390,7 +364,7 @@
                             data = mini.clone(data);    //必须
     						if (data) {
     							$.ajax({
-    				                url: "${pageContext.request.contextPath}/userManager/addShop.htmls",
+    				                url: "${pageContext.request.contextPath}/userManager/createlink.htmls",
     				                data: {'userid':data.id,'parentid':row.id},
     				                type: "post",
     				                dataType:"text",
@@ -421,6 +395,22 @@
                 parent.parent.layer.msg("请选中一条记录",{icon:6});
             }
         }
+        
+      	//给代理添加店
+	    function addShop() {
+	    	mini.open({
+	    	    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
+	    	    title: "会员管理", width: 800, height: 500,
+	    	    onload: function () {
+	    	        var iframe = this.getIFrameEl();
+	    	        var data = { action: "add",identity:"A"};
+	    	        iframe.contentWindow.SetData(data);
+	    	    },
+	    	    ondestroy: function (action) {
+	    	        grid_agent.reload();
+	    	    }
+	    	});
+		}
     </script>
 </head>
 <body>
@@ -457,6 +447,7 @@
 	        	<div name="shop" title="店-美容院">
 	                <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
 			    		 <a class="mini-button" plain="true" iconCls="icon-addnew" onclick="setLink()">关联</a>
+			    		 <a class="mini-button" plain="true" iconCls="icon-addnew" onclick="addShop()">添加店</a>
 				     </div>
 			        <div class="mini-fit" >
 				         <div id="grid_shop" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  

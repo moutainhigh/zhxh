@@ -2,6 +2,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+	<!-- 编辑--代理/店 -->
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title></title>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
@@ -127,7 +128,7 @@
                 cache: false,
                 success: function (text) {
                 	if(text == "isPhoneNum"){
-                		mini.alert("手机号已存在");
+                		parent.parent.layer.msg("手机号已存在,请更换手机号",{icon:6});
                 		return;
                 	}
                     CloseWindow("save");
@@ -150,13 +151,14 @@
                 form.setChanged(false);
                 //身份
                 var identity = rowData.identity;
-            	if(identity == 'A'){
+            	if(identity == 'A' || identity == 'C'){
             		//代理的上级是平台（平台也是个代理ID为1）
+            		//此处的C就代表直营店
             		var parentid = mini.get("parentid");
             		parentid.setValue("1");
             		parentid.setText("平台");
             		parentid.setShowButton(false);
-            	} 
+            	}
             }
             else if (action == "add") {
             	//设置身份
@@ -193,13 +195,12 @@
             CloseWindow("cancel");
         }
 
-
+		//设置上级机构
         function onButtonEdit(e) {
             var btnEdit = e.sender;
-
             mini.open({
-                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectUser",
-                title: "选择推荐人",
+                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectAgent",
+                title: "选择机构",
                 width: 650,
                 height: 380,
                 onload: function () {
@@ -209,12 +210,10 @@
                 ondestroy: function (action) {
                     if (action == "ok") {
                         var iframe = this.getIFrameEl();
-
                         var data = iframe.contentWindow.GetData();
                         data = mini.clone(data);    //必须
 						if (data) {
-							alert(data.id);
-                            btnEdit.setValue(data.id);//操蛋
+                            btnEdit.setValue(data.id);
                             btnEdit.setText(data.username);
                         }
                     }
