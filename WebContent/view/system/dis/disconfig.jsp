@@ -40,6 +40,7 @@
 	<script type="text/javascript">
 	
 		var form;
+		var formstate = "label";
 		$(function() {
 			mini.parse();
 			form = new mini.Form("#form1");
@@ -71,7 +72,16 @@
                 if (c.addCls) c.addCls("asLabel");          //增加asLabel外观
             }
         }
-        function inputModel() {
+		function inputModel() {
+        	var editBtn = mini.get("editBtn");
+        	
+        	if (formstate == "input") {
+        		labelModel();
+        		formstate = "label";
+        		editBtn.setText("编辑");
+        		return;
+        	}
+        	
             var fields = form.getFields();
             for (var i = 0, l = fields.length; i < l; i++) {
                 var c = fields[i];
@@ -79,6 +89,10 @@
                 if (c.removeCls) c.removeCls("asLabel");
             }
             mini.repaint(document.body);
+            
+            formstate = "input";
+            editBtn.setText("取消");
+            
         }
 		
 		function save() {
@@ -117,7 +131,7 @@
                  	<span id="pid" style="padding-left:5px;">平台利益分配参数设置[如果某些参数如果不设置或设置为0，将不限制]</span>
                  </td>
                  <td style="white-space:nowrap;">
-	         		<a class="mini-button" iconCls="icon-edit" plain="true" onclick="inputModel()">编辑</a>
+	         		<a id="editBtn" class="mini-button" iconCls="icon-edit" plain="true" onclick="inputModel()">编辑</a>
 	         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save()">保存</a>
                  </td>
              </tr>
@@ -164,9 +178,9 @@
 				</tr>
 				<tr>
 					<td>奖励转货款下限</td>
-					<td><input name="bonuses_ratio_down" class="mini-textbox" style="width:100%;" vtype="int" emptyText="请输入数字" /></td>
+					<td><input name="bonuses_ratio_down" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
 					<td>奖励转货款上限</td>
-					<td><input name="bonuses_ratio_up" class="mini-textbox" style="width:100%;" vtype="int" emptyText="请输入数字" /></td>
+					<td><input name="bonuses_ratio_up" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
 				</tr>
 				<tr>
 					<td>平台分成天数</td>
@@ -178,8 +192,8 @@
 						(1)返利:输入返利的百分比。例如0.3表示30%<br>
 						(2)奖励:输入整数。例如50表示50元<br>
 						(3)提现日期:限制每周提现的日期。输入整数。例如2表示每周二。<br>
-						(4)配额、充值、奖励:输入整数。例如500表示500元。<br>
-						(5)奖励转货款:输入奖励转为货款的倍数。例如3表示奖励将乘以3倍，计入货款。
+						(4)配额、充值:输入整数。例如500表示500元。<br>
+						(5)奖励转货款:输入奖励转为货款的倍数。例如1.3表示奖励将乘以1.3倍，计入货款。<br>
 						(6)平台分成天数:设置普通会员购买后，平台分成给代理和店，进入可提现账户的金额的天数。例如7表示7天后。
 					</td>
 				</tr>

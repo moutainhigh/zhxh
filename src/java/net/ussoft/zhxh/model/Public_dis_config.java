@@ -19,8 +19,8 @@ public class Public_dis_config {
 	private Integer quota_up;
 	private Integer deposit_down;
 	private Integer deposit_up;
-	private Integer bonuses_ratio_down;
-	private Integer bonuses_ratio_up;
+	private Float bonuses_ratio_down;
+	private Float bonuses_ratio_up;
 	private Integer balance_date;
 	
 	
@@ -173,32 +173,17 @@ public class Public_dis_config {
 	public void setDeposit_up(Integer deposit_up) {
 		this.deposit_up = deposit_up;
 	}
-	/**
-	 * 设置奖励转货款下限
-	 * @return
-	 */
-	public Integer getBonuses_ratio_down() {
+	
+	public Float getBonuses_ratio_down() {
 		return bonuses_ratio_down;
 	}
-	/**
-	 * 设置奖励转货款下限
-	 * @param bonuses_ratio_down
-	 */
-	public void setBonuses_ratio_down(Integer bonuses_ratio_down) {
+	public void setBonuses_ratio_down(Float bonuses_ratio_down) {
 		this.bonuses_ratio_down = bonuses_ratio_down;
 	}
-	/**
-	 * 设置奖励转货款上限
-	 * @return
-	 */
-	public Integer getBonuses_ratio_up() {
+	public Float getBonuses_ratio_up() {
 		return bonuses_ratio_up;
 	}
-	/**
-	 * 设置奖励转货款上限
-	 * @param bonuses_ratio_up
-	 */
-	public void setBonuses_ratio_up(Integer bonuses_ratio_up) {
+	public void setBonuses_ratio_up(Float bonuses_ratio_up) {
 		this.bonuses_ratio_up = bonuses_ratio_up;
 	}
 	/**

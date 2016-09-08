@@ -40,7 +40,7 @@
 	    var t2 = {};
 	    t2.id = "disconfig";
 	    t2.pid = "right";
-	    t2.text = "公共利益分配参数设置";
+	    t2.text = "公共利益分配标准设置";
 	    t2.iconCls = "setting";
 	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/dis/disconfig";
 	    t2.iconPosition = "top";
