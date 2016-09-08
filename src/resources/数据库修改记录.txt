@@ -169,6 +169,13 @@
 2、修改表filesdown
 	（1）增加isshow int 11 是否显示
 	
+20160908
+1、修改表public_user
+	(1)增加 createtime varchar（100） 创建时间。叫time的精确到时分秒 叫date的精确到日期
+2、修改表public_user_bank
+	(1)增加 bankstate int (11) 金额帐户状态  0：冻结  1：正常
+	（2）增加bankstatetxt varchar （50） 状态中文。存冻结or 正常。用于前台显示
+	
 	
 	
 	

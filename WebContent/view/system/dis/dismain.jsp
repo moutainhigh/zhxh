@@ -42,7 +42,7 @@
 	    t2.pid = "right";
 	    t2.text = "公共利益分配参数设置";
 	    t2.iconCls = "setting";
-	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/order/disconfig";
+	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/dis/disconfig";
 	    t2.iconPosition = "top";
 	    dataList.push(t2);
 	    
@@ -51,7 +51,7 @@
 	    t3.pid = "right";
 	    t3.text = "平台直属利益分配详细";
 	    t3.iconCls = "setting";
-	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/order/top_disstandard";
+	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/dis/top_disstandard";
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
 	    

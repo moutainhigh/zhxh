@@ -38,6 +38,8 @@ public class Public_user {
 	//临时字段
 	private String parentid; 		//存储机构（代理或店）的直属上级id
 	
+	private String createtime;		//创建时间
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public String getId() {
@@ -185,6 +187,13 @@ public class Public_user {
 		this.rank = rank;
 	}
 	
+	
+	public String getCreatetime() {
+		return createtime;
+	}
+	public void setCreatetime(String createtime) {
+		this.createtime = createtime;
+	}
 	@Transient
 	public String getParentid() {
 		return parentid;

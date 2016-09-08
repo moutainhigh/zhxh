@@ -9,13 +9,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="renderer" content="webkit">
     <title>众恒信和采购分销管理平台</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/order/css/c.css">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/view/order/js/jquery.layout/jquery-ui-latest.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/view/order/js/jquery.layout/jquery.layout-latest.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/view/order/js/commonApp.js"></script>
+    <%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/admin.css">
     <script src="${pageContext.request.contextPath}/js/boot.js" type="text/javascript"></script> 
     <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
-    <script src="${pageContext.request.contextPath}/js/pintuer/admin.js"></script>
-    <script src="${pageContext.request.contextPath}/js/layer/layer.js"></script>
+    <script src="${pageContext.request.contextPath}/js/pintuer/admin.js"></script> --%>
+    <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
     
     <!-- <link type="image/x-icon" href="/favicon.ico" rel="shortcut icon" />
     <link href="/favicon.ico" rel="bookmark icon" /> -->
@@ -28,151 +33,239 @@
     </style>
     
     <script type="text/javascript">
-    	$(function(){
-    		mini.parse();
-    		$("#north").css("overflow","visible");
-    		$(".mini-layout-region-body ").css("overflow","visible");
-    		$("#navbar1  a").click(function(){
-    			var funcode = $(this).attr("funcode");
-    			var url = funcode;
-    			if (url == 'index') {
-    				$("#main_frm").attr("src","${pageContext.request.contextPath}/view/system/h.jsp");
-    			}
-    			else {
-    				$("#main_frm").attr("src",url);
-    			}
-    			
-    			$("#navbar1 li").removeClass("active");
-    			$(this).parent().addClass("active");
-    		});
-    	})
-    	
-    	function updatepass(id) {
-    		
-    		var url = "${pageContext.request.contextPath}/common/dispatch.do?page=/view/account/updateAccount";
-    		var title = "修改帐户信息";
-        	mini.open({
-                url: url,
-                title: title, width:500, height:400,
-                allowResize:true,
-                onload: function () {
-                	
-                },
-                ondestroy: function (action) {
-                }
-            });
-    		
-			/* mini.open({
-	            url: bootPATH + "../common/dispatch.do?page=/view/auth/account/updateAccount",
-	            title: "修改帐户信息", width: 400, height:300,
-	            allowResize:true,
-	            onload: function () {
-	            },
-	            ondestroy: function (action) {
-	            }
-	        }); */
-		}
-    	
-    	function quit() {
+		var myLayout;
+		
+		$(function() {
+			myLayout = $('body').layout({
+				west__size:					96
+			,	west__spacing_closed:		0
+			,	west__spacing_open:		0
+			,	west__togglerLength_closed:	100
+			,	west__togglerContent_closed:""
+			,	west__togglerTip_closed:	""
+			,	west__sliderTip:			""
+			,	west__slideTrigger_open:	"mouseover"
+			,	center__maskContents:		true
+			});
+			
+			$(".ui-layout-west").css("z-index",999);
+		})
+		
+		function quit() {
 			if(confirm("真的要退出系统吗?")) {
 	            window.location.href = "${pageContext.request.contextPath}/logout.htmls";
 	        };
 	    }
-    	
-    </script>
+	</script>
 </head>
 
 <body>
-	<div id="layout1" class="mini-layout" style="width: 100%; height: 100%;">
-		<div  region="north" height="38" showSplit="false" showHeader="false" style="overflow: hide;">
-			<div class="navbar bg-blue bg-inverse radius">
-				<div class="navbar-head" style="vertical-align: middle;width:200px;margin-left: 15px;padding: 3px;">
-					<!-- <button class="button bg icon-navicon" data-target="#navbar-big2"></button> -->
-					<a href="#">
-						<img src="${pageContext.request.contextPath}/images/distributor_logo.png" width="32" style="vertical-align:middle"/>
-					</a>
-					<span >众恒信和采购分销管理平台</span>
-				</div>
-				<div class="navbar-body nav-navicon" id="navbar-big">
-					<ul class="nav nav-inline nav-menu">
-						<li><a href="#">首页</a> </li>
-						<li class="active"><a href="#">元件<span class="arrow"></span></a>
-							<ul class="drop-menu">
-								<li><a href="#">概述</a> </li>
-								<li><a href="#">网格系统<span class="arrow"></span></a>
-									<ul>
-										<li><a href="#">响应式布局</a> </li>
-										<li><a href="#">非响应式布局</a> </li>
-									</ul>
+	<div class="ui-layout-west">
+		<div class="side-wrap">
+			<h1 class="logo">
+				<a title=" 易订货, 让生意更简单！" href="#"><img src="${pageContext.request.contextPath}/view/order/images/logo.png" alt="易订货"></a>
+			</h1>
+			<div class="side-menu">
+				<ul>
+					<li class="pr side-menu-li li-crop menu1 current" id="order" code="WBM_ORDER">
+						<a class="order side-menu-a new-con-p" target="mainFrame" href="http://www.sina.com.cn">
+							<i class="icon"></i>订单
+						</a>
+						<div class="float-menu" style="top: 0px;">
+							<ul class="sec-nav">
+								<li class="sec-nav-li menu2" code="WBM_ORDER_INDENT">
+									<a class="sec-nav-a new-con" target="mainFrame" href="http://www.sohu.com">订货单444</a>
 								</li>
-								<li><a href="#">图标</a> </li>
-							</ul>
-						</li>
-						<li class="nav-more"><a href="#">更多<span class="arrow"></span></a>
-							<ul class="drop-menu">
-								<li><a href="#">组件</a> </li>
-								<li><a href="#">模块<span class="arrow"></span></a>
-									<ul>
-										<li><a href="#">头部</a> </li>
-										<li><a href="#">导航</a> </li>
-										<li><a href="#">底部</a> </li>
-									</ul>
+								<li class="sec-nav-li menu2" code="WBM_ORDER_RETURNED">
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/order/returnOrder?action=list">退货单226666</a>
+								</li>
+								<li class="sec-nav-li menu2" code="WBM_ORDER_OUTSTOCK">
+									<a class="sec-nav-a new-con" target="mainFrame" href="content.html">出库/发货记录444</a>
+								</li>
+								<li class="sec-nav-li menu2" code="WBM_ORDER_STATISTICS">
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/order/order?action=queryContent">订单商品统计</a>
 								</li>
 							</ul>
-						</li>
-					</ul>
-					<div class="navbar-form navbar-left">
-						<form>
-							<input type="text" class="input input-auto border-white" name="keywords" size="15" placeholder="关键词" />
-							<input type="submit" name="search" value="搜索" class="button bg-white" />
-						</form>
-					</div>
-					<ul class="nav nav-inline nav-menu navbar-right">
-						<li>
-							<a class="bg-main" href="javascript:;">
-								<spn><img src="http://www.pintuer.com/demo/pintuer2/images/face.jpg" width="28" class="radius-circle"></spn>
-								管理员
-								<span class="downward"></span>
-							</a>
-							<ul class="drop-menu">
-								<li><a class="icon-user" target="_blank" href="javascript:;">修改资料</a></li>
-								<li><a class="icon-key" target="_blank" href="javascript:;">修改密码</a></li>
+						</div>
+					</li>
+					<li class="pr side-menu-li li-crop menu1" id="customer" code="WBM_CUSTOMER">
+						<a class="customer side-menu-a new-con-p" href="http://corp.dinghuo123.com/customer/customer?action=list&amp;customerStatus=0">
+							<i class="icon"></i>客户
+						</a>
+						<div class="float-menu" style="top: 0px;">
+							<ul class="sec-nav">
+								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/customer/customer?action=list&amp;customerStatus=0">客户列表</a>
+								</li>
+								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/customer/type?action=list">客户级别设置</a>
+								</li>
+								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_FRANCHISE">
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/customer/share?action=joinRequestListForward">加盟信息</a>
+								</li>
+								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_FEEDBACK">
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/faq/question?action=manager">客户反馈</a>
+								</li>
 							</ul>
-						</li>
-						<li><a class="bg-green" href="javascript:;"><span class="icon-envelope"></span>&nbsp;<span class="badge bg-blue">5+</span><span class="downward"></span></a>
-							<ul class="drop-menu">
-								<li><a class="text-yellow-light" target="_blank" href="javascript:;"><span class="icon-envelope"></span>您有16封邮件</a></li>
-								<li><a class="bg-gray" target="_blank" href="javascript:;"><span class="icon-envelope"></span>查阅更多...</a></li>
+						</div>
+					</li>
+					<li class="pr side-menu-li li-crop menu1" id="product" code="WBM_PRODUCT">
+						<a class="product side-menu-a new-con-p" href="http://corp.dinghuo123.com/product/product?action=list&amp;status=0">
+							<i class="icon"></i>商品<span class="ui-new-func"></span>
+						</a>
+						<div class="float-menu" style="display: none; top: 0px;">
+							<ul class="sec-nav clearfix sec-nav-flow" style="width: 304px;">
+								<li class="sec-nav-li sec-nav-li-flow" style="height: 228px;">
+									<a class="sec-nav-a li-a-color" href="javascript:;">商品管理</a>
+									<ul class="third-nav-ul">
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_LIST">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/product?action=list&amp;status=0">商品列表</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_TYPE">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/type?action=list">商品类别</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_UNIT">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/unit?action=list">计量单位</a>
+										</li>
+									</ul>
+								</li>
+								<li class="sec-nav-li sec-nav-li-flow" style="height: 228px;">
+									<a class="sec-nav-a li-a-color" href="javascript:;">库存管理</a>
+									<ul class="third-nav-ul">
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_STOCK">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/product?action=inventoryList&amp;forward=inventorylist">商品库存</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_INSTOCK">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/inventory/inStorage?action=list_view">商品入库</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_OUTSTOCK">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/inventory/outStorage?action=list_view">商品出库</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_INVENTORY">
+											<a class="third-nav-a new-con" href="http://file.dinghuo123.com/corp/inventoryImport/start">库存盘点<span class="ui-new-func"></span></a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_STOCK_DETAIL">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/inventory/inStorage?action=allList_view">出入库明细</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_STOCK_WAREHOUSE">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/inventory/warehouse?action=list">仓库设置</a>
+										</li>
+									</ul>
+								</li>
+								<li class="sec-nav-li sec-nav-li-flow" style="height: 228px;">
+									<a class="sec-nav-a li-a-color" href="javascript:;">促销管理</a>
+									<ul class="third-nav-ul">
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_PROMOTION">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/promotion?action=productStrategyList">商品促销</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_ORDER_PROMOTION">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/promotion?action=orderStrategyList">订单促销</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_PRODUCT_MIX_PROMOTION">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/promotion?action=complexStrategyList">组合促销<span class="ui-new-func"></span></a>
+										</li>
+									</ul>
+								</li>
 							</ul>
-						</li>
-						<li><a class="bg-blue" href="javascript:;"><span class="icon-bell-o"></span>&nbsp;<span class="badge bg-green">99+</span><span class="downward"></span></a>
-							<ul class="drop-menu">
-								<li><a class="text-yellow-light active" target="_blank" href="javascript:;"><span class="icon-comment"></span>您有26条未读消息</a></li>
-								<li><a class="text-yellow-light active" target="_blank" href="javascript:;"><span class="icon-comments"></span>您有13条回复消息</a></li>
-								<li><a class="bg-gray" target="_blank" href="javascript:;"><span class="icon-envelope"></span>查看更多...</a></li>
+						</div>
+					</li>
+					<li class="pr side-menu-li li-crop menu1" id="pay" code="WBM_FUND">
+						<a class="pay side-menu-a new-con-p" href="http://corp.dinghuo123.com/pay/payment?action=list">
+							<i class="icon"></i>资金
+						</a>
+						<div class="float-menu" style="display: none; top: 0px;">
+							<ul class="sec-nav clearfix sec-nav-flow" style="width: 221px;">
+								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
+									<a class="sec-nav-a li-a-color" href="javascript:;">资金管理</a>
+									<ul class="third-nav-ul">
+										<li class="third-nav-li menu2" code="WBM_FUND_RECEIPT_CONFIRM">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/payment?action=auditList">收款确认</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_FUND_ONLINE_PAYMENT">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/onlinePayAccount?action=onlinePayAccountManage">在线支付</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_FUND_BANK_ACCOUNT">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/companyBank?action=list">银行账号</a>
+										</li>
+									</ul>
+								</li>
+								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
+									<a class="sec-nav-a li-a-color" href="javascript:;">资金报表</a>
+									<ul class="third-nav-ul">
+										<li class="third-nav-li menu2" code="WBM_FUND_INCOME_RECORD">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/payment?action=list">收款记录</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_FUND_INCOME_STATISTICS">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/payment?action=queryPaymentReport">订单收款统计</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_FUND_SEND_STATISTICS">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/logisticsReconciliation?action=list">发货统计</a>
+										</li>
+									</ul>
+								</li>
 							</ul>
-						</li>
-						<li><a class="bg-yellow" target="_blank" href="login.html"><span class="icon-sign-out"></span>注销</a></li>
-					</ul>
-					<!-- <div class="navbar-text navbar-right hidden-s">
-						文本 <a href="#">链接</a>
-						<button type="button" class="button bg-white">
-							按钮</button>
-					</div> -->
-				</div>
+						</div>
+					</li>
+					<li class="pr side-menu-li li-crop menu1" id="message" code="WBM_NOTIFY">
+						<a class="message side-menu-a new-con-p" href="http://corp.dinghuo123.com/message/notification?action=list">
+							<i class="icon"></i>通知
+						</a>
+						<div class="float-menu" style="display: none; top: 0px; margin-top: 0px;">
+							<ul class="sec-nav clearfix sec-nav-flow" style="width: 249px;">
+								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
+									<a class="sec-nav-a li-a-color" href="javascript:;">通知管理</a>
+									<ul class="third-nav-ul">
+										<li class="third-nav-li menu2" code="WBM_NOTIFY_NOTICE">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/message/notification?action=list">通知公告</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_NOTIFY_AD">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/generalize/view?action=list">广告发布</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_NOTIFY_CLASSIFY">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/message/notificationType?action=list">通知分类管理</a>
+										</li>
+									</ul>
+								</li>
+								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
+									<a class="sec-nav-a li-a-color" href="javascript:;">手机短信</a>
+									<ul class="third-nav-ul">
+										<li class="third-nav-li menu2" code="WBM_NOTIFY_SMS_RECHARGE">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/message/sms_recharge">短信充值</a>
+										</li>
+										<li class="third-nav-li menu2" code="WBM_NOTIFY_SMS_SETTING">
+											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/message/sms_setting">短信发送设置</a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="pr side-menu-li li-crop menu1" id="report" code="WBM_REPORT">
+						<a class="report side-menu-a new-con-p" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=business&amp;statisticsType=2&amp;dateSegment=4">
+							<i class="icon"></i>报表
+						</a>
+						<div class="float-menu" style="top: 0px; margin-top: 0px;">
+							<ul class="sec-nav">
+								<li class="sec-nav-li menu2" code="WBM_REPORT_ORDER">
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=business&amp;statisticsType=2&amp;dateSegment=4">订单统计报表</a>
+								</li>
+								<li class="sec-nav-li menu2" code="WBM_REPORT_AREA">
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=area&amp;statisticsType=5&amp;dateSegment=4">地区统计报表</a>
+								</li>
+								<li class="sec-nav-li menu2" code="WBM_REPORT_SALE">
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=product&amp;statisticsType=10&amp;dateSegment=4">商品销售报表</a>
+								</li>
+								<li class="sec-nav-li menu2" code="WBM_REPORT_INDENT">
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=customer&amp;statisticsType=8&amp;dateSegment=4">客户订货报表</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+				</ul>
 			</div>
-		</div>
-		<div title="south" region="south" showSplit="false" showHeader="false" height="30">
-			<div style="line-height: 28px; text-align: center; cursor: default">版权所有 亚普软件(北京)有限公司&copy; <a href="#"></a> All Rights Reserved.</div>
-		</div>
-<!-- 		<div title="south" region="south" showSplit="false" showHeader="false" height="30">
-			<div style="line-height: 28px; text-align: center; cursor: default">Copyright
-				© 亚普软件（北京）有限公司版权所有</div>
-		</div> -->
-		<div title="center" region="center" bodyStyle="overflow:hidden;">
-			<iframe id="main_frm" src="${pageContext.request.contextPath}/view/system/h.jsp" width="100%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="yes"></iframe>
 		</div>
 	</div>
 
+	<iframe id="mainFrame" name="mainFrame" class="ui-layout-center" width="100%" height="600" frameborder="0" scrolling="auto" src="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/order/index"></iframe>
 </body>
 </html>

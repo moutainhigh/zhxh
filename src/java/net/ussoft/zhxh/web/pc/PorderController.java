@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
+
 
 @Controller
 @RequestMapping("/porder")
@@ -62,6 +64,24 @@ public class PorderController extends BaseConstroller {
 	
 	@Resource
 	private IPublicOrderPathService orderPathService;
+	
+	/**
+	 * 跳转到某个页面。
+	 * @param page		跳转到参数指定的页面
+	 * @return
+	 */
+	@RequestMapping(value="dispatch",method=RequestMethod.GET)
+	public String dispatch(String page,String param ,ModelMap modelMap) {
+		
+		if (null != param && !"".equals(param)) {
+			Map<String,String> paramMap = (Map<String, String>) JSON.parse(param);
+//			String[] paramArr = param.split("#");
+			for (Map.Entry<String,String> entry : paramMap.entrySet()) {  
+				modelMap.put(entry.getKey(), entry.getValue());
+			}  
+		}
+		return page;
+	}
 	
 	/**
 	 * 立即购买

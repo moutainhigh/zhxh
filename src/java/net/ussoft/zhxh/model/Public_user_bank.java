@@ -22,6 +22,8 @@ public class Public_user_bank {
 	private Float rebatesbank;				//返利账户。店
 	private Float bonusesbank;				//奖励账户。店
 	private Float bonusestakenbank;				//奖励可提现账户。店
+	private Integer bankstate;				//帐户状态。0：冻结  1：正常
+	private String bankstatetxt;			//帐户状态中文。用于前台显示
 	
 	
 	@Id
@@ -109,6 +111,18 @@ public class Public_user_bank {
 	}
 	public void setBonusestakenbank(Float bonusestakenbank) {
 		this.bonusestakenbank = bonusestakenbank;
+	}
+	public Integer getBankstate() {
+		return bankstate;
+	}
+	public void setBankstate(Integer bankstate) {
+		this.bankstate = bankstate;
+	}
+	public String getBankstatetxt() {
+		return bankstatetxt;
+	}
+	public void setBankstatetxt(String bankstatetxt) {
+		this.bankstatetxt = bankstatetxt;
 	}
 	
 	

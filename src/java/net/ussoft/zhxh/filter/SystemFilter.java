@@ -47,7 +47,11 @@ public class SystemFilter implements Filter {
     			+ path + "/";
     	
         StringBuffer url = httpRequest.getRequestURL();
-        log.debug(url);
+        
+        if (url.toString().lastIndexOf(":") == 4) {
+        	url.deleteCharAt(url.length()-1);
+        	url.append(":" + httpRequest.getServerPort() + "/");
+        }
         
 //        if (url.indexOf("kaptcha") != -1 || url.indexOf("init") != -1 || url.indexOf("page") != -1 || url.indexOf("login") != -1 || url.toString().equals(basePath)) {
 //        	filterChain.doFilter(servletRequest, servletResponse);
@@ -77,7 +81,7 @@ public class SystemFilter implements Filter {
             }  
         }
         
-        String[] pc_strs = {"porder"};
+        String[] pc_strs = {"porder","order"};
         for (String str : pc_strs) {
             if (url.indexOf(str) >= 0) {
                 Object pc_o = CommonUtils.getSessionAttribute(httpRequest, Constants.PC_USER_SESSION);
