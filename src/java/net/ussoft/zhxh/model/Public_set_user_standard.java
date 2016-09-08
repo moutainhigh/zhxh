@@ -14,6 +14,7 @@ public class Public_set_user_standard {
 	private Float buyerdis;					//商品采购折扣
 	private Float rebatesdis;				//返利标准
 	private Float bonusesdis;				//奖励标准	
+	private String sizeid;					//关联规格id
 	
 	
 	@Id
@@ -98,6 +99,14 @@ public class Public_set_user_standard {
 	 */
 	public void setBonusesdis(Float bonusesdis) {
 		this.bonusesdis = bonusesdis;
+	}
+
+	public String getSizeid() {
+		return sizeid;
+	}
+
+	public void setSizeid(String sizeid) {
+		this.sizeid = sizeid;
 	}
 	
 	

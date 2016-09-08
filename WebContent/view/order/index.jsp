@@ -56,14 +56,14 @@
 	    	var myChart = echarts.init(document.getElementById('main'));
 	    	var option = {
 		    	    title : {
-		    	        text: '某地区蒸发量和降水量',
-		    	        subtext: '纯属虚构'
+		    	        text: '订单及销售额',
+		    	        subtext: '2016年度'
 		    	    },
 		    	    tooltip : {
 		    	        trigger: 'axis'
 		    	    },
 		    	    legend: {
-		    	        data:['蒸发量','降水量']
+		    	        data:['订单量[个数]','销售额[元]']
 		    	    },
 		    	    toolbox: {
 		    	        show : true,
@@ -88,7 +88,7 @@
 		    	    ],
 		    	    series : [
 		    	        {
-		    	            name:'蒸发量',
+		    	            name:'订单量[个数]',
 		    	            type:'bar',
 		    	            data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
 		    	            markPoint : {
@@ -104,7 +104,7 @@
 		    	            }
 		    	        },
 		    	        {
-		    	            name:'降水量',
+		    	            name:'销售额[元]',
 		    	            type:'bar',
 		    	            data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
 		    	            markPoint : {
@@ -124,6 +124,7 @@
 	    	
 	        // 使用刚指定的配置项和数据显示图表。
 	        myChart.setOption(option);
+	        window.onresize = myChart.resize; 
 	    })
  		
     </script>
@@ -192,7 +193,7 @@
 		</div>
 	</div>
 	<!--内容-->
-	<div class="layout" style="height:2000px">
+	<div class="layout" style="margin-bottom: 50px">
 		<ul class="bread bg">
 			<li><a href="#" class="icon-home">首页</a> </li>
 			<li></li>
@@ -264,12 +265,12 @@
 						</div>
 					</div>
 					<br>
-					<div class="panel border-sub">
+					<div class="panel border-sub" >
 						<div class="panel-head">
-							<strong>今日简报[客户订货单]</strong>
+							<strong>年度订单及销售额</strong>
 						</div>
-						<div class="panel-body">
-							<div id="main" style="width: 100%;height:400px;"></div>
+						<div class="panel-body" style="height:500px;">
+							<div id="main" style="width: 100%;height:100%;"></div>
 						</div>
 					</div>
 					<br>

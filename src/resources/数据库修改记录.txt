@@ -176,6 +176,14 @@
 	(1)增加 bankstate int (11) 金额帐户状态  0：冻结  1：正常
 	（2）增加bankstatetxt varchar （50） 状态中文。存冻结or 正常。用于前台显示
 	
+3、修改表public_set_user_standard （设置采购各种标准）
+	（1）增加sizeid varchar（40）	规格id
+4、新建表 public_set_bonuses_ratio （设置奖励转货款标准）
+	（1）id varchar（40）
+	（2）parentid varchar（40）
+	（3）userid varchar（40）
+	（4）bonuses_ratio Float（2）
+	
 	
 	
 	
