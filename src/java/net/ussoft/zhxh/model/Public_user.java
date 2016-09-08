@@ -4,6 +4,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Table(name="public_user")
 public class Public_user {
@@ -28,11 +29,14 @@ public class Public_user {
 	private String birthday;
 	private String companyname;		//存储机构（代理或店）的名称
 	private String companypath; 	//存储机构（代理或店）的地址
-	private String parentid; 		//存储机构（代理或店）的直属上级id
+	
 	private String belongcode; 		//存储普通会员的所属店代码
 	private String companycode; 	//存储机构的代码
 	private String wechar; 			//微信号码
 	private String rank; 			//代理商或店的级别,存文本，仅仅显示，没有实际意义。
+	
+	//临时字段
+	private String parentid; 		//存储机构（代理或店）的直属上级id
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -156,12 +160,6 @@ public class Public_user {
 	public void setCompanypath(String companypath) {
 		this.companypath = companypath;
 	}
-	public String getParentid() {
-		return parentid;
-	}
-	public void setParentid(String parentid) {
-		this.parentid = parentid;
-	}
 	public String getBelongcode() {
 		return belongcode;
 	}
@@ -185,6 +183,14 @@ public class Public_user {
 	}
 	public void setRank(String rank) {
 		this.rank = rank;
+	}
+	
+	@Transient
+	public String getParentid() {
+		return parentid;
+	}
+	public void setParentid(String parentid) {
+		this.parentid = parentid;
 	}
 	
 }
