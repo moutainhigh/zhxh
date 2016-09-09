@@ -201,5 +201,21 @@ public class Public_dis_config {
 		this.balance_date = balance_date;
 	}
 	
+	public Public_dis_config() {
+		this.setRebates_down(0f);
+		this.setRebates_up(0f);
+		this.setBonuses_down(0f);
+		this.setBonuses_up(0f);
+		this.setTaken_dian(0);
+		this.setTaken_daili(0);
+		this.setQuota_down(0);
+		this.setQuota_up(0);
+		this.setDeposit_down(0);
+		this.setDeposit_up(0);
+		this.setBonuses_ratio_down(0f);
+		this.setBonuses_ratio_up(0f);
+		this.setBalance_date(0);
+	}
+	
 	
 }

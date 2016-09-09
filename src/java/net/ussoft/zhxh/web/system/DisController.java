@@ -3,6 +3,7 @@ package net.ussoft.zhxh.web.system;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,13 +49,34 @@ public class DisController extends BaseConstroller{
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-
+		String json = "";
 		if(Constants.DISCONFIG.equals(act)){
+			
 			Public_dis_config tmp = disConfigService.getById("1");
-			String json = JSON.toJSONString(tmp);
-			out.print(json);
+			if (null == tmp || "".equals(tmp.getId())) {
+				//如果记录不存在，创建一条
+				Public_dis_config config = new Public_dis_config();
+				config.setId("1");
+				disConfigService.insert(config);
+				json = JSON.toJSONString(config);
+			}
+			else {
+				json = JSON.toJSONString(tmp);
+			}
+		}
+		else if (Constants.USERSTANDARD.equals(act)) {
+			//获取采购标准
+			//parenttype 在这里传入的就是userid
+			if (parenttype.equals("T")) {
+				//如果被设置采购标准是平台，说明是通用标准
+				List<Map<String,Object>> resultList = disConfigService.listDisStandard(parentid, parenttype);
+				
+				json = JSON.toJSONString(resultList.get(0));
+				
+			}
 		}
 		
+		out.print(json);
 	}
 	
 	@RequestMapping(value="/saveDisConfig",method=RequestMethod.POST)
@@ -75,6 +97,37 @@ public class DisController extends BaseConstroller{
 		
 		if (null != disConfig && !"".equals(disConfig.getId())) {
 			disConfigService.update(disConfig);
+		}
+		
+		out.print("success");
+	}
+	
+	/**
+	 * 保存采购标准
+	 * @param objs
+	 * @param response
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	@RequestMapping(value="/saveDisStandard",method=RequestMethod.POST)
+	public void saveDisStandard(String objs,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "success";
+		
+		if ("".equals(objs) || objs == null) {
+			out.print(result);
+			return;
+		}
+		Map<String, Object> row = (Map<String, Object>) JSON.parse(objs);
+		
+		if (null != row && !"".equals(row.get("parentid"))) {
+			List<Map<String, Object>> disList = new ArrayList<Map<String, Object>>();
+			disList.add(row);
+			disConfigService.updateDisStandard(disList);
 		}
 		
 		out.print("success");

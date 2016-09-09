@@ -13,6 +13,10 @@ public class Public_set_bonuses_ratio {
 	private String userid;					//被设置标准的机构
 	private Float bonuses_ratio;			//奖励转货款系数
 	
+	public Public_set_bonuses_ratio() {
+		this.setBonuses_ratio(0f);
+	}
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public String getId() {

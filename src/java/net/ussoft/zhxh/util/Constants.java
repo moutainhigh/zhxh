@@ -137,6 +137,10 @@ public class Constants{
 	 * 公共利益分配表
 	 */
 	public static final String DISCONFIG = "disconfig";
+	/**
+	 * 采购标准表
+	 */
+	public static final String USERSTANDARD = "userstandard";
 	
 	
 	

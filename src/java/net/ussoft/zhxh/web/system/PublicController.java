@@ -98,6 +98,7 @@ public class PublicController extends BaseConstroller{
 			content.setId(UUID.randomUUID().toString());
 			content.setParentid(parentid);
 			content.setParenttype(parenttype);
+			content.setIsshow(0);
 			content = contentService.insert(content);
 		}
 		

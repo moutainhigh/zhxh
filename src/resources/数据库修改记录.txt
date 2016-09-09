@@ -186,6 +186,13 @@
 5、修改表 public_dis_config 平台公共利益分配参数设置
 	（1）修改字段 bonuses_ratio_down 、 bonuses_ratio_up 俩字段的数据库类型为 decimal（11，2）
 	
+20160909
+1、增加表public_user_brand  机构与品牌关联表
+	(1)id varchar(40)
+	(2)parentid varchar(40)
+	(3)userid	varchar(40)
+	(4)brandid	varchar(40)
+	
 	
 	
 	

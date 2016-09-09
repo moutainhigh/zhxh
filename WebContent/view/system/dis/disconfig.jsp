@@ -112,8 +112,8 @@
 				type : "post",
 				dataType : "text",
 				success : function(text) {
-					mini.alert("保存完毕。");
-					labelModel();
+					parent.parent.layer.msg("保存完毕。",{icon:6});
+					inputModel();
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
 					mini.alert(jqXHR.responseText);
@@ -154,9 +154,9 @@
 				</tr>
 				<tr>
 					<td>奖励下限</td>
-					<td><input name="bonuses_down" class="mini-textbox" style="width:100%;" vtype="int" emptyText="请输入整数" /></td>
+					<td><input name="bonuses_down" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
 					<td>奖励上限</td>
-					<td><input name="bonuses_up" class="mini-textbox" style="width:100%;" vtype="int" emptyText="请输入整数" /></td>
+					<td><input name="bonuses_up" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
 				</tr>
 				<tr>
 					<td>店提现日期</td>

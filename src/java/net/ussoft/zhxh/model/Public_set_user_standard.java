@@ -16,6 +16,15 @@ public class Public_set_user_standard {
 	private Float bonusesdis;				//奖励标准	
 	private String sizeid;					//关联规格id
 	
+	public Public_set_user_standard() {
+		this.setParentid("");
+		this.setUserid("");
+		this.setBuyerdis(0f);
+		this.setRebatesdis(0f);
+		this.setBonusesdis(0f);
+		this.setSizeid("");
+	}
+	
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

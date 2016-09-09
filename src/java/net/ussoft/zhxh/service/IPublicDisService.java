@@ -1,6 +1,7 @@
 package net.ussoft.zhxh.service;
 
 import java.util.List;
+import java.util.Map;
 
 import net.ussoft.zhxh.model.Public_dis_config;
 
@@ -44,6 +45,23 @@ public interface IPublicDisService {
 	 * @return
 	 */
 	public int delete(String id);
+	
+	//=========采购标准
+	
+	/**
+	 * 采购标准获取
+	 * @param parentid
+	 * @param userid
+	 * @return
+	 */
+	public List<Map<String,Object>> listDisStandard(String parentid,String userid);
+	
+	/**
+	 * 更新对象
+	 * @param tmp
+	 * @return
+	 */
+	public int updateDisStandard(List<Map<String,Object>> disList);
 	
 	
 }

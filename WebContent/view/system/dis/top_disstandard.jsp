@@ -46,11 +46,13 @@
 		$(function() {
 			mini.parse();
 			form = new mini.Form("#form1");
-			/*$.ajax({
+			$.ajax({
 				async : false,
 				url : "${pageContext.request.contextPath}/dis/list.htmls",
 				data : {
-					'act' : 'disconfig'
+					'act' : 'userstandard',
+					'parentid':'1',
+					'parenttype':'T'
 				},
 				type : "post",
 				dataType : "json",
@@ -60,7 +62,7 @@
 				error : function(jqXHR, textStatus, errorThrown) {
 					mini.alert(jqXHR.responseText);
 				}
-			}) */
+			})
 			//form.setData(obj, false);
 			labelModel();
 		})
@@ -97,7 +99,7 @@
             
         }
         
-		function save() {
+		function saveT() {
             form.validate();
             if (form.isValid() == false) return;
 
@@ -107,14 +109,15 @@
 			
 			$.ajax({
 				async : false,
-				url : "${pageContext.request.contextPath}/dis/saveDisConfig.htmls",
+				url : "${pageContext.request.contextPath}/dis/saveDisStandard.htmls",
 				data : {
 					'objs' : json
 				},
 				type : "post",
 				dataType : "text",
 				success : function(text) {
-					mini.alert("保存完毕。");
+					parent.parent.layer.msg("保存完毕。",{icon:6});
+					inputModel();
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
 					mini.alert(jqXHR.responseText);
@@ -125,7 +128,7 @@
 </head>
 <body>
 	<div class="mini-splitter" style="width:100%;height:100%;" borderStyle="border:0;" vertical="true">
-   		<div size="50%" showCollapseButton="false" style="border-width: 1;">
+   		<div size="35%" showCollapseButton="false" style="border-width: 1;">
    			<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
 		        <table style="width:100%;border-collapse: separate;border-spacing: 3px;">
 		            <tbody>
@@ -135,7 +138,7 @@
 			                 </td>
 			                 <td style="white-space:nowrap;">
 				         		<a id="editBtn" class="mini-button" iconCls="icon-edit" plain="true" onclick="inputModel()">编辑</a>
-				         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save()">保存</a>
+				         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="saveT()">保存</a>
 			                 </td>
 			             </tr>
 			        </tbody>
@@ -143,7 +146,11 @@
 		    </div>
 		    <div class="mini-fit">
 			    <div id="form1" style="text-align: center;">
-			    	<input name="id" class="mini-textbox" style="width:100%;" visible=false/>
+			    	<input name="parentid" class="mini-textbox" style="width:100%;" visible=false/>
+			    	<input name="userid" class="mini-textbox" style="width:100%;" visible=false/>
+			    	<input name="id_TA" class="mini-textbox" style="width:100%;" visible=false/>
+			    	<input name="id_TC" class="mini-textbox" style="width:100%;" visible=false/>
+			    	<input name="ratio_id_TC" class="mini-textbox" style="width:100%;" visible=false/>
 			        <table class="table table-bordered t" style="width: 80%;margin:auto; margin-top: 20px">
 						<tbody>
 							<tr>
@@ -152,25 +159,25 @@
 							</tr>
 							<tr>
 								<td class="labelname"><label for="rebates_down$text">代理折扣</label></td>
-								<td colspan="7"><input id="buyerdis_a" name="buyerdis" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
+								<td colspan="7"><input id=buyerdis_TA name="buyerdis_TA" class="mini-textbox" style="width:50%;" vtype="float" required="true" emptyText="请输入数字" /></td>
 							</tr>
 							<tr>
 								<td><label for="rebates_down$text">直营店折扣</label></td>
-								<td><input id="buyerdis_c" name="buyerdis_c" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
+								<td><input id="buyerdis_TC" name="buyerdis_TC" class="mini-textbox" style="width:100%;" vtype="float" required="true" emptyText="请输入数字" /></td>
 								<td>直营店返利</td>
-								<td><input name="rebatesdis" class="mini-textbox" style="width:100%;" vtype="int" emptyText="请输入整数" /></td>
+								<td><input name="rebatesdis_TC" class="mini-textbox" style="width:100%;" vtype="float" required="true" emptyText="请输入数字" /></td>
 								<td>直营店奖励</td>
-								<td><input name="bonusesdis" class="mini-textbox" style="width:100%;" vtype="int" emptyText="请输入整数" /></td>
+								<td><input name="bonusesdis_TC" class="mini-textbox" style="width:100%;" vtype="float" required="true" emptyText="请输入数字" /></td>
 								<td>直营店奖励转货款</td>
-								<td><input name="bonuses_ratio" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
+								<td><input name="ratio_TC" class="mini-textbox" style="width:100%;" vtype="float" required="true" emptyText="请输入数字" /></td>
 							</tr>
 							<tr>
 								<td>说明</td>
 								<td colspan="7" style="color:#FF8C00">
 									(1)折扣:输入进货折扣百分比。例如0.3表示3折进货。<br>
-									(1)返利:输入返利的百分比。例如0.3表示30%<br>
-									(2)奖励:输入整数。例如50表示50元<br>
-									(5)奖励转货款:输入奖励转为货款的倍数。例如1.3表示奖励将乘以1.3倍，计入货款。<br>
+									(2)返利:输入返利的百分比。例如0.3表示30%<br>
+									(3)奖励:输入整数。例如50表示50元<br>
+									(4)奖励转货款:输入奖励转为货款的倍数。例如1.3表示奖励将乘以1.3倍，计入货款。<br>
 								</td>
 							</tr>
 						</tbody>
@@ -180,7 +187,7 @@
 		</div>
 		<div showCollapseButton="true">
 			<div id="mainTabs" class="mini-tabs" activeIndex="0" style="width:100%;height:100%;" borderStyle="padding:0;border:0;">
-	        	<div name="brandPic" title="综合页轮播图片">
+	        	<div name="brandPic" title="代理采购标准">
 	                <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
 			    		 <a class="mini-button" plain="true" iconCls="icon-addfolder" onclick="upload_brandfirstpic()">上传</a>
 				     	 <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandpic')">删除</a>
@@ -188,10 +195,10 @@
 				         <a class="mini-button" iconCls="icon-save" plain="true" onclick="saveBrandpic()">保存</a>
 				     </div>
 			        <div class="mini-fit" >
-				         <div id="grid_brandpic" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  
+				         <div id="grid_a_standard" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  
 				    </div>
 	            </div>
-	            <div name="brandFirst" title="综合页内容">
+	            <div name="brandFirst" title="直营店采购标准">
 	                <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
 				         <a class="mini-button" plain="true" iconCls="icon-addfolder" onclick="addRow()">新增</a>
 				         <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandfirst')">删除</a>
@@ -200,7 +207,7 @@
 				         <span class="separator"></span>
 				     </div>
 			        <div class="mini-fit" >
-				         <div id="grid_brandfirst" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  
+				         <div id="grid_c_standard" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  
 				     </div>
 	            </div>
 	        </div>
