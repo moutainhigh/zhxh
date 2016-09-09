@@ -10,6 +10,7 @@ import javax.persistence.Transient;
 public class Public_product_size {
 
 	private String id;
+	private String brandid;
 	private String productid;
 	private String productname;
 	private Integer showtype;
@@ -32,6 +33,13 @@ public class Public_product_size {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String getBrandid() {
+		return brandid;
+	}
+	public void setBrandid(String brandid) {
+		this.brandid = brandid;
 	}
 	public String getProductid() {
 		return productid;

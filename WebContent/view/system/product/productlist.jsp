@@ -467,6 +467,7 @@
 				
 				var rows = grid_product.getSelecteds();
 				var productid = "";
+				var brandid = "";
 	       	 	if (rows.length == 0) {
 	       	 		parent.parent.layer.msg("请选择要添加商品规格的所属商品.",{icon:6});
 	       		 	return;
@@ -478,8 +479,10 @@
 	       	 		}
 	       	 		else {
 	       	 			productid = rows[0].id;
+	       	 			brandid = row[0].brandid;
 	       	 		}
 	       	 	}
+	       	 	newRow.brandid = brandid;
 				newRow.productid = productid;
 				newRow.productsize = "新的商品规格";
 				newRow.price = "0";

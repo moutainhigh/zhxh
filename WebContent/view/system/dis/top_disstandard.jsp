@@ -188,15 +188,82 @@
 		<div showCollapseButton="true">
 			<div id="mainTabs" class="mini-tabs" activeIndex="0" style="width:100%;height:100%;" borderStyle="padding:0;border:0;">
 	        	<div name="brandPic" title="代理采购标准">
-	                <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
-			    		 <a class="mini-button" plain="true" iconCls="icon-addfolder" onclick="upload_brandfirstpic()">上传</a>
-				     	 <a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brandpic')">删除</a>
-				     	 <span class="separator"></span>
-				         <a class="mini-button" iconCls="icon-save" plain="true" onclick="saveBrandpic()">保存</a>
-				     </div>
-			        <div class="mini-fit" >
-				         <div id="grid_a_standard" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  
-				    </div>
+	        		<div class="mini-splitter" style="width:100%;height:100%;" borderStyle="border:0;">
+		   				<div size="30%" showCollapseButton="false" style="border-width: 1;">
+					    	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
+						        <table style="width:100%;">
+						            <tbody>
+						             <tr>
+						                 <td style="width:100%;">
+						                 	<span id="pid" style="padding-left:5px;">代理列表</span>
+						                 </td>
+						                 <td style="white-space:nowrap;">
+						                 	<!-- <a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_brand')">新增</a>
+						                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brand')">删除</a>
+							                <span class="separator"></span>
+							         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a>
+							         		<span class="separator"></span>
+					         				<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showStyle_brand()">预览品牌故事效果</a> -->
+						                 </td>
+						             </tr>
+						         </tbody>
+						        </table>
+						    </div>
+						    <div class="mini-fit">
+						        <div id="grid_user_a" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>
+						    </div>
+						</div>
+						<div showCollapseButton="true">
+							<div class="mini-splitter" style="width:100%;height:100%;" borderStyle="border:0;">
+				   				<div size="50%" showCollapseButton="false" style="border-width: 1;">
+							    	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
+								        <table style="width:100%;">
+								            <tbody>
+								             <tr>
+								                 <td style="width:100%;">
+								                 	<span id="pid" style="padding-left:5px;">品牌列表</span>
+								                 </td>
+								                 <td style="white-space:nowrap;">
+								                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_brand')">新增</a>
+								                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_brand')">删除</a>
+									                <span class="separator"></span>
+									         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a>
+									         		<span class="separator"></span>
+							         				<a class="mini-button" iconCls="icon-tip" plain="true" onclick="showStyle_brand()">预览品牌故事效果</a>
+								                 </td>
+								             </tr>
+								         </tbody>
+								        </table>
+								    </div>
+								    <div class="mini-fit">
+								        <div id="grid_brand" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>
+								    </div>
+								</div>
+								<div showCollapseButton="true">
+									<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
+							            <table style="width:100%;">
+							                <tbody>
+								                <tr>
+								                    <td style="width:100%;">
+								                    	<span id="pid" style="padding-left:5px;">商品列表</span>
+								                    </td>
+								                    <td style="white-space:nowrap;">
+								                    	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_product')">新增</a>
+								                 		<a class="mini-button" iconCls="icon-remove" plain="true" onclick="delRow('grid_product')">删除</a>
+										                <span class="separator"></span>
+										         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_product')">保存</a>
+								                    </td>
+								                </tr>
+								            </tbody>
+							            </table>
+							        </div>
+							        <div class="mini-fit">
+							            <div id="grid_product" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>
+							        </div>
+								</div>
+							</div>
+						</div>
+					</div>
 	            </div>
 	            <div name="brandFirst" title="直营店采购标准">
 	                <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">

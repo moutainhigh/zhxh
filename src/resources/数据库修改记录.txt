@@ -192,6 +192,9 @@
 	(2)parentid varchar(40)
 	(3)userid	varchar(40)
 	(4)brandid	varchar(40)
+
+2、修改表 public_product_size  规格表
+	（1）、增加字段 brandid  varchar（40） 品牌id
 	
 	
 	
