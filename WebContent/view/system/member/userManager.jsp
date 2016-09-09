@@ -53,10 +53,19 @@
 	    t3.pid = "right";
 	    t3.text = "直营店管理";
 	    t3.iconCls = "member";
-	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/shopList";
+	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/shopList&param={identity:'A',parentid:'1'}";
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
     
+	    var t5 = {};
+	    t5.id = "member";
+	    t5.pid = "right";
+	    t5.text = "代理店管理";
+	    t5.iconCls = "member";
+	    t5.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/shopList&param={identity:'C',parentid:''}";
+	    t5.iconPosition = "top";
+	    dataList.push(t5);
+	    
 	    var t4 = {};
 	    t4.id = "member";
 	    t4.pid = "right";

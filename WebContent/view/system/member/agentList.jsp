@@ -305,6 +305,7 @@
            		//s = ' <a class="Edit_Button" href="javascript:addShop(\''+id+'\')" >添加店</a>';
            	}else if(grid.id == "grid_shop"){
            		s = ' <a class="Edit_Button" href="javascript:move(\''+id+'\')" >移动</a>';
+           		s += ' <a class="Edit_Button" href="javascript:addRecommendShop(\''+id+'\')" >推荐店</a>';
            	}
             
             return s;
@@ -397,13 +398,29 @@
         }
         
       	//给代理添加店
-	    function addShop() {
+	    /* function addShop() {
 	    	mini.open({
 	    	    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
 	    	    title: "会员管理", width: 800, height: 500,
 	    	    onload: function () {
 	    	        var iframe = this.getIFrameEl();
 	    	        var data = { action: "add",identity:"A"};
+	    	        iframe.contentWindow.SetData(data);
+	    	    },
+	    	    ondestroy: function (action) {
+	    	        grid_agent.reload();
+	    	    }
+	    	});
+		} */
+		
+		//添加推荐店 
+		function addRecommendShop(tuijianid,tuijianman) {
+	    	mini.open({
+	    	    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
+	    	    title: "会员管理", width: 800, height: 500,
+	    	    onload: function () {
+	    	        var iframe = this.getIFrameEl();
+	    	        var data = { action: "add",identity:"A",tuijianid:'',tuijianman:''};
 	    	        iframe.contentWindow.SetData(data);
 	    	    },
 	    	    ondestroy: function (action) {
@@ -447,7 +464,7 @@
 	        	<div name="shop" title="店-美容院">
 	                <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
 			    		 <a class="mini-button" plain="true" iconCls="icon-addnew" onclick="setLink()">关联</a>
-			    		 <a class="mini-button" plain="true" iconCls="icon-addnew" onclick="addShop()">添加店</a>
+			    		 <!-- <a class="mini-button" plain="true" iconCls="icon-addnew" onclick="addShop()">添加店</a> -->
 				     </div>
 			        <div class="mini-fit" >
 				         <div id="grid_shop" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  

@@ -119,7 +119,7 @@
                 });
                 
             } else {
-                mini.alert("请选中一条记录");
+            	parent.parent.layer.msg("请选中一条记录",{icon:6});
             }
             
         }
@@ -128,30 +128,34 @@
         function remove() {
             var rows = grid_member.getSelecteds();
             if (rows.length > 0) {
-            	 mini.confirm("确定删除记录？", "系统消息",
-          	     	function (action) {
-	         	    	if (action == "ok") {
-	         	    		var ids = [];
-	                        for (var i = 0, l = rows.length; i < l; i++) {
-	                            var r = rows[i];
-	                            ids.push(r.id);
-	                        }
-	                        var id = ids.join(',');
-	                        grid_member.loading("操作中，请稍后......");
-	                        $.ajax({
-	                        	url: "${pageContext.request.contextPath}/userManager/delete.htmls?id=" +id,
-	                            dataType:"text",
-	                            success: function (text) {
-	                                grid_member.reload();
-	                            },
-	                            error: function () {
-	                            }
-	                        });
-	          	       	}
-          	    	}
-         	    );
+            	var cf1 = "确定要删除选中的数据吗？<br><p style='font-size:12px; color:red'>注意：删除后，不可恢复，请谨慎操作.</p>";
+            	parent.parent.layer.msg(cf1, {
+    	 	 		icon:3
+    	 	 		,time: 0 //不自动关闭
+    	 	  		,btn: ['确认删除', '取消']
+    	 	  		,yes: function(index){
+    	 	  			var ids = [];
+                        for (var i = 0, l = rows.length; i < l; i++) {
+                            var r = rows[i];
+                            ids.push(r.id);
+                        }
+                        var id = ids.join(',');
+                        grid_member.loading("操作中，请稍后......");
+                        $.ajax({
+                        	url: "${pageContext.request.contextPath}/userManager/delete.htmls?id=" +id,
+                            dataType:"text",
+                            success: function (text) {
+                                grid_member.reload();
+                            },
+                            error: function () {
+                            }
+                        });
+                        
+                        parent.parent.layer.close(index);
+    	 	  		}
+    	 		});
             } else {
-                mini.alert("请选中一条记录");
+            	parent.parent.layer.msg("请选中一条记录",{icon:6});
             }
         }
         
@@ -182,7 +186,7 @@
 	                    form.setData(o.data);
 	                },
 	                error: function () {
-	                    mini.alert("表单加载错误");
+	                    parent.parent.layer.msg("表单加载错误",{icon:6});
 	                    form.unmask();
 	                }
 	            });

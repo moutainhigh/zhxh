@@ -149,8 +149,8 @@
                 var rowData = data.row;
                 form.setData(rowData);
                 form.setChanged(false);
-                //身份
-                var identity = rowData.identity;
+                //上级
+                /* var identity = rowData.identity;
             	if(identity == 'A' || identity == 'C'){
             		//代理的上级是平台（平台也是个代理ID为1）
             		//此处的C就代表直营店
@@ -158,7 +158,10 @@
             		parentid.setValue("1");
             		parentid.setText("平台");
             		parentid.setShowButton(false);
-            	}
+            	} */
+                var parentid = mini.get("parentid");
+            	parentid.setRequired(false);
+            	parentid.setShowButton(false);
             }
             else if (action == "add") {
             	//设置身份

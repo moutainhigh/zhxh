@@ -46,11 +46,12 @@ public interface IPublicUserService {
 	public PageBean<Public_user> list(Map<String, Object> map,PageBean<Public_user> pageBean);
 	
 	/**
-	 * 查询所有 分页
+	 * 查询所有店
+	 * @param blnshop true:直营店；false:非直营店
 	 * @param pageBean
 	 * @return list
 	 * */
-	public PageBean<Public_user> list(String key,PageBean<Public_user> pageBean);
+	public PageBean<Public_user> list_shop(boolean blnshop,PageBean<Public_user> pageBean);
 	
 	/**
 	 * 添加

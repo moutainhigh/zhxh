@@ -12,8 +12,9 @@
     </style>
     
     <script type="text/javascript">
-    
-
+    	//
+		var _identity = '${identity}';
+    	var _parentid = '${parentid}';
     	//性别
     	var Genders = [{ id: 1, text: '先生' }, { id: 2, text: '女士'}];
     	//身份
@@ -47,7 +48,6 @@
 	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} }, */
 	  	          	
 	  	                { field: "setreturn",name:"setreturn", type:"comboboxcolumn",width: 80, headerAlign: "center", align:"center",allowSort: false, header: "接收分成",editor: { type: "combobox", data:"Setreturn"} }
-	  	          		
 	  	          	
 	  	            ],
 	            showFilterRow:false,
@@ -64,7 +64,7 @@
 	            showPageSize:false,
 	            pageSize:50
 	        });
-	    	grid_shop.load({identity:'A',parentid:'1'});	//直营店
+	    	grid_shop.load({identity:_identity,parentid:_parentid});
 	    	
 	    	//会员
 	    	grid_member = mini.get("grid_member");
@@ -134,7 +134,7 @@
 	    	    title: "会员管理", width: 800, height: 500,
 	    	    onload: function () {
 	    	        var iframe = this.getIFrameEl();
-	    	        var data = { action: "add",identity:"C"};
+	    	        var data = { action: "add",identity:_identity};
 	    	        iframe.contentWindow.SetData(data);
 	    	    },
 	    	    ondestroy: function (action) {
@@ -163,7 +163,7 @@
                 });
                 
             } else {
-                mini.alert("请选中一条记录");
+                parent.parent.layer.msg("请选择一条记录",{icon:6});
             }
             
         }
@@ -172,30 +172,34 @@
         function remove() {
             var rows = grid_shop.getSelecteds();
             if (rows.length > 0) {
-            	 mini.confirm("确定删除记录？", "系统消息",
-          	     	function (action) {
-	         	    	if (action == "ok") {
-	         	    		var ids = [];
-	                        for (var i = 0, l = rows.length; i < l; i++) {
-	                            var r = rows[i];
-	                            ids.push(r.id);
-	                        }
-	                        var id = ids.join(',');
-	                        grid_shop.loading("操作中，请稍后......");
-	                        $.ajax({
-	                        	url: "${pageContext.request.contextPath}/userManager/delete.htmls?id=" +id,
-	                            dataType:"text",
-	                            success: function (text) {
-	                                grid_shop.reload();
-	                            },
-	                            error: function () {
-	                            }
-	                        });
-	          	       	}
-          	    	}
-         	    );
+            	var cf1 = "确定要删除选中的数据吗？<br><p style='font-size:12px; color:red'>注意：删除后，不可恢复，请谨慎操作.</p>";
+            	parent.parent.layer.msg(cf1, {
+    	 	 		icon:3
+    	 	 		,time: 0 //不自动关闭
+    	 	  		,btn: ['确认删除', '取消']
+    	 	  		,yes: function(index){
+    	 	  			var ids = [];
+                        for (var i = 0, l = rows.length; i < l; i++) {
+                            var r = rows[i];
+                            ids.push(r.id);
+                        }
+                        var id = ids.join(',');
+                        grid_shop.loading("操作中，请稍后......");
+                        $.ajax({
+                        	url: "${pageContext.request.contextPath}/userManager/delete.htmls?id=" +id,
+                            dataType:"text",
+                            success: function (text) {
+                                grid_shop.reload();
+                            },
+                            error: function () {
+                            }
+                        });
+                        
+                        parent.parent.layer.close(index);
+    	 	  		}
+    	 		});
             } else {
-                mini.alert("请选中一条记录");
+            	parent.parent.layer.msg("请选择一条记录",{icon:6});
             }
         }
         

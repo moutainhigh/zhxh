@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_user;
-import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserLinkService;
 import net.ussoft.zhxh.service.IPublicUserService;
+import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.MD5;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -102,6 +102,9 @@ public class UserManagerController extends BaseConstroller{
 		if("A".equals(identity) && null != parentid){
 			//代理下的店 - 通过关联关系查询其下的店
 			pageBean = userService.list(parentid,"C", pageBean);
+		}else if("C".equals(identity)){
+			//非直营店
+			pageBean = userService.list_shop(false, pageBean);
 		}else{
 			//查询条件
 			Map<String, Object> searchmap = new LinkedHashMap<String, Object>();
@@ -248,6 +251,7 @@ public class UserManagerController extends BaseConstroller{
 			//密码md5
 			String pass = MD5.encode(user.getPassword());
 			user.setPassword(pass);
+			user.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 			if(!"".equals(user.getParentid()) && null != user.getParentid()){
 				int num = userService.insert(user, user.getParentid());	//添加代理、店
 				return num > 0 ? "success":"error";

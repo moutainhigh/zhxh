@@ -45,19 +45,17 @@ public class PublicUserService implements IPublicUserService{
 	}
 
 	@Override
-	public PageBean<Public_user> list(String key,PageBean<Public_user> pageBean) {
+	public PageBean<Public_user> list_shop(boolean flag,PageBean<Public_user> pageBean) {
 		
-		String sql = "select * from public_user";
+		String sql = "SELECT DISTINCT(u.id),u.* FROM public_user u,public_user_link k WHERE u.id = k.userid AND u.identity = 'C' ";
 		List<Object> values = new ArrayList<Object>();
-		
-		if (null == key || "".equals(key)) {
-			return userDao.search(sql, values, pageBean);
+		if(flag){
+			sql += " AND k.parentid = ?";	//直营店
+		}else{
+			sql += " AND k.parentid != ?";	//非直营店
 		}
-		else {
-			sql += " where phonenumber = ?";
-			values.add(key);
-			return userDao.search(sql, values, pageBean);
-		}
+		values.add("1"); //1代表直营店
+		return userDao.search(sql, values, pageBean);
 	}
 
 	@Override
