@@ -131,7 +131,7 @@
 	    function add() {
 	    	mini.open({
 	    	    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
-	    	    title: "会员管理", width: 800, height: 500,
+	    	    title: "会员管理", width: 800, height: 560,
 	    	    onload: function () {
 	    	        var iframe = this.getIFrameEl();
 	    	        var data = { action: "add",identity:_identity};
@@ -150,7 +150,7 @@
             if (rows.length == 1) {
                 mini.open({
                 	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
-                    title: "会员管理", width: 800, height: 500,
+                    title: "会员管理", width: 800, height: 560,
                     onload: function () {
                         var iframe = this.getIFrameEl();
                         var data = { action: "update", row: row };
@@ -269,7 +269,7 @@
 		                 </td>
 		                 <td style="white-space:nowrap;">
 		                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="add()">增加</a>
-                    		<a class="mini-button" iconCls="icon-add" plain="true" onclick="edit()">编辑</a>
+                    		<a class="mini-button" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
 		                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="remove()">删除</a>
 			                <span class="separator"></span>
 			         		<!-- <a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a> -->

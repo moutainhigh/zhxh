@@ -99,6 +99,13 @@
 					<td><input id="companycode" name="companycode" class="mini-textbox" style="width:100%;" allowInput="false" required="true" /></td>
 				</tr>
 				<tr>
+					<td>推荐机构</td>
+					<td><input id="tuijianman" name="tuijianman" class="mini-textbox" style="width:100%;" allowInput="false" />
+						<input id="tuijianid" name="tuijianid" class="mini-textbox" style="width:100%;" visible="false" /></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
 					<td>机构地址</td>
 					<td colspan="3"><input name="companypath" class="mini-textbox" style="width:100%;" required="true" emptyText="请输入机构地址" /></td>
 				</tr>
@@ -164,17 +171,41 @@
             	parentid.setShowButton(false);
             }
             else if (action == "add") {
+            	var method = data.method;
             	//设置身份
             	var identity = data.identity;
             	var obj = mini.get("identity");
                 obj.setValue(identity);
+                //推荐人
+                var _tuijianid = data.tuijianid;
+                var _tuijianman = data.tuijianman;
+                var _parentid = data.parentid;	//
+                var _pname = data.pname;
+                
             	if(identity == 'A'){
             		//代理的上级是平台（平台也是个代理ID为1）
             		var parentid = mini.get("parentid");
             		parentid.setValue("1");
             		parentid.setText("平台");
             		parentid.setShowButton(false);
-            	} 
+            	}else if(method == "recommend"){	//推荐店
+            		//设置推荐人
+            		var tuijianid = mini.get("tuijianid");
+            		tuijianid.setValue(_tuijianid);
+            		var tuijianman = mini.get("tuijianman");
+            		tuijianman.setValue(_tuijianman);
+            		//设置上级
+            		var parentid = mini.get("parentid");
+            		parentid.setValue(_parentid);
+            		parentid.setText(_pname);
+            		parentid.setShowButton(false);
+            	}else if(method == "addshop"){
+            		//设置上级
+            		var parentid = mini.get("parentid");
+            		parentid.setValue(_parentid);
+            		parentid.setText(_pname);
+            		parentid.setShowButton(false);
+            	}
             }
         }
 

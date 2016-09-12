@@ -171,8 +171,8 @@
 	        		layer.msg("手机号码不存在，请重新输入手机号码，再获取短信验证码.");
 					$('#umobile').focus();
 					return;
-	        	}else{
-	            	layer.msg("测试的验证码:" + text);
+	        	}else if(text == "success"){
+	            	//layer.msg("测试的验证码:" + text);
 	            	opentime();
 	            }
 	        },

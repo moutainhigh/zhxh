@@ -234,7 +234,8 @@
         				return;
                 	}
                 	else if(text == "success"){
-                    	location.reload();
+                    	//location.reload();
+                		opentime();
                     }else{
                     	layer.msg("测试的验证码:" + text);
                     	opentime();

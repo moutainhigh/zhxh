@@ -25,6 +25,7 @@ import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.Logger;
 import net.ussoft.zhxh.util.MD5;
+import net.ussoft.zhxh.util.SendSMS;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -225,10 +226,13 @@ public class PloginController extends BaseConstroller {
 		String sendCode = getSix();
 		
 		//TODO 发送短信验证码到手机
+		String send_content = "验证码"+sendCode+"用于修改账户密码，请勿提供给任何人。";
+		SendSMS.sendMessage(phonenumber, send_content);
 		savePhoneCodeLog(phonenumber, sendCode, "RESET", request);
 		
 		//TODO 返回值先用code代替。等短信连接上了，更改为success
-		out.print(sendCode);
+//		out.print(sendCode);
+		out.print("success");
 	}
 	
 	/**
@@ -356,7 +360,8 @@ public class PloginController extends BaseConstroller {
 		String sendCode = getSix();
 		
 		//TODO 发送短信验证码到手机
-		
+		String send_content = "您的注册验证码是" + sendCode;
+		SendSMS.sendMessage(phonenumber, send_content);
 		savePhoneCodeLog(phonenumber, sendCode, "PCREG", request);
 		/*
 		//当前时间戳
@@ -384,7 +389,8 @@ public class PloginController extends BaseConstroller {
 		codeLogService.insert(codeLog);*/
 		
 		//TODO 返回值先用code代替。等短信连接上了，更改为success
-		out.print(sendCode);
+//		out.print(sendCode);
+		out.print("success");
 	}
 	
 	protected String getRemoteIp(HttpServletRequest request){

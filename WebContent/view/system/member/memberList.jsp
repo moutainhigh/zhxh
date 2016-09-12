@@ -206,7 +206,7 @@
                  </td>
                  <td style="white-space:nowrap;">
                  	<a class="mini-button" iconCls="icon-add" plain="true" onclick="add()">增加</a>
-                  		<a class="mini-button" iconCls="icon-add" plain="true" onclick="edit()">编辑</a>
+                  		<a class="mini-button" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
                  	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="remove()">删除</a>
 	                <span class="separator"></span>
 	         		<!-- <a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a> -->

@@ -82,6 +82,7 @@
 	  	            	/* { field: "tuijianid",name:"tuijianid", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "推荐人",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }, */
 	  	            	{ field: "companyname",name:"companyname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构名称",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	            	{ field: "companycode",name:"companycode", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "机构代码",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	  	            	{ field: "tuijianman",name:"tuijianman", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "推荐机构",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	  	            	
 	  	            	/* { field: "birthday",name:"birthday", width: 80, headerAlign: "center", align:"center",allowSort: false, dateFormat:"yyyy-MM-dd", header: "生日",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
 	  	          		{ field: "sex",name:"sex",type:"comboboxcolumn",autoShowPopup:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "性别",editor: { type: "combobox",data:"Genders"} }, */
@@ -189,7 +190,7 @@
             if (rows.length == 1) {
                 mini.open({
                 	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
-                    title: "会员管理", width: 800, height: 500,
+                    title: "会员管理", width: 800, height: 560,
                     onload: function () {
                         var iframe = this.getIFrameEl();
                         var data = { action: "update", row: row };
@@ -252,31 +253,6 @@
             search();
         }
         
-        //查看推荐人
-        function referrer(row_uid){
-	        var row = grid_agent.getRowByUID(row_uid);
-	        if (row) {
-	            editWindow.show();
-	            var form = new mini.Form("#editform");
-	            form.clear();
-	
-	            form.loading();
-	            $.ajax({
-	            	url: "${pageContext.request.contextPath}/userManager/getById.htmls?id=" + row.id,
-	            	dataType:"text",
-	                success: function (text) {
-	                    form.unmask();
-	                    var o = mini.decode(text);
-	                    form.setData(o.data);
-	                },
-	                error: function () {
-	                    parent.parent.layer.msg("表单加载错误",{icon:2});
-	                    form.unmask();
-	                }
-	            });
-	        }
-	    }
-        
         //查看代理下的店、会员
         function onSelectionChanged(e) {
             var grid = e.sender;
@@ -305,7 +281,7 @@
            		//s = ' <a class="Edit_Button" href="javascript:addShop(\''+id+'\')" >添加店</a>';
            	}else if(grid.id == "grid_shop"){
            		s = ' <a class="Edit_Button" href="javascript:move(\''+id+'\')" >移动</a>';
-           		s += ' <a class="Edit_Button" href="javascript:addRecommendShop(\''+id+'\')" >推荐店</a>';
+           		s += ' <a class="Edit_Button" href="javascript:addRecommendShop(\''+id+'\',\''+record.username+'\')" >推荐店</a>';
            	}
             
             return s;
@@ -398,33 +374,40 @@
         }
         
       	//给代理添加店
-	    /* function addShop() {
-	    	mini.open({
-	    	    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
-	    	    title: "会员管理", width: 800, height: 500,
-	    	    onload: function () {
-	    	        var iframe = this.getIFrameEl();
-	    	        var data = { action: "add",identity:"A"};
-	    	        iframe.contentWindow.SetData(data);
-	    	    },
-	    	    ondestroy: function (action) {
-	    	        grid_agent.reload();
-	    	    }
-	    	});
-		} */
+	    function addShop() {
+	    	var row = grid_agent.getSelected();		//所选行 单行
+        	var rows = grid_agent.getSelecteds();	//所选行数 多行
+            if (rows.length == 1) {
+            	mini.open({
+    	    	    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
+    	    	    title: "会员管理", width: 800, height: 560,
+    	    	    onload: function () {
+    	    	        var iframe = this.getIFrameEl();
+    	    	        var data = { action: "add",method:"addshop",identity:"C",parentid:row.id,pname:row.username};
+    	    	        iframe.contentWindow.SetData(data);
+    	    	    },
+    	    	    ondestroy: function (action) {
+    	    	        grid_agent.reload();
+    	    	    }
+    	    	});
+            }else{
+            	parent.parent.layer.msg("请选择一条记录",{icon:6});
+            }
+		}
 		
 		//添加推荐店 
 		function addRecommendShop(tuijianid,tuijianman) {
+			var agent_row = grid_agent.getSelected();	//代理
 	    	mini.open({
 	    	    url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userEdit",
-	    	    title: "会员管理", width: 800, height: 500,
+	    	    title: "会员管理", width: 800, height: 560,
 	    	    onload: function () {
 	    	        var iframe = this.getIFrameEl();
-	    	        var data = { action: "add",identity:"A",tuijianid:'',tuijianman:''};
+	    	        var data = { action: "add",method:"recommend",identity:"C",tuijianid:tuijianid,tuijianman:tuijianman,parentid:agent_row.id,pname:agent_row.username};
 	    	        iframe.contentWindow.SetData(data);
 	    	    },
 	    	    ondestroy: function (action) {
-	    	        grid_agent.reload();
+	    	        grid_shop.reload();
 	    	    }
 	    	});
 		}
@@ -442,7 +425,7 @@
 		                 </td>
 		                 <td style="white-space:nowrap;">
 		                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="add()">增加</a>
-                    		<a class="mini-button" iconCls="icon-add" plain="true" onclick="edit()">编辑</a>
+                    		<a class="mini-button" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
 		                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="remove()">删除</a>
 			                <span class="separator"></span>
 			         		<!-- <a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_brand')">保存</a> -->
@@ -464,7 +447,7 @@
 	        	<div name="shop" title="店-美容院">
 	                <div class="mini-toolbar" style="padding:3px;border-top:0;border-left:0;border-right:0;border-bottom:1;">
 			    		 <a class="mini-button" plain="true" iconCls="icon-addnew" onclick="setLink()">关联</a>
-			    		 <!-- <a class="mini-button" plain="true" iconCls="icon-addnew" onclick="addShop()">添加店</a> -->
+			    		 <a class="mini-button" plain="true" iconCls="icon-add" onclick="addShop()">添加店</a>
 				     </div>
 			        <div class="mini-fit" >
 				         <div id="grid_shop" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>  

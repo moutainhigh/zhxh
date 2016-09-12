@@ -479,7 +479,7 @@
 	       	 		}
 	       	 		else {
 	       	 			productid = rows[0].id;
-	       	 			brandid = row[0].brandid;
+	       	 			brandid = rows[0].brandid;
 	       	 		}
 	       	 	}
 	       	 	newRow.brandid = brandid;
@@ -541,7 +541,7 @@
     		            	grid_product_size.reload();
     		            },
     		            error: function (jqXHR, textStatus, errorThrown) {
-    		                mini.alert(jqXHR.responseText);
+    		                parent.parent.layer.msg(jqXHR.responseText);
     		            }
     		        });
     	  		}
