@@ -32,7 +32,7 @@
 	    <c:forEach var="item" items="${productList}">
 	    	<dl>
 	            <dt class="fl">
-	            	<a href="${pageContext.request.contextPath}/pcMain/product_c.htmls?id=${item.id }" target="_blank">
+	            	<a href="${pageContext.request.contextPath}/pcMain/product_c.htmls?id=${item.id }" >
 	            		<img src="${pageContext.request.contextPath}/${item.productpic }" height="200px" />
 	            	</a>
 	            </dt>
@@ -42,7 +42,7 @@
 	                <c:if test="${fn:length(item.productmemo)>80 }">${fn:substring(item.productmemo ,0,80)} ...</c:if>
  					<c:if test="${fn:length(item.productmemo)<=80 }">${item.productmemo}</c:if>
 	                </em>
-	                <a href="${pageContext.request.contextPath}/pcMain/product_c.htmls?id=${item.id }" target="_blank">查看详情</a>
+	                <a href="${pageContext.request.contextPath}/pcMain/product_c.htmls?id=${item.id }" >查看详情</a>
 	            </dd>
 	        </dl>
 	    </c:forEach>

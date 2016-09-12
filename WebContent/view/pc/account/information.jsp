@@ -5,13 +5,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>个人中心-我的订单</title>
+<title>个人中心-我的信息</title>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/faq.css" />
 <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/js/laydate/laydate.js" type="text/javascript"></script>
+
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
@@ -68,15 +70,15 @@
 	                <td>性别</td>
 	                <td>
 	                	<select name="sex" class="xx-txt">
-	                		<option ${user.sex == 1?"selected":"" } value="1">先生</option>
 	                		<option ${user.sex == 2?"selected":"" } value="2">女士</option>
+	                		<option ${user.sex == 1?"selected":"" } value="1">先生</option>
 	                	</select>
 	                </td>
 	              </tr>
 	              
 	              <tr>
 	                <td>出生日期</td>
-	                <td><input type="text" name="birthday" value="${user.birthday }" class="xx-txt" /></td>
+	                <td><input type="text" id="birthday" name="birthday" value="${user.birthday }" class="xx-txt" /></td>
 	              </tr>
 	              <tr>
 	                <td> </td>
@@ -196,6 +198,11 @@
     		        }
     		    });
 			});
+			
+			//
+			laydate({
+			   elem: '#birthday'
+			})
 		});
 	</script>
 	<!--页脚-->

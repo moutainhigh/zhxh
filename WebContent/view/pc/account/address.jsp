@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>个人中心-我的订单</title>
+<title>个人中心-收货地址</title>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/faq.css" />
@@ -62,11 +62,11 @@
 	              </tr>
 	              <tr>
 	                <td>手机号码</td>
-	                <td><input type="text" value="${userPath.userphone }" name="userphone" id="userphone" class="xx-txt" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  /></td>
+	                <td><input type="text" value="${userPath.userphone }" name="userphone" id="userphone" maxlength="11" class="xx-txt" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  /></td>
 	              </tr>
 	              <tr>
 	                <td>邮编号码</td>
-	                <td><input type="text" value="${userPath.postcode }" name="postcode" id="postcode" class="xx-txt" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  /></td>
+	                <td><input type="text" value="${userPath.postcode }" name="postcode" id="postcode" maxlength="6" class="xx-txt" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  /></td>
 	              </tr>
 	              <tr>
 	                <td>收货地址</td>

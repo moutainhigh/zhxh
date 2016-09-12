@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>首页</title>
+<title>${brand.brandname }-系列展示</title>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/index.css" />
@@ -19,7 +19,7 @@
 	<!--头部-->
 	<%@include file="/view/pc/header.jsp" %>
 	<div class="shop-IMG">
-		<a href='${series.picurl != ""?series.picurl:"javascript:;" }' target="_blank">
+		<a href='${series.picurl != ""?series.picurl:"javascript:;" }' >
 			<img src="${pageContext.request.contextPath}/${series.pic }" />
 		</a>		
 	</div>		
@@ -28,7 +28,7 @@
 	    <div id="D1pic1" class="fPic">
 	    <c:forEach var="item" items="${brandlistPic }">
 	    	<div class="fcon" style="display: none;">
-	    		<a href='${item.pic_url != ""?item.pic_url:"javascript:;" }' target="_blank">
+	    		<a href='${item.pic_url != ""?item.pic_url:"javascript:;" }' >
 	    			<img src="${pageContext.request.contextPath}/${item.pic_path }" style="opacity: 1; /">
 	    		</a>
 	    	</div>
@@ -64,11 +64,11 @@
 	  })  
 	</script>
 	<!--视频-->
-	<div class="shop-IMG" align="center">
+	<div class="shop-IMG" align="center" >
 	<c:forEach var="item" items="${videoList }">
 		<c:choose>
 			<c:when test="${item.islocal == 0 }">
-				<video id="preview-player" class="video-js vjs-fluid placeholder vjs-big-play-centered" controls preload="auto" poster="${pageContext.request.contextPath}/${item.videoshowpic }" data-setup="{}">
+				<video id="preview-player" class="video-js vjs-big-play-centered" controls preload="auto" width="800px"  poster="${pageContext.request.contextPath}/${item.videoshowpic }" data-setup="{}">
 				    <source src="${pageContext.request.contextPath}/${item.mp4newname }" type="video/mp4"></source>
 				    <source src="${pageContext.request.contextPath}/${item.webmnewname }" type="video/webm"></source>
 				</video>
@@ -82,7 +82,7 @@
 	<!-- 图片 -->
 	<c:forEach var="item" items="${brandlist_pic }">
 		<div class="shop-IMG">
-			<a href='${item.pic_url != ""?item.pic_url:"javascript:;" }' target="_blank">
+			<a href='${item.pic_url != ""?item.pic_url:"javascript:;" }' >
 				<img src="${pageContext.request.contextPath}/${item.pic_path }" />
 			</a>
 		</div>

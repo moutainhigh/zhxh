@@ -146,6 +146,12 @@
 				$('#password').focus();
 				return;
 			}
+			if (trim(password).length < 6 || trim(password).length > 18) {
+				layer.msg("密码长度为6到18位。");
+				$('#password').val("");
+				$('#password').focus();
+				return;
+			}
 			
 			var user = {};
 			user.username = username;

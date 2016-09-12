@@ -80,7 +80,7 @@
 	<div class="imgbox">
 	    <ul id="banner_img">
 	    <c:forEach var="pic" items="${homePic }">
-			<li><a href='${pic.pic_url != ""?pic.pic_url:"javascript:;" }' target="_blank"><img src="${pageContext.request.contextPath}/${pic.pic_path }" height="600px;" /></a></li>
+			<li><a href='${pic.pic_url != ""?pic.pic_url:"javascript:;" }'><img src="${pageContext.request.contextPath}/${pic.pic_path }" width="1080px" height="600px" /></a></li>
 	    </c:forEach>
 	    </ul>
 	    <div class="clearfix"></div>
@@ -116,6 +116,36 @@
             $("#banner_img li").hide().stop(true,true).eq(index).fadeIn("slow");
             time = setTimeout(showimg, 3000);
          }
+         
+         /* var time = "";
+         var index = 0;
+         $(function () {
+             showimg();
+             //鼠标移入移出
+             $(".imgnum a").hover(function () {
+                clearTimeout(time);
+                var icon=$(this).index();
+                $(".imgnum a").removeClass("onselect").eq(icon).addClass("onselect");
+                $("#banner_img li").hide().stop(true,true).eq(icon).fadeIn("slow");
+             }, function () { 
+                index=$(this).index();
+                time = setTimeout(showimg, 3000);
+             });
+         });
+
+         function showimg() {       
+            index++;
+            if (index >= $('.imgnum a').length ) {
+                index = 0
+            }  
+            // index = index >= 5 ? 0 : index + 1;
+            console.log("index: "+index)
+            $(".imgnum a").removeClass("onselect").eq(index).addClass("onselect");
+            $("#banner_img li").hide().stop(true,true).eq(index).fadeIn("slow");
+            time = setTimeout(showimg, 3000);
+         } */
+         
+         
          //购车-登录框
          function cat(userid){
          	if(userid == ""){

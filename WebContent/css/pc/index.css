@@ -1,8 +1,8 @@
 .shop-con-l{ width:49%;}
 .shop-Img .title{ width: 100%; min-height: 21px; background: #000; margin: 20px 0 10px 0;}
 .shop-Img .title span{ display: block; float: left; font-size: 18px; color: #fff;padding: 9px 0;margin-left: 10px;}
-.shop-Img .title a{ display: block; float: right; font-size: 14px; color: #fff;padding: 9px 0;background: url(../../images/shape.png) center right no-repeat; padding-right: 11px; margin-right: 10px;}
-.shop-Img a img{ width: 100%; border: solid 1px #e0e0e0;}
+.shop-Img .title a{ display: block; float: right; font-size: 14px; color: #fff;padding: 9px 0;background: url(../../images/shape.png) center left no-repeat; padding-right: 11px; margin-right: 10px;}
+.shop-Img a img{ width: 100%;}
 .shop-con-r{ width: 49%;}
 .container .row{margin-bottom: auto;}
 .container{ margin-right: auto; margin-left: auto;}
