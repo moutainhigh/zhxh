@@ -13,8 +13,11 @@ public class Public_set_user_standard {
 	private String userid;					//被设置标准的机构
 	private Float buyerdis;					//商品采购折扣
 	private Float rebatesdis;				//返利标准
-	private Float bonusesdis;				//奖励标准	
+	private Float bonusesdis;				//奖励标准
+	private String brandid;					//品牌id
 	private String sizeid;					//关联规格id
+	private String productid;					//关联产品id
+	private Integer state;					//状态 0：禁止采购 1：可采购
 	
 	public Public_set_user_standard() {
 		this.setParentid("");
@@ -23,6 +26,9 @@ public class Public_set_user_standard {
 		this.setRebatesdis(0f);
 		this.setBonusesdis(0f);
 		this.setSizeid("");
+		this.setBrandid("");
+		this.setProductid("");
+		this.setState(0);
 	}
 	
 	
@@ -116,6 +122,36 @@ public class Public_set_user_standard {
 
 	public void setSizeid(String sizeid) {
 		this.sizeid = sizeid;
+	}
+
+
+	public String getBrandid() {
+		return brandid;
+	}
+
+
+	public void setBrandid(String brandid) {
+		this.brandid = brandid;
+	}
+
+
+	public String getProductid() {
+		return productid;
+	}
+
+
+	public void setProductid(String productid) {
+		this.productid = productid;
+	}
+
+
+	public Integer getState() {
+		return state;
+	}
+
+
+	public void setState(Integer state) {
+		this.state = state;
 	}
 	
 	

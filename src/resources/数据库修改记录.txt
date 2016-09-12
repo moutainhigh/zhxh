@@ -195,6 +195,14 @@
 
 2、修改表 public_product_size  规格表
 	（1）、增加字段 brandid  varchar（40） 品牌id
+
+3、修改表 public_set_user_standard 设置采购各种标准
+	(1）增加brandid varchar（40）	品牌id
+	
+20160910 
+1、修改表 public_set_user_standard 设置采购各种标准
+	(1）增加productid varchar（40）	商品id
+	(2) 增加state int（11） 状态 0：禁止采购  1：可采购
 	
 	
 	

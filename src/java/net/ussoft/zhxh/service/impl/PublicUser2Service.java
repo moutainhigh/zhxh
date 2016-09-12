@@ -1,0 +1,407 @@
+package net.ussoft.zhxh.service.impl;
+
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import net.ussoft.zhxh.dao.PublicBrandDao;
+import net.ussoft.zhxh.dao.PublicProductSizeDao;
+import net.ussoft.zhxh.dao.PublicSetUserStandardDao;
+import net.ussoft.zhxh.dao.PublicUserBankDao;
+import net.ussoft.zhxh.dao.PublicUserBrandDao;
+import net.ussoft.zhxh.dao.PublicUserDao;
+import net.ussoft.zhxh.dao.PublicUserLinkDao;
+import net.ussoft.zhxh.model.Public_brand;
+import net.ussoft.zhxh.model.Public_product_size;
+import net.ussoft.zhxh.model.Public_set_user_standard;
+import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.model.Public_user_brand;
+import net.ussoft.zhxh.model.Public_user_link;
+import net.ussoft.zhxh.service.IPublicUser2Service;
+
+@Service
+public class PublicUser2Service implements IPublicUser2Service{
+	
+	@Resource
+	private PublicUserDao userDao;
+	@Resource
+	private PublicUserLinkDao linkDao;
+	@Resource
+	private PublicUserBrandDao userBrandDao;
+	@Resource
+	private PublicSetUserStandardDao userStandardDao;
+	@Resource
+	private PublicProductSizeDao sizeDao;
+	@Resource
+	private PublicBrandDao brandDao;
+	@Resource
+	private PublicUserBankDao bankDao;
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#getById(java.lang.String)
+	 */
+	@Override
+	public Public_user getById(String id) {
+		return userDao.get(id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#list(java.lang.String)
+	 */
+	@Override
+	public List<Public_user> list(String parentid,String identity) {
+		//1、获取父id下的子id集合
+		Public_user_link link = new Public_user_link();
+		link.setParentid(parentid);
+		
+		List<Public_user_link> linkList = linkDao.search(link);
+		
+		//如果是空的。直接返回空
+		if (null == linkList || linkList.size() == 0) {
+			List<Public_user> tmpList = new ArrayList<Public_user>();
+			return tmpList;
+		}
+		
+		List<String> idsList = new ArrayList<String>();
+		
+		for (Public_user_link tmp : linkList) {
+			idsList.add(tmp.getUserid());
+		}
+		
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		sb.append("select * from public_user where identity=? and id in (");
+		
+		values.add(identity);
+		
+		Serializable[] ss=new Serializable[idsList.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(idsList);
+		
+		return userDao.search(sb.toString(), values);
+	}
+
+	@Override
+	public Public_user insert(Public_user user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int update(Public_user user) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int delete(String id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	
+	//=============机构与品牌begin
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#list_user_brand(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<Public_brand> list_user_brand(String parentid, String userid) {
+		//1、获取父id下的子id集合
+		Public_user_brand userBrand = new Public_user_brand();
+		userBrand.setParentid(parentid);
+		userBrand.setUserid(userid);
+		
+		List<Public_user_brand> userBrandList = userBrandDao.search(userBrand);
+		
+		//如果是空的。直接返回空
+		if (null == userBrandList || userBrandList.size() == 0) {
+			List<Public_brand> tmpList = new ArrayList<Public_brand>();
+			return tmpList;
+		}
+		
+		List<String> idsList = new ArrayList<String>();
+		
+		for (Public_user_brand tmp : userBrandList) {
+			idsList.add(tmp.getBrandid());
+		}
+		
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		sb.append("select * from public_brand where id in (");
+		
+		Serializable[] ss=new Serializable[idsList.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(idsList);
+		
+		return brandDao.search(sb.toString(), values);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#list_select_brand(java.lang.String, java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public List<Public_brand> list_select_brand(String parentid, String userid) {
+		//TODO ***** 删除品牌、删除商品、删除规格，要清理与机构的关联及采购利益标准
+		
+		
+		//获取全部品牌
+		List<Public_brand> brandList = brandDao.getAll("sort");
+		if (brandList.size() == 0) {
+			return brandList;
+		}
+		
+		String sql = "";
+		List<Object> values = new ArrayList<Object>();
+		
+		//如果parentid为1（平台）。重新将平台的所有品牌赋予1.
+		if (parentid.equals("1")) {
+			sql = "delete from public_user_brand where userid = ?";
+			values.add("1");
+			userBrandDao.del(sql, values);
+			
+			//将所有品牌与平台1对应。赋予平台所有品牌的操作
+			Public_user_brand tmp = new Public_user_brand();
+			tmp.setParentid("1");
+			tmp.setUserid("1");
+			for (Public_brand brand : brandList) {
+				tmp.setId(UUID.randomUUID().toString());
+				tmp.setBrandid(brand.getId());
+				userBrandDao.save(tmp);
+			}
+		}
+		
+		//获取parentid的机构作为userid能操作几个品牌
+//		sql = "select * from public_user_brand where userid = ?";
+		sql = "select b.* from public_brand b,public_user_brand u where u.userid = ? and b.id = u.brandid";
+		values.clear();
+		values.add(parentid);
+//		List<Public_user_brand> parentBrandList = userBrandDao.search(sql, values);
+		List<Public_brand> parentBrandList = brandDao.search(sql, values);
+		
+		//1、获取父id下的子id集合
+		Public_user_brand userBrand = new Public_user_brand();
+		userBrand.setParentid(parentid);
+		userBrand.setUserid(userid);
+		
+		List<Public_user_brand> userBrandList = userBrandDao.search(userBrand);
+		
+		//如果是空的。直接返回空
+		if (null != userBrandList && userBrandList.size() > 0) {
+			Iterator<Public_brand> iter = parentBrandList.iterator();
+	        while(iter.hasNext()){
+	            Public_brand b = iter.next();
+	            for (Public_user_brand user_brand : userBrandList) {
+					if (b.getId().equals(user_brand.getBrandid())) {
+						iter.remove();
+						break;
+					}
+				}
+	        }
+		}
+				
+		return parentBrandList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#saveUserBrand(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public boolean saveUserBrand(String brandids, String parentid, String userid) {
+		String[] idArr = brandids.split(",");
+		
+		if (idArr.length == 0) {
+			return true;
+		}
+		
+		Public_user_brand tmp = new Public_user_brand();
+		tmp.setParentid(parentid);
+		tmp.setUserid(userid);
+		for (String string : idArr) {
+			tmp.setId(UUID.randomUUID().toString());
+			tmp.setBrandid(string);
+			userBrandDao.save(tmp);
+		}
+		
+		return true;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#delUserBrand(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public void delUserBrand(String parentid, String userid, String brandid) {
+		String sql = "select * from public_user_brand where parentid=? and userid=? and brandid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(parentid);
+		values.add(userid);
+		values.add(brandid);
+		List<Public_user_brand> userBrandList = userBrandDao.search(sql, values);
+		
+		if (null != userBrandList && userBrandList.size() == 1) {
+			//删除关联的所有采购利益设置
+			//TODO 这里不删除已设置的采购规则。如果再次添加品牌进来，规则还在。需要注意在获取采购商品时，要先判断该机构能采购什么品牌。再去获取采购商品
+//			sql = "delete from public_set_user_standard where parentid = ? and userid=? and brandid=?";
+//			userStandardDao.del(sql, values);
+			
+			//删除本尊
+			userBrandDao.del(userBrandList.get(0).getId());
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#list_select_size(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<Public_product_size> list_select_size(String parentid, String userid, String productid) {
+		
+		String sql = "";
+		List<Object> values = new ArrayList<Object>();
+		
+		//获取商品下全部规格
+		sql = "select * from public_product_size where productid=? order by sizesort";
+		values.add(productid);
+		
+		
+		List<Public_product_size> allSizeList = sizeDao.search(sql, values);
+		if (allSizeList.size() == 0) {
+			return allSizeList;
+		}
+		
+		//获取parentid,userid   已经赋予了哪些，去除后返回，供前台选择
+		sql = "select * from public_set_user_standard where parentid=? and userid=? and productid=?";
+		values.clear();
+		values.add(parentid);
+		values.add(userid);
+		values.add(productid);
+		List<Public_set_user_standard> userStandardList = userStandardDao.search(sql, values);
+		
+		//如果是空的。直接返回空
+		if (null != userStandardList && userStandardList.size() > 0) {
+			Iterator<Public_product_size> iter = allSizeList.iterator();
+	        while(iter.hasNext()){
+	        	Public_product_size b = iter.next();
+	            for (Public_set_user_standard userStandard : userStandardList) {
+					if (b.getId().equals(userStandard.getSizeid())) {
+						iter.remove();
+						break;
+					}
+				}
+	        }
+		}
+				
+		return allSizeList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#saveUserSizeStandard(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public boolean saveUserSizeStandard(String brandid, String productid, String sizeids, String parentid,
+			String userid) {
+		String[] idArr = sizeids.split(",");
+		
+		if (idArr.length == 0) {
+			return true;
+		}
+		
+		Public_set_user_standard tmp = new Public_set_user_standard();
+		tmp.setParentid(parentid);
+		tmp.setUserid(userid);
+		tmp.setBrandid(brandid);
+		tmp.setProductid(productid);
+		for (String string : idArr) {
+			tmp.setId(UUID.randomUUID().toString());
+			tmp.setSizeid(string);
+			userStandardDao.save(tmp);
+		}
+		
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#listUserStandard(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<Map<String, Object>> listUserStandard(String parentid, String userid,String productid) {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select up.username as parentname,u.username as username,u.companyname,s.productpic,s.productname,s.productsize,s.price,s.sizesort,d.* from public_set_user_standard d");
+		sb.append(" left join public_product_size s ON d.sizeid = s.id");
+		sb.append(" left join public_user up ON up.id = d.parentid");
+		sb.append(" left join public_user u ON u.id = d.userid");
+		sb.append(" where d.parentid=? and d.userid=? and d.productid=? order by s.sizesort");
+		
+		List<Object> values = new ArrayList<Object>();
+		values.add(parentid);
+		values.add(userid);
+		values.add(productid);
+		
+		return userStandardDao.searchForMap(sb.toString(), values);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#saveStandard(java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public boolean saveStandard(List<Map<String, String>> rows) throws IllegalAccessException, InvocationTargetException {
+		for(int i=0,l=rows.size(); i<l; i++){
+			Map<String,String> row = (Map<String,String>)rows.get(i);
+	  		  
+			String id = row.get("id") != null ? row.get("id").toString() : "";
+	        String state = row.get("_state") != null ? row.get("_state").toString() : "";
+	        
+	        if (state.equals("removed") || state.equals("deleted")) {
+	        	userStandardDao.del(id);
+	        }
+	        //更新：_state为空，或modified
+	        else if (state.equals("modified") || state.equals(""))	 {
+	        	Public_set_user_standard s = new Public_set_user_standard();
+	        	BeanUtils.populate(s, row);
+//	        	Public_set_user_standard s = userStandardDao.get(id);
+//	        	s.setBuyerdis(Float.valueOf(row.get("buyerdis").toString()));
+//	        	s.setRebatesdis(Float.valueOf(row.get("rebatesdis").toString()));
+//	        	s.setBonusesdis(Float.valueOf(row.get("bonusesdis").toString()));
+//	        	s.setState(Integer.valueOf(row.get("state").toString()));
+	            
+	        	userStandardDao.update(s);
+	        }
+	    }
+		
+		return true;
+	}
+
+	//============end
+	
+}
