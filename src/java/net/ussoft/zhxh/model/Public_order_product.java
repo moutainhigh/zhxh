@@ -22,6 +22,21 @@ public class Public_order_product {
 	private String ordertime;
 	private Integer status;
 	private String productsize;
+	private Float buyerdis;					//商品采购折扣
+	private Float rebatesdis;				//返利标准
+	private Float bonusesdis;				//奖励标准
+	
+	public Public_order_product() {
+		this.setProductnum(0);
+		this.setIsoknum(0);
+		this.setIfok(0);
+		this.setIfover(0);
+		this.setPrice(0f);
+		this.setStatus(0);
+		this.setBuyerdis(0f);
+		this.setRebatesdis(0f);
+		this.setBonusesdis(0f);
+	}
 	
 	
 	@Id
@@ -109,6 +124,24 @@ public class Public_order_product {
 	}
 	public void setProductsize(String productsize) {
 		this.productsize = productsize;
+	}
+	public Float getBuyerdis() {
+		return buyerdis;
+	}
+	public void setBuyerdis(Float buyerdis) {
+		this.buyerdis = buyerdis;
+	}
+	public Float getRebatesdis() {
+		return rebatesdis;
+	}
+	public void setRebatesdis(Float rebatesdis) {
+		this.rebatesdis = rebatesdis;
+	}
+	public Float getBonusesdis() {
+		return bonusesdis;
+	}
+	public void setBonusesdis(Float bonusesdis) {
+		this.bonusesdis = bonusesdis;
 	}
 	
 	

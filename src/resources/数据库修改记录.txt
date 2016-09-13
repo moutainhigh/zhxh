@@ -204,6 +204,12 @@
 	(1）增加productid varchar（40）	商品id
 	(2) 增加state int（11） 状态 0：禁止采购  1：可采购
 	
+20160913
+1、修改表 public_order_product 订单商品表
+	（1）增加 buyerdis decimal（11，2）	//商品采购折扣
+	（2）增加 rebatesdis decimal（11，2）	//返利标准
+	（2）增加 bonusesdis decimal（11，2）	//奖励标准
+	
 	
 	
 	
