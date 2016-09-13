@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicBrandDao;
 import net.ussoft.zhxh.dao.PublicProductSizeDao;
+import net.ussoft.zhxh.dao.PublicSetBonusesRatioDao;
 import net.ussoft.zhxh.dao.PublicSetUserStandardDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.dao.PublicUserBrandDao;
@@ -25,6 +26,7 @@ import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.dao.PublicUserLinkDao;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_product_size;
+import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_set_user_standard;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_brand;
@@ -42,6 +44,8 @@ public class PublicUser2Service implements IPublicUser2Service{
 	private PublicUserBrandDao userBrandDao;
 	@Resource
 	private PublicSetUserStandardDao userStandardDao;
+	@Resource
+	private PublicSetBonusesRatioDao ratioDao;
 	@Resource
 	private PublicProductSizeDao sizeDao;
 	@Resource
@@ -194,7 +198,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 		
 		//获取parentid的机构作为userid能操作几个品牌
 //		sql = "select * from public_user_brand where userid = ?";
-		sql = "select b.* from public_brand b,public_user_brand u where u.userid = ? and b.id = u.brandid";
+		sql = "select b.* from public_brand b,public_user_brand u where u.userid = ? and b.id = u.brandid order by b.sort";
 		values.clear();
 		values.add(parentid);
 //		List<Public_user_brand> parentBrandList = userBrandDao.search(sql, values);
@@ -396,6 +400,130 @@ public class PublicUser2Service implements IPublicUser2Service{
 //	        	s.setState(Integer.valueOf(row.get("state").toString()));
 	            
 	        	userStandardDao.update(s);
+	        }
+	    }
+		
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#updateUserSizeStandard(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public boolean updateUserSizeStandard(String parentid, String userid, String updatekey, String updatevalue) {
+		String sql = "update public_set_user_standard set " + updatekey + "=? where parentid=? and userid=?";
+		
+		List<Object> values = new ArrayList<Object>();
+		
+		values.add(updatevalue);
+		values.add(parentid);
+		values.add(userid);
+		
+		userStandardDao.update(sql, values);
+		
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#listUserRatio(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<Map<String, Object>> listUserRatio(String parentid) {
+		String sql = "select r.*,u.username,u.companyname,u.companyname,u.companypath from public_set_bonuses_ratio r,public_user u where r.userid = u.id and r.parentid=?";
+		
+		List<Object> values = new ArrayList<Object>();
+		values.add(parentid);
+		return ratioDao.searchForMap(sql, values);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#listSelectUserC(java.lang.String)
+	 */
+	@Override
+	public List<Public_user> listSelectUserC(String parentid) {
+//		String sql = "select u.* from public_user u ,public_set_bonuses_ratio r,public_user_link l where u.identity='C' "
+//				+ "and r.parentid = ? and r.userid <> l.userid and l.parentid = ? and u.id = l.userid";
+//		
+		List<Object> values = new ArrayList<Object>();
+//		values.add(parentid);
+//		values.add(parentid);
+		
+		String sql = "";
+		//获取parentid下已配置的机构
+		sql = "select * from public_set_bonuses_ratio where parentid = ?";
+		values.add(parentid);
+		
+		List<Public_set_bonuses_ratio> ratioList = ratioDao.search(sql, values);
+		
+		//获取parentid下为C美容院的机构
+		sql = "select u.* from public_user u,public_user_link l where u.identity='C' and l.parentid=? and u.id = l.userid";
+		values.clear();
+//		values.add('C');
+		values.add(parentid);
+		
+		List<Public_user> userList = userDao.search(sql, values);
+		
+		//
+		if (null != ratioList && ratioList.size() > 0) {
+			Iterator<Public_user> iter = userList.iterator();
+	        while(iter.hasNext()){
+	            Public_user b = iter.next();
+	            for (Public_set_bonuses_ratio ratio : ratioList) {
+					if (b.getId().equals(ratio.getUserid())) {
+						iter.remove();
+						break;
+					}
+				}
+	        }
+		}
+		return userList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#UserRatioSel(java.lang.String, java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public void UserRatioSel(String ids, String parentid) {
+		String[] idArr = ids.split(",");
+		
+		Public_set_bonuses_ratio ratio = new Public_set_bonuses_ratio();
+		
+		for (String userid : idArr) {
+			ratio.setId(UUID.randomUUID().toString());
+			ratio.setParentid(parentid);
+			ratio.setUserid(userid);
+			ratioDao.save(ratio);
+		}
+		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#saveRatio(java.util.List)
+	 */
+	@Transactional("txManager")
+	@Override
+	public boolean saveRatio(List<Map<String, String>> rows) throws IllegalAccessException, InvocationTargetException {
+		for(int i=0,l=rows.size(); i<l; i++){
+			Map<String,String> row = (Map<String,String>)rows.get(i);
+	  		  
+			String id = row.get("id") != null ? row.get("id").toString() : "";
+	        String state = row.get("_state") != null ? row.get("_state").toString() : "";
+	        
+	        if (state.equals("removed") || state.equals("deleted")) {
+	        	ratioDao.del(id);
+	        }
+	        //更新：_state为空，或modified
+	        else if (state.equals("modified") || state.equals(""))	 {
+	        	Public_set_bonuses_ratio s = new Public_set_bonuses_ratio();
+	        	BeanUtils.populate(s, row);
+	        	ratioDao.update(s);
 	        }
 	    }
 		

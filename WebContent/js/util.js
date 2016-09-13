@@ -109,7 +109,7 @@ $.ajaxSetup({
         if(sessionstatus=="timeout"){
         	alert("登录超时,请重新登录！");
             //如果超时就处理 ，指定要跳转的页面
-            window.top.location.href = getRootPath_web() + "/login.do";
+            window.top.location.href = getRootPath_web() + "/login.htmls";
             //window.location.replace(webPath.webRoot + "account/login");   
         }   
     }   

@@ -194,6 +194,28 @@ public class UserManager2Controller extends BaseConstroller{
 		out.print("success");
 	}
 	
+	/**
+	 * 批量修改被设置者的采购利益标准
+	 * @param parentid
+	 * @param userid
+	 * @param updatekey
+	 * @param updatevalue
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/updateUserSizeStandard",method=RequestMethod.POST)
+	public void updateUserSizeStandard(String parentid,String userid,String updatekey,String updatevalue,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		userService.updateUserSizeStandard(parentid, userid,updatekey,updatevalue);
+		
+		out.print("success");
+	}
+	
+	
+	
 	@RequestMapping(value="/saveStandard",method=RequestMethod.POST)
 	public void saveStandard(String objs,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
 		response.setContentType("text/xml;charset=UTF-8");
@@ -210,6 +232,99 @@ public class UserManager2Controller extends BaseConstroller{
 		List<Map<String, String>> rows = (List<Map<String, String>>) JSON.parse(objs);
 		
 		userService.saveStandard(rows);
+		
+		out.print("success");
+	}
+	
+	/**
+	 * 获取机构的奖励转货款系数
+	 * @param parentid
+	 * @param userid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/listUserRatio",method=RequestMethod.POST)
+	public void listUserRatio(String parentid,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
+		List<Map<String,Object>> ratioList = userService.listUserRatio(parentid);
+		
+		map.put("total", ratioList.size());
+		map.put("data", ratioList);
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 获取parentid对应的没有加入到奖励转货款系数表的机构列表
+	 * @param parentid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/listSelectUserC",method=RequestMethod.POST)
+	public void listSelectUserC(String parentid,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
+		List<Public_user> userList = userService.listSelectUserC(parentid);
+		
+		map.put("total", userList.size());
+		map.put("data", userList);
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 为奖励转贷款表插入选择的机构
+	 * @param ids
+	 * @param parentid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/UserRatioSel",method=RequestMethod.POST)
+	public void UserRatioSel(String ids,String parentid,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		userService.UserRatioSel(ids, parentid);
+		
+		out.print("success");
+	}
+	
+	/**
+	 * 保存机构奖励转贷款系数
+	 * @param objs
+	 * @param response
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	@RequestMapping(value="/saveRatio",method=RequestMethod.POST)
+	public void saveRatio(String objs,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "success";
+		
+		if ("".equals(objs) || objs == null) {
+			out.print(result);
+			return;
+		}
+		//
+		List<Map<String, String>> rows = (List<Map<String, String>>) JSON.parse(objs);
+		
+		userService.saveRatio(rows);
 		
 		out.print("success");
 	}

@@ -116,6 +116,16 @@ public interface IPublicUser2Service {
 	public boolean saveUserSizeStandard(String brandid,String productid,String sizeids,String parentid,String userid);
 	
 	/**
+	 * 按设置者与被设置者，批量修改采购标准
+	 * @param parentid
+	 * @param userid
+	 * @param updatekey
+	 * @param updatevalue
+	 * @return
+	 */
+	public boolean updateUserSizeStandard(String parentid,String userid,String updatekey,String updatevalue);
+	
+	/**
 	 * 保存机构的规格设置标准
 	 * @param objs
 	 * @return
@@ -123,6 +133,37 @@ public interface IPublicUser2Service {
 	 * @throws IllegalAccessException 
 	 */
 	public boolean saveStandard(List<Map<String, String>> rows) throws IllegalAccessException, InvocationTargetException;
+	
+	/**
+	 * 获取机构的奖励转货款系数
+	 * @param parentid
+	 * @param userid
+	 * @return
+	 */
+	public List<Map<String,Object>> listUserRatio(String parentid);
+	
+	/**
+	 * 获取要添加机构到奖励转货款的机构列表
+	 * @param parentid
+	 * @return
+	 */
+	public List<Public_user> listSelectUserC(String parentid);
+	
+	/**
+	 * 为奖励转货款系数表插入新的对应
+	 * @param ids
+	 * @param parentid
+	 */
+	public void UserRatioSel(String ids,String parentid);
+	
+	/**
+	 * 保存机构奖励转货款系数
+	 * @param objs
+	 * @return
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
+	 */
+	public boolean saveRatio(List<Map<String, String>> rows) throws IllegalAccessException, InvocationTargetException;
 	
 	
 	
