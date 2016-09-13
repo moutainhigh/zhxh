@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>个人中心-我的订单</title>
+<title>个人中心-收货地址</title>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/faq.css" />
@@ -53,7 +53,7 @@
 	        <h3>收货地址</h3>
 	        <div class="indent">
 	            <h4>新增收货地址</h4>
-	            <form name="form1" action="${pageContext.request.contextPath}/porder/editAddress.htmls" method="post">
+	            <form id="address_form" name="form1" method="post">
 	            <input type="hidden" name="id" value="${userPath.id }"/>
 	            <table width="" border="0" cellpadding="0" cellspacing="0" class="my-xx">
 	              <tr>
@@ -62,11 +62,11 @@
 	              </tr>
 	              <tr>
 	                <td>手机号码</td>
-	                <td><input type="text" value="${userPath.userphone }" name="userphone" id="userphone" class="xx-txt" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  /></td>
+	                <td><input type="text" value="${userPath.userphone }" name="userphone" id="userphone" maxlength="11" class="xx-txt" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  /></td>
 	              </tr>
 	              <tr>
 	                <td>邮编号码</td>
-	                <td><input type="text" value="${userPath.postcode }" name="postcode" id="postcode" class="xx-txt" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  /></td>
+	                <td><input type="text" value="${userPath.postcode }" name="postcode" id="postcode" maxlength="6" class="xx-txt" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"  /></td>
 	              </tr>
 	              <tr>
 	                <td>收货地址</td>
@@ -103,6 +103,23 @@
 	</div>
 	
 	<script type="text/javascript">
+		//form序列化
+		$.fn.serializeObject = function()  
+		{  
+		   var o = {};  
+		   var a = this.serializeArray();  
+		   $.each(a, function() {  
+		       if (o[this.name]) {  
+		           if (!o[this.name].push) {  
+		               o[this.name] = [o[this.name]];  
+		           }  
+		           o[this.name].push(this.value || '');  
+		       } else {  
+		           o[this.name] = this.value || '';  
+		       }  
+		   });  
+		   return o;  
+		};
 		$(function(){
 			//
 			$("#save").click(function(){
@@ -129,7 +146,25 @@
 						return false;
 					}
 				}
-				form1.submit();
+				var obj = $("#address_form").serializeObject();
+				var fdata = $.param(obj);
+				$.ajax({
+			    	async:false,
+			        url: "${pageContext.request.contextPath}/porder/editAddress.htmls",
+			        data: fdata,
+			        type: "post",
+			        dataType:"text",
+			        success: function (text) {
+			        	if(text != "error"){
+			        		location.reload();
+			        	}else{
+			        		layer.msg("添加失败！");
+			        	}
+			        },
+			        error: function (jqXHR, textStatus, errorThrown) {
+			            layer.msg(jqXHR.responseText);
+			        }
+			    });
 			});
 		});
 		//

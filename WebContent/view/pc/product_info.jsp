@@ -91,7 +91,7 @@
 	<div class="HTML-con">
 	   <c:if test="${linkPros.size() > 0 }">
 	    <div class="shop-page-cnter2">
-	        <h3>相关商品</h3>
+	        <h3 align="center">相关商品</h3>
 	        <div class="area">
 	            <div class="cons">
 	                <div class="con" style="left:0;"><!--调整第一个显示位置请修改"left:0px;的值" -->

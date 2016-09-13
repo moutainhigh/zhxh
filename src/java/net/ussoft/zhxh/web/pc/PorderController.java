@@ -186,78 +186,12 @@ public class PorderController extends BaseConstroller {
 		catService.delete(idlist);
 		catinit(true, idlist.size());	//初始化购物车数量
 		
-		
 		//初始品牌、专题
 		init(modelMap);
-		
 		modelMap.put("subtotal", order.getOrdertotal());	//支付的金额
 		modelMap.put("orderno", order.getOrdernumber()); 	//订单号
-		
 		return new ModelAndView("/view/pc/orderpay", modelMap);
 	}
-	
-	/**
-	 * 生成订单
-	 * @param idlist 购买的所有商品ID
-	 * */
-	/*private Public_order addOrder(List<String> idlist){
-		//购物车提交的商品
-		List<Public_cat> catList = catService.getByIds(idlist);
-		float subtotal = 0;		//合计价格
-		for(Public_cat obj:catList){
-			Public_product_size psize = psizeService.getById(obj.getProductsizeid());
-			//如果特价没有，把售价给它-前台统一使用特价
-			if(psize.getSaleprice() == 0){
-				psize.setSaleprice(psize.getPrice());
-			}
-			
-			//计算价格
-			subtotal += psize.getSaleprice() * obj.getBuycount();
-		}
-		Public_order order = new Public_order();
-		order.setId(UUID.randomUUID().toString());
-		//获取session中的账户
-		Public_user user = getSessionUser();
-		order.setUserid(user.getId());
-//		order.setParentid(parentid);			//上级ID
-//		order.setIdentity(identity);			//身份
-		String ordernumber = "PO"+OrderNO.getOrderNo();		//订单号
-		order.setOrdernumber(ordernumber);
-		order.setOrdertotal(subtotal);			//总金额
-		order.setOrderstatus(0);				//待支付
-		order.setOrderstatusmemo("待支付");
-		order.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));;
-		return orderService.insert(order);
-	}*/
-	
-	/**
-	 * 订单商品
-	 * @param idlist 购买的所有商品ID
-	 * @param orderId 订单ID
-	 * */
-	/*private void addOrderProduct(List<String> idlist,String orderId){
-		//购物车提交的商品
-		List<Public_cat> catList = catService.getByIds(idlist);
-		for(Public_cat obj:catList){
-			Public_product_size psize = psizeService.getById(obj.getProductsizeid());
-			
-			//订单商品 
-			Public_order_product orderPro = new Public_order_product();
-			orderPro.setId(UUID.randomUUID().toString());
-			orderPro.setOrderid(orderId);
-			orderPro.setProductid(psize.getId());
-			orderPro.setProductname(psize.getProductname());
-			orderPro.setProductpic(psize.getProductpic());
-			orderPro.setProductsize(psize.getProductsize());
-			orderPro.setProductnum(obj.getBuycount());		//购买数量
-			orderPro.setIsoknum(obj.getBuycount());			//可结算数量（退货时冲减）
-			orderPro.setPrice(psize.getSaleprice());		//此处存放的是特价（值已处理-如果特价没有，把售价给它-前台统一使用特价）
-			orderPro.setProductmemo(psize.getProductmemo());
-			orderPro.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
-			orderPro.setStatus(0);	//已购买
-			orderProServivce.insert(orderPro);
-		}
-	}*/
 	
 	/**
 	 * 购物车
@@ -271,13 +205,11 @@ public class PorderController extends BaseConstroller {
 		List<Public_cat> catList = catService.list(userid);
 		for(Public_cat obj:catList){
 			Public_product_size psize = psizeService.getById(obj.getProductsizeid());
-			
 			if (null == psize) {
 				//如果商品已不存在.就删除购物车里的
 				catService.delete(obj.getId());
 				continue;
 			}
-			
 			psize.setQuantity(obj.getBuycount());
 			psize.setProductcatid(obj.getId());
 			//如果特价没有，把售价给它-前台统一使用特价
@@ -286,15 +218,9 @@ public class PorderController extends BaseConstroller {
 			}
 			psizeList.add(psize);
 		}
-		
-		//
-		
-		
 		//初始品牌、专题
 		init(modelMap);
-		
 		modelMap.put("psizeList", psizeList);
-		
 		return new ModelAndView("/view/pc/cat", modelMap);
 	}
 	
@@ -505,7 +431,7 @@ public class PorderController extends BaseConstroller {
 	/**
 	 * 收货地址 - 添加
 	 * */
-	@RequestMapping(value="/editAddress")
+/*	@RequestMapping(value="/editAddress")
 	public ModelAndView editAddress (Public_user_path userPath,ModelMap modelMap) throws Exception {
 		Public_user userSession = getSessionUser();
 		if(!"".equals(userPath.getId()) && null != userPath.getId()){
@@ -526,7 +452,37 @@ public class PorderController extends BaseConstroller {
 		modelMap.put("userPathList", userPathList);
 		
 		return new ModelAndView("/view/pc/account/address", modelMap);
+	}*/
+	/**
+	 * 收货地址 - 添加
+	 * */
+	@RequestMapping(value="/editAddress")
+	public void editAddress (Public_user_path userPath,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		Public_user userSession = getSessionUser();
+		if(!"".equals(userPath.getId()) && null != userPath.getId()){
+			//修改
+			int num = userPathService.update(userPath);
+			if(num > 0){
+				out.print("success");
+				return;
+			}
+		}else{
+			userPath.setId(UUID.randomUUID().toString());
+			userPath.setUserid(userSession.getId());
+			Public_user_path obj = userPathService.insert(userPath);
+			if(obj != null){
+				out.print("success");
+				return;
+			}
+		}
+		
+		out.print("error");
 	}
+	
 	
 	/**
 	 * 收货地址 - 修改
@@ -549,7 +505,7 @@ public class PorderController extends BaseConstroller {
 	}
 	
 	/**
-	 * 收货地址 - 修改
+	 * 收货地址 - 删除
 	 * */
 	@RequestMapping(value="/delAddress")
 	public ModelAndView delAddress (String id,ModelMap modelMap) throws Exception {
@@ -618,5 +574,25 @@ public class PorderController extends BaseConstroller {
 		modelMap.put("order", order);
 		
 		return new ModelAndView("/view/pc/account/orderinfo", modelMap);
+	}
+	
+	/**
+	 * 取消订单
+	 * @param user
+	 * */
+	@RequestMapping(value="/cancel_o",method=RequestMethod.POST)
+	public void cancelorder(String id,HttpServletRequest request,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		Public_order order = orderService.getById(id);
+		order.setOrderstatus(-1);
+		order.setOrderstatusmemo("已取消");
+		int num = orderService.update(order);
+		if(num > 0){
+			out.print("success");
+			return;
+		}
+		out.print("error");
 	}
 }

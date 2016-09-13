@@ -34,7 +34,7 @@
 	    		<ul class="user-header fr">
 	    			<c:choose>
 	    				<c:when test="${sessionScope.pc_user_sessiion != null }">
-	    					<li class="name1" style="line-height:42px;color:#fff;"><a style="color:#fff;font-weight: bold;" href="${pageContext.request.contextPath}/porder/orders.htmls" title="个人中心">${sessionScope.pc_user_sessiion.phonenumber}</a></li>
+	    					<li class="name1" style="line-height:42px;color:#fff;"><a style="color:#fff;font-weight: bold;" href="${pageContext.request.contextPath}/porder/orders.htmls" title="个人中心">${sessionScope.pc_user_sessiion.username}</a></li>
 	    				</c:when>
 	    				<c:otherwise>
 	    					<li class="name"><a href="javascript:;" title="个人中心"></a></li>

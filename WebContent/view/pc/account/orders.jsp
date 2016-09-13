@@ -83,7 +83,11 @@
 	                        <div class="dingdan-zt line-height">${item.orderstatusmemo }</div>
 	                        <c:if test="${status.index == 0 }">
 	                        	<div class="dingdan-cz">
-	                        		<a href="${pageContext.request.contextPath}/porder/orderinfo.htmls?id=${item.id}" target="_blank">订单详情</a>
+	                        	<c:if test="${item.orderstatus == 0 }">
+	                        		<a href="javascript:;" onclick="cancel('${item.id}')">取消订单</a>
+	                        	</c:if>
+	                        		<b><a href="${pageContext.request.contextPath}/porder/orderinfo.htmls?id=${item.id}" target="_blank">订单详情</a></b>
+	                        		<!-- <em class="pj">去支付</em> -->
 		                            <!-- <b class="del">删除</b> -->
 		                            <!-- <em class="pj">评价</em> -->
 		                        </div>
@@ -134,5 +138,36 @@
 	
 	<!--页脚-->
 	<%@ include file="/view/pc/bottom.jsp" %>
+	
+	<script type="text/javascript">
+	
+		//取消订单
+		function cancel(id){
+			layer.confirm('确定要取消订单吗？', {
+				title:"系统提示",
+				icon:3,
+			  	btn: ['确定','取消'] //按钮
+			}, function(){
+				$.ajax({
+			    	async:false,
+			        url: "${pageContext.request.contextPath}/porder/cancel_o.htmls",
+			        data: {id:id},
+			        type: "post",
+			        dataType:"text",
+			        success: function (text) {
+			        	if(text != "error"){
+			        		location.reload();
+			        	}else{
+			        		layer.msg("操作失败！");
+			        	}
+			        },
+			        error: function (jqXHR, textStatus, errorThrown) {
+			            layer.msg(jqXHR.responseText);
+			        }
+			    });
+			}, function(){
+			});
+		}
+	</script>
 </body>
 </html>
