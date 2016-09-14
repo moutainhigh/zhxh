@@ -210,6 +210,27 @@
 	（2）增加 rebatesdis decimal（11，2）	//返利标准
 	（2）增加 bonusesdis decimal（11，2）	//奖励标准
 	
+2、表public_user_link 机构关联表
+	（1）初始一条数据 id、parentidi、userid 都有1     //将平台关联自己
+	
+3、修改public_user 个人中心
+	（1）增加sort int（11） //排序   请初始化已存在的机构该字段值
+	
+2016-09-14
+1、将public_bankget_list表修改为表名 public_trade_bill。字段修改为以下：
+	(1) id varchar（40）
+	(2) billid			varchar(100)		//流水单号
+	(3) orderid			varchar(40)		 	//订单id
+	(4) parentid		varchar(40)			//上级id
+	(5) userid			varchar(40)			//用户id	
+	(6) amount			Decimal (11,2)		//金额	
+	(7) createtime		varchar(100)		//创建时间	
+	(8) banktime		varchar(100)		//支付回执时间	
+	(9) paytype			varchar(100)		//支付类型	
+	(10)trantype		Integer(11)			//交易类型	
+	(11) trantypetxt	varchar(50)			//交易类型文本	
+	(12) status			Integer(11)			//状态
+	(13) billmemo		varchar(500)		//交易描述
 	
 	
 	
