@@ -48,7 +48,7 @@
 	    			 	</div>
 	    			 	<a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')" title="购物车"></a>
 	    			 </li>
-	    			 <li class="search" id="search"><a href="javascript:;" title="检索"></a></li>
+	    			 <!-- <li class="search" id="search"><a href="javascript:;" title="检索"></a></li> -->
 	    		</ul>
 	    	<c:if test='${ptype eq "1" }'>
 	    		<a href="${pageContext.request.contextPath}/pcMain/story-c.htmls?id=${id}" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" style="width:22px;height:22px;" title="品牌故事"/></a>

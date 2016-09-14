@@ -88,6 +88,13 @@
 	    </div>
 	    <div class="dingdan">
 	        <div class="tit clearfix">
+	            <span class="fl">机构代码<i>/</i></span>
+	            <span class="fr"><input style="width: 160px;height: 42px;border: solid 1px #000;text-indent: 8px;" type="text" id="compcode" name="compcode" placeholder="请输入机构代码"></span>
+	        </div>
+	        
+	    </div>
+	    <div class="dingdan">
+	        <div class="tit clearfix">
 	            <span class="fl">商品<i>/</i></span>
 	        </div>
 	    </div>
@@ -125,6 +132,7 @@
 	    <form name="form1" action="${pageContext.request.contextPath}/porder/suborder.htmls" method="post">
 	    	<input type="hidden" name="ids" value="${pids }">
 	    	<input type="hidden" name="addressid" id="address" value="">
+	    	<input type="hidden" name="companycode" id="companycode" value="">
 	    	<input type="button" value="立即付款" onclick="tosubmit()" class="shopcart-but" />
 	    </form>
 	</div>
@@ -159,6 +167,27 @@
 			if(typeof(address) == "undefined" || address == ""){
 				layer.msg("请选择一个地址！");
 				return;
+			}
+			//
+			var compcode = $("#compcode").val();
+			if(typeof(compcode) == "undefined" || compcode == ""){
+				layer.msg("请填写机构代码！");
+				return;
+			}else{
+				//验证机构代码
+				/* $.ajax({
+			    	async:false,
+			        url: "${pageContext.request.contextPath}/porder/newaddress.htmls",
+			        data: fdata,
+			        type: "post",
+			        dataType:"text",
+			        success: function (text) {
+						
+			        },
+			        error: function (jqXHR, textStatus, errorThrown) {
+			            layer.msg(jqXHR.responseText);
+			        }
+			    }); */
 			}
 			form1.submit();
 		}

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_order;
+import net.ussoft.zhxh.model.Public_product_size;
+import net.ussoft.zhxh.model.Public_user;
 
 /**
  * 订单管理
@@ -60,4 +62,22 @@ public interface IPublicOrderService {
 	 * @return
 	 * */
 	public int delete(String id);
+	
+	/*-----------------------------------------*/
+	
+	/**
+	 * 创建采购单
+	 * @param psizeList
+	 * @param user
+	 * @return
+	 * */
+	public Public_order createorder(List<Public_product_size> psizeList,Public_user user);
+	
+	/**
+	 * 支付-采购单货款
+	 * @param order
+	 * */
+	public int payment(Public_order order);
+	
+	
 }

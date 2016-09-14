@@ -74,16 +74,13 @@
 						<div class="float-menu" style="top: 0px;">
 							<ul class="sec-nav">
 								<li class="sec-nav-li menu2" code="WBM_ORDER_INDENT">
-									<a class="sec-nav-a new-con" target="mainFrame" href="http://www.sohu.com">订货单444</a>
+									<a class="sec-nav-a new-con" target="mainFrame" href="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/order/createorder">采购</a>
 								</li>
 								<li class="sec-nav-li menu2" code="WBM_ORDER_RETURNED">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/order/returnOrder?action=list">退货单226666</a>
+									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/order/returnOrder?action=list">我的订单</a>
 								</li>
 								<li class="sec-nav-li menu2" code="WBM_ORDER_OUTSTOCK">
-									<a class="sec-nav-a new-con" target="mainFrame" href="content.html">出库/发货记录444</a>
-								</li>
-								<li class="sec-nav-li menu2" code="WBM_ORDER_STATISTICS">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/order/order?action=queryContent">订单商品统计</a>
+									<a class="sec-nav-a new-con" target="mainFrame" href="content.html">客户订单</a>
 								</li>
 							</ul>
 						</div>
@@ -99,12 +96,6 @@
 								</li>
 								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
 									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/customer/type?action=list">客户级别设置</a>
-								</li>
-								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_FRANCHISE">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/customer/share?action=joinRequestListForward">加盟信息</a>
-								</li>
-								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_FEEDBACK">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/faq/question?action=manager">客户反馈</a>
 								</li>
 							</ul>
 						</div>
@@ -126,29 +117,6 @@
 										</li>
 										<li class="third-nav-li menu2" code="WBM_PRODUCT_UNIT">
 											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/unit?action=list">计量单位</a>
-										</li>
-									</ul>
-								</li>
-								<li class="sec-nav-li sec-nav-li-flow" style="height: 228px;">
-									<a class="sec-nav-a li-a-color" href="javascript:;">库存管理</a>
-									<ul class="third-nav-ul">
-										<li class="third-nav-li menu2" code="WBM_PRODUCT_STOCK">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/product?action=inventoryList&amp;forward=inventorylist">商品库存</a>
-										</li>
-										<li class="third-nav-li menu2" code="WBM_PRODUCT_INSTOCK">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/inventory/inStorage?action=list_view">商品入库</a>
-										</li>
-										<li class="third-nav-li menu2" code="WBM_PRODUCT_OUTSTOCK">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/inventory/outStorage?action=list_view">商品出库</a>
-										</li>
-										<li class="third-nav-li menu2" code="WBM_PRODUCT_INVENTORY">
-											<a class="third-nav-a new-con" href="http://file.dinghuo123.com/corp/inventoryImport/start">库存盘点<span class="ui-new-func"></span></a>
-										</li>
-										<li class="third-nav-li menu2" code="WBM_PRODUCT_STOCK_DETAIL">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/inventory/inStorage?action=allList_view">出入库明细</a>
-										</li>
-										<li class="third-nav-li menu2" code="WBM_PRODUCT_STOCK_WAREHOUSE">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/inventory/warehouse?action=list">仓库设置</a>
 										</li>
 									</ul>
 								</li>
@@ -179,7 +147,7 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">资金管理</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_FUND_RECEIPT_CONFIRM">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/payment?action=auditList">收款确认</a>
+											<a class="third-nav-a new-con" target="mainFrame" href="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/order/account">资金账户</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_FUND_ONLINE_PAYMENT">
 											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/onlinePayAccount?action=onlinePayAccountManage">在线支付</a>
@@ -193,7 +161,7 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">资金报表</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_FUND_INCOME_RECORD">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/payment?action=list">收款记录</a>
+											<a class="third-nav-a new-con" href="">资金账户</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_FUND_INCOME_STATISTICS">
 											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/payment?action=queryPaymentReport">订单收款统计</a>

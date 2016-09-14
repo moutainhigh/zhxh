@@ -53,4 +53,28 @@ public interface IPublicUserBankService {
 	 * @return
 	 * */
 	public int delete(String id);
+	
+	
+	/**
+	 * 充值
+	 * @param prepaid_bill_orderid 充值流水订单号
+	 * @return
+	 * */
+	public int recharge(String prepaid_bill_orderid);
+	
+	/**
+	 * 提现
+	 * */
+	public int withdrawal(String userid,String parentid);
+	
+	/**
+	 * 设置配额
+	 * */
+	public int setQuota(String id);
+	
+	/**
+	 * 转货款
+	 * */
+	public int transfBuyBank(); 
+	
 }

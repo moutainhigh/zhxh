@@ -1,5 +1,6 @@
 package net.ussoft.zhxh.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -11,6 +12,8 @@ import net.ussoft.zhxh.dao.PublicOrderDao;
 import net.ussoft.zhxh.dao.PublicOrderPathDao;
 import net.ussoft.zhxh.dao.PublicOrderProductDao;
 import net.ussoft.zhxh.dao.PublicProductSizeDao;
+import net.ussoft.zhxh.dao.PublicSetUserStandardDao;
+import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.dao.PublicUserPathDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_cat;
@@ -18,6 +21,9 @@ import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_order_path;
 import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_product_size;
+import net.ussoft.zhxh.model.Public_set_user_standard;
+import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Public_user_path;
 import net.ussoft.zhxh.service.IPublicOrderService;
 import net.ussoft.zhxh.util.DateUtil;
@@ -42,6 +48,10 @@ public class PublicOrderService implements IPublicOrderService{
 	PublicUserPathDao userPathDao;
 	@Resource
 	PublicOrderPathDao orderPathDao;
+	@Resource
+	PublicSetUserStandardDao standardDao;	//
+	@Resource
+	PublicUserBankDao bankDao;	//账户
 	
 	@Override
 	public Public_order getById(String id) {
@@ -121,7 +131,7 @@ public class PublicOrderService implements IPublicOrderService{
 		order.setId(UUID.randomUUID().toString());
 		order.setUserid(userid);
 //		order.setParentid(parentid);			//上级ID
-//		order.setIdentity(identity);			//身份
+		order.setIdentity("Z");			//身份
 		String ordernumber = "PO"+OrderNO.getOrderNo();		//订单号
 		order.setOrdernumber(ordernumber);
 		order.setOrdertotal(subtotal);			//总金额
@@ -174,4 +184,146 @@ public class PublicOrderService implements IPublicOrderService{
 		orderPath.setUserphone(userPath.getUserphone());
 		orderPathDao.save(orderPath);
 	}
+	
+	/*------------------------------------------采购---------------------------------------------*/
+	
+	@Transactional("txManager")
+	@Override
+	public Public_order createorder(List<Public_product_size> psizeList,Public_user user) {
+		//生成主订单
+		float subtotal = 0;		//合计价格
+		for(Public_product_size obj:psizeList){
+			//折扣-是否有折扣计算价格
+			Public_set_user_standard standard = getProStandard(user.getId(), user.getParentid(), obj.getId());
+			Float buydrdis = standard.getBuyerdis();
+			if(buydrdis != null && buydrdis > 0){
+				subtotal += obj.getPrice() * buydrdis;	//计算折扣后的价格
+			}else{
+				subtotal += obj.getPrice();
+			}
+		}
+		Public_order order = new Public_order();
+		order.setId(UUID.randomUUID().toString());
+		order.setUserid(user.getId());
+		
+		order.setParentid(user.getParentid());			//上级ID
+		order.setIdentity(user.getIdentity());			//身份
+		String ordernumber = "PO"+OrderNO.getOrderNo();		//订单号
+		order.setOrdernumber(ordernumber);
+		order.setOrdertotal(subtotal);			//总金额
+		order.setOrderstatus(0);				//待支付
+		order.setOrderstatusmemo("待支付");
+		order.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));;
+		order = orderDao.save(order);
+		//订单商品
+		productOrderSize(order,psizeList);
+		
+		//订单-发货地址-还没想好，地址是否可多个（如果是多个的话可在user中添加临时字段传进来）
+		//addAddress(addressid, order.getId());
+
+		return order;
+	}
+	
+	/**
+	 * 采购-订单商品
+	 * @param order 订单
+	 * @param quantity	数量
+	 * @param psizeList 购买的商品
+	 * */
+	private void productOrderSize(Public_order order,List<Public_product_size> psizeList){
+		for(Public_product_size psize:psizeList){
+			//折扣
+			Public_set_user_standard standard = getProStandard(order.getUserid(), order.getParentid(), psize.getId());
+			//订单商品 
+			Public_order_product orderPro = new Public_order_product();
+			orderPro.setId(UUID.randomUUID().toString());
+			orderPro.setOrderid(order.getId());
+			orderPro.setProductid(psize.getId());
+			orderPro.setProductname(psize.getProductname());
+			orderPro.setProductpic(psize.getProductpic());
+			orderPro.setProductsize(psize.getProductsize());
+			orderPro.setProductnum(psize.getQuantity());		//购买数量
+			orderPro.setIsoknum(psize.getQuantity());			//可结算数量（退货时冲减）
+			float price = psize.getSaleprice() == 0?psize.getPrice():psize.getSaleprice();
+			orderPro.setPrice(price);
+			orderPro.setProductmemo(psize.getProductmemo());
+			orderPro.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+			orderPro.setStatus(0);	//已购买
+			
+			orderPro.setBuyerdis(standard.getBuyerdis());
+			orderPro.setRebatesdis(standard.getRebatesdis());
+			orderPro.setBonusesdis(standard.getBonusesdis());
+			
+			orderProDao.save(orderPro);
+		}
+	}
+	
+	/**
+	 * 获取商品的商品折扣
+	 * @param userid
+	 * @param parentid
+	 * @param sizeid
+	 * @return
+	 * */
+	private Public_set_user_standard getProStandard(String userid,String parentid,String sizeid){
+		String sql = "SELECT * FROM public_set_user_standard WHERE userid=? AND parentid=? AND sizeid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(userid);
+		values.add(parentid);
+		values.add(sizeid);
+		List<Public_set_user_standard> list = standardDao.search(sql,values);
+		return list.size() > 0 ? list.get(0): new Public_set_user_standard();
+	}
+	
+	/**
+	 * 支付-采购单货款
+	 * */
+	@Transactional("txManager")
+	@Override
+	public int payment(Public_order order){
+		//冲减可支配账户
+		Public_user_bank userbank = getUserBank(order.getUserid(), order.getParentid());
+		float havebank = userbank.getHavebank();
+		userbank.setHavebank(havebank - order.getOrdertotal());
+		userbank = bankDao.update(userbank);
+		if(userbank != null){
+			//修改订单状态
+			int num = updateOrderStatus(order.getId(), 1, "待发货");
+			if(num > 0)
+				return 1;
+		}
+		return 0;
+	}
+	
+	/**
+	 * 获取账户
+	 * @param userid
+	 * @param parentid
+	 * @return
+	 * */
+	private Public_user_bank getUserBank(String userid,String parentid){
+		String sql = "SELECT * FROM public_user_bank WHERE userid=? AND parentid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(userid);
+		values.add(parentid);
+		List<Public_user_bank> list = bankDao.search(sql, values);
+		return list.size() > 0 ? list.get(0): new Public_user_bank();
+	}
+	
+	/**
+	 * 修改订单状态 
+	 * @param id
+	 * @param orderstatus
+	 * @param orderstatusmemo
+	 * @return
+	 * */
+	private int updateOrderStatus(String id,int orderstatus,String orderstatusmemo){
+		String sql = "UPDATE public_order SET orderstatus=?,orderstatusmemo=? WHERE id=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(String.valueOf(orderstatus));
+		values.add(orderstatusmemo);
+		values.add(id);
+		return orderDao.update(sql, values);
+	}
+	
 }

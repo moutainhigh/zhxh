@@ -20,6 +20,13 @@ public interface IPublicTradeBillService {
 	public Public_trade_bill getById(String id);
 	
 	/**
+	 * 根据流水单号获取对象
+	 * @param billid
+	 * @return
+	 * */
+	public Public_trade_bill getByBillid(String billid);
+	
+	/**
 	 * 查询所有
 	 * @return list
 	 * */
@@ -28,9 +35,9 @@ public interface IPublicTradeBillService {
 	/**
 	 * 查询所有 分页
 	 * @param pageBean
-	 * @return list
+	 * @return pagebean
 	 * */
-	public List<Public_trade_bill> list(PageBean<Public_trade_bill> pageBean);
+	public PageBean<Public_trade_bill> list(PageBean<Public_trade_bill> pageBean);
 	
 	/**
 	 * 添加

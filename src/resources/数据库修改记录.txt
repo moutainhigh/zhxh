@@ -232,7 +232,19 @@
 	(12) status			Integer(11)			//状态
 	(13) billmemo		varchar(500)		//交易描述
 	
-	
+2、数据字典
+INSERT INTO sys_data_dic VALUES('46','public_order','orderstatus','-1','取消订单');
+INSERT INTO sys_data_dic VALUES('47','public_trade_bill','trantype','0','普通购买');
+INSERT INTO sys_data_dic VALUES('48','public_trade_bill','trantype','1','充值-货款充值');
+INSERT INTO sys_data_dic VALUES('49','public_trade_bill','trantype','2','充值-现金充值');
+INSERT INTO sys_data_dic VALUES('50','public_trade_bill','trantype','3','提现-现金账户');
+INSERT INTO sys_data_dic VALUES('51','public_trade_bill','trantype','4','提现-奖励账户');
+INSERT INTO sys_data_dic VALUES('52','public_trade_bill','trantype','5','提现-平台售额');
+--
+INSERT INTO sys_data_dic VALUES('53','public_trade_bill','status','0','未支付、提现失败');
+INSERT INTO sys_data_dic VALUES('54','public_trade_bill','status','1','支付成功、提现成功');
+INSERT INTO sys_data_dic VALUES('55','public_log','logtype','withdrawal','提现');
+
 	
 	
 	

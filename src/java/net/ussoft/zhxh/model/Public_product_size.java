@@ -23,7 +23,7 @@ public class Public_product_size {
 	private Float saleprice;
 	private String linkids;
 	
-	private int quantity; //临时字段，存放购物车中对应商品的数量
+	private int quantity; //临时字段，存放购物车中对应商品的数量和采购单的数量
 	private String productcatid;	//购物车对应商品ID
 	
 	@Id
