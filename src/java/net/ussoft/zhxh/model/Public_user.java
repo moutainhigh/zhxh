@@ -43,7 +43,11 @@ public class Public_user {
 	private String createtime;		//创建时间
 	
 	public Public_user() {
-		this.id = "";
+		super();
+	}
+	
+	public Public_user(String id) {
+		this.id = id;
 		this.usercode = "";
 		this.username = "";
 		this.phonenumber = "";

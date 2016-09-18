@@ -85,11 +85,11 @@ public class PloginController extends BaseConstroller {
 		Public_user res = userService.login(uname,pwd);
 		
 		if (null != res) {
-//			//这里要判断帐户的状态，如果为不启用，就拒绝访问
-//			if (res.getAccountstate() == 0) {
-//				modelMap.put("result", "您的帐户已被禁用，请与管理员联系。");
-//				return new ModelAndView("login",modelMap);
-//			}
+			//这里要判断帐户的状态，如果为不启用，就拒绝访问
+			if (res.getIsopen() <= 0) {
+				out.print("您的帐户已被禁用，请与管理员联系。");
+				return;
+			}
 		
 			//用户登录成功，将用户实体存入session
 			CommonUtils.setSessionAttribute(request, Constants.PC_USER_SESSION, res);
@@ -159,8 +159,8 @@ public class PloginController extends BaseConstroller {
 			return;
 		}
 		
-		Public_user tmp = new Public_user();
-		tmp.setId(UUID.randomUUID().toString());
+		Public_user tmp = new Public_user(UUID.randomUUID().toString());
+//		tmp.setId(UUID.randomUUID().toString());
 		tmp.setUsername(user.getUsername());
 		tmp.setPhonenumber(user.getPhonenumber());
 		tmp.setIdentity("Z");

@@ -146,13 +146,13 @@ public class UserManagerController extends BaseConstroller{
 		if (null == row) {
 			return "error";
 		}
-		Public_user user = new Public_user();
+		Public_user user = new Public_user(UUID.randomUUID().toString());
 		BeanUtils.populate(user, row);
 		
 		//验证手机号是否已存在
 		boolean flag = userService.checkPhoneNum(user.getPhonenumber());
 		if(!flag){
-			user.setId(UUID.randomUUID().toString());
+//			user.setId(UUID.randomUUID().toString());
 			//密码md5
 			String pass = MD5.encode("123456");
 			user.setPassword(pass);

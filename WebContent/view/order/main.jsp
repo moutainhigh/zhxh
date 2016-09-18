@@ -74,7 +74,7 @@
 						<div class="float-menu" style="top: 0px;">
 							<ul class="sec-nav">
 								<li class="sec-nav-li menu2" code="WBM_ORDER_INDENT">
-									<a class="sec-nav-a new-con" target="mainFrame" href="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/order/createorder">采购</a>
+									<a class="sec-nav-a new-con" target="mainFrame" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/createorder">采购</a>
 								</li>
 								<li class="sec-nav-li menu2" code="WBM_ORDER_RETURNED">
 									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/order/returnOrder?action=list">我的订单</a>
@@ -147,7 +147,7 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">资金管理</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_FUND_RECEIPT_CONFIRM">
-											<a class="third-nav-a new-con" target="mainFrame" href="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/order/account">资金账户</a>
+											<a class="third-nav-a new-con" target="mainFrame" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/account">资金账户</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_FUND_ONLINE_PAYMENT">
 											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/onlinePayAccount?action=onlinePayAccountManage">在线支付</a>
@@ -234,6 +234,6 @@
 		</div>
 	</div>
 
-	<iframe id="mainFrame" name="mainFrame" class="ui-layout-center" width="100%" height="600" frameborder="0" scrolling="auto" src="${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/order/index"></iframe>
+	<iframe id="mainFrame" name="mainFrame" class="ui-layout-center" width="100%" height="600" frameborder="0" scrolling="auto" src="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index"></iframe>
 </body>
 </html>

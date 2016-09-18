@@ -191,7 +191,7 @@ public class PublicUserService implements IPublicUserService{
 	@Transactional("txManager")
 	@Override
 	public int update(Public_user user) {
-		if (!user.getIdentity().equals("Z")) {
+		if (null != user.getIdentity() && !user.getIdentity().equals("Z")) {
 			//获取旧数据，判断手机号码是否更改，如果更改了就要批量更改普通会员的所属店代码
 			Public_user tmp = userDao.get(user.getId());
 			if (!user.getPhonenumber().equals(tmp.getPhonenumber())) {
