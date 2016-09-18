@@ -9,9 +9,11 @@ import javax.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicLogDao;
+import net.ussoft.zhxh.dao.PublicSetBonusesRatioDao;
 import net.ussoft.zhxh.dao.PublicTradeBillDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.model.Public_log;
+import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.service.IPublicUserBankService;
@@ -26,7 +28,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 	PublicTradeBillDao billDao;
 	@Resource
 	PublicLogDao logDao;
-
+	@Resource
+	PublicSetBonusesRatioDao ratioDao;
+	
 	@Override
 	public Public_user_bank getById(String id) {
 		return userBankDao.get(id);
@@ -77,31 +81,6 @@ public class PublicUserBankService implements IPublicUserBankService{
 		return userBankDao.save(userBank);
 	}
 	
-	/**
-	 * 预付订单-充值流水
-	 * */
-	public int prepaid_bill(String userid,String parentid,float amount){
-		//支付流水单，支付成功后进行业务处理
-		/*
-		 id
-		 billid	流水单号，支付用
-		 orderid 订单ID
-		 userid：当前用户
-		 parentid：上级
-		 amount：金额
-		 createtime：创建时间
-		 banktime:支付回执时间
-		 paytype:支付类型
-		 trantype:交易类型,1购买、充值（2.货款3.现金）、提现（现金账户、奖励、平台售额）
-		 status:0未支付，1支付成功
-		 
-		 bank_name:开户行名称
-		 bank_card_no:卡号
-		 bank_card_name:户名
-		 */
-		return 0;
-	}
-
 	/**
 	 * 充值
 	 * */
@@ -168,6 +147,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 	
 	/**
 	 * 充值-店充值
+	 * @param bill
+	 * @param type 1:直营店，2:非直营店
 	 * */
 	public int rechargeC(Public_trade_bill bill,int type){
 		/*
@@ -228,23 +209,15 @@ public class PublicUserBankService implements IPublicUserBankService{
 		return 0;
 	}
 	
-	/**
-	 * 提现-流水单
-	 * */
-	public int withdrawal_bill(String userid,String parentid,float amount){
-		//同支付流水单
-		return 0;
-	}
-	
 	@Override
 	public int withdrawal(String userid, String parentid) {
-		//冲减平台可提现账户
+		//代理提现
 		
-		//冲减代理、店可提现账户
-		
-		//增加平台支出（总和)
-		
-		//
+		//店提提现
+		/*
+		 1.奖励提现
+		 2.平台售额提现
+		 */
 		
 		return 0;
 	}
@@ -406,30 +379,64 @@ public class PublicUserBankService implements IPublicUserBankService{
 		return 0;
 	}
 	
+	@Transactional("txManager")
 	@Override
-	public int setQuota(String id) {
-		//配额累计
-		//增加可支配账户
+	public int setQuota(String userid,String parentid,float amount) {
+		Public_user_bank bank = getUserBank(userid, parentid);
+		bank.setQuotabank(bank.getQuotabank() + amount);	//配额累计
+		bank.setHavebank(bank.getHavebank() + amount);		//增加可支配账户
+		bank = userBankDao.update(bank);
 		//日志
-		
+		Public_log log = saveLog(userid, parentid, "quota","配额",amount);
+		if(bank != null && log != null){
+			return 1;
+		}
 		return 0;
 	}
 
+	@Transactional("txManager")
 	@Override
-	public int transfBuyBank() {
+	public int transfBuyBank(String userid,String parentid,float amount) {
 		//查找转货款对应的系数
+		Public_set_bonuses_ratio ratio = getBonusersRatio(userid, parentid);
 		
-		//冲减奖励可提现账户
-		//增加可支配账户
+		Public_user_bank bank = getUserBank(userid, parentid);
+		bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);	//冲减奖励可提现账户
+		//
+		if(ratio.getBonuses_ratio() > 0){
+			float _amount = amount * ratio.getBonuses_ratio();
+			bank.setHavebank(bank.getHavebank() + _amount);	//增加可支配账户
+		}else{
+			bank.setHavebank(bank.getHavebank() + amount);	//增加可支配账户
+		}
+		bank = userBankDao.update(bank);
 		//日志
+		Public_log log = saveLog(userid, parentid, "bonuses_ratio", "奖励转贷款", amount);
+		if(bank != null && log != null)
+			return 1;
 		return 0;
 	}
 
-	//未处理的
-	//奖励
-	
-	//平台售额
-	
+	@Transactional("txManager")
+	@Override
+	public int rebate() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Transactional("txManager")
+	@Override
+	public int reward() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Transactional("txManager")
+	@Override
+	public int platformSale() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	/**
 	 * 修改支付账单流水 状态
@@ -461,4 +468,43 @@ public class PublicUserBankService implements IPublicUserBankService{
 		
 		return logDao.update(log);
 	}
+	
+	/**
+	 * 添加日志
+	 * @param userid
+	 * @param parentid
+	 * @param logtype 操作类型
+	 * @param logmemo 日志内容描述
+	 * @param amount 金额
+	 * @return
+	 * */
+	private Public_log saveLog(String userid,String parentid,String logtype,String logmemo,float amount){
+		Public_log log = new Public_log();
+		log.setId(UUID.randomUUID().toString());
+		log.setUserid(userid);	//主操作人
+		log.setTouserid(parentid);			//被操作人
+		log.setLogtype(logtype);	//操作类型
+		log.setLogmemo(logmemo);
+		log.setLogtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+//		log.setLognum();		//流水表ID
+		log.setLogpay(amount);	//金额
+		
+		return logDao.update(log);
+	}
+	
+	/**
+	 * 查找账户奖励转货款标准
+	 * @param userid
+	 * @param parentid
+	 * @return obj:null
+	 * */
+	private Public_set_bonuses_ratio getBonusersRatio(String userid,String parentid){
+		String sql = "SELECT * FROM public_set_bonuses_ratio WHERE userid = ? AND parentid = ?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(userid);
+		values.add(parentid);
+		List<Public_set_bonuses_ratio> list = ratioDao.search(sql, values);
+		return list.size() > 0 ? list.get(0) : null;
+	}
+	
 }

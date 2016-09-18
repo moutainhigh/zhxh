@@ -217,6 +217,8 @@ public class PublicOrderService implements IPublicOrderService{
 		order = orderDao.save(order);
 		//订单商品
 		productOrderSize(order,psizeList);
+		//商品返利 - 新增表
+		
 		
 		//订单-发货地址-还没想好，地址是否可多个（如果是多个的话可在user中添加临时字段传进来）
 		//addAddress(addressid, order.getId());

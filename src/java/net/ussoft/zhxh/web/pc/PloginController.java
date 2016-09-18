@@ -170,9 +170,9 @@ public class PloginController extends BaseConstroller {
 		tmp.setSex(1);
 		tmp.setPassword(MD5.encode(user.getPassword()));
 		
-		Public_user obj = userService.insert(tmp);
+		int num = userService.insert(tmp);
 		
-		if(obj != null) {
+		if(num > 0) {
 			result = "success";
 		}
 		out.print(result);

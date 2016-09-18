@@ -69,12 +69,34 @@ public interface IPublicUserBankService {
 	
 	/**
 	 * 设置配额
+	 * @param userid
+	 * @param parentid
+	 * @param amount
+	 * @return
 	 * */
-	public int setQuota(String id);
+	public int setQuota(String userid,String parentid,float amount);
 	
 	/**
 	 * 转货款
+	 * @param userid
+	 * @param parentid
+	 * @param amount
+	 * @return
 	 * */
-	public int transfBuyBank(); 
+	public int transfBuyBank(String userid,String parentid,float amount); 
 	
+	/**
+	 * 返利
+	 * */
+	public int rebate();
+	
+	/**
+	 * 奖励
+	 * */
+	public int reward();
+	
+	/**
+	 * 平台售额
+	 * */
+	public int platformSale();
 }
