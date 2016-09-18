@@ -37,10 +37,11 @@ public interface IPublicUserService {
 	 * @param parentid			上级id
 	 * @param identity			级别代码
 	 * @param map				查询条件
+	 * @param showtype			显示结果类型。1，正常的。0：待关联的
 	 * @param pageBean			
 	 * @return
 	 */
-	public PageBean<Public_user> list(String parentid,String identity,Map<String, Object> map,PageBean<Public_user> pageBean);
+	public PageBean<Public_user> list(String parentid,String identity,Map<String, Object> map,int showtype,PageBean<Public_user> pageBean);
 	
 	
 	/**

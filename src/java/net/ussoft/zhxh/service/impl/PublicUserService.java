@@ -55,7 +55,7 @@ public class PublicUserService implements IPublicUserService{
 	 * @see net.ussoft.zhxh.service.IPublicUserService#list(java.lang.String, java.lang.String, java.util.Map, net.ussoft.zhxh.model.PageBean)
 	 */
 	@Override
-	public PageBean<Public_user> list(String parentid, String identity, Map<String, Object> map,
+	public PageBean<Public_user> list(String parentid, String identity, Map<String, Object> map,int showtype,
 			PageBean<Public_user> pageBean) {
 		StringBuffer sb = new StringBuffer();
 		
@@ -63,17 +63,37 @@ public class PublicUserService implements IPublicUserService{
 		
 		List<Object> values = new ArrayList<Object>();
 		
-		if (null != parentid && !"".equals(parentid) && !identity.equals("Z")) {
-			sb.append(" and l.parentid = ? and l.userid =u.id ");
-			values.add(parentid);
+		boolean isPage = true;
+		
+		if (showtype == 1) {
+			if (null != parentid && !"".equals(parentid) && !identity.equals("Z")) {
+				sb.append(" and l.parentid = ? and l.userid =u.id ");
+				values.add(parentid);
+			}
 		}
+		else if (showtype == 0) {
+			isPage = false;
+			if (null != parentid && !"".equals(parentid) && !identity.equals("Z")) {
+				sb.append(" and l.parentid = ? and l.userid <> u.id ");
+				values.add(parentid);
+			}
+			else if (identity.equals("C")){
+				sb.append(" and u.id not in (select userid from public_user_link) ");
+			}
+		}
+		
 		
 		if(null != identity && !"".equals(identity)) {
 			if (identity.equals("Z")) {
 				//获取普通会员
-				Public_user parentUser = userDao.get(parentid);
-				sb.append(" and u.belongcode=?");
-				values.add(parentUser.getCompanycode());
+				if (showtype == 0) {
+					sb.append(" and (u.belongcode='' or belongcode is null)");
+				}
+				else if (showtype == 1) {
+					Public_user parentUser = userDao.get(parentid);
+					sb.append(" and u.belongcode=? ");
+					values.add(parentUser.getCompanycode());
+				}
 			}
 			
 			//为了普通会员的移动。这里传入的identity可以是 A,C 。用来获取所有代理和门店
@@ -112,7 +132,16 @@ public class PublicUserService implements IPublicUserService{
 		//添加状态为-1。状态值说明：0：禁用（禁止登录），1：正常  -1：删除的。所有机构不真实删除，仅做删除标记。
 		sb.append(" and isopen <> -1 order by sort");
 		
-		return userDao.search(sb.toString(), values, pageBean);
+		if (isPage) {
+			pageBean = userDao.search(sb.toString(), values, pageBean);
+		}
+		else {
+			List<Public_user> userList = userDao.search(sb.toString(), values);
+			pageBean.setList(userList);
+			pageBean.setRowCount(userList.size());
+		}
+		
+		return pageBean;
 	}
 	
 	
@@ -419,18 +448,20 @@ public class PublicUserService implements IPublicUserService{
 				identity = tmp.getIdentity();
 			}
 			if (identity.equals("C")) {
-				//删除关系
-				sql = "DELETE FROM public_user_link WHERE parentid=? AND userid=?";
-				values.clear();
-				values.add(oldParentid);
-				values.add(userid);
-				int num = linkDao.del(sql, values);
-				
-				//冻结账户
-				Public_user_bank userBank = getUserBank(userid, oldParentid);
-				userBank.setBankstate(0);	//冻结账户
-				userBank.setBankstatetxt("冻结");
-				userBank = bankDao.update(userBank);
+				if (null != oldParentid && !"".equals(oldParentid)) {
+					//删除关系
+					sql = "DELETE FROM public_user_link WHERE parentid=? AND userid=?";
+					values.clear();
+					values.add(oldParentid);
+					values.add(userid);
+					int num = linkDao.del(sql, values);
+					
+					//冻结账户
+					Public_user_bank userBank = getUserBank(userid, oldParentid);
+					userBank.setBankstate(0);	//冻结账户
+					userBank.setBankstatetxt("冻结");
+					userBank = bankDao.update(userBank);
+				}
 				
 				//创建新的关系和账户
 				Public_user_link userlink = getUserLink(userid, newParentid);

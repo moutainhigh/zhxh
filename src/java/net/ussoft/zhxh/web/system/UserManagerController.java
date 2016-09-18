@@ -26,6 +26,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSON;
 
@@ -43,15 +44,14 @@ public class UserManagerController extends BaseConstroller{
 	
 	/**
 	 * 个人中心
-	 * @param identity 身份
-	 * @param parentid 上级
-	 * @param belongcode 所属机构代码
-	 * @param companycode 机构代码
-	 * @param mobile 手机号
+	 * @param parentid 	上级
+	 * @param identity 	身份
+	 * @param mapObj 	查询map
+	 * @param showtype	显示类型  1：正常  0：待关联
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/list",method=RequestMethod.POST)
-	public void list(String parentid,String identity,String mapObj,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void list(String parentid,String identity,String mapObj,int pageIndex,int pageSize,@RequestParam(value="showtype", defaultValue="1") int showtype,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -67,7 +67,7 @@ public class UserManagerController extends BaseConstroller{
 			searchMap = (Map<String, Object>) JSON.parse(mapObj);
 		}
 		
-		userService.list(parentid, identity, searchMap, pageBean);
+		userService.list(parentid, identity, searchMap,showtype, pageBean);
 //		//查看代理下店、会员
 //		if("A".equals(identity) && null != parentid){
 //			//代理下的店 - 通过关联关系查询其下的店

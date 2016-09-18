@@ -66,14 +66,14 @@
 	    t5.iconPosition = "top";
 	    dataList.push(t5);
 	    
-	    var t4 = {};
+	    /* var t4 = {};
 	    t4.id = "member";
 	    t4.pid = "right";
 	    t4.text = "全部普通会员管理";
 	    t4.iconCls = "member";
 	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userZList";
 	    t4.iconPosition = "top";
-	    dataList.push(t4);
+	    dataList.push(t4); */
 	    
 	    var t6 = {};
 	    t6.id = "member";
