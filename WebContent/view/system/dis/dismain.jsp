@@ -49,7 +49,7 @@
 	    var t3 = {};
 	    t3.id = "disstandard";
 	    t3.pid = "right";
-	    t3.text = "平台直属利益分配详细";
+	    t3.text = "平台直属利益分配设置";
 	    t3.iconCls = "setting";
 	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/dis/top_disstandard";
 	    t3.iconPosition = "top";

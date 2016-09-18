@@ -1,9 +1,14 @@
 package net.ussoft.zhxh.service.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
@@ -18,6 +23,7 @@ import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.MD5;
 import net.ussoft.zhxh.util.MakeQuerySql;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,170 +49,145 @@ public class PublicUserService implements IPublicUserService{
 		
 		return userDao.getAll();
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUserService#list(java.lang.String, java.lang.String, java.util.Map, net.ussoft.zhxh.model.PageBean)
+	 */
 	@Override
-	public PageBean<Public_user> list_shop(boolean flag,PageBean<Public_user> pageBean) {
+	public PageBean<Public_user> list(String parentid, String identity, Map<String, Object> map,
+			PageBean<Public_user> pageBean) {
+		StringBuffer sb = new StringBuffer();
 		
-		String sql = "SELECT DISTINCT(u.id),u.* FROM public_user u,public_user_link k WHERE u.id = k.userid AND u.identity = 'C' ";
+		sb.append("select DISTINCT(u.id),u.* from public_user u,public_user_link l where 1=1");
+		
 		List<Object> values = new ArrayList<Object>();
-		if(flag){
-			sql += " AND k.parentid = ?";	//直营店
-		}else{
-			sql += " AND k.parentid != ?";	//非直营店
+		
+		if (null != parentid && !"".equals(parentid) && !identity.equals("Z")) {
+			sb.append(" and l.parentid = ? and l.userid =u.id ");
+			values.add(parentid);
 		}
-		values.add("1"); //1代表直营店
-		return userDao.search(sql, values, pageBean);
-	}
-
-	@Override
-	public PageBean<Public_user> list(String parentid,String identity,PageBean<Public_user> pageBean) {
-		String sql = "SELECT u.* FROM public_user u,public_user_link k WHERE u.id = k.userid AND k.parentid = ?";
-		List<Object> values = new ArrayList<Object>();
-		values.add(parentid);
-		if(!"".equals(identity) && null != identity){
-			sql += " AND u.identity= ?";
-			values.add(identity);
-		}
-		return userDao.search(sql, values, pageBean);
-	}
-	
-	@Override
-	public PageBean<Public_user> list(Map<String, Object> map,PageBean<Public_user> pageBean) {
 		
-		Map<String, Object> resultMap  = MakeQuerySql.search(Public_user.class, map);
-		String sql = (String) resultMap.get("sql");
-		List<Object> values = (List<Object>) resultMap.get("values");
-		
-		return userDao.search(sql, values, pageBean);
-	}
-	
-	@Transactional("txManager")
-	@Override
-	public int update(Public_user user) {
-		// TODO Auto-generated method stub
-		Public_user obj = userDao.update(user);
-		if(obj != null)
-			return 1;
-		return 0;
-	}
-
-	@Transactional("txManager")
-	@Override
-	public int updateParent(String userid,String oldparentid,String newparentid) {
-		/*
-		 移动店时
-		 1.删除目前的关联关系
-		 2.冻结店和上级的账户
-		 3.和新的上级创建关联关系和账户 
-		 3.1、添加关系时判断是否存在，存在不做任何操作；（出现的情况-代理A和代理B同时应有店X，操作把代理A下的店X移动到代理B下）
-		 3.2、账户创建时要验证下是否已创建过，如创建过则不用再创建设置为冻结状态
-		 */
-		//删除关系
-		String del_linkSql = "DELETE FROM public_user_link WHERE parentid=? AND userid=?";
-		List<Object> del_values = new ArrayList<Object>();
-		del_values.add(oldparentid);
-		del_values.add(userid);
-		int num = linkDao.del(del_linkSql, del_values);
-		
-		//冻结账户
-		Public_user_bank userBank = getUserBank(userid, oldparentid);
-		userBank.setBankstate(0);	//冻结账户
-		userBank.setBankstatetxt("冻结");
-		userBank = bankDao.update(userBank);
-		
-		//创建新的关系和账户
-		Public_user_link userlink = getUserLink(userid, newparentid);
-		if(userlink == null){
-			//创建新的关系
-			 userlink = addlink(userid, newparentid);
-			//创建账户
-			Public_user_bank userbank = createbank(userid, newparentid);
-			if(num > 0 && userBank != null && userlink != null && userbank != null){
-				return 1;
+		if(null != identity && !"".equals(identity)) {
+			if (identity.equals("Z")) {
+				//获取普通会员
+				Public_user parentUser = userDao.get(parentid);
+				sb.append(" and u.belongcode=?");
+				values.add(parentUser.getCompanycode());
 			}
-		}
-		
-		return 0;
-	}
-	
-	@Transactional("txManager")
-	@Override
-	public int createlink(String userid,String parentid) {
-		/*
-		  1.关系存在不予操作
-		  2.关系不存在，账户不存在--同时创建关系和账户
-		  3.关系不存在，账户存在--创建关系，账户设置给冻结状态（由平台去处理）
-		 */
-		Public_user_link userlink = getUserLink(userid, parentid);
-		if(userlink == null){
-			//创建个人中心关联关系 （代理、店）
-			userlink = addlink(userid, parentid);
-			//创建账户
-			Public_user_bank userbank = createbank(userid, parentid);
-			if(userlink != null && userbank != null){
-				return 1;	//创建成功
-			}else{
-				return 0;	//创建失败
+			
+			//为了普通会员的移动。这里传入的identity可以是 A,C 。用来获取所有代理和门店
+			String[] identityArr = identity.split(",");
+			if (identityArr.length > 1) {
+				sb.append(" and (");
+				for (String str : identityArr) {
+					sb.append(" u.identity = ? or");
+					values.add(str);
+				}
+				
+				sb.delete(sb.length()-3, sb.length());
+		        sb.append(")");
 			}
+			else {
+				sb.append(" and u.identity = ?");
+				values.add(identity);
+			}
+			
 		}
 		
-		return -1; //已存在关联关系
-	}
-	
-	@Transactional("txManager")
-	@Override
-	public int delete(String id) {
-		String[] ids = id.split(",");
-		for(int i=0;i<ids.length;i++){
-			userDao.del(ids[i]);
+		if (null != map && map.size() > 0) {
+			Set<Entry<String, Object>> set=map.entrySet();
+	        Iterator iterator=set.iterator();
+	        sb.append(" and (");
+	        for (int i = 0; i < set.size(); i++) {
+	            Map.Entry mapEntry=(Entry) iterator.next();
+	            if (null != mapEntry.getValue() && !"".equals(mapEntry.getValue().toString())) {
+	            	sb.append(" u."+mapEntry.getKey()+" like '%"+mapEntry.getValue()+"%' or");
+	            }
+	        }
+	        sb.delete(sb.length()-3, sb.length());
+	        sb.append(")");
 		}
-		return 1;
+		
+		//添加状态为-1。状态值说明：0：禁用（禁止登录），1：正常  -1：删除的。所有机构不真实删除，仅做删除标记。
+		sb.append(" and isopen <> -1 order by sort");
+		
+		return userDao.search(sb.toString(), values, pageBean);
 	}
-
-	@Transactional("txManager")
-	@Override
-	public Public_user insert(Public_user user) {
-		userDao.save(user);
-		return user;
-	}
+	
 	
 	@Transactional("txManager")
 	@Override
-	public int insert(Public_user user,String parentid) {
+	public int insert(Public_user user) {
 		//创建会员信息
 		user = userDao.save(user);
 		
-		//创建个人中心关联关系 （代理、店）
-		Public_user_link userLink = new Public_user_link();
-		userLink.setId(UUID.randomUUID().toString());
-		userLink.setUserid(user.getId());
-		userLink.setParentid(parentid);
-		userLink = linkDao.save(userLink);
-		
-		//创建个人账户-（代理、店）
-		Public_user_bank userBank = createbank(user.getId(), parentid);
-		if(user != null && userLink != null && userBank != null){
-			return 1;
+		if (null != user.getParentid() && !"".equals(user.getParentid())) {
+			//创建个人中心关联关系 （代理、店）
+			Public_user_link userLink = new Public_user_link();
+			userLink.setId(UUID.randomUUID().toString());
+			userLink.setUserid(user.getId());
+			userLink.setParentid(user.getParentid());
+			userLink = linkDao.save(userLink);
+			
+			//创建个人账户-（代理、店）
+//			Public_user_bank userBank = createbank(user.getId(), user.getParentid());
+//			if(user != null && userLink != null && userBank != null){
+//				return 1;
+//			}
 		}
-		return 0;
+		//TODO 确认普通会员是否有金额帐户
+		//创建个人账户-（代理、店）
+		if (user.getIdentity().equals("Z")) {
+			createbank(user.getId(), "1");
+		}
+		else {
+			createbank(user.getId(), user.getParentid());
+		}
+		
+		return 1;
 	}
-
+	
 	@Override
 	public boolean checkPhoneNum(String phoneNum) {
 		List<Object> values = new ArrayList<Object>();
 		values.add(phoneNum);
-		String sql = "select id from public_user where phonenumber=?";
+		String sql = "select id from public_user where phonenumber=? and isopen <> -1";
 		List<Public_user> list = userDao.search(sql, values);
 		if(list.size() > 0)
 			return true;
 		return false;
 	}
-
+	
+	@Transactional("txManager")
+	@Override
+	public int update(Public_user user) {
+		if (!user.getIdentity().equals("Z")) {
+			//获取旧数据，判断手机号码是否更改，如果更改了就要批量更改普通会员的所属店代码
+			Public_user tmp = userDao.get(user.getId());
+			if (!user.getPhonenumber().equals(tmp.getPhonenumber())) {
+				String sql = "update public_user set belongcode=? where belongcode=? and isopen <> -1";
+				List<Object> values = new ArrayList<Object>();
+				values.add(user.getPhonenumber());
+				values.add(tmp.getPhonenumber());
+				userDao.update(sql, values);
+			}
+		}
+		
+		Public_user obj = userDao.update(user);
+		if(obj != null) {
+			
+			return 1;
+		}
+			
+		return 0;
+	}
+	
 	@Override
 	public Public_user getByPhoneNum(String phoneNum) {
 		List<Object> values = new ArrayList<Object>();
 		values.add(phoneNum);
-		String sql = "select * from public_user where phonenumber=?";
+		String sql = "select * from public_user where phonenumber=? and isopen <> -1";
 		List<Public_user> list = userDao.search(sql, values);
 		if(list.size() > 0){
 			return list.get(0);
@@ -214,18 +195,101 @@ public class PublicUserService implements IPublicUserService{
 		
 		return null;
 	}
-
+	
+	@Transactional("txManager")
 	@Override
-	public Public_user login(String username,String password) {
-		Public_user user = getByPhoneNum(username);
-		if (user == null ) {
-			return null;
+	public int delete(String id) {
+		String[] ids = id.split(",");
+		
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		for(int i=0;i<ids.length;i++){
+			//不真实删除，做isopen为-1 表示删除
+			Public_user user = userDao.get(ids[i]);
+			user.setIsopen(-1);
+			userDao.update(user);
+			
+			//判断机构类型。
+			//如果是代理，将下级所有店及普通会员设置取消关联。
+			if (!user.getIdentity().equals("Z")) {
+				if (user.getIdentity().equals("A")) {
+					sb.setLength(0);
+					values.clear();
+					sb.append("delete from public_user_link where parentid=?");
+					values.add(user.getId());
+					linkDao.del(sb.toString(), values);
+				}
+				
+				//取消删除机构与普通会员的关联。
+				sb.setLength(0);
+				values.clear();
+				sb.append("update public_user set belongcode='' where belongcode=?");
+				values.add(user.getCompanycode());
+				userDao.update(sb.toString(), values);
+			}
 		}
-		// 将输入的密码与Pojo里的密码MD5后对比，如果不匹配，说明密码不对
-		if (!MD5.encode(password).equals(user.getPassword())) {
-			return null;
+		return 1;
+	}
+	
+	@Override
+	public String checkDel(String ids) {
+		String[] idArr = ids.split(",");
+		String sql = "";
+		String companycode = "";
+		List<Object> values = new ArrayList<Object>();
+		for (String id : idArr) {
+			Public_user user = userDao.get(id);
+			companycode = user.getCompanycode();
+			sql = "select count(id) from public_user where belongcode = ?";
+			values.clear();
+			values.add(companycode);
+			
+			int num = userDao.getInt(sql, values);
+			System.out.println(num+"=================");
+			
+			
+			
+			if (num > 0) {
+				return companycode;
+			}
 		}
-		return user;
+		return "";
+	}
+
+	
+	@Transactional("txManager")
+	@Override
+	public void initUpdatePass(String id) {
+		String[] ids = id.split(",");
+		for(int i=0;i<ids.length;i++){
+			//不真实删除，做isopen为-1 表示删除
+			Public_user user = userDao.get(ids[i]);
+			user.setPassword(MD5.encode("123456"));
+			userDao.update(user);
+//			userDao.del(ids[i]);
+		}
+		
+	}
+	
+	@Transactional("txManager")
+	@Override
+	public int createlink(String parentid,String userids) {
+		/*
+		  1.关系存在不予操作
+		  2.关系不存在，账户不存在--同时创建关系和账户
+		  3.关系不存在，账户存在--创建关系，账户设置给冻结状态（由平台去处理）
+		 */
+		String[] ids = userids.split(",");
+		for (String id : ids) {
+			Public_user_link userlink = getUserLink(id, parentid);
+			if(userlink == null){
+				//创建个人中心关联关系 （代理、店）
+				userlink = addlink(id, parentid);
+				//创建账户
+				Public_user_bank userbank = createbank(id, parentid);
+			}
+		}
+		return 1; //已存在关联关系
 	}
 	
 	/**
@@ -287,10 +351,167 @@ public class PublicUserService implements IPublicUserService{
 			userbank.setId(UUID.randomUUID().toString());
 			userbank.setUserid(userid);
 			userbank.setParentid(parentid);
-			userbank.setBankstate(1); //账户启用
-			userbank.setBankstatetxt("正常");
+//			userbank.setBankstate(1); //账户启用
+//			userbank.setBankstatetxt("正常");
 			userbank = bankDao.save(userbank);
 		}
 		return userbank;
 	}
+	
+	/*
+	 * 
+	 */
+	@Transactional("txManager")
+	@Override
+	public void outLink(String parentid, String userids) {
+		String[] idsArr = userids.split(",");
+		
+		List<String> idsList = Arrays.asList(idsArr);
+		
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		
+		//判断是什么类型的接触
+		Public_user tmp = userDao.get(idsArr[0]);
+		if (tmp.getIdentity().equals("C")) {
+			sb.append("delete from public_user_link where parentid=? and userid in (");
+			values.add(parentid);
+			
+			Serializable[] ss=new Serializable[idsList.size()];
+			Arrays.fill(ss, "?");
+			sb.append(StringUtils.join(ss,','));
+			sb.append(")");
+			values.addAll(idsList);
+			
+			linkDao.del(sb.toString(), values);
+		}
+		else if (tmp.getIdentity().equals("Z")) {
+			sb.append("update public_user set belongcode = '' where id in (");
+			values.clear();
+			Serializable[] ss=new Serializable[idsList.size()];
+			Arrays.fill(ss, "?");
+			sb.append(StringUtils.join(ss,','));
+			sb.append(")");
+			values.addAll(idsList);
+			
+			userDao.update(sb.toString(), values);
+		}
+	}
+	
+	@Transactional("txManager")
+	@Override
+	public int userMove(String userids,String oldParentid,String newParentid) {
+		/*
+		 移动店时
+		 1.删除目前的关联关系
+		 2.冻结店和上级的账户
+		 3.和新的上级创建关联关系和账户 
+		 3.1、添加关系时判断是否存在，存在不做任何操作；（出现的情况-代理A和代理B同时应有店X，操作把代理A下的店X移动到代理B下）
+		 3.2、账户创建时要验证下是否已创建过，如创建过则不用再创建设置为冻结状态
+		 */
+		String[] ids = userids.split(",");
+		String identity = "";
+		String sql = "";
+		List<Object> values = new ArrayList<Object>();
+		for (String userid : ids) {
+			if (identity.equals("")) {
+				Public_user tmp = userDao.get(userid);
+				identity = tmp.getIdentity();
+			}
+			if (identity.equals("C")) {
+				//删除关系
+				sql = "DELETE FROM public_user_link WHERE parentid=? AND userid=?";
+				values.clear();
+				values.add(oldParentid);
+				values.add(userid);
+				int num = linkDao.del(sql, values);
+				
+				//冻结账户
+				Public_user_bank userBank = getUserBank(userid, oldParentid);
+				userBank.setBankstate(0);	//冻结账户
+				userBank.setBankstatetxt("冻结");
+				userBank = bankDao.update(userBank);
+				
+				//创建新的关系和账户
+				Public_user_link userlink = getUserLink(userid, newParentid);
+				if(userlink == null){
+					//创建新的关系
+					 userlink = addlink(userid, newParentid);
+					//创建账户
+					createbank(userid, newParentid);
+				}
+			}
+			else if (identity.equals("Z")) {
+				//如果移动的是普通会员.将belongcode设置为新的就可以
+				Public_user newParent = userDao.get(newParentid);
+				String newCode = newParent.getCompanycode();
+				
+				sql = "update public_user set belongcode = ? where id =?";
+				values.clear();
+				values.add(newCode);
+				values.add(userid);
+				userDao.update(sql, values);
+			}
+		}
+		
+		
+		return 1;
+	}
+	
+	
+	
+	//========以下不确定要
+
+	@Override
+	public PageBean<Public_user> list_shop(boolean flag,PageBean<Public_user> pageBean) {
+		
+		String sql = "SELECT DISTINCT(u.id),u.* FROM public_user u,public_user_link k WHERE u.id = k.userid AND u.identity = 'C' ";
+		List<Object> values = new ArrayList<Object>();
+		if(flag){
+			sql += " AND k.parentid = ?";	//直营店
+		}else{
+			sql += " AND k.parentid != ?";	//非直营店
+		}
+		values.add("1"); //1代表直营店
+		return userDao.search(sql, values, pageBean);
+	}
+
+	@Override
+	public PageBean<Public_user> list(String parentid,String identity,PageBean<Public_user> pageBean) {
+		String sql = "SELECT u.* FROM public_user u,public_user_link k WHERE u.id = k.userid AND k.parentid = ?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(parentid);
+		if(!"".equals(identity) && null != identity){
+			sql += " AND u.identity= ?";
+			values.add(identity);
+		}
+		return userDao.search(sql, values, pageBean);
+	}
+	
+	@Override
+	public PageBean<Public_user> list(Map<String, Object> map,PageBean<Public_user> pageBean) {
+		
+		Map<String, Object> resultMap  = MakeQuerySql.search(Public_user.class, map);
+		String sql = (String) resultMap.get("sql");
+		List<Object> values = (List<Object>) resultMap.get("values");
+		
+		return userDao.search(sql, values, pageBean);
+	}
+	
+	
+	
+	@Override
+	public Public_user login(String username,String password) {
+		Public_user user = getByPhoneNum(username);
+		if (user == null ) {
+			return null;
+		}
+		// 将输入的密码与Pojo里的密码MD5后对比，如果不匹配，说明密码不对
+		if (!MD5.encode(password).equals(user.getPassword())) {
+			return null;
+		}
+		return user;
+	}
+
+
 }

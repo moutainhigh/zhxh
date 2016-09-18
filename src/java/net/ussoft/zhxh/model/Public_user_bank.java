@@ -25,6 +25,22 @@ public class Public_user_bank {
 	private Integer bankstate;				//帐户状态。0：冻结  1：正常
 	private String bankstatetxt;			//帐户状态中文。用于前台显示
 	
+	public Public_user_bank() {
+		this.setIncomebank(0f);
+		this.setCostbank(0f);
+		this.setTakenbank(0f);
+		this.setSellbank(0f);
+		this.setHavebank(0f);
+		this.setQuotabank(0f);
+		this.setDepositbank(0f);
+		this.setSelltakenbank(0f);
+		this.setRebatesbank(0f);
+		this.setBonusesbank(0f);
+		this.setBonusestakenbank(0f);
+		this.setBankstate(0);
+		this.setBankstatetxt("冻结");
+	}
+	
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

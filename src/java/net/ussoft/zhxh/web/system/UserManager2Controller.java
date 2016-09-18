@@ -21,6 +21,8 @@ import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.service.IPublicUser2Service;
+import net.ussoft.zhxh.util.Constants;
+import net.ussoft.zhxh.util.FileOperate;
 
 @Controller
 @RequestMapping(value="userManager2")
@@ -45,6 +47,42 @@ public class UserManager2Controller extends BaseConstroller{
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
+	
+//	@RequestMapping(value="/save",method=RequestMethod.POST)
+//	public void save(String objs,String savetype,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+//		
+//		response.setContentType("text/xml;charset=UTF-8");
+//		response.setCharacterEncoding("UTF-8");
+//		PrintWriter out = response.getWriter();
+//		
+//		String result = "success";
+//		
+//		if ("".equals(objs) || objs == null) {
+//			out.print(result);
+//			return;
+//		}
+//		//
+//		List<Map<String, String>> rows = (List<Map<String, String>>) JSON.parse(objs);
+//		
+//		for(int i=0,l=rows.size(); i<l; i++){
+//			Map<String,String> row = (Map<String,String>)rows.get(i);
+//	  		  
+//			String id = row.get("id") != null ? row.get("id").toString() : "";
+//	        String state = row.get("_state") != null ? row.get("_state").toString() : "";
+//	        //新增：id为空，或_state为added
+//	        if(state.equals("added") || id.equals("")) {
+//	        	insert(row,savetype);
+//	        }
+//	        else if (state.equals("removed") || state.equals("deleted")) {
+//	        	boolean isok = delete(id,savetype);
+//	        }
+//	        //更新：_state为空，或modified
+//	        else if (state.equals("modified") || state.equals(""))	 {
+//	            update(row,savetype);
+//	        }
+//	    }
+//		out.print(result);
+//	}
 	
 	
 	//===========机构与品牌begin=========

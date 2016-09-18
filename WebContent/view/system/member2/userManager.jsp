@@ -44,45 +44,36 @@
 	    t2.pid = "right";
 	    t2.text = "代理管理";
 	    t2.iconCls = "member";
-	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userList";
+	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/agentList";
 	    t2.iconPosition = "top";
 	    dataList.push(t2);
 	    
-	    /* var t3 = {};
+	    var t3 = {};
 	    t3.id = "member";
 	    t3.pid = "right";
 	    t3.text = "直营店管理";
 	    t3.iconCls = "member";
-	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userCList";
+	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/shopList&param={identity:'A',parentid:'1'}";
 	    t3.iconPosition = "top";
-	    dataList.push(t3); */
+	    dataList.push(t3);
     
 	    var t5 = {};
 	    t5.id = "member";
 	    t5.pid = "right";
-	    t5.text = "全部门店管理";
+	    t5.text = "代理店管理";
 	    t5.iconCls = "member";
-	    t5.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userCList";
+	    t5.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/shopList&param={identity:'C',parentid:''}";
 	    t5.iconPosition = "top";
 	    dataList.push(t5);
 	    
 	    var t4 = {};
 	    t4.id = "member";
 	    t4.pid = "right";
-	    t4.text = "全部普通会员管理";
+	    t4.text = "普通会员管理";
 	    t4.iconCls = "member";
-	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userZList";
+	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/memberList";
 	    t4.iconPosition = "top";
 	    dataList.push(t4);
-	    
-	    var t6 = {};
-	    t6.id = "member";
-	    t6.pid = "right";
-	    t6.text = "待关联机构管理";
-	    t6.iconCls = "member";
-	    t6.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/userXList";
-	    t6.iconPosition = "top";
-	    dataList.push(t6);
 	    
     	$(function(){
     		mini.parse();

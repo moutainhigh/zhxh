@@ -34,7 +34,7 @@ public interface IPublicUser2Service {
 	 * @param Public_user
 	 * @return 
 	 * */
-	public Public_user insert(Public_user user);
+	public boolean insert(Public_user user);
 	
 	/**
 	 * 修改

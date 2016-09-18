@@ -48,6 +48,41 @@ public class MakeQuerySql {
         resultMap.put("values", values);
         return resultMap;
 	}
+	
+	public static <T> Map<String, Object> search_like(Class<T> typeClass,Map<String, Object> map){
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		Table table = AnnotationUtils.findAnnotation(typeClass, Table.class);
+		if(table==null){
+			throw new RuntimeException(typeClass+"没有定义@table");
+		}
+		String tableName = table.name();
+		
+//		String tablename = typeClass.getName().substring(
+//                typeClass.getName().lastIndexOf(".") + 1);
+		
+		StringBuffer sql=new StringBuffer("select * from ");
+		sql.append(tableName);
+		if (map.size()!=0) {
+			sql.append(" t where 1=1");//后面只需拼接and条件
+		}
+		List<Object> values = new ArrayList<Object>();
+		
+		Set<Entry<String, Object>> set=map.entrySet();
+		Iterator iterator=set.iterator();
+		for (int i = 0; i < set.size(); i++) {
+			Map.Entry mapEntry=(Entry) iterator.next();
+			if (null != mapEntry.getValue() && !"".equals(mapEntry.getValue().toString())) {
+//				sql.append(" and t."+mapEntry.getKey()+" ?");
+				sql.append(" and t."+mapEntry.getKey()+" like '%?%");
+				values.add(mapEntry.getValue());
+			}
+		}
+		resultMap.put("sql", sql.toString());
+		resultMap.put("values", values);
+		return resultMap;
+	}
 
 	/*private static String search(Class typeClass,Map<String, Object> map){
 		

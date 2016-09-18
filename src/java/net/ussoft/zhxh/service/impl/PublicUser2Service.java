@@ -98,13 +98,15 @@ public class PublicUser2Service implements IPublicUser2Service{
 		sb.append(")");
 		values.addAll(idsList);
 		
+		sb.append(" order by sort");
+		
 		return userDao.search(sb.toString(), values);
 	}
-
+	
 	@Override
-	public Public_user insert(Public_user user) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean insert(Public_user user) {
+		
+		return false;
 	}
 
 	@Override

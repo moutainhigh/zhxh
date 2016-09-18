@@ -33,6 +33,17 @@ public interface IPublicUserService {
 	public List<Public_user> list();
 	
 	/**
+	 * 获取个人中心数据。
+	 * @param parentid			上级id
+	 * @param identity			级别代码
+	 * @param map				查询条件
+	 * @param pageBean			
+	 * @return
+	 */
+	public PageBean<Public_user> list(String parentid,String identity,Map<String, Object> map,PageBean<Public_user> pageBean);
+	
+	
+	/**
 	 * 个人中心关联关系查询
 	 * @param parentid
 	 * @param pageBean
@@ -54,19 +65,12 @@ public interface IPublicUserService {
 	public PageBean<Public_user> list_shop(boolean blnshop,PageBean<Public_user> pageBean);
 	
 	/**
-	 * 添加
-	 * @param Public_user
-	 * @return 
-	 * */
-	public Public_user insert(Public_user user);
-	
-	/**
 	 * 添加 - 代理、店
 	 * @param Public_user
 	 * @param parentid
 	 * @return 
 	 * */
-	public int insert(Public_user user,String parentid);
+	public int insert(Public_user user);
 	
 	/**
 	 * 修改
@@ -76,13 +80,26 @@ public interface IPublicUserService {
 	public int update(Public_user user);
 	
 	/**
+	 * 初始化机构密码
+	 * @param id
+	 */
+	public void initUpdatePass(String id);
+	
+	/**
+	 * 解除关联关系
+	 * @param parentid
+	 * @param userids
+	 */
+	public void outLink(String parentid,String userids);
+	
+	/**
 	 * 修改其上级机构
 	 * @param userid
 	 * @param oldparentid
 	 * @param newparentid
 	 * @return 
 	 * */
-	public int updateParent(String userid,String oldparentid,String newparentid);
+	public int userMove(String userids,String oldParentid,String newParentid);
 	
 	/**
 	 * 代理添加店-创建关联关系
@@ -90,7 +107,7 @@ public interface IPublicUserService {
 	 * @param parentid
 	 * @return
 	 * */
-	public int createlink(String userid,String parentid);
+	public int createlink(String parentid,String userids);
 	
 	/**
 	 * 删除
@@ -98,6 +115,13 @@ public interface IPublicUserService {
 	 * @return
 	 * */
 	public int delete(String id);
+	
+	/**
+	 * 检查店是否能删除。主要是为代理管理页面，店没有显示包含的普通会员，所以要ajax判断
+	 * @param ids
+	 * @return
+	 */
+	public String checkDel(String ids);
 	
 	/**
 	 * 验证手机号是否已存在

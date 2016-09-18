@@ -23,7 +23,7 @@
 	<%@include file="/view/pc/header.jsp" %>
 	
 	<div class="HTML-con dzyf">
-	    <div class="new-content">${story.memo}</div>
+	    <div class="new-content" style="line-height:20px;text-indent:2em">${story.memo}</div>
 	</div>
 	
 	<!--页脚-->

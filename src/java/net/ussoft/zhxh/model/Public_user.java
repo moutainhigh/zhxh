@@ -35,10 +35,50 @@ public class Public_user {
 	private String wechar; 			//微信号码
 	private String rank; 			//代理商或店的级别,存文本，仅仅显示，没有实际意义。
 	
+	private int sort;
+	
 	//临时字段
 	private String parentid; 		//存储机构（代理或店）的直属上级id
 	
 	private String createtime;		//创建时间
+	
+	public Public_user() {
+		this.id = "";
+		this.usercode = "";
+		this.username = "";
+		this.phonenumber = "";
+		this.identity = "";
+		this.identitymemo = "";
+		this.dianid = "";
+		this.shidaiid = "";
+		this.shengdaiid = "";
+		this.tuijianid = "";
+		this.tuijianman = "";
+		this.tuijiansort = "";
+		this.setreturn = 0;
+		this.isopen = 0;
+		this.password = "";
+		this.uid = "";
+		this.sex = 0;
+		this.birthday = "";
+		this.companyname = "";
+		this.companypath = "";
+		this.belongcode = "";
+		this.companycode = "";
+		this.wechar = "";
+		this.rank = "";
+		this.sort = 1;
+		this.parentid = "";
+		this.createtime = "";
+	}
+//	public Public_user {
+//		this.setUsercode("");
+//		this.setUsername("");
+//		this.setPhonenumber("");
+//		this.setIdentity("");
+//		this.setIdentitymemo("");
+//		this.set
+//	}
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -188,6 +228,14 @@ public class Public_user {
 	}
 	
 	
+	
+	
+	public int getSort() {
+		return sort;
+	}
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
 	public String getCreatetime() {
 		return createtime;
 	}

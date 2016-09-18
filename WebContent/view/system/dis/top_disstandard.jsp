@@ -40,7 +40,7 @@
       	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
       	                { field: "username",name:"username", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "真实姓名",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
       	                { field: "phonenumber",name:"phonenumber", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "手机号码",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	              	{ field: "birthday",name:"birthday",dateFormat:"yyyy-MM-dd",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "性别",vtype:"required",editor:{ type: "datepicker"} },
+      	              	{ field: "birthday",name:"birthday",dateFormat:"yyyy-MM-dd",width: 80, headerAlign: "center", align:"center",allowSort: false, header: "生日",vtype:"required",editor:{ type: "datepicker"} },
       	              	{ field: "sex",name:"sex",type:"comboboxcolumn",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "性别",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"女"},{"id":"1","text":"男"}] } },
       	              	{ field: "identitymemo",name:"identitymemo",width: 100, headerAlign: "center", align:"center",allowSort: false, header: "身份" },
       	                { field: "companyname",name:"companyname",width: 100, headerAlign: "center", align:"center",allowSort: false, header: "机构名称" ,vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25}},
@@ -1137,32 +1137,6 @@
 	    }
 		
 		
-		//以下不确定要
-		function saveT() {
-            form.validate();
-            if (form.isValid() == false) return;
-
-            //提交数据
-            var data = form.getData();      
-            var json = mini.encode(data);
-			
-			$.ajax({
-				async : false,
-				url : "${pageContext.request.contextPath}/dis/saveDisStandard.htmls",
-				data : {
-					'objs' : json
-				},
-				type : "post",
-				dataType : "text",
-				success : function(text) {
-					parent.parent.layer.msg("保存完毕。",{icon:6});
-					inputModel();
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					mini.alert(jqXHR.responseText);
-				}
-			});
-		}
 	</script>
 </head>
 <body>
@@ -1270,7 +1244,7 @@
 						            <tbody>
 							             <tr>
 							                 <td style="width:100%;">
-							                 	<span id="pid" style="padding-left:5px;">代理列表</span>
+							                 	<span id="pid" style="padding-left:5px;">直营店列表</span>
 							                 </td>
 							                 <td style="white-space:nowrap;">
 							                 	<a class="mini-menubutton" plain="true" menu="#grid_c_updatedis_c" name="auth">按机构批量修改[该机构的所有采购商品批量修改]</a>
