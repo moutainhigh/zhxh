@@ -447,11 +447,16 @@ public abstract class BaseDaoMysqlImpl<T,ID> extends JdbcDaoSupport implements B
 //		}
 		
 		//因传入的sql是带select的，原外面套了一层select count 这样效率非常低。以下改为解析sql，获取表名和where后面的sql，拼接
-		String regex = "(?<=from)";
+		/*String regex = "(?<=from)";
         String[] strs = sql.toLowerCase().split(regex);
         
         StringBuilder sb=new StringBuilder("select count(0) from ");
-		sb.append(strs[1]);
+		sb.append(strs[1]);*/
+		
+		String regex = " from ";
+        sql = sql.substring(sql.indexOf(regex),sql.length());
+        StringBuilder sb=new StringBuilder("select count(0) ");
+		sb.append(sql);
 		
 //		StringBuilder sb = new StringBuilder();
 //		sb.append("select count(*) from ").append(this.tableName).append(" ").append(sql);
