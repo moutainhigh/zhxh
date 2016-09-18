@@ -454,7 +454,8 @@ public abstract class BaseDaoMysqlImpl<T,ID> extends JdbcDaoSupport implements B
 		sb.append(strs[1]);*/
 		
 		String regex = " FROM ";
-        sql = sql.toUpperCase().substring(sql.indexOf(regex),sql.length());
+		sql = sql.toUpperCase();
+        sql = sql.substring(sql.indexOf(regex),sql.length());
         StringBuilder sb=new StringBuilder("select count(0) ");
 		sb.append(sql);
 		
