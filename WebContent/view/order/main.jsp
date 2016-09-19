@@ -14,12 +14,6 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/view/order/js/jquery.layout/jquery-ui-latest.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/view/order/js/jquery.layout/jquery.layout-latest.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/view/order/js/commonApp.js"></script>
-    <%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/admin.css">
-    <script src="${pageContext.request.contextPath}/js/boot.js" type="text/javascript"></script> 
-    <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
-    <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
-    <script src="${pageContext.request.contextPath}/js/pintuer/admin.js"></script> --%>
     <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
     
     <!-- <link type="image/x-icon" href="/favicon.ico" rel="shortcut icon" />
@@ -34,7 +28,7 @@
     
     <script type="text/javascript">
 		var myLayout;
-		
+		var curInd = -1;
 		$(function() {
 			myLayout = $('body').layout({
 				west__size:					96
@@ -49,7 +43,28 @@
 			});
 			
 			$(".ui-layout-west").css("z-index",999);
+			
+			$(".side-menu  a").click(function(){
+    			var funcode = $(this).attr("funcode");
+    			curInd = $(this).attr("curInd");
+    			var url = funcode;
+    			if (url == 'index') {
+    				$("#mainFrame").attr("src","${pageContext.request.contextPath}/view/system/h.jsp");
+    			}
+    			else {
+    				$("#mainFrame").attr("src",url);
+    			}
+    			Public.Ui.Menu.curInd = curInd;
+    			
+    			/* $("#navbar1 li").removeClass("active");
+    			$(this).parent().addClass("active"); */
+    		});
 		})
+		
+		function removeMenuCurrent() {
+			$(".side-menu-li").removeClass("current");
+			Public.Ui.Menu.curInd = -1;
+		}
 		
 		function quit() {
 			if(confirm("真的要退出系统吗?")) {
@@ -63,11 +78,11 @@
 	<div class="ui-layout-west">
 		<div class="side-wrap">
 			<h1 class="logo">
-				<a title=" 易订货, 让生意更简单！" href="#"><img src="${pageContext.request.contextPath}/view/order/images/logo.png" alt="易订货"></a>
+				<a title="众恒信和, 让美丽更简单！" href="#"><img src="${pageContext.request.contextPath}/view/order/images/logo.png" alt="众恒信和"></a>
 			</h1>
 			<div class="side-menu">
 				<ul>
-					<li class="pr side-menu-li li-crop menu1 current" id="order" code="WBM_ORDER">
+					<li class="pr side-menu-li li-crop menu1" id="order" code="WBM_ORDER">
 						<a class="order side-menu-a new-con-p" target="mainFrame" href="http://www.sina.com.cn">
 							<i class="icon"></i>订单
 						</a>
@@ -86,13 +101,13 @@
 						</div>
 					</li>
 					<li class="pr side-menu-li li-crop menu1" id="customer" code="WBM_CUSTOMER">
-						<a class="customer side-menu-a new-con-p" href="http://corp.dinghuo123.com/customer/customer?action=list&amp;customerStatus=0">
+						<a class="customer side-menu-a new-con-p" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">
 							<i class="icon"></i>客户
 						</a>
 						<div class="float-menu" style="top: 0px;">
 							<ul class="sec-nav">
 								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/customer/customer?action=list&amp;customerStatus=0">客户列表</a>
+									<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">客户列表</a>
 								</li>
 								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
 									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/customer/type?action=list">客户级别设置</a>

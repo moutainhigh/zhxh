@@ -16,7 +16,7 @@
 					<li>
 						<a class="" href="javascript:;">
 							<span><img src="${pageContext.request.contextPath}/images/user_man.png" width="22" class="radius-circle"></span>
-							我
+							${sessionScope.pc_user_sessiion.username == ""?sessionScope.pc_user_sessiion.companyname:sessionScope.pc_user_sessiion.username  } 
 							<span class="downward"></span>
 						</a>
 						<ul class="drop-menu">

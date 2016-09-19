@@ -14,7 +14,7 @@ body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
 	margin: 0;
 	padding: 0;
 	border: 0;
-	font-size: 14px;
+	font-size: 12px;
 	font: inherit;
 	vertical-align: baseline
 }
@@ -25,7 +25,7 @@ article, aside, details, figcaption, figure, dialog, footer, header,
 }
 
 body {
-	font-size: 14px;
+	font-size: 12px;
 	color: #333;
 	background: #fff;
 	font-family: "Microsoft YaHei", "simsun", "Helvetica Neue", Arial,

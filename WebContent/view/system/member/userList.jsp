@@ -411,7 +411,7 @@
 	        }
 	    	
 	        var objs = tmpGrid.getChanges();
-	        var json = mini.encode(objs,"yyyy-MM-dd HH:mm:ss");
+	        var json = mini.encode(objs,"yyyy-MM-dd");
 	        if (json.length == 2) {
 	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:3});
 	        	return;

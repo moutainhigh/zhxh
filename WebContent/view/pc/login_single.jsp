@@ -39,6 +39,10 @@
 <script>
 	$('#${id}').addClass('cur');
 	
+	if (window != top) {
+		top.location.href = location.href;
+	}
+	 
 	$(function(){
 		$('b.zhuce').click(function(){
 	    	//$('.denglu').fadeOut(200);
