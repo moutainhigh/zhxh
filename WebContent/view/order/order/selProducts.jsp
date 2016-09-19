@@ -29,6 +29,9 @@
     	.table th{text-align: center}
     </style>
     <script type="text/javascript">
+    	var aaa = "asdf";
+    	var resultJson = [];
+    	var objs;
     	$(function(){
     		//品牌
     		brand();
@@ -68,6 +71,7 @@
                 type: "post",
                 dataType:"json",
                 success: function (json) {
+                	objs = json;
                	 	$("#orderList").setTemplateElement("Template-List-user-show");
 	                $("#orderList").processTemplate(json.data);
                 },
@@ -75,6 +79,13 @@
                     alert(jqXHR.responseText);
                 }
            });
+    	}
+    	function aa(){
+    		var dd = {};
+    		dd.id = "1";
+    		dd.name = "aaa";
+    		resultJson.push(dd);
+    		return resultJson;
     	}
     </script>
 </head>

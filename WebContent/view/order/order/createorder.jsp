@@ -49,7 +49,7 @@
     </style>
     <script type="text/javascript">
     	$(function(){
-    		
+    		var ddd = "asdf";
     		//
     		$("#selPro").click(function(){
     			var comp = $("#f_comp").val();
@@ -66,15 +66,35 @@
     				    fix: false, //不固定
     				    maxmin: true,
     				    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/selProducts&param={'parentid':'"+comp+"'}",
-    				    btn: ['继续弹出', '全部关闭'] //只是为了演示
-    				  ,yes: function(){
-    				    alert(12); 
-    				  }
-    				  ,btn2: function(){
-    				    layer.closeAll();
-    				  },
+    				    btn: ['继续弹出', '全部关闭'], //只是为了演示
+    				  	yes: function(index,layero){
+    				  		var win = parent.window['layui-layer-iframe' + index].window;
+    				  		alert(win.aa()[0].name);
+    				  		return;
+    				  		 var smallSrc = layer.getChildFrame('#ImgUrl', index).attr("src");
+    				  		 
+    				  		//var iframeWin = window[layero.find('iframe')[0]]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+    				  		//alert(iframeWin);
+    				  		//alert(doc.prototype.toString.apply(o) );
+    				  		/* var id = "";
+    				  		var ids = "";
+    						if (id != "") {
+    							ids = id;
+    						}else {
+    				       	    $("input[name='id']").each(function(index,element){
+    				       	    	if(element.checked==true){
+    				       	        	ids += element.value + ",";
+    				       	        }
+    				       	    });
+    				       	 	ids = ids.substring(0,ids.length-1);
+    						}
+    						alert(ids); */
+    				  	},
+    				  	btn2: function(){
+    				    	layer.closeAll();
+    				  	},
     				    end: function(){
-    				    	alert(123);
+    				    	//alert(123);
     				    }
     				});
     			}
