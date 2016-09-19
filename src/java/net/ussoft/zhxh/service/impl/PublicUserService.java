@@ -489,6 +489,22 @@ public class PublicUserService implements IPublicUserService{
 		return 1;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUserService#listParent(java.lang.String)
+	 */
+	@Override
+	public List<Public_user> listParent(String userid) {
+		if (null != userid && !"".equals(userid)) {
+			String sql = "select u.* from public_user u,public_user_link k where k.userid=? and k.parentid = u.id order by u.sort";
+			List<Object> values = new ArrayList<Object>();
+			values.add(userid);
+			
+			return userDao.search(sql, values);
+		}
+		return null;
+	}
+	
 	
 	
 	//========以下不确定要
