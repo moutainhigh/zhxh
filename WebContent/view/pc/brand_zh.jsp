@@ -25,7 +25,7 @@
 	    <c:forEach var="item" items="${brandPicList }">
 	    	<li>
 	    		<a href='${item.pic_url != ""?item.pic_url:"javascript:;" }' >
-	    			<img src="${pageContext.request.contextPath}/${item.pic_path }" width="1524px" height="563px"  />
+	    			<img src="${pageContext.request.contextPath}/${item.pic_path }" /><!-- 1524:563 -->
 	    		</a>
 	    	</li>
 	    </c:forEach>

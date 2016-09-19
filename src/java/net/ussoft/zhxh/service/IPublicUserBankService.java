@@ -2,6 +2,7 @@ package net.ussoft.zhxh.service;
 
 import java.util.List;
 
+import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user_bank;
 
 /**
@@ -57,10 +58,11 @@ public interface IPublicUserBankService {
 	
 	/**
 	 * 充值
-	 * @param prepaid_bill_orderid 充值流水订单号
+	 * @param bill 充值账单流水
+	 * @param identity 身份
 	 * @return
 	 * */
-	public int recharge(String prepaid_bill_orderid);
+	public int recharge(Public_trade_bill bill,String identity);
 	
 	/**
 	 * 提现

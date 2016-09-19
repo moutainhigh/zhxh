@@ -85,20 +85,55 @@ public class PublicUserBankService implements IPublicUserBankService{
 	 * 充值
 	 * */
 	@Override
-	public int recharge(String prepaid_bill_orderid){
+	public int recharge(Public_trade_bill bill,String identity){
 		//第三方支付返回成功后执行，此处是否需要添加线程锁-例如服务器返回了两次（应该不会）
-		//查找充值流水单 prepaid_bill_orderid
+		//当前账户
+		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
+		//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
+		Public_user_bank bank_PT = getUserBank("1", "1");
+		//代理
+		Public_user_bank bank_A = getUserBank(bill.getParentid(), ""); //目前结构，代理的账户是唯一的
+		//充值金额
+		float amount = bill.getAmount();
+		//平台账户变更
+		bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
+		bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
 		
-		//增加可支配账户
+		String logmemo = "货款充值";	//日志内容
+		if("A".equals(identity)){
+			if(bill.getTrantype() == 1)	{
+				//货款充值
+				bank.setHavebank(bank.getHavebank() + amount);	//增加代理商可支配账户
+			}else if(bill.getTrantype() == 2){
+				//现金充值
+				bank.setTakenbank(bank.getTakenbank() + amount);	//增加代理可提现账户
+				bank.setIncomebank(bank.getIncomebank() + amount);	//增加代理收入总和
+				logmemo = "现金充值";
+			}
+		}else if("C".equals(identity)){
+			bank.setHavebank(bank.getHavebank() + amount);	//增加店可支配账户
+			//非直营店,parentid 不等于1就代表非直营店
+			if(!"1".equals(bill.getParentid())){
+				bank_A.setTakenbank(bank_A.getTakenbank() + amount);		//增加代理可提现账户
+				bank_A.setIncomebank(bank_A.getIncomebank() + amount);	//增加代理收入总和
+				//代理账户变更
+				bank_A = userBankDao.update(bank_A);
+			}
+		}
 		
-		//增加上级的收入（总和）
-		//可提现账户
+		//平台账户变更
+		bank_PT = userBankDao.update(bank_PT);
+		//当前账户
+		bank = userBankDao.update(bank);
+		//更新流水表状态
+		bill = updateBillStatus(bill);
+		//加日志 
+		String logtype = "deposit";	//充值
+		Public_log log = saveLog(bill, logtype, logmemo);
 		
-		//充值累计
-		
-		//充值流水标记已成功
-		
-		//添加日志
+		if(bank_PT != null && bank_A != null && bank != null && bill != null && log != null){
+			return 1;
+		}
 		
 		return 0;
 	}
@@ -504,6 +539,19 @@ public class PublicUserBankService implements IPublicUserBankService{
 		values.add(userid);
 		values.add(parentid);
 		List<Public_set_bonuses_ratio> list = ratioDao.search(sql, values);
+		return list.size() > 0 ? list.get(0) : null;
+	}
+	
+	/**
+	 * 充值/体现-账单流水
+	 * @param billid
+	 * @return
+	 * */
+	private Public_trade_bill getTradeBill(String billid){
+		String sql = "SELECT * FROM Public_trade_bill WHERE billid = ?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(billid);
+		List<Public_trade_bill> list = billDao.search(sql, values);
 		return list.size() > 0 ? list.get(0) : null;
 	}
 	
