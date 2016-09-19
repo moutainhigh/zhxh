@@ -374,6 +374,27 @@ public class PublicUser2Service implements IPublicUser2Service{
 		
 		return userStandardDao.searchForMap(sb.toString(), values);
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#listUserStandardFromBrand(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<Map<String, Object>> listUserStandardFromBrand(String parentid, String userid, String brandid) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select up.username as parentname,u.username as username,u.companyname,s.productpic,s.productname,s.productsize,s.price,s.sizesort,d.* from public_set_user_standard d");
+		sb.append(" left join public_product_size s ON d.sizeid = s.id");
+		sb.append(" left join public_user up ON up.id = d.parentid");
+		sb.append(" left join public_user u ON u.id = d.userid");
+		sb.append(" where d.parentid=? and d.userid=? and d.brandid=? order by s.sizesort");
+		
+		List<Object> values = new ArrayList<Object>();
+		values.add(parentid);
+		values.add(userid);
+		values.add(brandid);
+		
+		return userStandardDao.searchForMap(sb.toString(), values);
+	}
 
 	/*
 	 * (non-Javadoc)
