@@ -141,7 +141,7 @@
 	    			 <li class="shop-cart"><a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')"></a></li>
 	    			 <li class="search" id="search"><a href="javascript:;"></a></li>
 	    		</ul>
-	        <a href="javascript:;" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" /></a>
+	        <a href="javascript:;" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" style="width:22px;height:22px;" title="品牌故事"/></a>
 	        <div class="nav">
             <c:forEach var="brand" items="${brandList }">
 		    	<a id="${brand.id }" href="${pageContext.request.contextPath}/pcMain/zh.htmls?id=${brand.id}" >${brand.brandname }</a>

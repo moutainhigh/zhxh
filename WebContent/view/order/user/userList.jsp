@@ -15,6 +15,7 @@
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
     
     <script src="${pageContext.request.contextPath}/js/jquery-jtemplates.js"></script>
+    <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
     
     <style type="text/css">
     	
@@ -164,6 +165,8 @@
     	var pageIndex = 1;
     	var pageSize = 2;
     	var totalPage = 0;
+    	
+    	var radio_value = "";
     	$(function(){
     		$("input[name=radio_user]:eq(0)").attr("checked",'checked');
     		radio_click();
@@ -203,7 +206,7 @@
     	}
     	
     	function radio_click() {
-    		var radio_value = $("input[name='radio_user']:checked").val();
+    		radio_value = $("input[name='radio_user']:checked").val();
     		$.ajax({
     			async:false,
                 url: "${pageContext.request.contextPath}/orderUser/list.htmls",
@@ -211,11 +214,6 @@
                 type: "post",
                 dataType:"json",
                 success: function (json) {
-               	 	/* alert(json.data);
-               	    $(".booklist").setTemplateElement("Template-List-note-show");
-     	         	$(".booklist").setParam('totle', 0);
-                 	//process template
-                 	$(".booklist").processTemplate(data); */
                  	totalPage = Math.ceil(json.total/pageSize);
                  	//totalPage = ((json.total%pageSize==0)?(json.total/pageSize):(json.total/pageSize+1));   
                	 	$(".admin-panel").setTemplateElement("Template-List-user-show");
@@ -233,6 +231,35 @@
                     alert(jqXHR.responseText);
                 }
            });
+    	}
+    	
+    	function addUser() {
+    		layer.open({
+			    type: 2,
+			    title:'新建客户',
+			    area: ['600px', '650px'],
+			    fix: false, //不固定
+			    maxmin: false,
+			    scrollbar:false,
+			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/addUser",
+			    success: function(layero, index){
+			    	/* var win = parent.window['layui-layer-iframe' + index].window;
+			    	var data = {};
+			    	data.identity = "Z";
+			    	win.setData(data); */
+			    },
+			    btn: ['保存', '取消'],
+			  	yes: function(index,layero){
+			  		var win = parent.window['layui-layer-iframe' + index].window;
+			  		//alert(win.aa()[0].name);
+			  	},
+			  	btn2: function(){
+			    	layer.closeAll();
+			  	},
+			    end: function(){
+			    	//alert(123);
+			    }
+			});
     	}
     </script>
 </head>
@@ -264,7 +291,7 @@
 					<input name="radio_user" type="radio"> 门店
 					<input name="radio_user" type="radio"> 普通会员 -->
 					<input name="radio_user" type="radio" value="Z"> 普通会员 
-					<a href="javascript:;" onclick="aaa()" style="margin-left: 20px" class="button bg-blue">新建</a>
+					<a id="addUser" href="javascript:;" onclick="addUser()" style="margin-left: 20px" class="button bg-blue">新建</a>
 				</div>
 			</form>
 			<form method="post">
@@ -419,5 +446,6 @@
 		</table>
 	    -->
 	</textarea>
+	
 </body>
 </html>

@@ -56,4 +56,46 @@ public class OrderUserController extends BaseConstroller {
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
+	
+	/**
+	 * 检查手机号是否存在。
+	 * @param userid			机构id
+	 * @param phoneNum			手机号码
+	 * @param checkType			检查类型。 insert 新建。判断是否唯一。update 要判断是否等于原值，等于说明没有更改放过，不等于判断是否已存在
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/checkPhoneNum",method=RequestMethod.GET)
+	public void checkPhoneNum(String userid,String phoneNum,String checkType,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		boolean flag = true;
+		//判断检查类型
+		if (checkType.equals("insert")) {
+			flag = userService.checkPhoneNum(phoneNum);
+		}
+		else {
+			Public_user user = userService.getById(userid);
+			if (user.getPhonenumber().equals(phoneNum)) {
+				flag = false;
+			}
+			else {
+				flag = userService.checkPhoneNum(phoneNum);
+			}
+		}
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
+		if (flag) {
+			map.put("getdata", "false");
+		}
+		else {
+			map.put("getdata", "true");
+		}
+		String json = JSON.toJSONString(map);
+		out.print(json);
+		
+	}
 }
