@@ -16,7 +16,7 @@
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
     
     <script src="${pageContext.request.contextPath}/js/jquery-jtemplates.js"></script>
-    <script src="${pageContext.request.contextPath}/js/laydate/laydate.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
     
     <style type="text/css">
 	    
@@ -57,25 +57,47 @@
     </style>
     
     <script type="text/javascript">
+    
+  //form序列化
+	$.fn.serializeObject = function()  
+	{  
+	   var o = {};  
+	   var a = this.serializeArray();  
+	   $.each(a, function() {  
+	       if (o[this.name]) {  
+	           if (!o[this.name].push) {  
+	               o[this.name] = [o[this.name]];  
+	           }  
+	           o[this.name].push(this.value || '');  
+	       } else {  
+	           o[this.name] = this.value || '';  
+	       }  
+	   });  
+	   return o;  
+	};
     	
     	$(function(){
-    		laydate({
- 			   elem: '#birthday'
- 			})
- 			
+    		
  			$(".view-body").setTemplateElement("Template-List-user-form");
      		$(".view-body").setParam('identity', parent.radio_value);
             $(".view-body").processTemplate();
- 			
+            
+            laydate({
+  			   elem: '#birthday'
+  			})
     	})
-    	
-    	/* function setData(data) {
-    		identity = data.identity;
+    	//外部获取数据。这里是序列化form表单
+    	function getData() {
     		
-    		$(".view-body").setTemplateElement("Template-List-user-form");
-     		$(".view-body").setParam('identity', identity);
-            $(".view-body").processTemplate();
-    	} */
+    		console.log($("#addUserForm").serializeJson() + "=======");  
+    		return $("#addUserForm").serializeJson();
+    	}
+    	
+    	function aa() {
+    		var obj = $("#addUserForm").serializeObject();
+    		alert(obj.username);
+    		//console.log($("#addUserForm").serializeJson() + "=======");  
+    	}
     	
     </script>
 </head>
@@ -83,7 +105,7 @@
 	<div class="container-layout" style="padding: 30px;">
 		<div class="doc-demoview doc-viewad0 ">
 			<div class="view-body">
-				<form method="post" class="form-x" onsubmit="return false;">
+				<form id="addUserForm" method="post" class="form-x" onsubmit="return false;">
 					<div class="form-group">
 						<div class="label">
 							<label for="username">真实姓名</label>
@@ -102,7 +124,7 @@
 					</div>
 					<div class="form-group">
 						<div class="label">
-							<label for="username">出生日期</label>
+							<label for="birthday">出生日期</label>
 						</div>
 						<div class="field">
 							<input type="text" class="input" id="birthday" name="birthday" size="30" placeholder="点击选择">
@@ -167,7 +189,7 @@
 							<div class="input-group">
 								<input type="text" class="input" id="vcode" name="vcode" size="50" data-validate="required:必填" placeholder="手机验证码" />
 								<span class="addbtn">
-					            	<button type="button" class="button">获取</button>
+					            	<button type="button" class="button" onclick="aa()">获取</button>
 					            </span>
 							</div>
 						</div>
@@ -274,5 +296,6 @@
 	    -->
 	</textarea>
 <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
+<script src="${pageContext.request.contextPath}/js/laydate/laydate.js" type="text/javascript"></script>
 </body>
 </html>
