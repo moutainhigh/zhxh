@@ -2,6 +2,7 @@ package net.ussoft.zhxh.web.order;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,13 +15,14 @@ import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_order;
+import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_user;
-import net.ussoft.zhxh.service.impl.PublicBrandService;
 import net.ussoft.zhxh.service.impl.PublicOrderService;
 import net.ussoft.zhxh.service.impl.PublicUser2Service;
 import net.ussoft.zhxh.service.impl.PublicUserService;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +72,31 @@ public class OrderController extends BaseConstroller {
 		return new ModelAndView("/view/order/order/createorder", modelMap);
 	}
 	
+	/**
+	 * 创建订货单
+	 * */
+	@RequestMapping(value="/createorder",method=RequestMethod.POST)
+	public void createorder(String objs,HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		List<Public_product_size> psizeList = new ArrayList<Public_product_size>();
+		//商品
+		List<Map<String, String>> rows = (List<Map<String, String>>) JSON.parse(objs);
+		for(int i=0,l=rows.size(); i<l; i++){
+			Map<String,String> row = (Map<String,String>)rows.get(i);
+			Public_product_size product = new Public_product_size();
+			BeanUtils.populate(product, row);
+			psizeList.add(product);
+		}
+		Public_user user = getSessionUser();
+		Public_order order = orderService.createorder(psizeList, user);
+		if(order != null){
+			out.print("success");
+			return;
+		}
+		out.print("error");
+	}
 	
 	/**
 	 * 订货单

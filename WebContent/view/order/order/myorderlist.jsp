@@ -10,6 +10,7 @@
     <meta name="renderer" content="webkit">
 	<title>Insert title here</title>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/view/order/css/table.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
@@ -25,6 +26,13 @@
 		    padding-bottom: 10px;
 		    background-color: #fff;
 		}
+		.nav-inline li a {
+			line-height: 22px;
+		}
+		
+		.border-back {
+    		border-color:#b5cfd9;
+		}
 		.admin {
 		    width: 100%;
 		    padding: 20px;
@@ -34,18 +42,6 @@
 		    top: 87px;
 		    overflow: auto;
 		}
-		
-		.nav-inline li a {
-			line-height: 22px;
-		}
-		
-		.border-back {
-    		border-color:#b5cfd9;
-		}
-		/* .panel-back {
-			background-color: #f7f7f7;
-		} */
-		.table th{text-align: center}
     </style>
     <script type="text/javascript">
     	$(function(){

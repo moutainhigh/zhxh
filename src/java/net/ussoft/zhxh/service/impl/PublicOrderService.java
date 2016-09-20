@@ -197,9 +197,9 @@ public class PublicOrderService implements IPublicOrderService{
 			Public_set_user_standard standard = getProStandard(user.getId(), user.getParentid(), obj.getId());
 			Float buydrdis = standard.getBuyerdis();
 			if(buydrdis != null && buydrdis > 0){
-				subtotal += obj.getPrice() * buydrdis;	//计算折扣后的价格
+				subtotal += obj.getPrice() * buydrdis * obj.getQuantity();	//计算折扣后的价格
 			}else{
-				subtotal += obj.getPrice();
+				subtotal += obj.getPrice() * obj.getQuantity();
 			}
 		}
 		Public_order order = new Public_order();
@@ -246,8 +246,7 @@ public class PublicOrderService implements IPublicOrderService{
 			orderPro.setProductsize(psize.getProductsize());
 			orderPro.setProductnum(psize.getQuantity());		//购买数量
 			orderPro.setIsoknum(psize.getQuantity());			//可结算数量（退货时冲减）
-			float price = psize.getSaleprice() == 0?psize.getPrice():psize.getSaleprice();
-			orderPro.setPrice(price);
+			orderPro.setPrice(psize.getPrice());
 			orderPro.setProductmemo(psize.getProductmemo());
 			orderPro.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 			orderPro.setStatus(0);	//已购买

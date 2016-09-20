@@ -10,6 +10,7 @@
     <meta name="renderer" content="webkit">
 	<title>Insert title here</title>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/view/order/css/table.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
@@ -25,6 +26,12 @@
 		    padding-bottom: 10px;
 		    background-color: #fff;
 		}
+		.nav-inline li a {
+			line-height: 22px;
+		}
+		.border-back {
+    		border-color:#b5cfd9;
+		}
 		.admin {
 		    width: 100%;
 		    padding: 20px;
@@ -34,72 +41,184 @@
 		    top: 87px;
 		    overflow: auto;
 		}
-		
-		.nav-inline li a {
-			line-height: 22px;
-		}
-		
-		.border-back {
-    		border-color:#b5cfd9;
-		}
-		/* .panel-back {
-			background-color: #f7f7f7;
-		} */
-		.table th{text-align: center}
     </style>
     <script type="text/javascript">
+		//全局对象
+		var objArr = new Array();
+		var total = 0,total_sum = 0;
     	$(function(){
-    		var ddd = "asdf";
-    		//
-    		$("#selPro").click(function(){
-    			var comp = $("#f_comp").val();
-    			if(comp == "0"){
-    				layer.tips('请选择采购商家', '#f_comp', {
+    		//提示信息
+    		layer.tips('请先选择采购商家', '#f_comp', {
    					  tips: [2, '#FF9901'],
-   					  time: 4000
+   					  time: 4000,
    					});
+    		
+    		//选择商家
+    		$("#f_comp").change(function(){
+    			brand($(this).val());
+    		});
+    		
+    		//
+    		$("#submit_btn").click(function(){
+    			if(objArr.length > 0){
+    				var _data =  JSON.stringify(objArr);
+    				$.ajax({
+    	    			async:false,
+    	                url: "${pageContext.request.contextPath}/order/createorder.htmls",
+    	                data: {objs:_data},
+    	                type: "post",
+    	                dataType:"text",
+    	                success: function (text) {
+    	                	if(text == "success")
+    	                		location.href = "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist";
+    	                	else
+    	                		layer.msg("操作失败",{icon:6});
+    	                },
+    	                error: function (jqXHR, textStatus, errorThrown) {
+    	                    alert(jqXHR.responseText);
+    	                }
+    	           	});
     			}else{
-    				parent.parent.layer.open({
-    				    type: 2,
-    				    title:'选择商品',
-    				    area: ['720px', '520px'],
-    				    fix: false, //不固定
-    				    maxmin: true,
-    				    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/selProducts&param={'parentid':'"+comp+"'}",
-    				    btn: ['继续弹出', '全部关闭'], //只是为了演示
-    				  	yes: function(index,layero){
-    				  		var win = parent.window['layui-layer-iframe' + index].window;
-    				  		alert(win.aa()[0].name);
-    				  		return;
-    				  		 var smallSrc = layer.getChildFrame('#ImgUrl', index).attr("src");
-    				  		 
-    				  		//var iframeWin = window[layero.find('iframe')[0]]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-    				  		//alert(iframeWin);
-    				  		//alert(doc.prototype.toString.apply(o) );
-    				  		/* var id = "";
-    				  		var ids = "";
-    						if (id != "") {
-    							ids = id;
-    						}else {
-    				       	    $("input[name='id']").each(function(index,element){
-    				       	    	if(element.checked==true){
-    				       	        	ids += element.value + ",";
-    				       	        }
-    				       	    });
-    				       	 	ids = ids.substring(0,ids.length-1);
-    						}
-    						alert(ids); */
-    				  	},
-    				  	btn2: function(){
-    				    	layer.closeAll();
-    				  	},
-    				    end: function(){
-    				    	//alert(123);
-    				    }
-    				});
+    				layer.msg("您没有添加任何商品",{icon:6});
+    				return;
     			}
     		});
     	});
+    	
+    	//加载数据
+    	function loadData(){
+    		$("#proList").setTemplateElement("Template-List-user-show");
+            $("#proList").processTemplate(objArr);
+            bindTdClick();	//td绑定
+            parent.parent.layer.closeAll();	//关闭窗体
+            //
+            $("#total").html(formatFloat(total,2));
+            $("#total_sum").html(formatFloat(total,2));
+            
+    	}
+    	
+    	//品牌
+    	function brand(id){
+    		$.ajax({
+    			async:false,
+                url: "${pageContext.request.contextPath}/order/brandlist.htmls",
+                data: {parentid:id},
+                type: "post",
+                dataType:"json",
+                success: function (json) {
+                	var data = json.data;
+                	$("#brand").html("");
+                	for(i=0;i<data.length;i++){
+                		$('<li><a href="javascript:;" onclick="selPro(\''+data[i].id+'\')">'+data[i].brandname+'</a> </li>').appendTo($("#brand"));
+                	}
+                	if(data.length > 0)
+                		$("#brand_btn").removeAttr("disabled");	//解除
+                	else
+                		$("#brand_btn").attr("disabled","disabled");	//禁用
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                }
+           	});
+    	}
+    	
+    	//选择商品
+		function selPro(brandid){
+			var comp = $("#f_comp").val();
+			if(comp == "0"){
+				layer.tips('请选择采购商家', '#f_comp', {
+					  tips: [2, '#FF9901'],
+					  time: 4000
+					});
+			}else{
+				parent.parent.layer.open({
+				    type: 2,
+				    title:'选择商品',
+				    area: ['720px', '520px'],
+				    fix: false, //不固定
+				    maxmin: true,
+				    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/selProducts&param={'parentid':'"+comp+"','brandid':'"+brandid+"'}",
+				    btn: ['确 定', '取 消'],
+				  	yes: function(index,layero){
+				  		var win = parent.window['layui-layer-iframe' + index].window;
+				  		var data = win.getData();
+				  		if(data.length > 0){
+				  			disposal(data);
+				  		}else{
+				  			parent.parent.layer.msg("您没有选择任何商品",{icon:6});
+				  		}
+				  	},
+				    end: function(){
+				    	//alert(123);
+				    }
+				});
+			}
+		}
+		
+    	//处理数据
+    	function disposal(data){
+    		for(i=0;i<data.length;i++){
+    			objArr.push(initializeObj(data[i]));
+    		}
+    		//加载数据
+    		loadData();
+    	}
+    	
+    	//初始数据对象
+    	function initializeObj(data){
+    		var obj = {};
+    		obj.id = data.id;
+			obj.productname = data.productname;
+			obj.productsize = data.productsize;
+			obj.price = data.price;		//售价
+			obj.buyerdis = data.buyerdis;	//折扣
+			obj.quantity = data.quantity; 	//数量
+			if(parseInt(data.buyerdis) > 0){
+				obj.subtotal = data.price * data.buyerdis * data.quantity;	//小计
+			}else{
+				obj.subtotal = data.price * data.quantity;	//小计
+			}
+			total += obj.subtotal;
+			return obj;
+    	}
+    	
+    	//绑定数量的TD
+    	function bindTdClick() {
+    		$('.quantity').unbind('click').click(function(){
+    			var e = $(this);
+    			var html = $(this).html();
+    			if (html.indexOf("input") == -1) {
+    				$(this).html("<input type='text' class='input quant' value='"+html+"'/>");
+    				$(".quant").focus();
+    				$(".quant").select();
+    				$(".quant").blur(function(){
+    					var val = $(this).val();
+    					if(!(/^(\+|-)?\d+$/.test(val)) || val == 0){  
+    				        val = 1; //非正整数为1
+    				    }
+    					e.html(val);
+    					var id = $(e).parent("tr").attr("id");	//当前行ID
+    					for(var i=0;i<objArr.length;i++) {
+    						if (id == objArr[i].id) {
+    							objArr[i].quantity = val; //变更数量
+    							total = total - objArr[i].subtotal; //减去该商品数量变更前的小计
+    							if(parseInt(objArr[i].buyerdis) > 0){
+    								objArr[i].subtotal = objArr[i].price * objArr[i].buyerdis * objArr[i].quantity;	//小计
+    							}else{
+    								objArr[i].subtotal = objArr[i].price * objArr[i].quantity;	//小计
+    							}
+    							total = total + objArr[i].subtotal;	//把新的小计加到合计中
+    							break;
+    						}
+    					}
+    					//重新加载数据
+    					loadData();
+    				})
+    			}
+    		})
+    	}
+    	
+    	
     </script>
 </head>
 <body>
@@ -127,18 +246,25 @@
 	             </div></form>
 			</div>
 			<div class="padding float-right">
-				<button class="button bg-blue" id="selPro"><span class="icon-plus"></span> 选择商品</button>
+				<div class="button-group border-blue">
+					<button id="brand_btn" type="button" class="button bg-blue dropdown-toggle" disabled="disabled">
+						<span class="icon-plus"></span> 选择商品 <span class="downward"></span>
+					</button>
+					<ul id="brand" class="drop-menu">
+					</ul>
+				</div>
+				<!-- <button class="button bg-blue" id="selPro"><span class="icon-plus"></span> </button> -->
 			</div>
-			<form method="post">
-				<div class="admin-panel">
+			<div>
+				<div id="proList" class="admin-panel">
 					<table class="table table-bordered table-hover text-small">
 						<tbody>
 							<tr class="panel-head">
 								<th width="45" align="center"><input type="checkbox" value="1" name="id"></th>
 								<!-- <th width="120"></th> -->
 								<th width="*">商品名称</th>
-								<th width="100">规格</th>
-								<th width="100">数量</th>
+								<th width="160">规格</th>
+								<th width="160">数量</th>
 								<th width="100">单价</th>
 								<th width="100">折扣</th>
 								<th width="180">小计</th>
@@ -147,9 +273,9 @@
 					</table>
 				</div>
 				<div class="text-right" style="padding: 30px 50px;">
-					<div>合计：<span>￥20,000.00</span></div>
+					<div>合计：￥<span id="total">0.00</span></div>
 					<br/>
-					<div>应付总额：<span style="color: red !important">￥20,000.00</span></div>
+					<div>应付总额：￥<span style="color: red !important" id="total_sum">0.00</span></div>
 				</div>
 				<div class="form-inline" style="padding-top: 20px;">
 					<div class="form-group">
@@ -163,9 +289,9 @@
 					</div>
 				</div>
 				<div>
-					<button class="button button-big bg-blue">提交订单</button>
+					<button id="submit_btn" class="button button-big bg-blue">提交订单</button>
 				</div>
-			</form>		
+			</div>		
 		</div>
 	</div>
 	<!--底部-->
@@ -176,5 +302,95 @@
 			</div>
 		</div>
 	</div>
+	
+	<textarea id="Template-List-user-show" rows="0" cols="0" style="display:none">
+		<!--
+		<table class="table table-bordered table-hover text-small">
+			<tbody>
+				<tr class="panel-head">
+					<th width="45" align="center"><input type="checkbox" name="checkall"></th>
+					<th width="*">商品名称</th>
+					<th width="160">规格</th>
+					<th width="160">数量</th>
+					<th width="100">单价</th>
+					<th width="100">折扣</th>
+					<th width="180">小计</th>
+				</tr>
+				{#foreach $T as row}
+				<tr class="tr" id="{$T.row.id}">
+					<td align="center"><input type="checkbox" value="{$T.row.id}" name="id"></td>
+					<td>{$T.row.productname}</td>
+					<td>{$T.row.productsize}</td>
+					<td class="quantity">{$T.row.quantity}</td>
+					<td>{$T.row.price}</td>
+					<td>{$T.row.buyerdis}</td>
+					<td>{$T.row.subtotal}</td>
+				</tr>
+				{#/for}
+			</tbody>
+		</table>
+	    -->
+	</textarea>
+	
+	<script type="text/javascript">
+		/** 
+		 * 将数值四舍五入(保留2位小数)后格式化成金额形式 
+		 * 
+		 * @param num 数值(Number或者String) 
+		 * @return 金额格式的字符串,如'1,234,567.45' 
+		 * @type String 
+		 */  
+		function formatCurrency(num) {  
+		    num = num.toString().replace(/\$|\,/g,'');  
+		    if(isNaN(num))  
+		    num = "0";  
+		    sign = (num == (num = Math.abs(num)));  
+		    num = Math.floor(num*100+0.50000000001);  
+		    cents = num%100;  
+		    num = Math.floor(num/100).toString();  
+		    if(cents<10)  
+		    cents = "0" + cents;  
+		    for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)  
+		    num = num.substring(0,num.length-(4*i+3))+','+  
+		    num.substring(num.length-(4*i+3));  
+		    return (((sign)?'':'-') + num + '.' + cents);  
+		}  
+		   
+		/** 
+		 * 将数值四舍五入(保留1位小数)后格式化成金额形式 
+		 * 
+		 * @param num 数值(Number或者String) 
+		 * @return 金额格式的字符串,如'1,234,567.4' 
+		 * @type String 
+		 */  
+		function formatCurrencyTenThou(num) {  
+		    num = num.toString().replace(/\$|\,/g,'');  
+		    if(isNaN(num))  
+		    num = "0";  
+		    sign = (num == (num = Math.abs(num)));  
+		    num = Math.floor(num*10+0.50000000001);  
+		    cents = num%10;  
+		    num = Math.floor(num/10).toString();  
+		    for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)  
+		    num = num.substring(0,num.length-(4*i+3))+','+  
+		    num.substring(num.length-(4*i+3));  
+		    return (((sign)?'':'-') + num + '.' + cents);  
+		}  
+		  
+		// 添加金额格式化  
+	    function formatFloat(src, pos){  
+	        var num = parseFloat(src).toFixed(pos);  
+	        num = num.toString().replace(/\$|\,/g,'');  
+	        if(isNaN(num)) num = "0";  
+	        sign = (num == (num = Math.abs(num)));  
+	        num = Math.floor(num*100+0.50000000001);  
+	        cents = num%100;  
+	        num = Math.floor(num/100).toString();  
+	        if(cents<10) cents = "0" + cents;  
+	        for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)  
+	        num = num.substring(0,num.length-(4*i+3))+','+num.substring(num.length-(4*i+3));  
+	        return (((sign)?'':'-') + num + '.' + cents);  
+	    }
+	</script>
 </body>
 </html>
