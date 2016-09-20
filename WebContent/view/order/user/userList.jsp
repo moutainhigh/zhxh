@@ -16,6 +16,7 @@
     
     <script src="${pageContext.request.contextPath}/js/jquery-jtemplates.js"></script>
     <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
     
     <style type="text/css">
     	
@@ -174,7 +175,8 @@
     			$(this).val();
     			radio_click();
   			});
-    		
+    		//调用全选插件
+    	    $.fn.check({ checkall_name: "checkall", checkbox_name: "row_id" })
     	});
     	
     	function pageSel() {
@@ -358,7 +360,7 @@
 		<table class="table table-bordered table-hover text-small">
 			<tbody>
 				<tr class="panel-head">
-					<th width="45" align="center"><input type="checkbox" value="1" name="id"></th>
+					<th width="45" align="center"><input type="checkbox" value="1" name="checkall"></th>
 					<th width="45">序号</th>
 					<th width="80">姓名</th>
 					<th width="100">手机号码</th>
@@ -377,7 +379,7 @@
 				{#if $P.rowCount > 0}
 					{#foreach $T as row}
 						<tr class="tr">
-							<td align="center"><input type="checkbox" value="1" name="id"></td>
+							<td align="center"><input type="checkbox" value="1" name="row_id"></td>
 							<td>{($T.row$index+1)+($P.pageIndex * $P.pageSize - $P.pageSize)}</td>
 							<td>{$T.row.username}</td>
 							<td>{$T.row.phonenumber}</td>
