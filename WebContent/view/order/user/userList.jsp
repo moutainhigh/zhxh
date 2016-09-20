@@ -10,6 +10,7 @@
     <meta name="renderer" content="webkit">
 	<title>Insert title here</title>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/js/pintuer/pintuer.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/view/order/css/table.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
@@ -20,7 +21,7 @@
     
     <style type="text/css">
     	
-    	.doc-naver {
+    	/* .doc-naver {
 		    padding-top: 10px;
 		    padding-bottom: 10px;
 		}
@@ -28,7 +29,7 @@
 		    padding-top: 10px;
 		    padding-bottom: 10px;
 		    background-color: #fff;
-		}
+		} */
 		.admin {
 		    width: 100%;
 		    padding: 20px;
@@ -43,122 +44,13 @@
 			line-height: 22px;
 		}
 		
-		.border-back {
+		/* .border-back {
     		border-color:#b5cfd9;
-		}
+		} */
 		/* .panel-back {
 			background-color: #f7f7f7;
 		} */
-		.table th{text-align: center}
 		
-		.table-bordered th {
-		    border-bottom: 0px solid #ddd;
-		}
-		
-		.table tr {
-			height:45px;
-		}
-		.table th ,.table tbody td {
-			vertical-align: middle;
-			padding: 1px 5px;
-			text-align: center;
-		}
-		
-		tfoot {
-		    display: table-footer-group;
-		    vertical-align: middle;
-		    border-color: inherit;
-		}
-		.table tfoot td {
-			vertical-align: middle;
-		    height: 66px;
-		    border-top: 1px solid #dce2e7;
-		    border: solid 0px #ddd;
-		}
-		
-		.page {
-		    float: right;
-		    display: inline-block;
-		    vertical-align: middle;
-		    width: 350px;
-		    line-height: 26px;
-		    margin: 10px;
-		}
-		
-
-		.page-total {
-		    float: left;
-		    line-height: 26px;
-		    margin: 10px 10px 0;
-		    display: block;
-		    float: right;
-		}
-		.page span {
-		    float: left;
-		    margin-left: 5px;
-		}
-		
-		.page .pageSel {
-		    float: left;
-		    display: block;
-		    color: #666;
-		    margin: 0 0 0 10px;
-		    border: 1px solid #d6dee3;
-		    padding: 4px;
-		    font-size: 12px;
-		    height: 26px;
-		}
-		.page-number {
-		    margin-left: 130px;
-		}
-		
-		.page .pn {
-		    float: right;
-		}
-		.page .pn, .page .pn a {
-		    margin-left: 5px;
-		}
-		
-		.page .ui-pager-next, .page .ui-pager-prev {
-		    margin-left: 5px;
-		}
-
-		.ui-pager-next, .ui-pager-prev {
-		    background: url(${pageContext.request.contextPath}/view/order/images/icon8.png) no-repeat;
-		    display: inline-block;
-		    width: 25px;
-		    height: 0;
-		    padding-top: 25px;
-		    overflow: hidden;
-		    cursor: pointer;
-		}
-		
-		.ui-pager-next {
-		    background-color: #fafafa;
-		    border: 1px solid #c7ced1;
-		    background-position: 10px -51px;
-		}
-		.ui-pager-prev {
-		    background-color: #fafafa;
-		    border: 1px solid #c7ced1;
-		    background-position: 9px -34px;
-		}
-		
-		.ui-pager-inp {
-		    padding: 0 5px;
-		    height: 25px;
-		    line-height: 25px;
-		    border: 1px solid #d6dee3;
-		    color: #555;
-		    width: 30px;
-		    display: inline-block;
-		    float: left;
-		    vertical-align: middle;
-		    outline: 0;
-		    font-family: verdana,'宋体','Microsoft Yahei',Tahoma,Arial;
-		    margin-left: 5px;
-		    font-size: 12px;
-		}
 		
     </style>
     <script type="text/javascript">
@@ -252,7 +144,8 @@
 			    },
 			    btn: ['保存', '取消'],
 			  	yes: function(index,layero){
-			  		var win = parent.window['layui-layer-iframe' + index].window;
+			  		var win = window['layui-layer-iframe' + index].window;
+			  		console.log(win.getData());
 			  		//alert(win.aa()[0].name);
 			  	},
 			  	btn2: function(){
@@ -405,7 +298,7 @@
 			</tbody>
 			<tfoot>
 				<tr class="">
-					<td align="center"><input type="checkbox" value="0"></td>
+					<td align="center"><input type="checkbox" value="0" name="checkall"></td>
 					<td colspan="5" class="tr pr10" style="text-align:left" >
 						<a class="batch-op batchActivate" href="javascript:void(0)">批量开通</a>
 						<a class="batch-op batchInactivate" href="javascript:void(0)">批量禁用</a>
