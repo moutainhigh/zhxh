@@ -167,8 +167,8 @@
 	    <div id="loginform" class="login">
 	        <h3>登录账号</h3>
 	        <div class="login-ipnut">
-	            <div><input type="text" id="uname" value="" class="txt name" placeholder="手机或邮箱"/></div>
-	            <div><input type="text" id="pwd" value="" class="txt mima" placeholder="密码" /></div>
+	            <div><input type="text" id="uname" value="" class="txt name" placeholder="手机"/></div>
+	            <div><input type="password" id="pwd" value="" class="txt mima" placeholder="密码" /></div>
 	            <div class="clearfix wjmima">
 	                <a href="忘记密码.html" class="fr">忘记密码？</a>
 	                <!-- <em class="fr">没有账号 <b class="zhuce">立即注册</b></em> -->

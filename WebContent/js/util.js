@@ -156,9 +156,9 @@ $.fn.serializeObject = function()
 
 //form 序列化插件。
 (function($){  
-    $.fn.serializeJson=function(){  
+    $.fn.serializeJson=function(){
         var serializeObj={};
-        var array=this.serializeArray();  
+        var array=this.serializeArray();
         var str=this.serialize();  
         $(array).each(function(){  
             if(serializeObj[this.name]){  

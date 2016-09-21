@@ -6,11 +6,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
-import java.util.Map.Entry;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.dao.PublicUserDao;
@@ -22,10 +26,6 @@ import net.ussoft.zhxh.model.Public_user_link;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.MD5;
 import net.ussoft.zhxh.util.MakeQuerySql;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PublicUserService implements IPublicUserService{
@@ -59,7 +59,13 @@ public class PublicUserService implements IPublicUserService{
 			PageBean<Public_user> pageBean) {
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append("select DISTINCT(u.id),u.* from public_user u,public_user_link l where 1=1");
+		if (identity.equals("Z")) {
+			sb.append("select DISTINCT(u.id),u.* from public_user u where 1=1");
+		}
+		else {
+			sb.append("select DISTINCT(u.id),u.* from public_user u,public_user_link l where 1=1");
+		}
+		
 		
 		List<Object> values = new ArrayList<Object>();
 		
@@ -491,6 +497,45 @@ public class PublicUserService implements IPublicUserService{
 	
 	/*
 	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUserService#updateBatch(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public boolean updateBatch(String updateUserids, String field, String fieldValue) {
+		if (null == updateUserids || "".equals(updateUserids)) {
+			return false;
+		}
+		
+		String[] idsArr = updateUserids.split(",");
+		
+		List<String> idsList = Arrays.asList(idsArr);
+		
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		
+		//判断是什么类型的接触
+		sb.append("update public_user set ");
+		sb.append(field).append("=?");
+		sb.append(" where id in (");
+		values.add(fieldValue);
+		
+		Serializable[] ss=new Serializable[idsList.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(idsList);
+		
+		int num = userDao.update(sb.toString(), values);
+		
+		if (num > 0) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/*
+	 * (non-Javadoc)
 	 * @see net.ussoft.zhxh.service.IPublicUserService#listParent(java.lang.String)
 	 */
 	@Override
@@ -503,6 +548,19 @@ public class PublicUserService implements IPublicUserService{
 			return userDao.search(sql, values);
 		}
 		return null;
+	}
+	
+	@Override
+	public Public_user login(String username,String password) {
+		Public_user user = getByPhoneNum(username);
+		if (user == null ) {
+			return null;
+		}
+		// 将输入的密码与Pojo里的密码MD5后对比，如果不匹配，说明密码不对
+		if (!MD5.encode(password).equals(user.getPassword())) {
+			return null;
+		}
+		return user;
 	}
 	
 	
@@ -547,18 +605,5 @@ public class PublicUserService implements IPublicUserService{
 	
 	
 	
-	@Override
-	public Public_user login(String username,String password) {
-		Public_user user = getByPhoneNum(username);
-		if (user == null ) {
-			return null;
-		}
-		// 将输入的密码与Pojo里的密码MD5后对比，如果不匹配，说明密码不对
-		if (!MD5.encode(password).equals(user.getPassword())) {
-			return null;
-		}
-		return user;
-	}
-
 
 }

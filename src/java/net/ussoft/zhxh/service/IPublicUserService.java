@@ -145,4 +145,13 @@ public interface IPublicUserService {
 	 * */
 	public Public_user login(String username,String password);
 	
+	/**
+	 * 批量修改机构信息
+	 * @param updateUserids
+	 * @param field
+	 * @param fieldValue
+	 * @return
+	 */
+	public boolean updateBatch(String updateUserids,String field,String fieldValue);
+	
 }

@@ -14,7 +14,7 @@
    	   	    <a href="javascript:;" class="map">网站地图</a>
    	    </div>
    	    <div class="fr footer-right">
-   	   	    <span>Copyright © 众恒信合</span>
+   	   	    <span>Copyright © 集丽科技 备案号：京ICP备16003113号</span>
    	    </div>
     </div>
     <div class="footer-tk footer-Itk">

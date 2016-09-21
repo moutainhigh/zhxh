@@ -7,7 +7,7 @@
 	    <div class="login">
 	        <h3>登录账号</h3>
 	        <div id="loginform" class="login-ipnut">
-	            <div><input type="text" id="uname" value="" class="txt name em" placeholder="手机或邮箱"/></div>
+	            <div><input type="text" id="uname" value="" class="txt name em" placeholder="手机"/></div>
 	            <br/>
 	            <div><input type="password" id="pwd" value="" class="txt mima em" placeholder="密码" /></div>
 	            <br/>

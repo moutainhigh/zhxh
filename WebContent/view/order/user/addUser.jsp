@@ -35,6 +35,18 @@
 		    padding-bottom:15px;
 		}
 		
+		.doc-codead0 {
+		    background: #efe;
+		}
+		.doc-democode {
+		    border: solid 1px #ddd;
+		    border-radius: 0 0 4px 4px;
+		    padding: 15px;
+		    background: #f5f5f5;
+		    font-size: 12px;
+		    border-top: none;
+		}
+		
 		.form-x .form-group .label {
 		    float: left;
 		    width: 15%;
@@ -58,24 +70,6 @@
     
     <script type="text/javascript">
     
-  //form序列化
-	$.fn.serializeObject = function()  
-	{  
-	   var o = {};  
-	   var a = this.serializeArray();  
-	   $.each(a, function() {  
-	       if (o[this.name]) {  
-	           if (!o[this.name].push) {  
-	               o[this.name] = [o[this.name]];  
-	           }  
-	           o[this.name].push(this.value || '');  
-	       } else {  
-	           o[this.name] = this.value || '';  
-	       }  
-	   });  
-	   return o;  
-	};
-    	
     	$(function(){
     		
  			$(".view-body").setTemplateElement("Template-List-user-form");
@@ -85,18 +79,19 @@
             laydate({
   			   elem: '#birthday'
   			})
+  			
+  			$("#phonenumber").blur(function(){
+				var val = $(this).val();
+				$('#companycode').val(val);
+ 			})
     	})
     	//外部获取数据。这里是序列化form表单
     	function getData() {
-    		
-    		console.log($("#addUserForm").serializeJson() + "=======");  
-    		return $("#addUserForm").serializeJson();
-    	}
-    	
-    	function aa() {
-    		var obj = $("#addUserForm").serializeObject();
-    		alert(obj.username);
-    		//console.log($("#addUserForm").serializeJson() + "=======");  
+    		var formData = false;
+    		$("#addUserForm").ajaxSubmit(function() {
+				formData = $("#addUserForm").serializeJson();
+			});
+    		return formData;
     	}
     	
     </script>
@@ -197,10 +192,20 @@
 				</form>
 			</div>
 		</div>
+		<div class="doc-democode doc-codead0 ">
+			<blockquote class="border-sub">
+				<p><span style="color:red">填写注意：</span><br>
+				
+				1.手机号码必须真实填写，一个手机号码仅能注册一次。<br>
+				2.手机号码需接收验证短信，填入验证码才能合法注册。<br>
+				3.手机号码同时作为客户登录本系统的帐号及普通会员采购时利益分配的唯一标准代码。
+				</p>
+			</blockquote>
+		</div>
 	</div>
 	<textarea id="Template-List-user-form" rows="0" cols="0" style="display:none">
 		<!--
-		<form method="post" class="form-x" onsubmit="return false;">
+		<form id="addUserForm" method="post" class="form-x" onsubmit="return false;">
 			<input type="hidden" id="identity" name="identity" value="{$P.identity}" />
 			<div class="form-group">
 				<div class="label">
@@ -259,7 +264,7 @@
 					<label for="companyname">机构代码</label>
 				</div>
 				<div class="field">
-					<input type="text" class="input" id="companycode" name="companycode" size="30" data-validate="required:必填" placeholder="机构代码[与手机号相同]">
+					<input type="text" class="input" id="companycode" name="companycode" disabled="disabled" size="30" data-validate="required:必填" placeholder="机构代码[与手机号相同]">
 				</div>
 			</div>
 			{#/if}
