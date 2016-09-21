@@ -46,26 +46,45 @@
 		//全局对象
 		var objArr = new Array();
 		var total = 0,total_sum = 0;
+		var comp;//采购商家(用于改变商家时-取消回调)
     	$(function(){
     		//提示信息
-    		layer.tips('请先选择采购商家', '#f_comp', {
-   					  tips: [2, '#FF9901'],
-   					  time: 4000,
-   					});
+    		layer.tips('请先选择采购商家', '#f_comp', {tips: [2, '#FF9901'],time: 5000,});
     		
     		//选择商家
     		$("#f_comp").change(function(){
+    			if($(this).val() != "0")
+    				layer.tips('点击选择品牌', '#brand_btn', {tips: [1, '#FF9901'],time: 5000,});
+    			
+    			if(objArr.length > 0){
+    				var cf1 = "";
+    				layer.confirm('您是如何看待前端开发？', {
+   						btn: ['重要','奇葩'] //按钮
+   					}, function(index){
+   						//数据清零
+    	    			objArr = [];
+    	    			total = 0,total_sum = 0;
+    	    			loadData();
+    	    			layer.close(index);
+   					}, function(){
+   						$("#f_comp").val(comp);
+   					});
+    				
+    			}
+    			//品牌
     			brand($(this).val());
+    			
     		});
     		
-    		//
+    		//提交
     		$("#submit_btn").click(function(){
     			if(objArr.length > 0){
     				var _data =  JSON.stringify(objArr);
+    				var _parentid = $("#f_comp").val();
     				$.ajax({
     	    			async:false,
     	                url: "${pageContext.request.contextPath}/order/createorder.htmls",
-    	                data: {objs:_data},
+    	                data: {objs:_data,parentid:_parentid},
     	                type: "post",
     	                dataType:"text",
     	                success: function (text) {
@@ -124,35 +143,28 @@
     	
     	//选择商品
 		function selPro(brandid){
-			var comp = $("#f_comp").val();
-			if(comp == "0"){
-				layer.tips('请选择采购商家', '#f_comp', {
-					  tips: [2, '#FF9901'],
-					  time: 4000
-					});
-			}else{
-				parent.parent.layer.open({
-				    type: 2,
-				    title:'选择商品',
-				    area: ['720px', '520px'],
-				    fix: false, //不固定
-				    maxmin: true,
-				    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/selProducts&param={'parentid':'"+comp+"','brandid':'"+brandid+"'}",
-				    btn: ['确 定', '取 消'],
-				  	yes: function(index,layero){
-				  		var win = parent.window['layui-layer-iframe' + index].window;
-				  		var data = win.getData();
-				  		if(data.length > 0){
-				  			disposal(data);
-				  		}else{
-				  			parent.parent.layer.msg("您没有选择任何商品",{icon:6});
-				  		}
-				  	},
-				    end: function(){
-				    	//alert(123);
-				    }
-				});
-			}
+			comp = $("#f_comp").val();
+			parent.parent.layer.open({
+			    type: 2,
+			    title:'选择商品',
+			    area: ['720px', '520px'],
+			    fix: false, //不固定
+			    maxmin: true,
+			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/selProducts&param={'parentid':'"+comp+"','brandid':'"+brandid+"'}",
+			    btn: ['确 定', '取 消'],
+			  	yes: function(index,layero){
+			  		var win = parent.window['layui-layer-iframe' + index].window;
+			  		var data = win.getData();
+			  		if(data.length > 0){
+			  			disposal(data);//处理数据，并加载
+			  		}else{
+			  			parent.parent.layer.msg("您没有选择任何商品",{icon:6});
+			  		}
+			  	},
+			    end: function(){
+			    	//alert(123);
+			    }
+			});
 		}
 		
     	//处理数据

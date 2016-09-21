@@ -33,17 +33,20 @@
     <script type="text/javascript">
     	$(function(){
     		//品牌对应的商品
-    		prolist();
-    		
+    		prolist("");
+    		$(".search-btn").click(function(){
+    			var keyword = $("#keyword").val();
+    			prolist(keyword);
+    		});
     	});
     	
     	
     	//品牌-商品列表
-    	function prolist(){
+    	function prolist(keyword){
     		$.ajax({
     			async:false,
                 url: "${pageContext.request.contextPath}/order/prolist.htmls",
-                data: {parentid:'${parentid}',brandid:'${brandid}',pageIndex:0,pageSize:30},
+                data: {parentid:'${parentid}',brandid:'${brandid}',keyword:keyword},
                 type: "post",
                 dataType:"json",
                 success: function (json) {
@@ -88,8 +91,8 @@
 	<div class="admin">
 		<div style="padding-bottom: 20px;">
 			<table style="text-align: center;"><tr>
-				<td width="200px;"><input type="text" class="input" name="" placeholder="请输入商品名称" /></td>
-				<td width="100px;"><button class="button" id="newOrder"><span class="icon-search"></span> 搜索</button></td>
+				<td width="200px;"><input type="text" id="keyword" class="input" name="" placeholder="请输入商品名称" /></td>
+				<td width="100px;"><button class="button search-btn" id="newOrder"><span class="icon-search"></span> 搜索</button></td>
 			</tr></table>
 		</div>
 		<!-- <div class="padding float-right">

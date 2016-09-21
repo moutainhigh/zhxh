@@ -114,6 +114,16 @@ public interface IPublicUser2Service {
 	public List<Map<String,Object>> listUserStandardFromBrand(String parentid,String userid,String brandid);
 	
 	/**
+	 * 获取被设置机构的采购利益详细。根据品牌id，获取全部商品下的全部规格
+	 * @param parentid
+	 * @param userid
+	 * @param brandid
+	 * @param productname 商品名称检索
+	 * @return
+	 */
+	public List<Map<String,Object>> listUserStandardFromBrand(String parentid,String userid,String brandid,String productname);
+	
+	/**
 	 * 添加机构的规格采购标准
 	 * @param brandid
 	 * @param productid

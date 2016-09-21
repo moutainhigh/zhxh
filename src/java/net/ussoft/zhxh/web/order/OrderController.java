@@ -27,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
@@ -76,7 +77,7 @@ public class OrderController extends BaseConstroller {
 	 * 创建订货单
 	 * */
 	@RequestMapping(value="/createorder",method=RequestMethod.POST)
-	public void createorder(String objs,HttpServletResponse response) throws Exception {
+	public void createorder(String objs,String parentid,HttpServletResponse response) throws Exception {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -90,6 +91,7 @@ public class OrderController extends BaseConstroller {
 			psizeList.add(product);
 		}
 		Public_user user = getSessionUser();
+		user.setParentid(parentid); //商家
 		Public_order order = orderService.createorder(psizeList, user);
 		if(order != null){
 			out.print("success");
@@ -167,14 +169,14 @@ public class OrderController extends BaseConstroller {
 	 * 商品列表
 	 * */
 	@RequestMapping(value="/prolist",method=RequestMethod.POST)
-	public void productlist(String parentid,String brandid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void productlist(String parentid,String brandid,@RequestParam(value="keyword",defaultValue="")String keyword, HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		Public_user user = getSessionUser();
 		
-		List<Map<String, Object>> list = user2Service.listUserStandardFromBrand(parentid, user.getId(), brandid);
+		List<Map<String, Object>> list = user2Service.listUserStandardFromBrand(parentid, user.getId(), brandid,keyword);
 		
 		map.put("data",list);
 		
