@@ -245,6 +245,15 @@ INSERT INTO sys_data_dic VALUES('53','public_trade_bill','status','0','未支付
 INSERT INTO sys_data_dic VALUES('54','public_trade_bill','status','1','支付成功、提现成功');
 INSERT INTO sys_data_dic VALUES('55','public_log','logtype','withdrawal','提现');
 
+
+2016-09-22
+1、 修改public_order 订单表
+	（1）增加ordertype varchar(50) 订单来源   内容  p：来源于pc官网的订单   o：来源于采购平台的订单
+	(2)执行以下sql 在数据字典里加入
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '53', 'public_order', 'ordertype', 'p', '来源于pc官网订单');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '54', 'public_order', 'ordertype', 'o', '来源于采购平台的订单');
+	
+
 	
 	
 	

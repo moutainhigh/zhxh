@@ -22,6 +22,8 @@ public class Public_order {
 	private String identity;
 	private String deliverynum;
 	
+	private String ordertype;
+	
 	private List<Public_order_product> orderProList;
 	
 	
@@ -119,5 +121,13 @@ public class Public_order {
 	public void setOrderProList(List<Public_order_product> orderProList) {
 		this.orderProList = orderProList;
 	}
+	public String getOrdertype() {
+		return ordertype;
+	}
+	public void setOrdertype(String ordertype) {
+		this.ordertype = ordertype;
+	}
+	
+	
 	
 }
