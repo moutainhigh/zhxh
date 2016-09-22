@@ -4,6 +4,16 @@
 为拼图table、分页，采购平台table的css专用
 */
 
+.doc-naver {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.doc-header.fixed-top .doc-naver {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #fff;
+}
+
 .table th{text-align: center}
 		
 .table-bordered th {
@@ -19,7 +29,7 @@
 	text-align: center;
 }
 
-tfoot {
+.tfoot {
     display: table-footer-group;
     vertical-align: middle;
     border-color: inherit;

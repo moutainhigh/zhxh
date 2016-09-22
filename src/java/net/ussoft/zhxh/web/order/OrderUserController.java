@@ -6,9 +6,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -21,11 +23,16 @@ import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUserLinkService;
 import net.ussoft.zhxh.service.IPublicUserService;
+import net.ussoft.zhxh.util.CommonUtils;
+import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.MD5;
+import net.ussoft.zhxh.util.SendSMS;
 
 
 @Controller
@@ -36,6 +43,8 @@ public class OrderUserController extends BaseConstroller {
 	private IPublicUserService userService;
 	@Resource
 	private IPublicUserLinkService userlinkService;	//个人中心关联关系
+	@Resource
+	private IPublicPhoneCodeLogService codeLogService;
 	
 	@RequestMapping(value="/list",method=RequestMethod.POST)
 	public void list(String parentid,String identity,String mapObj,int pageIndex,int pageSize,@RequestParam(value="showtype", defaultValue="1") int showtype,HttpServletResponse response) throws IOException {
@@ -104,9 +113,128 @@ public class OrderUserController extends BaseConstroller {
 		out.print(json);
 	}
 	
+	/**
+	 * 获取手机验证码
+	 * @param phonenumber
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getCode",method=RequestMethod.POST)
+	public void getCode(String phonenumber,String sendType,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		if (null == phonenumber || "".equals(phonenumber)) {
+			out.print("empty");
+			return;
+		}
+		
+		//判断手机号码是否重复
+		boolean isok = userService.checkPhoneNum(phonenumber);
+		
+		if (isok) {
+			out.print("exist");
+			return;
+		}
+		
+		String sendCode = getSix();
+		
+		String logType = "ORDERREG";
+		//发送短信验证码到手机
+		String send_content = "您的注册验证码是" + sendCode;
+		if (null != sendType) {
+			if (sendType.equals("update")) {
+				send_content = "您正在修改个人信息，修改信息验证码是"+sendCode+",如非您个人操作，请忽略并与本网站联系。";
+				logType = "ORDERUPDATE";
+			}
+		}
+		SendSMS.sendMessage(phonenumber, send_content);
+		savePhoneCodeLog(phonenumber, sendCode, logType, request);
+		
+		out.print("success");
+	}
+	
+	/**
+	 * 产生随机的六位数
+	 * @return
+	 */
+	public static String getSix(){
+		Random rad=new Random();
+		String result  = rad.nextInt(1000000) +"";
+		
+		if(result.length()!=6){
+			return getSix();
+		}
+		return result;
+	}
+	
+	/**
+	 * 验证码发送日志
+	 * @param phonenumber
+	 * @param sendCode
+	 * @param sendType
+	 * @param request
+	 * */
+	private void savePhoneCodeLog(String phonenumber,String sendCode,String sendType,HttpServletRequest request){
+
+		//当前时间戳
+		Long oldTime = System.currentTimeMillis();
+		
+		//s为原时间戳和当前时间戳中间相隔的分钟数
+//		Long s = (System.currentTimeMillis() - oldTime) / (1000 * 60);
+		CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("sendCode", sendCode);
+		map.put("phonenumber", phonenumber);
+		map.put("codetime", oldTime);
+		CommonUtils.setSessionAttribute(request, Constants.CODE_SESSION, map);
+		
+		//将发送情况写入日志
+		Public_phone_code_log codeLog = new Public_phone_code_log();
+		codeLog.setId(UUID.randomUUID().toString());
+		codeLog.setPhonenumber(phonenumber);
+		codeLog.setSendcode(sendCode);
+		codeLog.setSendtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		codeLog.setSendtimestr(oldTime.toString());
+		codeLog.setSendtype(sendType);	//类型
+		codeLog.setIp(getRemoteIp(request));
+		codeLogService.insert(codeLog);
+	}
+	
+	protected String getRemoteIp(HttpServletRequest request){
+		
+		String remoteIp = request.getHeader("x-forwarded-for");
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("X-Real-IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("Proxy-Client-IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getRemoteAddr();
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getRemoteHost();
+        }
+        return remoteIp;
+    }
+	
 	
 	@RequestMapping(value="/save",method=RequestMethod.POST)
-	public void save(String objs,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+	public void save(String objs,HttpServletRequest request,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
 		
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
@@ -128,14 +256,14 @@ public class OrderUserController extends BaseConstroller {
 	        String state = row.get("_state") != null ? row.get("_state").toString() : "";
 	        //新增：id为空，或_state为added
 	        if(state.equals("added") || id.equals("")) {
-	        	insert(row);
+	        	result = insert(row, request);
 	        }
 	        else if (state.equals("removed") || state.equals("deleted")) {
 	        	delete(id);
 	        }
 	        //更新：_state为空，或modified
 	        else if (state.equals("modified") || state.equals(""))	 {
-	            update(row);
+	            update(row,request);
 	        }
 	    }
 		out.print(result);
@@ -149,10 +277,22 @@ public class OrderUserController extends BaseConstroller {
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	private String insert(Map<String,String> row) throws IllegalAccessException, InvocationTargetException {
+	private String insert(Map<String,String> row,HttpServletRequest request) throws IllegalAccessException, InvocationTargetException {
 		if (null == row) {
 			return "error";
 		}
+		
+		//获取验证码session
+		HashMap<String,Object> map = (HashMap<String,Object>) CommonUtils.getSessionAttribute(request, Constants.CODE_SESSION);
+		
+		if (map == null){
+			return "codeerror";
+		}
+		String sendCode = row.get("sendcode");
+		if (null == sendCode || !sendCode.equals(map.get("sendCode").toString())) {
+			return "codeerror";
+		}
+				
 		Public_user user = new Public_user(UUID.randomUUID().toString());
 		BeanUtils.populate(user, row);
 		
@@ -211,10 +351,23 @@ public class OrderUserController extends BaseConstroller {
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	private String update(Map<String,String> row) throws IOException, IllegalAccessException, InvocationTargetException {
+	private String update(Map<String,String> row,HttpServletRequest request) throws IOException, IllegalAccessException, InvocationTargetException {
 		if (null == row) {
 			return "error";
 		}
+		if (row.get("updatePhone").equals("1")) {
+			//获取验证码session
+			HashMap<String,Object> map = (HashMap<String,Object>) CommonUtils.getSessionAttribute(request, Constants.CODE_SESSION);
+			
+			if (map == null){
+				return "codeerror";
+			}
+			String sendCode = row.get("sendcode");
+			if (null == sendCode || !sendCode.equals(map.get("sendCode").toString())) {
+				return "codeerror";
+			}
+		}
+		
 		Public_user user = new Public_user();
 		BeanUtils.populate(user, row);
 		//

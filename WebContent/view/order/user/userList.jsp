@@ -14,7 +14,6 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
-    
     <script src="${pageContext.request.contextPath}/js/jquery-jtemplates.js"></script>
     <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
@@ -25,8 +24,8 @@
     	/* .doc-naver {
 		    padding-top: 10px;
 		    padding-bottom: 10px;
-		}
-		.doc-header.fixed-top .doc-naver {
+		} */
+		/* .doc-header.fixed-top .doc-naver {
 		    padding-top: 10px;
 		    padding-bottom: 10px;
 		    background-color: #fff;
@@ -52,18 +51,16 @@
 			background-color: #f7f7f7;
 		} */
 		
-		
     </style>
     <script type="text/javascript">
     	var parentid = '${sessionScope.pc_user_sessiion.id}';
     	var pageIndex = 1;
-    	var pageSize = 2;
+    	var pageSize = 10;
     	var totalPage = 0;
     	
     	var rows = [];
     	
-    	var updateRow = "";
-    	
+    	var searchmap = "";
     	var radio_value = "";
     	$(function(){
     		$("input[name=radio_user]:eq(0)").attr("checked",'checked');
@@ -71,11 +68,30 @@
     		$("input[name=radio_user]").click(function(){
     			$(this).val();
     			pageIndex = 1;
+    			searchmap = "";
+    			$("#searchTxt").val("");
     			radio_click();
   			});
     		//调用全选插件
-    	    $.fn.check({ checkall_name: "checkall", checkbox_name: "row_id" })
+    	    $.fn.check({ checkall_name: "checkall", checkbox_name: "row_id" });
+    		
+    	    $('#searchTxt').bind('keypress',function(event){
+                if(event.keyCode == "13") {
+                	searchUser();
+                }
+            });
+    	    
     	});
+    	
+    	function bindTrClick() {
+    		//除了表头（第一行）以外所有的行添加click事件.
+            $("tr").first().nextAll().click(function (e) {
+            	if (e.target.tagName == "TD") {
+            		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
+                	firstInput.attr("checked",!firstInput.is(':checked'));
+            	}
+            });
+    	}
     	
     	function pageSel() {
     		$('.pageSel').change(function(){ 
@@ -84,20 +100,6 @@
     			pageSize = p1;
     			radio_click();
     		}) 
-    	}
-    	
-    	function bindTdClick2() {
-    		$('.table td').unbind('click').click(function(){
-    			var html = $(this).html();
-    			if (html.indexOf("input") == -1) {
-    				$(this).html("<input type='text' class='input input-small' value='"+html+"'/>");
-    				$(".input").focus();
-    				$(".input").blur(function(){
-    					var val = $(this).val();
-    					$('.table td').html(val);
-    				})
-    			}
-    		})
     	}
     	
     	//绑定数量的TD
@@ -192,10 +194,22 @@
     	
     	function radio_click() {
     		radio_value = $("input[name='radio_user']:checked").val();
+    		
+    		var par = {};
+    		par.parentid = parentid;
+    		par.identity = radio_value;
+    		par.pageIndex = pageIndex-1;
+    		par.pageSize = pageSize;
+    		
+    		if (searchmap != "") {
+    			par.mapObj = JSON.stringify(searchmap);
+    		}
+    		
     		$.ajax({
     			async:false,
                 url: "${pageContext.request.contextPath}/orderUser/list.htmls",
-                data: {'parentid':parentid,identity:radio_value,pageIndex:pageIndex-1,pageSize:pageSize},
+                data: par,
+                //data: {'parentid':parentid,identity:radio_value,pageIndex:pageIndex-1,pageSize:pageSize},
                 type: "post",
                 dataType:"json",
                 success: function (json) {
@@ -208,12 +222,14 @@
 	         		$(".admin-panel").setParam('pageIndex', pageIndex);
 	         		$(".admin-panel").setParam('radio_value', radio_value);
 	         		$(".admin-panel").setParam('totalPage', totalPage);
+	         		$(".admin-panel").setParam('parentid', parentid);
 	         		//$("#admin-panel").setParam('docAuthArr', docAuthArr);
 	                $(".admin-panel").processTemplate(json.data);
 	                
 	                //bindTdClick();
 	                pageSel();
 	                pageEnter();
+	                bindTrClick();
 	              	//调用全选插件
 	        	    $.fn.check({ checkall_name: "checkall", checkbox_name: "row_id" });
 	              	
@@ -224,6 +240,26 @@
            });
     	}
     	
+    	function searchUser() {
+    		var key = $("#searchTxt").val();
+    		pageIndex = 1;
+    		
+    		if (key != "") {
+    			searchmap = {};
+                searchmap.username = key;
+                searchmap.phonenumber = key;
+                if (radio_value != "Z") {
+                	searchmap.companyname = key;
+                    searchmap.companypath = key;
+                }
+            }
+            else {
+            	searchmap = "";
+            }
+			radio_click();
+			
+    	}
+    	
     	function addUser() {
     		
     		var pHeight = $(window.parent).height();
@@ -232,7 +268,7 @@
     		layer.open({
 			    type: 2,
 			    title:'新建客户',
-			    area: ['600px', (pHeight-100) +'px'],
+			    area: ['700px', (pHeight-100) +'px'],
 			    fix: false, //不固定
 			    maxmin: false,
 			    scrollbar:false,
@@ -271,6 +307,9 @@
 			                 		layer.msg("保存成功。",{icon:6});
 			                 		radio_click();
 			                 	}
+			                 	else if (text == "codeerror") {
+			                 		layer.msg("手机短信验证码错误，请输入正确，再尝试，或与开发商联系。",{icon:5});
+			                 	}
 			                 	else {
 			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
 			                 	}
@@ -293,7 +332,7 @@
     		var pHeight = $(window.parent).height();
 	   		var pWidth = $(window.parent).width();
 	   		
-	   		
+	   		var updateRow = "";
 	   		for (var i=0;i<rows.length;i++) {
 	   			if (rows[i].id == userid) {
 	   				updateRow = rows[i];
@@ -309,16 +348,17 @@
     		layer.open({
 			    type: 2,
 			    title:'修改客户',
-			    area: ['600px', (pHeight-100) +'px'],
+			    area: ['700px', (pHeight-100) +'px'],
 			    fix: false, //不固定
 			    maxmin: false,
 			    scrollbar:false,
 			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/updateUser",
 			    success: function(layero, index){
-			    	/* var win = window['layui-layer-iframe' + index].window;
+			    	var win = window['layui-layer-iframe' + index].window;
 			    	var data = [];
-			    	data.row = row;
-			    	win.setData(data); */
+			    	data.updateRow = updateRow;
+			    	data.updatePhone = 0;
+			    	win.setData(data);
 			    },
 			    btn: ['保存', '取消'],
 			  	yes: function(index,layero){
@@ -334,6 +374,7 @@
 			  		}, 
 			  		function()	{
 			  			row._state = 'modified';
+			  			row.updatePhone = "0";
 			  			if (row.identity != "Z") {
 			  				row.companycode = row.phonenumber;
 			  			}
@@ -350,6 +391,9 @@
 			                 	if (text == 'success') {
 			                 		layer.msg("保存成功。",{icon:6});
 			                 		radio_click();
+			                 	}
+			                 	else if (text == "codeerror") {
+			                 		layer.msg("手机短信验证码错误，请输入正确，再尝试，或与开发商联系。",{icon:5});
 			                 	}
 			                 	else {
 			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
@@ -485,9 +529,9 @@
 			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
 			<li><a href="javascript:;" >客户列表</a></li>
 		</ul>
-		<div class="admin" style="padding: 30px 60px;">
+		<div class="admin" style="padding: 20px 60px;">
 			<form onsubmit="return false;" class="form-x" method="post">
-				<div class="form-group float-right">
+				<div class="form-group float-right" style="width:430px">
 					<c:choose>
 	    				<c:when test="${sessionScope.pc_user_sessiion.id == '1' }">
 	    					<input name="radio_user" type="radio" value="A"> 代理
@@ -505,55 +549,13 @@
 					<input name="radio_user" type="radio"> 门店
 					<input name="radio_user" type="radio"> 普通会员 -->
 					<input name="radio_user" type="radio" value="Z"> 普通会员 
-					<a id="addUser" href="javascript:;" onclick="addUser()" style="margin-left: 20px" class="button bg-blue">新建</a>
+					<input type="text" id="searchTxt" name="searchTxt" class="input input-auto" style="width:120px;margin-left: 20px"/>
+					<a id="searchBtn" href="javascript:;" class="button bg-main button-small" onclick="searchUser()">检索</a>
+					<a id="addUser" href="javascript:;" onclick="addUser()" style="margin-left: 5px" class="button bg-blue">新建</a>
 				</div>
 			</form>
 			<form method="post" >
 				<div class="admin-panel">
-					<table class="table table-bordered table-hover text-small">
-						<tbody>
-							<tr class="panel-head">
-								<th width="45" align="center"><input type="checkbox" value="1" name="id"></th>
-								<!-- <th width="120"></th> -->
-								<th width="*">商品名称</th>
-								<th width="100">规格</th>
-								<th width="100">数量</th>
-								<th width="100">单价</th>
-								<th width="100">折扣</th>
-								<th width="180">小计</th>
-							</tr>
-							<tr>
-								<td align="center"><input type="checkbox" value="1" name="id"></td>
-								<%-- <td><img alt="" src="${pageContext.request.contextPath}/file/pic/aa26da09-60e8-4168-8bf5-49bd65645e1b.jpg" width="46px" height="46px"></td> --%>
-								<td>商品A</td>
-								<td align="center">30ml</td>
-								<td align="center">12</td>
-								<td align="center">180</td>
-								<td align="center">0.3</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td align="center"><input type="checkbox" value="1" name="id"></td>
-								<%-- <td><img alt="" src="${pageContext.request.contextPath}/file/pic/aa26da09-60e8-4168-8bf5-49bd65645e1b.jpg" width="46px" height="46px"></td> --%>
-								<td>商品A</td>
-								<td align="center">30ml</td>
-								<td align="center">12</td>
-								<td align="center">180</td>
-								<td align="center">0.3</td>
-								<td></td>
-							</tr>
-							<tr>
-								<td align="center"><input type="checkbox" value="1" name="id"></td>
-								<%-- <td><img alt="" src="${pageContext.request.contextPath}/file/pic/aa26da09-60e8-4168-8bf5-49bd65645e1b.jpg" width="46px" height="46px"></td> --%>
-								<td>商品A</td>
-								<td align="center">30ml</td>
-								<td align="center">12</td>
-								<td align="center">180</td>
-								<td align="center">0.3</td>
-								<td></td>
-							</tr>
-						</tbody>
-					</table>
 				</div>
 			</form>		
 		</div>
@@ -571,7 +573,7 @@
 		<!--
 		<table class="table table-bordered table-hover text-small">
 			<tbody>
-				<tr class="panel-head">
+				<tr class="panel-head item">
 					<th width="45" align="center"><input type="checkbox" value="1" name="checkall"></th>
 					<th width="45">序号</th>
 					<th width="80">姓名</th>
@@ -583,7 +585,7 @@
 					<th width="200">客户名称</th>
 					<th width="200">客户地址</th>
 					<th width="100">客户代码</th>
-					<th width="80">客户级别</th>
+					<th width="120">客户级别</th>
 					<th width="80">接收分成</th>
 					{#elseif $P.radio_value == 'Z'}
 					<th width="100">所属机构代码</th>
@@ -625,8 +627,9 @@
 				{#/if}
 				
 			</tbody>
-			<tfoot>
+			<tfoot class="tfoot">
 				<tr class="">
+					{#if $P.parentid == "1"}
 					<td align="center"><input type="checkbox" value="0" name="checkall"></td>
 					<td colspan="6" class="tr pr10" style="text-align:left" >
 						<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'isopen')">批量开通</a>
@@ -637,11 +640,13 @@
 						{#/if}
 						<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="delbatch()">批量删除</a>
 					</td>
+					{#else}
+					
+					{#/if}
 					<td colspan="9" style="text-align:right" >
 						<div class="page">
 							<span>每页显示</span>
 							<select class="pageSel">
-								<option {#if $P.pageSize == 2}selected{#/if}  value="2">2</option>
 								<option {#if $P.pageSize == 10}selected{#/if}  value="10">10</option>
 								<option {#if $P.pageSize == 50}selected{#/if}  value="50">50</option>
 								<option {#if $P.pageSize == 100}selected{#/if}  value="100">100</option>
@@ -675,6 +680,15 @@
 		</table>
 	    -->
 	</textarea>
-	
+	<!-- <td align="center"><input type="checkbox" value="0" name="checkall"></td>
+	<td colspan="6" class="tr pr10" style="text-align:left" >
+		<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'isopen')">批量开通</a>
+		<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'isopen')">批量禁用</a>
+		{#if $P.radio_value == 'A' || $P.radio_value == 'C'} | 
+		<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'setreturn')">批量接收分成</a>
+		<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'setreturn')">批量禁用接收分成</a> | 
+		{#/if}
+		<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="delbatch()">批量删除</a>
+	</td> -->
 </body>
 </html>

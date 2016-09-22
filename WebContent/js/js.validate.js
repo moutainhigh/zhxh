@@ -104,6 +104,20 @@ function isMoney(str){
     var result=str.match(/^(([1-9]\d*)|(([0-9]{1}|[1-9]+)\.[0-9]{1,2}))$/);
     if(result==null)return false;
     return true;
+}
+
+function validatemobile(mobile) {
+	if (trim(mobile) == "") {
+        return false; 
+    }     
+    if(mobile.length!=11) {
+    	return false; 
+    } 
+    var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+    if(!myreg.test(mobile)) {
+        return false; 
+    }
+    return true;
 } 
     
 /**

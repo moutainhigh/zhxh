@@ -17,6 +17,7 @@
     
     <script src="${pageContext.request.contextPath}/js/jquery-jtemplates.js"></script>
     <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/js/js.validate.js" type="text/javascript"></script>
     
     <style type="text/css">
 	    
@@ -41,7 +42,7 @@
 		.doc-democode {
 		    border: solid 1px #ddd;
 		    border-radius: 0 0 4px 4px;
-		    padding: 15px;
+		    padding: 10px;
 		    background: #f5f5f5;
 		    font-size: 12px;
 		    border-top: none;
@@ -84,6 +85,8 @@
 				var val = $(this).val();
 				$('#companycode').val(val);
  			})
+ 			
+ 			$('#username').focus();
     	})
     	//外部获取数据。这里是序列化form表单
     	function getData() {
@@ -93,6 +96,76 @@
 			});
     		return formData;
     	}
+    	
+		function getSendCode() {
+			
+			var phonenumber = $('#phonenumber').val();
+			
+			if (trim(phonenumber) == "") {
+				parent.layer.msg("请输入手机号码。");
+				$('#phonenumber').val("");
+				$('#phonenumber').focus();
+				return;
+			}
+			
+			if (!validatemobile(phonenumber) ) {
+				parent.layer.msg("请正确输入手机号码。");
+				$('#phonenumber').val("");
+				$('#phonenumber').focus();
+				return;
+			}
+			//获取
+			$.ajax({
+            	url: "${pageContext.request.contextPath}/orderUser/getCode.htmls",
+            	data:{'phonenumber':phonenumber,'sendType':'insert'},
+            	type:"post",
+            	dataType:"text",
+                success: function (text) {
+                	if (text == "empty") {
+                		layer.msg("未获取到手机号码，请重新输入手机号码，再获取短信验证码.");
+        				$('#phonenumber').focus();
+        				return;
+                	}
+                	else if (text == "exist") {
+                		layer.msg("手机号码已注册过，请重新输入手机号码，再获取短信验证码.");
+        				$('#phonenumber').focus();
+        				return;
+                	}
+                	else if(text == "success"){
+                    	//location.reload();
+                		opentime();
+                    }else{
+                    	//layer.msg("测试的验证码:" + text);
+                    	opentime();
+                    }
+                },
+                error: function () {
+                    layer.msg("失败");
+                    return;
+                }
+            });
+			return false;
+		}
+		
+		var wait=120;
+		function opentime() {
+			var o = $(".huoqu");
+			if (wait == 0) {  
+	            o.removeAttr("disabled");
+	            //o.val("获取验证码");
+	            o.text("获取验证码");
+	            wait = 120;
+	        } else {
+	        	o.attr("disabled", true);
+	            //o.val("重新发送(" + wait + ")");
+	            o.text("重新发送(" + wait + ")");
+	            wait--;  
+	            setTimeout(function() {  
+	            	opentime(o);
+	            },  
+	            1000)
+	        }
+		}
     	
     </script>
 </head>
@@ -182,7 +255,7 @@
 						</div>
 						<div class="field">
 							<div class="input-group">
-								<input type="text" class="input" id="vcode" name="vcode" size="50" data-validate="required:必填" placeholder="手机验证码" />
+								<input type="text" class="input" id="sendcode" name="sendcode" size="50" data-validate="required:必填" placeholder="手机验证码" />
 								<span class="addbtn">
 					            	<button type="button" class="button" onclick="aa()">获取</button>
 					            </span>
@@ -195,10 +268,10 @@
 		<div class="doc-democode doc-codead0 ">
 			<blockquote class="border-sub">
 				<p><span style="color:red">填写注意：</span><br>
-				
 				1.手机号码必须真实填写，一个手机号码仅能注册一次。<br>
 				2.手机号码需接收验证短信，填入验证码才能合法注册。<br>
-				3.手机号码同时作为客户登录本系统的帐号及普通会员采购时利益分配的唯一标准代码。
+				3.手机号码同时作为客户登录本系统的帐号及普通会员采购时利益分配的唯一标准代码。<br>
+				4、平台会对新建帐户的身份进行审核，审核通过后，该帐户的状态为[正常]才可以登录本系统。同时开启该帐户的[接收分成]。
 				</p>
 			</blockquote>
 		</div>
@@ -290,9 +363,9 @@
 				</div>
 				<div class="field">
 					<div class="input-group">
-						<input type="text" class="input" id="vcode" name="vcode" size="50" data-validate="required:必填" placeholder="手机验证码" />
+						<input type="text" class="input" id="sendcode" name="sendcode" size="50" data-validate="required:必填" placeholder="手机验证码" />
 						<span class="addbtn">
-			            	<button type="button" class="button" onclick="aa()">获取</button>
+			            	<button type="button" class="button huoqu" onclick="getSendCode()">获取验证码</button>
 			            </span>
 					</div>
 				</div>

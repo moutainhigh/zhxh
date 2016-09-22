@@ -17,6 +17,7 @@
     
     <script src="${pageContext.request.contextPath}/js/jquery-jtemplates.js"></script>
     <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/js/js.validate.js" type="text/javascript"></script>
     
     <style type="text/css">
 	    
@@ -72,7 +73,7 @@
     
     	$(function(){
     		
-    		$(".view-body").setTemplateElement("Template-List-user-form");
+    		/* $(".view-body").setTemplateElement("Template-List-user-form");
      		//$(".view-body").setParam('identity', parent.radio_value);
             $(".view-body").processTemplate(parent.updateRow);
             
@@ -83,15 +84,15 @@
   			$("#phonenumber").blur(function(){
 				var val = $(this).val();
 				$('#companycode').val(val);
- 			})
+ 			}) */
     	})
     	
     	//作废。因从外面调用传参数，模板数据加载后，不能带入js的绑定。
     	function setData(data) {
-    		var row = data.row;
-    		
+    		var row = data.updateRow;
+    		var updatePhone = data.updatePhone;
     		$(".view-body").setTemplateElement("Template-List-user-form");
-     		//$(".view-body").setParam('identity', parent.radio_value);
+     		$(".view-body").setParam('updatePhone', updatePhone);
             $(".view-body").processTemplate(row);
             
             laydate({
@@ -103,10 +104,6 @@
 				$('#companycode').val(val);
  			})
  			
- 			//document.write("<script src='${pageContext.request.contextPath}/js/pintuer/pintuer.js'><\/script>"); 
- 			//$("script[src*='pintuer.js']").remove();
- 			
- 			//$('script[src*="pintuer.js"]').attr('src', $('script[src*="pintuer2.js"]').attr('src') +'&'+new Date().getTime());
     	}
     	
     	//外部获取数据。这里是序列化form表单
@@ -117,6 +114,76 @@
 			});
     		return formData;
     	}
+    	
+		function getSendCode() {
+			
+			var phonenumber = $('#phonenumber').val();
+			
+			if (trim(phonenumber) == "") {
+				parent.layer.msg("请输入手机号码。");
+				$('#phonenumber').val("");
+				$('#phonenumber').focus();
+				return;
+			}
+			
+			if (!validatemobile(phonenumber) ) {
+				parent.layer.msg("请正确输入手机号码。");
+				$('#phonenumber').val("");
+				$('#phonenumber').focus();
+				return;
+			}
+			//获取
+			$.ajax({
+            	url: "${pageContext.request.contextPath}/orderUser/getCode.htmls",
+            	data:{'phonenumber':phonenumber,'sendType':'update'},
+            	type:"post",
+            	dataType:"text",
+                success: function (text) {
+                	if (text == "empty") {
+                		layer.msg("未获取到手机号码，请重新输入手机号码，再获取短信验证码.");
+        				$('#phonenumber').focus();
+        				return;
+                	}
+                	else if (text == "exist") {
+                		layer.msg("手机号码已注册过，请重新输入手机号码，再获取短信验证码.");
+        				$('#phonenumber').focus();
+        				return;
+                	}
+                	else if(text == "success"){
+                    	//location.reload();
+                		opentime();
+                    }else{
+                    	//layer.msg("测试的验证码:" + text);
+                    	opentime();
+                    }
+                },
+                error: function () {
+                    layer.msg("失败");
+                    return;
+                }
+            });
+			return false;
+		}
+		
+		var wait=120;
+		function opentime() {
+			var o = $(".huoqu");
+			if (wait == 0) {  
+	            o.removeAttr("disabled");
+	            //o.val("获取验证码");
+	            o.text("获取验证码");
+	            wait = 120;
+	        } else {
+	        	o.attr("disabled", true);
+	            //o.val("重新发送(" + wait + ")");
+	            o.text("重新发送(" + wait + ")");
+	            wait--;  
+	            setTimeout(function() {  
+	            	opentime(o);
+	            },  
+	            1000)
+	        }
+		}
     	
     </script>
 </head>
@@ -139,9 +206,11 @@
 	</div>
 	<textarea id="Template-List-user-form" rows="0" cols="0" style="display:none">
 		<!--
+		<script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
 		<form id="addUserForm" method="post" class="form-x" onsubmit="return false;">
 			<input type="hidden" id="id" name="id" value="{$T.id}" />
 			<input type="hidden" id="identity" name="identity" value="{$T.identity}" />
+			{#if $P.updatePhone == 0}<input type="hidden" class="input" id="phonenumber" name="phonenumber" size="30" value="{$T.phonenumber}" >{/#if}
 			<div class="form-group">
 				<div class="label">
 					<label for="username">真实姓名</label>
@@ -155,7 +224,7 @@
 					<label for="phonenumber">手机号码</label>
 				</div>
 				<div class="field">
-					<input type="text" class="input" id="phonenumber" name="phonenumber" size="30" value="{$T.phonenumber}" data-validate="required:必填,mobile:手机号码只能填写数字,ajax#${pageContext.request.contextPath}/orderUser/checkPhoneNum.htmls?userid={$T.id}&checkType=update&phoneNum=:手机号码已注册" placeholder="手机号码[作为客户登录本系统的帐号。[不能为空,仅数字]">
+					<input type="text" class="input" id="phonenumber" name="phonenumber" {#if $P.updatePhone == 0}disabled="disabled"{/#if} size="30" value="{$T.phonenumber}" data-validate="required:必填,mobile:手机号码只能填写数字,ajax#${pageContext.request.contextPath}/orderUser/checkPhoneNum.htmls?userid={$T.id}&checkType=update&phoneNum=:手机号码已注册" placeholder="手机号码[作为客户登录本系统的帐号。[不能为空,仅数字]">
 				</div>
 			</div>
 			<div class="form-group">
@@ -219,23 +288,24 @@
 					<input type="text" class="input" id="sort" name="sort" size="30" value="{$T.sort}" data-validate="required:必填,number:请填写数字"  placeholder="排序">
 				</div>
 			</div>
+			{#if $P.updatePhone == 1}
 			<div class="form-group">
 				<div class="label">
 					<label for="wechar">验证码</label>
 				</div>
 				<div class="field">
 					<div class="input-group">
-						<input type="text" class="input" id="vcode" name="vcode" size="50" data-validate="required:必填" placeholder="手机验证码" />
+						<input type="text" class="input" id="sendcode" name="sendcode" size="50" data-validate="required:必填" placeholder="手机验证码" />
 						<span class="addbtn">
-			            	<button type="button" class="button" onclick="aa()">获取</button>
+			            	<button type="button" class="button huoqu" onclick="getSendCode()">获取验证码</button>
 			            </span>
 					</div>
 				</div>
 			</div>
+			{/#if}
 		</form>
 	    -->
 	</textarea>
-	<script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
 	<script src="${pageContext.request.contextPath}/js/laydate/laydate.js" type="text/javascript"></script>
 </body>
 </html>
