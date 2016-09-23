@@ -359,10 +359,10 @@ public class PublicUser2Service implements IPublicUser2Service{
 	 */
 	@Transactional("txManager")
 	@Override
-	public List<Map<String, Object>> listUserStandard(String parentid, String userid,String productid,String brandid) {
+	public List<Map<String, Object>> listUserStandard(String parentid, String userid,String productid,String brandid,String state) {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select up.companyname as parentname,u.username as username,u.companyname,s.productpic,s.productname,s.productsize,s.price,s.sizesort,b.brandname,d.* from public_set_user_standard d");
+		sb.append("select up.companyname as parentname,u.username as username,u.companyname,s.id as sizeid,s.productpic,s.productname,s.productsize,s.price,s.sizesort,b.brandname,d.* from public_set_user_standard d");
 		sb.append(" left join public_product_size s ON d.sizeid = s.id");
 		sb.append(" left join public_user up ON up.id = d.parentid");
 		sb.append(" left join public_user u ON u.id = d.userid");
@@ -381,6 +381,11 @@ public class PublicUser2Service implements IPublicUser2Service{
 		if (null != brandid && !"".equals(brandid)) {
 			sb.append(" and d.brandid=?");
 			values.add(brandid);
+		}
+		
+		if (null != state && !"".equals(state)) {
+			sb.append(" and d.state=?");
+			values.add(state);
 		}
 		
 		sb.append(" order by s.sizesort");

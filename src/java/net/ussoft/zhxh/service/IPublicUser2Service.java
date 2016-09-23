@@ -102,7 +102,7 @@ public interface IPublicUser2Service {
 	 * @param userid
 	 * @return
 	 */
-	public List<Map<String,Object>> listUserStandard(String parentid,String userid,String productid,String brandid);
+	public List<Map<String,Object>> listUserStandard(String parentid,String userid,String productid,String brandid,String state);
 	
 	/**
 	 * 获取被设置机构的采购利益详细。根据品牌id，获取全部商品下的全部规格
