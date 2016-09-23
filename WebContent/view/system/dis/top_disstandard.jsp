@@ -132,6 +132,7 @@
 	      	              { field: "parentname",name:"parentname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "设置者" },
     	                  { field: "username",name:"username", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "被设置者" },
     	                  { field: "companyname",name:"companyname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "机构名称" },
+						  { field: "brandname",name:"brandname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "品牌"},
 						  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称"},
 						  { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准"},
 						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价" },
@@ -417,20 +418,20 @@
                 if (typeof(record.id) != "undefined" && record.id != "") {
                 	if (field == "brandlogo") {
        	        		if (typeof(value) == "undefined" || value == "") {
-                    		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brand\',\''+record.id+'\',\'logo\',\'brandlog\')" >选择图片</a>';
+                    		e.cellHtml = '';
            	        	}
        	        		else {
-       	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brand\',\''+record.id+'\',\'logo\',\'brandlog\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
+       	        			e.cellHtml = '<img src="${pageContext.request.contextPath}/' + value + '" height="30px" />';
        	        		}
         	        }
                 }
                 
                 if (field == "brandcolor") {
                 	if (typeof(value) == "undefined" || value == "") {
-                		e.cellHtml = '<a href="javascript:;" onclick="open_sel_color(\''+uid+'\')" >选择颜色</a>';
+                		e.cellHtml = '';
        	        	}
    	        		else {
-   	        			e.cellHtml = '<a href="javascript:;" onclick="open_sel_color(\''+uid+'\')" ><span style="background-color:' + value + ';width:30px;height:30px;display:inline-block"></span></a>';
+   	        			e.cellHtml = '<span style="background-color:' + value + ';width:30px;height:30px;display:inline-block"></span>';
    	        		}
     	        }
                 
@@ -475,10 +476,10 @@
                 if (typeof(record.id) != "undefined" && record.id != "") {
                 	if (field == "productpic") {
        	        		if (typeof(value) == "undefined" || value == "") {
-                    		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product_size\',\''+record.id+'\',\'pic\',\'productsize\')" >选择图片</a>';
+                    		e.cellHtml = '';
            	        	}
        	        		else {
-       	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product_size\',\''+record.id+'\',\'pic\',\'productsize\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
+       	        			e.cellHtml = '<img src="${pageContext.request.contextPath}/' + value + '" height="30px" />';
        	        		}
         	        }
                 }
@@ -503,20 +504,20 @@
                 if (typeof(record.id) != "undefined" && record.id != "") {
                 	if (field == "brandlogo") {
        	        		if (typeof(value) == "undefined" || value == "") {
-                    		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brand\',\''+record.id+'\',\'logo\',\'brandlog\')" >选择图片</a>';
+                    		e.cellHtml = '';
            	        	}
        	        		else {
-       	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_brand\',\''+record.id+'\',\'logo\',\'brandlog\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
+       	        			e.cellHtml = '<img src="${pageContext.request.contextPath}/' + value + '" height="30px" />';
        	        		}
         	        }
                 }
                 
                 if (field == "brandcolor") {
                 	if (typeof(value) == "undefined" || value == "") {
-                		e.cellHtml = '<a href="javascript:;" onclick="open_sel_color(\''+uid+'\')" >选择颜色</a>';
+                		e.cellHtml = '';
        	        	}
    	        		else {
-   	        			e.cellHtml = '<a href="javascript:;" onclick="open_sel_color(\''+uid+'\')" ><span style="background-color:' + value + ';width:30px;height:30px;display:inline-block"></span></a>';
+   	        			e.cellHtml = '<span style="background-color:' + value + ';width:30px;height:30px;display:inline-block"></span>';
    	        		}
     	        }
                 
@@ -561,10 +562,10 @@
                 if (typeof(record.id) != "undefined" && record.id != "") {
                 	if (field == "productpic") {
        	        		if (typeof(value) == "undefined" || value == "") {
-                    		e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product_size\',\''+record.id+'\',\'pic\',\'productsize\')" >选择图片</a>';
+                    		e.cellHtml = '';
            	        	}
        	        		else {
-       	        			e.cellHtml = '<a href="javascript:;" onclick="open_upload_pic(\'grid_product_size\',\''+record.id+'\',\'pic\',\'productsize\')" ><img src="${pageContext.request.contextPath}/' + value + '" height="30px" /></a>';
+       	        			e.cellHtml = '<img src="${pageContext.request.contextPath}/' + value + '" height="30px" />';
        	        		}
         	        }
                 }

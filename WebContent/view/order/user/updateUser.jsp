@@ -87,7 +87,6 @@
  			}) */
     	})
     	
-    	//作废。因从外面调用传参数，模板数据加载后，不能带入js的绑定。
     	function setData(data) {
     		var row = data.updateRow;
     		var updatePhone = data.updatePhone;

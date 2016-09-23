@@ -357,22 +357,80 @@ public class PublicUser2Service implements IPublicUser2Service{
 	 * (non-Javadoc)
 	 * @see net.ussoft.zhxh.service.IPublicUser2Service#listUserStandard(java.lang.String, java.lang.String)
 	 */
+	@Transactional("txManager")
 	@Override
-	public List<Map<String, Object>> listUserStandard(String parentid, String userid,String productid) {
+	public List<Map<String, Object>> listUserStandard(String parentid, String userid,String productid,String brandid) {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select up.username as parentname,u.username as username,u.companyname,s.productpic,s.productname,s.productsize,s.price,s.sizesort,d.* from public_set_user_standard d");
+		sb.append("select up.companyname as parentname,u.username as username,u.companyname,s.productpic,s.productname,s.productsize,s.price,s.sizesort,b.brandname,d.* from public_set_user_standard d");
 		sb.append(" left join public_product_size s ON d.sizeid = s.id");
 		sb.append(" left join public_user up ON up.id = d.parentid");
 		sb.append(" left join public_user u ON u.id = d.userid");
-		sb.append(" where d.parentid=? and d.userid=? and d.productid=? order by s.sizesort");
+		sb.append(" left join public_brand b On d.brandid = b.id");
+		sb.append(" where d.parentid=? and d.userid=?");
 		
 		List<Object> values = new ArrayList<Object>();
 		values.add(parentid);
 		values.add(userid);
-		values.add(productid);
 		
-		return userStandardDao.searchForMap(sb.toString(), values);
+		if (null != productid && !"".equals(productid)) {
+			sb.append(" and d.productid=?");
+			values.add(productid);
+		}
+		
+		if (null != brandid && !"".equals(brandid)) {
+			sb.append(" and d.brandid=?");
+			values.add(brandid);
+		}
+		
+		sb.append(" order by s.sizesort");
+		
+		//尝试获取，如果没有获取到。读取parentid 能操作什么品牌。自动加入。
+		
+		List<Map<String,Object>> resultMap = userStandardDao.searchForMap(sb.toString(), values);
+		
+		//当为下级设置折扣等利益时，这里是想如果表里没有，自动将parent可操作的商品加入。但考虑到如果让上级主动选择下级能购买的商品，这样可能更符合要求。
+		//这里先屏蔽。就是订单选择商品那里，不要选择上级的品牌，直接或者利益表里的数据，并关联到商品。这样小郭要修改了。
+//		if (null == resultMap || resultMap.size() == 0) {
+//			//首先清除userid 能操作的品牌，并将parentid能操作的品牌赋予它
+//			
+//			String sql = "select distinct s.* from public_product_size s,public_user_brand b where ";
+//			List<Object> tmpValues = new ArrayList<Object>();
+//			
+//			sql += " b.userid = ? and b.brandid = s.brandid";
+//			tmpValues.add(userid);
+//			
+//			if (null != productid && !"".equals(productid)) {
+//				sql += " and s.productid=?";
+//				tmpValues.add(productid);
+//			}
+//			if (null != brandid && !"".equals(brandid)) {
+//				sb.append(" and s.brandid=?");
+//				tmpValues.add(brandid);
+//			}
+//			List<Public_product_size> sizeList = sizeDao.search(sql, tmpValues);
+//			
+//			if (null != sizeList && sizeList.size() > 0) {
+//				//循环加入
+//				Public_set_user_standard setUserS = new Public_set_user_standard();
+//				setUserS.setParentid(parentid);
+//				setUserS.setUserid(userid);
+//				setUserS.setState(0);
+//				setUserS.setState(0);
+//				
+//				for (Public_product_size size : sizeList) {
+//					setUserS.setId(UUID.randomUUID().toString());
+//					setUserS.setBrandid(size.getBrandid());
+//					setUserS.setProductid(size.getProductid());
+//					setUserS.setSizeid(size.getId());
+//					userStandardDao.save(setUserS);
+//				}
+//				
+//				resultMap = userStandardDao.searchForMap(sb.toString(), values);
+//			}
+//		}
+		
+		return resultMap;
 	}
 	
 	/*

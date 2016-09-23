@@ -109,9 +109,16 @@
 								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">
 									<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">客户列表</a>
 								</li>
-								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/customer/type?action=list">客户级别设置</a>
-								</li>
+								<c:if test="${sessionScope.pc_user_sessiion.id != '1'}">
+									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">我的利益</a>
+									</li>
+								</c:if>
+								<c:if test="${sessionScope.pc_user_sessiion.identity == 'A'}">
+									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">客户利益设置</a>
+									</li>
+								</c:if>
 							</ul>
 						</div>
 					</li>
