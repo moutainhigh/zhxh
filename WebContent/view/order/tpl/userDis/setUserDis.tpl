@@ -22,7 +22,7 @@
 				<tr class="tr">
 					<td align="center"><input type="checkbox" value="{$T.row.id}" name="row_id"></td>
 					<td>{$T.row$index+1}</td>
-					<td>{#if $T.row.productpic != ""}<img src="${pageContext.request.contextPath}/{$T.row.productpic}" height="30px" />{#/if} </td>
+					<td>{#if $T.row.productpic != ""}<img src="{$P.path}{$T.row.productpic}" height="30px" />{#/if} </td>
 					<td>{$T.row.parentname}</td>
 					<td>{$T.row.username}</td>
 					<td>{$T.row.companyname}</td>

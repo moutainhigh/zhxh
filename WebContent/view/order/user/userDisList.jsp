@@ -454,7 +454,7 @@
                 	$(".setUserDisDiv").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/setUserDis.tpl");
              		$(".setUserDisDiv").setParam('radio_value', radio_value);
              		$(".setUserDisDiv").setParam('rowCount', json.total);
-             		//$(".selUserDiv").setParam('parentid', parentid);
+             		$(".setUserDisDiv").setParam('path', '${pageContext.request.contextPath}/');
                     $(".setUserDisDiv").processTemplate(json.data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -522,8 +522,7 @@
 			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
 			<li><a href="javascript:;" >客户利益设置</a></li>
 		</ul>
-		<div class="selUserDiv" style="display:none;padding:20px 60px;">
-		</div>
+		<div class="selUserDiv" style="display:none;padding:20px 60px;"></div>
 		<div class="userDiv" style="padding: 20px 60px;">
 			<form onsubmit="return false;" class="form-x" method="post">
 				<div class="form-group float-right" style="width:300px">
@@ -547,7 +546,6 @@
 		</div>
 		<div class="setUserDisDiv" style="display:none;padding:20px 60px;">
 			
-		</div>
 		</div>
 	</div>
 	<!--底部-->

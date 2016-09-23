@@ -173,7 +173,6 @@
 	<div class="container-layout" style="padding: 30px;">
 		<div class="doc-demoview doc-viewad0 ">
 			<div class="view-body">
-				
 			</div>
 		</div>
 		<div class="doc-democode doc-codead0 ">
