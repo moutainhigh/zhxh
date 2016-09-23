@@ -46,7 +46,7 @@ public class OrderUserDisController extends BaseConstroller {
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		List<Map<String, Object>> userStandardList = userService.listUserStandard(parentid, userid,"",brandid);
+		List<Map<String, Object>> userStandardList = userService.listUserStandard(parentid, userid,"",brandid,"");
 		
 		map.put("total", userStandardList.size());
 		map.put("data", userStandardList);

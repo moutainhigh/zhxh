@@ -200,7 +200,7 @@ public class UserManager2Controller extends BaseConstroller{
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		List<Map<String, Object>> userStandardList = userService.listUserStandard(parentid, userid,productid,"");
+		List<Map<String, Object>> userStandardList = userService.listUserStandard(parentid, userid,productid,"","");
 		
 		map.put("total", userStandardList.size());
 		map.put("data", userStandardList);
