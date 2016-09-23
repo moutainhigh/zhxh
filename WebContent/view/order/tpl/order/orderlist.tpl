@@ -2,29 +2,16 @@
 <table class="table table-bordered table-hover text-small update">
 	<tbody>
 		<tr class="panel-head item">
-			<th width="45" align="center"><input type="checkbox" value="1" name="checkall"></th>
-			<th width="45">序号</th>
-			<th width="80">姓名</th>
-			<th width="100">手机号码</th>
-			<th width="80">生日</th>
-			<th width="50">性别</th>
-			<th width="60">身份</th>
-			{#if $P.radio_value == 'A' || $P.radio_value == 'C'}
-			<th width="150">客户名称</th>
-			<th width="200">客户地址</th>
-			<th width="100">客户代码</th>
-			<th width="120">客户级别</th>
-			<th width="80">接收分成</th>
-			{#elseif $P.radio_value == 'Z'}
-			<th width="100">所属机构代码</th>
-			{#/if}
-			{#if $P.radio_value == "C"}
-			<th width="150">推荐人</th>
-			{#/if}
-			<th width="80">微信号码</th>
-			<th width="50">状态</th>
-			<th width="50">排序</th>
-			<th width="160">操作</th>
+			<tr class="panel-head">
+				<th width="45" align="center"><input type="checkbox" value="1" name="id"></th>
+				<th width="45">序号</th>
+				<th width="*">商家名称</th>
+				<th width="180">单号</th>
+				<th width="180">下单时间</th>
+				<th width="100">金额</th>
+				<th width="100">状态</th>
+				<th width="360">操作</th>
+			</tr>
 		</tr>
 		{#if $P.rowCount > 0}
 			{#foreach $T as row}

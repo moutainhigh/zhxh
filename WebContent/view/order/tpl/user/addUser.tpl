@@ -96,7 +96,7 @@
 				</div>
 				<div class="form-group">				
 					<div class="field"  style="width:100%;margin-top:10px">
-						<button class="button bg-sub button-block button-big" onclick="insertUser()">保存</button>
+						<a href="javascript:;" class="button bg-sub button-block button-big" onclick="insertUser()">保存</a>
 					</div>
 				</div>
 				<div class="form-group">				

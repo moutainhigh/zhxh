@@ -25,7 +25,7 @@ function getData() {
 }
 
 function insertUser() {
-	alert(getRootPath_web());
+	//alert(getRootPath_web());
 	var row = getData();
 	if (row == false) {
 			return;
@@ -47,8 +47,9 @@ function insertUser() {
             dataType:"text",
             success: function (text) {
              	if (text == 'success') {
-             		layer.msg("保存成功。",{icon:6});
-             		radio_click();
+             		layer.msg("保存成功1。",{icon:6});
+             		//radio_click();
+             		return;
              	}
              	else if (text == "codeerror") {
              		layer.msg("手机短信验证码错误，请输入正确，再尝试，或与开发商联系。",{icon:5});

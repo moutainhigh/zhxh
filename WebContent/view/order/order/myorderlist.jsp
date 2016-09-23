@@ -15,6 +15,7 @@
     <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
     <script src="${pageContext.request.contextPath}/js/jquery-jtemplates.js"></script>
+    <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
     
     <style type="text/css">
     	.doc-naver {padding-top: 10px;padding-bottom: 10px;}
@@ -25,6 +26,7 @@
     </style>
     <script type="text/javascript">
     	$(function(){
+    		getRootPath_web();
     		$.ajax({
     			async:false,
                 url: "${pageContext.request.contextPath}/order/orderlist.htmls",
