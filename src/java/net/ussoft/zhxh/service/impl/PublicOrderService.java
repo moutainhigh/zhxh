@@ -136,6 +136,7 @@ public class PublicOrderService implements IPublicOrderService{
 		order.setOrdernumber(ordernumber);
 		order.setOrdertotal(subtotal);			//总金额
 		order.setOrderstatus(0);				//待支付
+		order.setOrdertype("p");	//来源-pc官网
 		order.setOrderstatusmemo("待支付");
 		order.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));;
 		return orderDao.save(order);
@@ -213,15 +214,15 @@ public class PublicOrderService implements IPublicOrderService{
 		order.setOrdertotal(subtotal);			//总金额
 		order.setOrderstatus(0);				//待支付
 		order.setOrderstatusmemo("待支付");
+		order.setOrdertype("o"); //来源订货平台
 		order.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));;
 		order = orderDao.save(order);
 		//订单商品
 		productOrderSize(order,psizeList);
 		//商品返利 - 新增表
 		
-		
-		//订单-发货地址-还没想好，地址是否可多个（如果是多个的话可在user中添加临时字段传进来）
-		//addAddress(addressid, order.getId());
+		//收货地址
+		addAddress(user.getAddressid(), order.getId());
 
 		return order;
 	}

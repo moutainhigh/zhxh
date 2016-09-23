@@ -16,6 +16,7 @@
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
     <script src="${pageContext.request.contextPath}/js/jquery-jtemplates.js"></script>
     <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
     <style type="text/css">
     	.doc-naver {
 		    padding-top: 10px;
@@ -47,6 +48,7 @@
 		var objArr = new Array();
 		var total = 0,total_sum = 0;
 		var comp;//采购商家(用于改变商家时-取消回调)
+		var address;
     	$(function(){
     		//提示信息
     		layer.tips('请先选择采购商家', '#f_comp', {tips: [2, '#FF9901'],time: 5000,});
@@ -57,9 +59,9 @@
     				layer.tips('点击选择品牌', '#brand_btn', {tips: [1, '#FF9901'],time: 5000,});
     			
     			if(objArr.length > 0){
-    				var cf1 = "";
-    				layer.confirm('您是如何看待前端开发？', {
-   						btn: ['重要','奇葩'] //按钮
+    				var cf = "您确定要变更采购商家吗？<br><p style='font-size:12px; color:red'>注意：变更后，已选择的商品将被清除。</p>";
+    				layer.confirm(cf, {title:'系统提示',icon:3,
+   						btn: ['确定','取消'] //按钮
    					}, function(index){
    						//数据清零
     	    			objArr = [];
@@ -81,10 +83,15 @@
     			if(objArr.length > 0){
     				var _data =  JSON.stringify(objArr);
     				var _parentid = $("#f_comp").val();
+    				var _address_id = $("#address_id").val();
+    				if(typeof(_address_id) == "undefined" || _address_id == ""){
+    					layer.msg("请添加收货地址",{icon:6});
+    					return;
+    				}
     				$.ajax({
     	    			async:false,
     	                url: "${pageContext.request.contextPath}/order/createorder.htmls",
-    	                data: {objs:_data,parentid:_parentid},
+    	                data: {objs:_data,parentid:_parentid,addressid:_address_id},
     	                type: "post",
     	                dataType:"text",
     	                success: function (text) {
@@ -169,12 +176,27 @@
 		
     	//处理数据
     	function disposal(data){
-    		for(i=0;i<data.length;i++){
-    			objArr.push(initializeObj(data[i]));
+    		if(objArr.length > 0){
+    			for(var i=0;i<data.length;i++){
+    				var flag = true;
+        			for(var j=0;j<objArr.length;j++){
+        				if(data[i].id == objArr[j].id){
+        					flag = false;
+        				}
+        			}
+        			if(flag)
+        				objArr.push(initializeObj(data[i]));
+        		}
+    		}else{
+    			for(var i=0;i<data.length;i++){
+        			objArr.push(initializeObj(data[i]));
+        		}
     		}
+    		
     		//加载数据
     		loadData();
     	}
+    	
     	
     	//初始数据对象
     	function initializeObj(data){
@@ -230,7 +252,53 @@
     		})
     	}
     	
+    	//选择收货地址
+    	function selAddress(){
+			parent.parent.layer.open({
+			    type: 2,
+			    title:'修改收货地址',
+			    area: ['720px', '520px'],
+			    fix: false, //不固定
+			    maxmin: true,
+			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myaddress",
+			    btn: ['确 定', '取 消'],
+			  	yes: function(index,layero){
+			  		var win = parent.window['layui-layer-iframe' + index].window;
+			  		var data = win.getData();
+			  		if(data.length > 0){
+			  			var address = "收货人："+data[0].username+"，联系电话："+data[0].userphone+"，收货地址："+data[0].address;
+			  			$("#address_id").val(data[0].id);
+			  			$("#address").html(address);
+			  			parent.parent.layer.closeAll();	//关闭窗体
+			  		}else{
+			  			parent.parent.layer.msg("请选择一个收货地址",{icon:6});
+			  		}
+			  	},
+			    end: function(){
+			    	//alert(123);
+			    }
+			});
+		}
     	
+    	//
+    	function delRow(id){
+    		var cf = "您确定要删除？";
+			layer.confirm(cf, {title:'系统提示',icon:3,
+				btn: ['确定','取消'] //按钮
+			}, function(index){
+				var objArr_tmp = new Array();
+				for(var i=0;i<objArr.length;i++){
+					if(objArr[i].id == id){
+						objArr.splice(i,1);
+						break;
+					}
+				}
+				loadData();
+   				layer.close(index);
+			}, function(){
+				$("#f_comp").val(comp);
+			});
+    	}
     </script>
 </head>
 <body>
@@ -242,7 +310,7 @@
 			<li><a href="#" >采购单</a></li>
 		</ul>
 		<div class="admin" style="padding: 30px 60px;">
-			<div class="x3" style="padding-bottom: 20px;">
+			<div class="x3">
 				<form onsubmit="return false;" class="form-x"><div class="form-group" id="f_parent">
 	                 <div class="label" style="width: 16%">
 	                     <label for="f_class">采购商家：</label>
@@ -284,24 +352,24 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="text-right" style="padding: 30px 50px;">
+				<div class="text-right panel" style="padding: 30px 50px;border-top: solid 0">
 					<div>合计：￥<span id="total">0.00</span></div>
 					<br/>
 					<div>应付总额：￥<span style="color: red !important" id="total_sum">0.00</span></div>
 				</div>
-				<div class="form-inline" style="padding-top: 20px;">
+				<div class="form-inline" style="padding-top: 30px;">
 					<div class="form-group">
 						<div class="label">
-							<label for="username">
-								收货信息：</label>
+							<label for="username">收货信息：</label>
 						</div>
-						<div class="field">
-							收货人：张三，联系电话：15010780215，收货地址：北京市朝阳区望京悠乐汇A 2108
+						<div class="field"><button class="button button-little border-blue" onclick="selAddress()"><span class="icon-edit"></span></button>
+							<input type="hidden" id="address_id" value="${address_id }"/>
+							<label id="address">${address }</label>
 						</div>
 					</div>
 				</div>
-				<div>
-					<button id="submit_btn" class="button button-big bg-blue">提交订单</button>
+				<div class="padding-top">
+					<button id="submit_btn" class="button bg-blue float-right">提交订单</button>
 				</div>
 			</div>		
 		</div>
@@ -317,10 +385,10 @@
 	
 	<textarea id="Template-List-user-show" rows="0" cols="0" style="display:none">
 		<!--
-		<table class="table table-bordered table-hover text-small">
+		<table class="table table-bordered table-hover text-small sel">
 			<tbody>
 				<tr class="panel-head">
-					<th width="45" align="center"><input type="checkbox" name="checkall"></th>
+					<th width="45" align="center"></th>
 					<th width="*">商品名称</th>
 					<th width="160">规格</th>
 					<th width="160">数量</th>
@@ -330,7 +398,7 @@
 				</tr>
 				{#foreach $T as row}
 				<tr class="tr" id="{$T.row.id}">
-					<td align="center"><input type="checkbox" value="{$T.row.id}" name="id"></td>
+					<td align="center"><a href="javascript:;" class="button-little icon-minus" onclick="delRow('{$T.row.id}')"> </a></td>
 					<td>{$T.row.productname}</td>
 					<td>{$T.row.productsize}</td>
 					<td class="quantity">{$T.row.quantity}</td>
@@ -343,66 +411,5 @@
 		</table>
 	    -->
 	</textarea>
-	
-	<script type="text/javascript">
-		/** 
-		 * 将数值四舍五入(保留2位小数)后格式化成金额形式 
-		 * 
-		 * @param num 数值(Number或者String) 
-		 * @return 金额格式的字符串,如'1,234,567.45' 
-		 * @type String 
-		 */  
-		function formatCurrency(num) {  
-		    num = num.toString().replace(/\$|\,/g,'');  
-		    if(isNaN(num))  
-		    num = "0";  
-		    sign = (num == (num = Math.abs(num)));  
-		    num = Math.floor(num*100+0.50000000001);  
-		    cents = num%100;  
-		    num = Math.floor(num/100).toString();  
-		    if(cents<10)  
-		    cents = "0" + cents;  
-		    for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)  
-		    num = num.substring(0,num.length-(4*i+3))+','+  
-		    num.substring(num.length-(4*i+3));  
-		    return (((sign)?'':'-') + num + '.' + cents);  
-		}  
-		   
-		/** 
-		 * 将数值四舍五入(保留1位小数)后格式化成金额形式 
-		 * 
-		 * @param num 数值(Number或者String) 
-		 * @return 金额格式的字符串,如'1,234,567.4' 
-		 * @type String 
-		 */  
-		function formatCurrencyTenThou(num) {  
-		    num = num.toString().replace(/\$|\,/g,'');  
-		    if(isNaN(num))  
-		    num = "0";  
-		    sign = (num == (num = Math.abs(num)));  
-		    num = Math.floor(num*10+0.50000000001);  
-		    cents = num%10;  
-		    num = Math.floor(num/10).toString();  
-		    for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)  
-		    num = num.substring(0,num.length-(4*i+3))+','+  
-		    num.substring(num.length-(4*i+3));  
-		    return (((sign)?'':'-') + num + '.' + cents);  
-		}  
-		  
-		// 添加金额格式化  
-	    function formatFloat(src, pos){  
-	        var num = parseFloat(src).toFixed(pos);  
-	        num = num.toString().replace(/\$|\,/g,'');  
-	        if(isNaN(num)) num = "0";  
-	        sign = (num == (num = Math.abs(num)));  
-	        num = Math.floor(num*100+0.50000000001);  
-	        cents = num%100;  
-	        num = Math.floor(num/100).toString();  
-	        if(cents<10) cents = "0" + cents;  
-	        for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)  
-	        num = num.substring(0,num.length-(4*i+3))+','+num.substring(num.length-(4*i+3));  
-	        return (((sign)?'':'-') + num + '.' + cents);  
-	    }
-	</script>
 </body>
 </html>

@@ -14,7 +14,7 @@
     <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
     <script src="${pageContext.request.contextPath}/js/jquery-jtemplates.js"></script>
-     <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
     
     <style type="text/css">
 		.admin {
@@ -40,6 +40,15 @@
     		});
     	});
     	
+    	function bindTrClick() {
+    		//除了表头（第一行）以外所有的行添加click事件.
+            $(".sel tr").first().nextAll().click(function (e) {
+            	if (e.target.tagName == "TD") {
+            		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
+                	firstInput.attr("checked",!firstInput.is(':checked'));
+            	}
+            });
+    	}
     	
     	//品牌-商品列表
     	function prolist(keyword){
@@ -50,9 +59,9 @@
                 type: "post",
                 dataType:"json",
                 success: function (json) {
-                	objs = json;
                	 	$("#orderList").setTemplateElement("Template-List-user-show");
 	                $("#orderList").processTemplate(json.data);
+	                bindTrClick();
 	             	 //调用全选插件
 	                $.fn.check({ checkall_name: "checkall", checkbox_name: "id" })
                 },
@@ -99,22 +108,11 @@
 			<button class="button bg-blue" id="newOrder"><span class="icon-plus"></span> 新增</button>
 		</div> -->
 		<div id="orderList" class="admin-panel">
-			<table class="table table-bordered table-hover text-small">
-				<tbody>
-					<tr class="panel-head">
-						<th width="45" align="center"><input type="checkbox"></th>
-						<th width="*">商品名称</th>
-						<th width="100">规格</th>
-						<th width="100">单价</th>
-						<th width="100">折扣</th>
-					</tr>
-				</tbody>
-			</table>
 		</div>
 	</div>
 	<textarea id="Template-List-user-show" rows="0" cols="0" style="display:none">
 		<!--
-		<table class="table table-bordered table-hover text-small">
+		<table class="table table-bordered table-hover text-small sel">
 			<tbody>
 				<tr class="panel-head">
 					<th width="45" align="center"><input type="checkbox" name="checkall"></th>

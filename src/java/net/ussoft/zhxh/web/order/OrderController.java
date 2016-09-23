@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -15,12 +16,19 @@ import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_order;
+import net.ussoft.zhxh.model.Public_order_path;
 import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_user;
-import net.ussoft.zhxh.service.impl.PublicOrderService;
-import net.ussoft.zhxh.service.impl.PublicUser2Service;
-import net.ussoft.zhxh.service.impl.PublicUserService;
+import net.ussoft.zhxh.model.Public_user_bank;
+import net.ussoft.zhxh.model.Public_user_path;
+import net.ussoft.zhxh.service.IPublicOrderPathService;
+import net.ussoft.zhxh.service.IPublicOrderProductService;
+import net.ussoft.zhxh.service.IPublicOrderService;
+import net.ussoft.zhxh.service.IPublicUser2Service;
+import net.ussoft.zhxh.service.IPublicUserBankService;
+import net.ussoft.zhxh.service.IPublicUserPathService;
+import net.ussoft.zhxh.service.IPublicUserService;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -38,12 +46,19 @@ import com.alibaba.fastjson.JSON;
 public class OrderController extends BaseConstroller {
 	
 	@Resource
-	private PublicOrderService orderService;
+	private IPublicOrderService orderService;
 	@Resource
-	private PublicUserService userService;
+	private IPublicUserService userService;
 	@Resource
-	private PublicUser2Service user2Service;
-	
+	private IPublicUser2Service user2Service;
+	@Resource
+	private IPublicUserPathService userPathService;
+	@Resource
+	private IPublicUserBankService bankService;
+	@Resource
+	private IPublicOrderProductService orderProServivce;
+	@Resource
+	private IPublicOrderPathService orderPathService;
 	/**
 	 * 跳转到某个页面。
 	 * @param page		跳转到参数指定的页面
@@ -68,8 +83,21 @@ public class OrderController extends BaseConstroller {
 	@RequestMapping(value="/newOrder")
 	public ModelAndView newOrder (ModelMap modelMap) throws Exception {
 		Public_user user = getSessionUser();
+		//商家
 		List<Public_user> u_list = userService.listParent(user.getId());
+		//收货地址,后期添加设置默认，目前随机取一条
+		List<Public_user_path> userPathList = userPathService.list(user.getId());
+		String address_id = "",address = "";
+		if(userPathList.size() > 0){
+			Public_user_path userpath = userPathList.get(0);
+			address_id = userpath.getId();
+			address = "收货人："+userpath.getUsername()+"，联系电话："+userpath.getUserphone()+"，收货地址："+userpath.getUserpath();
+		}
+		
 		modelMap.put("u_list", u_list);
+		modelMap.put("address_id", address_id);
+		modelMap.put("address", address);
+		
 		return new ModelAndView("/view/order/order/createorder", modelMap);
 	}
 	
@@ -77,10 +105,14 @@ public class OrderController extends BaseConstroller {
 	 * 创建订货单
 	 * */
 	@RequestMapping(value="/createorder",method=RequestMethod.POST)
-	public void createorder(String objs,String parentid,HttpServletResponse response) throws Exception {
+	public void createorder(String objs,String parentid,String addressid,HttpServletResponse response) throws Exception {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
+		if ("".equals(objs) || objs == null || "".equals(parentid) || null == parentid || "".equals(addressid) || null == addressid) {
+			out.print("error");
+			return;
+		}
 		List<Public_product_size> psizeList = new ArrayList<Public_product_size>();
 		//商品
 		List<Map<String, String>> rows = (List<Map<String, String>>) JSON.parse(objs);
@@ -92,6 +124,7 @@ public class OrderController extends BaseConstroller {
 		}
 		Public_user user = getSessionUser();
 		user.setParentid(parentid); //商家
+		user.setAddressid(addressid);
 		Public_order order = orderService.createorder(psizeList, user);
 		if(order != null){
 			out.print("success");
@@ -127,6 +160,7 @@ public class OrderController extends BaseConstroller {
 		p.setOrderType("desc");
 		
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("ordertype= ", "o");	//订单类型-订货平台
 		Public_user user = getSessionUser();
 		if("my".equals(orderType)){
 			params.put("userid= ", user.getId());
@@ -135,10 +169,78 @@ public class OrderController extends BaseConstroller {
 			params.put("parentid= ", user.getId());
 			p = orderService.list(params, p);
 		}
+		//赋username
+		List<Public_order> orderlist = setOrderUsername(p.getList(), orderType);
 		
-		map.put("data", p.getList());
+		map.put("data", orderlist);
 		map.put("pageCount", p.getPageCount());
 		map.put("rowCount", p.getRowCount());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	/**
+	 * 给订单中的userid，parentid 赋username
+	 * */
+	private List<Public_order> setOrderUsername(List<Public_order> list,String orderType){
+		List<Public_order> resultlist = new ArrayList<Public_order>();
+		Public_user user_obj = null;
+		if("sub".equals(orderType)){
+			String userid = "";
+			for(Public_order order : list){
+				if(order.getUserid().equals(userid)){
+					order.setU_username(user_obj.getUsername());
+				}else{
+					user_obj = userService.getById(order.getUserid());
+					order.setU_username(user_obj.getUsername());
+					userid = order.getUserid();
+				}
+				resultlist.add(order);
+			}
+		}else if("my".equals(orderType)){
+			String parentid = "";
+			for(Public_order order : list){
+				if(order.getParentid().equals(parentid)){
+					order.setP_username(user_obj.getUsername());
+				}else{
+					user_obj = userService.getById(order.getParentid());
+					order.setP_username(user_obj.getUsername());
+					parentid = order.getParentid();
+				}
+				resultlist.add(order);
+			}
+		}
+//		else if("all".equals(orderType)) userid,parentid 都获取
+		return resultlist;
+	}
+	
+	/**
+	 * 订单详情
+	 * */
+	@RequestMapping(value="/orderdetails",method=RequestMethod.POST)
+	public void orderdetails(String orderid, HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if(orderid == null || "".equals(orderid)){
+			out.print("error");
+			return;
+		}
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		//订单
+		Public_order order = orderService.getById(orderid);
+		//订单商品
+		Map<String, Object> op_map = new LinkedHashMap<String, Object>();
+		op_map.put("orderid = ", orderid);
+		List<Public_order_product> proList = orderProServivce.list(op_map);
+		//收货地址
+		Public_order_path orderPath = orderPathService.getByOrderId(orderid);
+		
+		
+		map.put("order",order);
+		map.put("products", proList);
+		map.put("address", orderPath);
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
@@ -183,4 +285,132 @@ public class OrderController extends BaseConstroller {
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
+	
+	/**
+	 * 收货地址
+	 * @param parentid
+	 * 
+	 * */
+	@RequestMapping(value="/address",method=RequestMethod.POST)
+	public void address(HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		Public_user user = getSessionUser();
+		//收货地址
+		List<Public_user_path> userPathList = userPathService.list(user.getId());
+		
+		map.put("data", userPathList);
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 新增/编辑地址
+	 * */
+	@RequestMapping(value="/editaddress",method=RequestMethod.POST)
+	public void editaddress(String objs, HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(objs) || objs == null) {
+			out.print("error");
+			return;
+		}
+		List<Map<String, String>> rows = (List<Map<String, String>>) JSON.parse(objs);
+		for(int i=0,l=rows.size(); i<l; i++){
+			Map<String,String> row = (Map<String,String>)rows.get(i);
+			Public_user_path userPath = new Public_user_path();
+			BeanUtils.populate(userPath, row);
+			
+			editaddress(userPath);
+			
+		}
+		out.print("success");
+	}
+	//批量添加/修改，应该在service中完成-
+	private String editaddress(Public_user_path userPath){
+		if(!"".equals(userPath.getId()) && null != userPath.getId()){
+			//修改
+			int num = userPathService.update(userPath);
+			if(num > 0){
+				return "success";
+			}
+		}else{
+			userPath.setId(UUID.randomUUID().toString());
+			Public_user user = getSessionUser();
+			userPath.setUserid(user.getId());
+			Public_user_path obj = userPathService.insert(userPath);
+			if(obj != null){
+				return "success";
+			}
+		}
+		return "error";
+	}
+	
+	/**
+	 * 删除地址
+	 * @param id
+	 * */
+	@RequestMapping(value="/deladdress",method=RequestMethod.POST)
+	public void deladdress(String id, HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(id) || id == null) {
+			out.print("error");
+			return;
+		}
+		int num = userPathService.delete(id);
+		if(num > 0){
+			out.print("success");
+			return;
+		}
+		out.print("error");
+	}
+	
+	/**
+	 * 我的账户余额（可支配账户）
+	 * @param id
+	 * */
+	@RequestMapping(value="/mybank",method=RequestMethod.POST)
+	public void mybank(String parentid, HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(parentid) || parentid == null) {
+			out.print("error");
+			return;
+		}
+		Public_user user = getSessionUser();
+		Public_user_bank bank = bankService.getUserBank(user.getId(), parentid);
+		
+		
+	}
+	
+	/**
+	 * 我的账户余额（可支配账户）
+	 * @param id
+	 * */
+	@RequestMapping(value="/paymentorder",method=RequestMethod.POST)
+	public void paymentorder(String orderid, HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		Public_order order = orderService.getById(orderid);
+		Public_user user = getSessionUser();
+		Public_user_bank bank = bankService.getUserBank(user.getId(), order.getParentid());
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("ordertotal", order.getOrdertotal());	//订单金额
+		map.put("havebank", bank.getHavebank());		//可支配账户余额
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
 }

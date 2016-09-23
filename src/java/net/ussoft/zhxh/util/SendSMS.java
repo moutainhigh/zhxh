@@ -27,7 +27,7 @@ public class SendSMS {
 	 * @return
 	 * */
 	public static String sendMessage(String mobile,String content){
-		String send_content = encode_gb2312(content + "【众恒信和】");
+		String send_content = encode_gb2312(content + "【集丽科技】");
 		return SendMessage(ID, PWD, mobile, send_content, "");
 	}
 	

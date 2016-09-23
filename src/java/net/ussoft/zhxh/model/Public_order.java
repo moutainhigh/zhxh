@@ -24,6 +24,8 @@ public class Public_order {
 	
 	private String ordertype;
 	
+	private String u_username;	//临时字段-userid对应的username
+	private String p_username;	//临时字段-parentid对应的username
 	private List<Public_order_product> orderProList;
 	
 	
@@ -127,7 +129,19 @@ public class Public_order {
 	public void setOrdertype(String ordertype) {
 		this.ordertype = ordertype;
 	}
-	
-	
+	@Transient
+	public String getU_username() {
+		return u_username;
+	}
+	public void setU_username(String u_username) {
+		this.u_username = u_username;
+	}
+	@Transient
+	public String getP_username() {
+		return p_username;
+	}
+	public void setP_username(String p_username) {
+		this.p_username = p_username;
+	}
 	
 }

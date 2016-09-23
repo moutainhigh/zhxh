@@ -328,6 +328,7 @@ public class PorderController extends BaseConstroller {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		Public_user user = getSessionUser();
 		map.put("userid = ", user.getId());
+		map.put("ordertype= ", "p");	//pc官网订单
 		//查询该用户下的所有订单
 		p = orderService.list(map, p);
 		for(Public_order obj:p.getList()){

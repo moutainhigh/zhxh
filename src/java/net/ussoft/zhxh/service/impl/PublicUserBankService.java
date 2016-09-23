@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicLogDao;
@@ -19,7 +20,7 @@ import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.util.DateUtil;
 
-@Resource
+@Service
 public class PublicUserBankService implements IPublicUserBankService{
 	
 	@Resource

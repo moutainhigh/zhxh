@@ -39,8 +39,8 @@ public class Public_user {
 	
 	//临时字段
 	private String parentid; 		//存储机构（代理或店）的直属上级id
-	
 	private String createtime;		//创建时间
+	private String addressid;		//收货地址
 	
 	public Public_user() {
 		super();
@@ -230,10 +230,6 @@ public class Public_user {
 	public void setRank(String rank) {
 		this.rank = rank;
 	}
-	
-	
-	
-	
 	public int getSort() {
 		return sort;
 	}
@@ -252,6 +248,13 @@ public class Public_user {
 	}
 	public void setParentid(String parentid) {
 		this.parentid = parentid;
+	}
+	@Transient
+	public String getAddressid() {
+		return addressid;
+	}
+	public void setAddressid(String addressid) {
+		this.addressid = addressid;
 	}
 	
 }
