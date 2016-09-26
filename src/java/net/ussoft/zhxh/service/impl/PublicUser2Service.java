@@ -166,6 +166,14 @@ public class PublicUser2Service implements IPublicUser2Service{
 		
 		sb.append(" order by sort");
 		
+		if (null == p) {
+			List<Public_brand> resultList = brandDao.search(sb.toString(), values);
+			PageBean<Public_brand> tmpP = new PageBean<Public_brand>();
+			
+			tmpP.setList(resultList);
+			return tmpP;
+		}
+		
 		return p = brandDao.search(sb.toString(), values, p);
 	}
 

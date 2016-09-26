@@ -59,8 +59,8 @@ public interface IPublicUser2Service {
 	 * 获取机构能操作的品牌
 	 * @param parentid
 	 * @param userid
-	 * @param brandname		检索条件。模糊检索品牌名称
-	 * @param PageBean		
+	 * @param brandname		检索条件。模糊检索品牌名称	可选
+	 * @param PageBean		分页检索。可选。null为不分页，获取全部	
 	 * @return
 	 * */
 	public PageBean<Public_brand> list_user_brand(String parentid,String userid,String brandname,PageBean<Public_brand> p);
