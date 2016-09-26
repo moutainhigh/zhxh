@@ -260,9 +260,23 @@ INSERT INTO sys_data_dic VALUES('55','public_log','logtype','withdrawal','提现
 	（1）增加brandname varchar(200)  品牌名称
 	
 2016-09-26
-数据字典
+1.数据字典
 INSERT INTO sys_data_dic VALUES('58','public_log','logtype','paymentorder','已付款');
 INSERT INTO sys_data_dic VALUES('59','public_log','logtype','cancelorder','已取消');
 INSERT INTO sys_data_dic VALUES('60','public_log','logtype','sendorder','已发货');
 INSERT INTO sys_data_dic VALUES('61','public_log','logtype','signorder','已签收');
+
+2.增加表public_product_size_rebate 返利数量表
+DROP TABLE IF EXISTS `public_product_size_rebate`;
+CREATE TABLE `public_product_size_rebate` (
+  `id` varchar(40) NOT NULL,
+  `parentid` varchar(40) DEFAULT NULL,
+  `userid` varchar(40) DEFAULT NULL,
+  `sizeid` varchar(40) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
 
