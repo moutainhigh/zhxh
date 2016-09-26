@@ -443,7 +443,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 			Arrays.fill(ss4, "?");
 			sb.append(StringUtils.join(ss4,','));
 			sb.append(")");
-			values.addAll(brandidList);
+			values.addAll(searchSizeIdList);
 		}
 		
 		if (null != productid && !"".equals(productid)) {
