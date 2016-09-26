@@ -31,31 +31,22 @@
     	.table-bordered th {border-bottom: 1px solid #ddd;}
     </style>
     <script type="text/javascript">
+    	//
+    	var parentid,brandid;
     	$(function(){
-    		//品牌对应的商品
-    		prolist("");
+    		//搜索
     		$(".search-btn").click(function(){
     			var keyword = $("#keyword").val();
-    			prolist(keyword);
+    			loadData(keyword);
     		});
     	});
     	
-    	function bindTrClick() {
-    		//除了表头（第一行）以外所有的行添加click事件.
-            $(".sel tr").first().nextAll().click(function (e) {
-            	if (e.target.tagName == "TD") {
-            		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
-                	firstInput.attr("checked",!firstInput.is(':checked'));
-            	}
-            });
-    	}
-    	
     	//品牌-商品列表
-    	function prolist(keyword){
+    	function loadData(keyword){
     		$.ajax({
     			async:false,
                 url: "${pageContext.request.contextPath}/order/prolist.htmls",
-                data: {parentid:'${parentid}',brandid:'${brandid}',keyword:keyword},
+                data: {parentid:parentid,brandid:brandid,keyword:keyword},
                 type: "post",
                 dataType:"json",
                 success: function (json) {
@@ -71,6 +62,14 @@
            });
     	}
     	
+    	//
+    	function setData(pid,bid){
+    		parentid = pid;
+    		brandid = bid;
+    		loadData("");
+    	}
+    	
+    	//
     	function getData(){
     		var objArr = new Array();
     		$("input[name='id']").each(function(index,element){
@@ -78,12 +77,14 @@
        	        	id = element.value;
        	        	var tr = $('#'+id);
        	        	var tds = $(tr).find("td");
+       	        	var i = 1;
        	        	var _obj = {};
        	        	_obj.id = id;
-       	        	_obj.productname = $.trim($(tds[1]).text());
-       	        	_obj.productsize = $.trim($(tds[2]).text());
-       	        	_obj.price = $.trim($(tds[3]).text());
-       	        	_obj.buyerdis = $.trim($(tds[4]).text());
+       	        	_obj.brandname = $.trim($(tds[i++]).text());
+       	        	_obj.productname = $.trim($(tds[i++]).text());
+       	        	_obj.productsize = $.trim($(tds[i++]).text());
+       	        	_obj.price = $.trim($(tds[i++]).text());
+       	        	_obj.buyerdis = $.trim($(tds[i++]).text());
        	        	_obj.quantity = 1;
        	        	objArr.push(_obj);
        	        	/* for(i=0;i<tds.length;i++){
@@ -92,6 +93,16 @@
        	        }
        	    });
     		return objArr;
+    	}
+    	
+    	function bindTrClick() {
+    		//除了表头（第一行）以外所有的行添加click事件.
+            $(".sel tr").first().nextAll().click(function (e) {
+            	if (e.target.tagName == "TD") {
+            		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
+                	firstInput.attr("checked",!firstInput.is(':checked'));
+            	}
+            });
     	}
     </script>
 </head>
@@ -104,9 +115,6 @@
 				<td width="100px;"><button class="button search-btn" id="newOrder"><span class="icon-search"></span> 搜索</button></td>
 			</tr></table>
 		</div>
-		<!-- <div class="padding float-right">
-			<button class="button bg-blue" id="newOrder"><span class="icon-plus"></span> 新增</button>
-		</div> -->
 		<div id="orderList" class="admin-panel">
 		</div>
 	</div>
@@ -116,18 +124,20 @@
 			<tbody>
 				<tr class="panel-head">
 					<th width="45" align="center"><input type="checkbox" name="checkall"></th>
-					<th width="80">商品名称</th>
+					<th width="80">品牌</th>
+					<th width="*">商品名称</th>
 					<th width="100">规格</th>
-					<th width="50">单价</th>
-					<th width="50">折扣</th>
+					<th width="80">单价</th>
+					<th width="60">折扣</th>
 				</tr>
 				{#foreach $T as row}
 				<tr class="tr" id="{$T.row.id}">
 					<td align="center"><input type="checkbox" value="{$T.row.id}" name="id"></td>
+					<td align="center">{$T.row.brandname}</td>
 					<td>{$T.row.productname}</td>
-					<td>{$T.row.productsize}</td>
-					<td>{$T.row.price}</td>
-					<td>{$T.row.buyerdis}</td>
+					<td align="center">{$T.row.productsize}</td>
+					<td align="right">{$T.row.price}</td>
+					<td align="center">{$T.row.buyerdis}</td>
 				</tr>
 				{#/for}
 			</tbody>

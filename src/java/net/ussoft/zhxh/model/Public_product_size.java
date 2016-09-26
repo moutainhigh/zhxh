@@ -25,6 +25,7 @@ public class Public_product_size {
 	
 	private int quantity; //临时字段，存放购物车中对应商品的数量和采购单的数量
 	private String productcatid;	//购物车对应商品ID
+	private String brandname;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -121,6 +122,13 @@ public class Public_product_size {
 	}
 	public void setProductcatid(String productcatid) {
 		this.productcatid = productcatid;
+	}
+	@Transient
+	public String getBrandname() {
+		return brandname;
+	}
+	public void setBrandname(String brandname) {
+		this.brandname = brandname;
 	}
 	
 }

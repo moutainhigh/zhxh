@@ -29,6 +29,7 @@ import net.ussoft.zhxh.service.IPublicUser2Service;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserPathService;
 import net.ussoft.zhxh.service.IPublicUserService;
+import net.ussoft.zhxh.util.SendSMS;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -120,6 +121,7 @@ public class OrderController extends BaseConstroller {
 			Map<String,String> row = (Map<String,String>)rows.get(i);
 			Public_product_size product = new Public_product_size();
 			BeanUtils.populate(product, row);
+			product.setBrandname(row.get("brandname"));
 			psizeList.add(product);
 		}
 		Public_user user = getSessionUser();
@@ -146,9 +148,13 @@ public class OrderController extends BaseConstroller {
 	
 	/**
 	 * 订单列表
+	 * @param orderType
+	 * @param ordernum
+	 * @param parentid
+	 * @param ordertime
 	 * */
 	@RequestMapping(value="/orderlist",method=RequestMethod.POST)
-	public void orderlist(String orderType,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void orderlist(String orderType,String ordernum,String parentid,String ordertime,String orderstatus, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -161,6 +167,10 @@ public class OrderController extends BaseConstroller {
 		
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("ordertype= ", "o");	//订单类型-订货平台
+		params.put("ordernumber= ", ordernum);
+		params.put("parentid= ", parentid);
+		params.put("ordertime= ", ordertime);
+		params.put("orderstatus= ", orderstatus);
 		Public_user user = getSessionUser();
 		if("my".equals(orderType)){
 			params.put("userid= ", user.getId());
@@ -173,8 +183,7 @@ public class OrderController extends BaseConstroller {
 		List<Public_order> orderlist = setOrderUsername(p.getList(), orderType);
 		
 		map.put("data", orderlist);
-		map.put("pageCount", p.getPageCount());
-		map.put("rowCount", p.getRowCount());
+		map.put("total", p.getRowCount());
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
@@ -259,9 +268,9 @@ public class OrderController extends BaseConstroller {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		Public_user user = getSessionUser();
 		//获取机构经销的品牌
-		List<Public_brand> brandList = user2Service.list_user_brand(parentid, user.getId());
+		PageBean<Public_brand> p = user2Service.list_user_brand(parentid, user.getId(),"",null);
 		
-		map.put("data", brandList);
+		map.put("data", p.getList());
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
@@ -277,10 +286,11 @@ public class OrderController extends BaseConstroller {
 		PrintWriter out = response.getWriter();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		Public_user user = getSessionUser();
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
 		
-		List<Map<String, Object>> list = user2Service.listUserStandardFromBrand(parentid, user.getId(), brandid,keyword);
+		p = user2Service.listUserStandard(parentid, user.getId(), brandid,"","1",keyword,p);
 		
-		map.put("data",list);
+		map.put("data",p.getList());
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
@@ -376,26 +386,7 @@ public class OrderController extends BaseConstroller {
 	 * @param id
 	 * */
 	@RequestMapping(value="/mybank",method=RequestMethod.POST)
-	public void mybank(String parentid, HttpServletResponse response) throws Exception {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		if ("".equals(parentid) || parentid == null) {
-			out.print("error");
-			return;
-		}
-		Public_user user = getSessionUser();
-		Public_user_bank bank = bankService.getUserBank(user.getId(), parentid);
-		
-		
-	}
-	
-	/**
-	 * 我的账户余额（可支配账户）
-	 * @param id
-	 * */
-	@RequestMapping(value="/paymentorder",method=RequestMethod.POST)
-	public void paymentorder(String orderid, HttpServletResponse response) throws Exception {
+	public void mybank(String orderid, HttpServletResponse response) throws Exception {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -409,8 +400,78 @@ public class OrderController extends BaseConstroller {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("ordertotal", order.getOrdertotal());	//订单金额
 		map.put("havebank", bank.getHavebank());		//可支配账户余额
+		map.put("bankstate", bank.getBankstate());	//账户状态，0:冻结，1:正常
 		String json = JSON.toJSONString(map);
 		out.print(json);
+	}
+	
+	/**
+	 * 付款
+	 * @param id
+	 * */
+	@RequestMapping(value="/paymentorder",method=RequestMethod.POST)
+	public void paymentorder(String orderid, HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		Public_order order = orderService.getById(orderid);
+		if(order.getOrderstatus() == 0){	//未支付状态
+			Public_user user = getSessionUser();
+			Public_user_bank bank = bankService.getUserBank(user.getId(), order.getParentid());
+			if(bank.getBankstate() == 1){
+				if(bank.getHavebank() > order.getOrdertotal()){
+					int num = bankService.paymentorder(bank,order);
+					if(num > 0){
+//						Public_user pu = userService.getById(order.getParentid());
+//						SendSMS.sendMessage(pu.getPhonenumber(), "");
+						out.print("1");	//支付成功
+					}
+				}else{
+					out.print("-1");	//余额不足
+				}
+			}else{
+				out.print("0");	//账户已冻结
+			}
+		}else{
+			out.print("2");	//订单不是未支付状态，可能已经支付过又进行了请求-防止重复扣款
+		}
+		
+		return;
+	}
+	
+	/**
+	 * 取消订单
+	 * @param id
+	 * */
+	@RequestMapping(value="/cancelorder",method=RequestMethod.POST)
+	public void cancelorder(String orderid, HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		Public_order order = orderService.getById(orderid);
+		if(order.getOrderstatus() == 1){	//待发货状态
+			Public_user user = getSessionUser();
+			Public_user_bank bank = bankService.getUserBank(user.getId(), order.getParentid());
+			int num = bankService.cancelorder(bank,order);
+			if(num >0){
+//				Public_user pu = userService.getById(order.getParentid());
+//				SendSMS.sendMessage(pu.getPhonenumber(), "");
+				out.print("1");	//成功
+			}else{
+				out.print("0");	//失败
+			}
+		}else{
+			out.print("2");	//订单已发货-不能取消订单
+		}
+		return;
 	}
 	
 }

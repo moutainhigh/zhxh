@@ -32,30 +32,39 @@
     </style>
     <script type="text/javascript">
     	//
-    	var orderid = "",ispay = "true";
+    	var orderid = "",ispay = 1;
     	//
     	function setData(id){
+    		orderid = id;
     		$.ajax({
     			async:false,
-                url: "${pageContext.request.contextPath}/order/paymentorder.htmls",
+                url: "${pageContext.request.contextPath}/order/mybank.htmls",
                 data: {orderid:id},
                 type: "post",
                 dataType:"json",
                 success: function (json) {
                	 	var ordertotal = json.ordertotal;
                	 	var havebank = json.havebank;
+               	 	var bankstate = json.bankstate;
                 	$("#total").html(formatFloat(ordertotal,2));
                	 	$("#havebank").html(formatFloat(havebank,2));
-            	 	if(ordertotal > havebank){
-            	 		ispay = "false";
-            	 		$("#alert").removeClass("alert-green");
-            	 		$("#alert").addClass("alert-yellow");
-            	 		$("#warning").html("可支配账户余额不足，请尽快充值！");
-            	 	}else{
-            	 		$("#alert").removeClass("alert-yellow");
-            	 		$("#alert").addClass("alert-green");
-            	 		$("#warning").html("可支配账户余额充足！");
-            	 	}
+               	 	if(bankstate == 0){
+	               	 	ispay = 0;	//账户冻结
+	        	 		$("#alert").removeClass("alert-green");
+	        	 		$("#alert").addClass("alert-yellow");
+	        	 		$("#warning").html("您的账户已被冻结，请联系管理员！");
+               	 	}else{
+	               	 	if(ordertotal > havebank){
+	            	 		ispay = -1;	//账户余额不足
+	            	 		$("#alert").removeClass("alert-green");
+	            	 		$("#alert").addClass("alert-yellow");
+	            	 		$("#warning").html("可支配账户余额不足，请尽快充值！");
+	            	 	}else{
+	            	 		$("#alert").removeClass("alert-yellow");
+	            	 		$("#alert").addClass("alert-green");
+	            	 		$("#warning").html("可支配账户余额充足！");
+	            	 	}
+               	 	}
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert(jqXHR.responseText);

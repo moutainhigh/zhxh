@@ -18,30 +18,11 @@
     <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
     <style type="text/css">
-    	.doc-naver {
-		    padding-top: 10px;
-		    padding-bottom: 10px;
-		}
-		.doc-header.fixed-top .doc-naver {
-		    padding-top: 10px;
-		    padding-bottom: 10px;
-		    background-color: #fff;
-		}
-		.nav-inline li a {
-			line-height: 22px;
-		}
-		.border-back {
-    		border-color:#b5cfd9;
-		}
-		.admin {
-		    width: 100%;
-		    padding: 20px;
-		    background: #fff;
-		    right: 0;
-		    bottom: 0;
-		    top: 87px;
-		    overflow: auto;
-		}
+    	.doc-naver {padding-top: 10px;padding-bottom: 10px;}
+		.doc-header.fixed-top .doc-naver { padding-top: 10px;padding-bottom: 10px;background-color: #fff;}
+		.nav-inline li a {line-height: 22px;}
+		.border-back {border-color:#b5cfd9;}
+		.admin {width: 100%;padding: 20px;background: #fff;right: 0;bottom: 0;top: 87px;overflow: auto;}
     </style>
     <script type="text/javascript">
 		//全局对象
@@ -55,7 +36,8 @@
     		
     		//选择商家
     		$("#f_comp").change(function(){
-    			if($(this).val() != "0")
+    			var _brand = $(this).val();
+    			if(_brand != "0")
     				layer.tips('点击选择品牌', '#brand_btn', {tips: [1, '#FF9901'],time: 5000,});
     			
     			if(objArr.length > 0){
@@ -67,15 +49,14 @@
     	    			objArr = [];
     	    			total = 0,total_sum = 0;
     	    			loadData();
+    	    			brand(_brand);	//品牌
     	    			layer.close(index);
    					}, function(){
    						$("#f_comp").val(comp);
    					});
-    				
+    			}else{
+        			brand(_brand);//品牌
     			}
-    			//品牌
-    			brand($(this).val());
-    			
     		});
     		
     		//提交
@@ -116,7 +97,6 @@
     		$("#proList").setTemplateElement("Template-List-user-show");
             $("#proList").processTemplate(objArr);
             bindTdClick();	//td绑定
-            parent.parent.layer.closeAll();	//关闭窗体
             //
             $("#total").html(formatFloat(total,2));
             $("#total_sum").html(formatFloat(total,2));
@@ -156,14 +136,19 @@
 			    title:'选择商品',
 			    area: ['720px', '520px'],
 			    fix: false, //不固定
-			    maxmin: true,
-			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/selProducts&param={'parentid':'"+comp+"','brandid':'"+brandid+"'}",
+			    maxmin: false,
+			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/selProducts",
 			    btn: ['确 定', '取 消'],
+			    success:function(layero,index){
+			    	var win = parent.window['layui-layer-iframe' + index].window;
+			    	win.setData(comp,brandid);
+			    },
 			  	yes: function(index,layero){
 			  		var win = parent.window['layui-layer-iframe' + index].window;
 			  		var data = win.getData();
 			  		if(data.length > 0){
 			  			disposal(data);//处理数据，并加载
+			  			parent.parent.layer.closeAll();	//关闭窗体
 			  		}else{
 			  			parent.parent.layer.msg("您没有选择任何商品",{icon:6});
 			  		}
@@ -202,17 +187,20 @@
     	function initializeObj(data){
     		var obj = {};
     		obj.id = data.id;
+    		obj.brandname = data.brandname;
 			obj.productname = data.productname;
 			obj.productsize = data.productsize;
-			obj.price = data.price;		//售价
+			obj.price = formatFloat(data.price,2);		//售价
 			obj.buyerdis = data.buyerdis;	//折扣
 			obj.quantity = data.quantity; 	//数量
+			var _subtotal = 0;
 			if(parseInt(data.buyerdis) > 0){
-				obj.subtotal = data.price * data.buyerdis * data.quantity;	//小计
+				_subtotal = data.price * data.buyerdis * data.quantity;	//小计
 			}else{
-				obj.subtotal = data.price * data.quantity;	//小计
+				_subtotal = data.price * data.quantity;	//小计
 			}
-			total += obj.subtotal;
+			obj.subtotal = formatFloat(_subtotal,2);
+			total = parseFloat(total) + parseFloat(obj.subtotal);
 			return obj;
     	}
     	
@@ -293,10 +281,21 @@
 						break;
 					}
 				}
+				//重新计算价格
+				total = 0;
+				total_sum = 0;
+				for(var i=0;i<objArr.length;i++){
+					var subtotal = 0;
+					if(parseInt(objArr[i].buyerdis) > 0){
+						subtotal = objArr[i].price * objArr[i].buyerdis * objArr[i].quantity;	//小计
+					}else{
+						subtotal = objArr[i].price * objArr[i].quantity;	//小计
+					}
+					total = parseFloat(total) + parseFloat(subtotal);
+				}
 				loadData();
    				layer.close(index);
 			}, function(){
-				$("#f_comp").val(comp);
 			});
     	}
     </script>
@@ -389,6 +388,7 @@
 			<tbody>
 				<tr class="panel-head">
 					<th width="45" align="center"></th>
+					<th width="160">品牌</th>
 					<th width="*">商品名称</th>
 					<th width="160">规格</th>
 					<th width="160">数量</th>
@@ -399,12 +399,13 @@
 				{#foreach $T as row}
 				<tr class="tr" id="{$T.row.id}">
 					<td align="center"><a href="javascript:;" class="button-little icon-minus" onclick="delRow('{$T.row.id}')"> </a></td>
-					<td>{$T.row.productname}</td>
+					<td>{$T.row.brandname}</td>
+					<td style="text-align: left;">{$T.row.productname}</td>
 					<td>{$T.row.productsize}</td>
 					<td class="quantity">{$T.row.quantity}</td>
-					<td>{$T.row.price}</td>
+					<td style="text-align: right;">￥{$T.row.price}</td>
 					<td>{$T.row.buyerdis}</td>
-					<td>{$T.row.subtotal}</td>
+					<td style="text-align: right;">￥{$T.row.subtotal}</td>
 				</tr>
 				{#/for}
 			</tbody>

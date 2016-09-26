@@ -259,3 +259,8 @@ INSERT INTO sys_data_dic VALUES('55','public_log','logtype','withdrawal','提现
 1、修改public_order_product 订单商品表
 	（1）增加brandname varchar(200)  品牌名称
 	
+2016-09-26
+数据字典
+INSERT INTO sys_data_dic VALUES('58','public_log','logtype','paymentorder','已付款');
+INSERT INTO sys_data_dic VALUES('59','public_log','logtype','cancelorder','取消订单');
+

@@ -1,36 +1,48 @@
 package net.ussoft.zhxh.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicLogDao;
+import net.ussoft.zhxh.dao.PublicOrderDao;
+import net.ussoft.zhxh.dao.PublicPhoneCodeLogDao;
 import net.ussoft.zhxh.dao.PublicSetBonusesRatioDao;
 import net.ussoft.zhxh.dao.PublicTradeBillDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.model.Public_log;
+import net.ussoft.zhxh.model.Public_order;
+import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.service.IPublicUserBankService;
+import net.ussoft.zhxh.util.CommonUtils;
+import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 
 @Service
 public class PublicUserBankService implements IPublicUserBankService{
 	
 	@Resource
-	PublicUserBankDao userBankDao;
+	private PublicUserBankDao userBankDao;
 	@Resource
-	PublicTradeBillDao billDao;
+	private PublicTradeBillDao billDao;
 	@Resource
-	PublicLogDao logDao;
+	private PublicLogDao logDao;
 	@Resource
-	PublicSetBonusesRatioDao ratioDao;
+	private PublicSetBonusesRatioDao ratioDao;
+	@Resource
+	private PublicPhoneCodeLogDao codelogDao;
+	@Resource
+	private PublicOrderDao orderDao;
 	
 	@Override
 	public Public_user_bank getById(String id) {
@@ -80,6 +92,52 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Override
 	public Public_user_bank insert(Public_user_bank userBank) {
 		return userBankDao.save(userBank);
+	}
+	
+	/**
+	 * 订货单-支付扣款
+	 * @param bank
+	 * @param order
+	 * */
+	@Transactional("txManager")
+	@Override
+	public int paymentorder(Public_user_bank bank,Public_order order){
+		//扣款
+		bank.setHavebank(bank.getHavebank() - order.getOrdertotal());
+		bank = userBankDao.update(bank);	//
+		//改变订单状态
+		order.setOrderstatus(1);	//支付成功-转为 待发货
+		order.setOrderstatusmemo("待发货");
+		order = orderDao.update(order);
+		//日志
+		Public_log log = saveLog(bank.getUserid(), bank.getParentid(), "paymentorder", order.getOrdernumber()+"-已付款", order.getOrdertotal(), order.getId());
+		if(bank != null && order !=null && log != null){
+			return 1;
+		}
+		return 0;
+	}
+	
+	/**
+	 * 订货单-取消订单
+	 * @param bank
+	 * @param order
+	 * */
+	@Transactional("txManager")
+	@Override
+	public int cancelorder(Public_user_bank bank,Public_order order){
+		//退换订单金额
+		bank.setHavebank(bank.getHavebank() + order.getOrdertotal());
+		bank = userBankDao.update(bank);	//
+		//改变订单状态
+		order.setOrderstatus(-1);	//取消订单
+		order.setOrderstatusmemo("已取消");
+		order = orderDao.update(order);
+		//日志
+		Public_log log = saveLog(bank.getUserid(), bank.getParentid(), "cancelorder", order.getOrdernumber()+"-已取消", order.getOrdertotal(), order.getId());
+		if(bank != null && order !=null && log != null){
+			return 1;
+		}
+		return 0;
 	}
 	
 	/**
@@ -423,7 +481,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		bank.setHavebank(bank.getHavebank() + amount);		//增加可支配账户
 		bank = userBankDao.update(bank);
 		//日志
-		Public_log log = saveLog(userid, parentid, "quota","配额",amount);
+		Public_log log = saveLog(userid, parentid, "quota","配额",amount,"");
 		if(bank != null && log != null){
 			return 1;
 		}
@@ -447,7 +505,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		}
 		bank = userBankDao.update(bank);
 		//日志
-		Public_log log = saveLog(userid, parentid, "bonuses_ratio", "奖励转贷款", amount);
+		Public_log log = saveLog(userid, parentid, "bonuses_ratio", "奖励转贷款", amount,"");
 		if(bank != null && log != null)
 			return 1;
 		return 0;
@@ -502,7 +560,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		log.setLognum(bill.getId());		//流水表ID
 		log.setLogpay(bill.getAmount());	//金额
 		
-		return logDao.update(log);
+		return logDao.save(log);
 	}
 	
 	/**
@@ -512,9 +570,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 	 * @param logtype 操作类型
 	 * @param logmemo 日志内容描述
 	 * @param amount 金额
+	 * @param lognum 
 	 * @return
 	 * */
-	private Public_log saveLog(String userid,String parentid,String logtype,String logmemo,float amount){
+	private Public_log saveLog(String userid,String parentid,String logtype,String logmemo,float amount,String lognum){
 		Public_log log = new Public_log();
 		log.setId(UUID.randomUUID().toString());
 		log.setUserid(userid);	//主操作人
@@ -522,10 +581,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 		log.setLogtype(logtype);	//操作类型
 		log.setLogmemo(logmemo);
 		log.setLogtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
-//		log.setLognum();		//流水表ID
+		log.setLognum(lognum);
 		log.setLogpay(amount);	//金额
 		
-		return logDao.update(log);
+		return logDao.save(log);
 	}
 	
 	/**
@@ -554,6 +613,25 @@ public class PublicUserBankService implements IPublicUserBankService{
 		values.add(billid);
 		List<Public_trade_bill> list = billDao.search(sql, values);
 		return list.size() > 0 ? list.get(0) : null;
+	}
+	
+	/**
+	 * 发送短信日志
+	 * */
+	private void savePhoneCodeLog(String phonenumber,String sendCode,String sendType){
+
+		//当前时间戳
+		Long oldTime = System.currentTimeMillis();
+		//将发送情况写入日志
+		Public_phone_code_log codeLog = new Public_phone_code_log();
+		codeLog.setId(UUID.randomUUID().toString());
+		codeLog.setPhonenumber(phonenumber);
+		codeLog.setSendcode(sendCode);
+		codeLog.setSendtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		codeLog.setSendtimestr(oldTime.toString());
+		codeLog.setSendtype(sendType);	//类型
+		codeLog.setIp("");
+		codelogDao.save(codeLog);
 	}
 	
 }

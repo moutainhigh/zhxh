@@ -2,6 +2,7 @@ package net.ussoft.zhxh.service;
 
 import java.util.List;
 
+import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user_bank;
 
@@ -54,6 +55,20 @@ public interface IPublicUserBankService {
 	 * @return
 	 * */
 	public int delete(String id);
+	
+	/**
+	 * 订货单-支付扣款
+	 * @param bank
+	 * @param order
+	 * */
+	public int paymentorder(Public_user_bank bank,Public_order order);
+	
+	/**
+	 * 订货单-取消订单
+	 * @param bank
+	 * @param order
+	 * */
+	public int cancelorder(Public_user_bank bank,Public_order order);
 	
 	
 	/**

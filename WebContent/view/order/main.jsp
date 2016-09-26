@@ -83,19 +83,16 @@
 			<div class="side-menu">
 				<ul>
 					<li class="pr side-menu-li li-crop menu1" id="order" code="WBM_ORDER">
-						<a class="order side-menu-a new-con-p" target="mainFrame" href="javascript:;" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist">
+						<a class="order side-menu-a new-con-p" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist">
 							<i class="icon"></i>订单
 						</a>
 						<div class="float-menu" style="top: 0px;">
 							<ul class="sec-nav">
-								<li class="sec-nav-li menu2" code="WBM_ORDER_INDENT">
-									<a class="sec-nav-a new-con" target="mainFrame" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/createorder" href="javascript:;">采购</a>
-								</li>
 								<li class="sec-nav-li menu2" code="WBM_ORDER_RETURNED">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/order/returnOrder?action=list">我的订单</a>
+									<a class="sec-nav-a new-con" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist">我的订单</a>
 								</li>
 								<li class="sec-nav-li menu2" code="WBM_ORDER_OUTSTOCK">
-									<a class="sec-nav-a new-con" target="mainFrame" href="content.html">客户订单</a>
+									<a class="sec-nav-a new-con" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/suborderlist">客户订单</a>
 								</li>
 							</ul>
 						</div>

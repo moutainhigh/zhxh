@@ -242,6 +242,7 @@ public class PublicOrderService implements IPublicOrderService{
 			orderPro.setId(UUID.randomUUID().toString());
 			orderPro.setOrderid(order.getId());
 			orderPro.setProductid(psize.getId());
+			orderPro.setBrandname(psize.getBrandname());
 			orderPro.setProductname(psize.getProductname());
 			orderPro.setProductpic(psize.getProductpic());
 			orderPro.setProductsize(psize.getProductsize());

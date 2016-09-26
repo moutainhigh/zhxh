@@ -246,7 +246,12 @@
 		           </div>
 		    </div>
           	<div class="form-group" id="f_1474450918646">
-            	<button class="button bg-blue" onclick="f_submit()">保存</button>
+          		<div class="label">
+	               <label for=""></label>
+	           </div>
+	           <div class="field">
+	               <button class="button" onclick="f_submit()">保存</button>
+	           </div>
          	</div>
 		</form>
 		 -->
