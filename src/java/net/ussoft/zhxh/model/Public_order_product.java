@@ -13,6 +13,7 @@ public class Public_order_product {
 	private String productid;
 	private String productname;
 	private String productpic;
+	private String brandname;
 	private Integer productnum;
 	private Integer isoknum;
 	private Integer ifok;
@@ -142,6 +143,16 @@ public class Public_order_product {
 	}
 	public void setBonusesdis(Float bonusesdis) {
 		this.bonusesdis = bonusesdis;
+	}
+
+
+	public String getBrandname() {
+		return brandname;
+	}
+
+
+	public void setBrandname(String brandname) {
+		this.brandname = brandname;
 	}
 	
 	
