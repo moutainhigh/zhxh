@@ -31,9 +31,18 @@
     </style>
     <script type="text/javascript">
     	var parentid = '${sessionScope.pc_user_sessiion.id}';
+    	//机构分页
     	var pageIndex = 1;
     	var pageSize = 10;
     	var totalPage = 0;
+    	//品牌分页
+    	var pageIndex_brand = 1;
+    	var pageSize_brand = 5;
+    	
+    	//采购标准设置翻页
+    	var pageIndex_dis = 1;
+    	var pageSize_dis = 10;
+    	var totalPage_dis = 0;
     	
     	var rows = [];
     	
@@ -43,18 +52,9 @@
     	//设置用
     	var set_user = "";
     	
-    	function getPath() {
-    		var strFullPath=window.document.location.href;  
-            var strPath=window.document.location.pathname;  
-            var pos=strFullPath.indexOf(strPath);  
-            var prePath=strFullPath.substring(0,pos);  
-            var postPath=strPath.substring(0,strPath.substr(1).indexOf('/')+1);  
-            var basePath = prePath;  
-            basePath = prePath + postPath;    
-            return basePath;
-    	}
+    	var sel_brandid= "";
+    	
     	$(function(){
-    		getPath();
     		/* layer.prompt({
     			formType: 0,
     			value: '0.2',
@@ -84,14 +84,37 @@
     	    
     	});
     	
-    	function bindTrClick() {
-    		//除了表头（第一行）以外所有的行添加click事件.
-            $("tr").first().nextAll().click(function (e) {
-            	if (e.target.tagName == "TD") {
-            		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
-                	firstInput.attr("checked",!firstInput.is(':checked'));
-            	}
-            });
+    	function bindTrClick(type) {
+    		if (type == "userList") {
+    			//除了表头（第一行）以外所有的行添加click事件.
+                $("tr").first().nextAll().click(function (e) {
+                	if (e.target.tagName == "TD") {
+                		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
+                    	firstInput.attr("checked",!firstInput.is(':checked'));
+                	}
+                });
+    		}
+    		else if (type == "userBrand") {
+    			 $(".userBrand tr").first().nextAll().click(function (e) {
+                 	if (e.target.tagName == "TD") {
+                 		var $radio = $(this).find("input[type=radio]");
+                        $flag  = $radio.is(":checked");
+		                if( !$flag ){
+		                    $radio.prop("checked",true).trigger("click");
+		                }
+                 		//var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
+                     	//firstInput.attr("checked",!firstInput.is(':checked'));
+                 	}
+                 });
+    		}
+    		else if (type == "userDis") {
+    			 $(".userDis tr").first().nextAll().click(function (e) {
+                 	if (e.target.tagName == "TD") {
+                 		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
+                     	firstInput.attr("checked",!firstInput.is(':checked'));
+                 	}
+                 });
+    		}
     	}
     	
     	function pageSel() {
@@ -155,16 +178,27 @@
     		})
     	}
     	
-    	function pageEnter() {
+    	function pageEnter(type) {
     		$('.ui-pager-inp').bind('keypress',function(event) {
                 if(event.keyCode == "13") {
                 	if (isInteger($(this).val())) {
-                		if ($(this).val() > totalPage || $(this).val() < 1 || $(this).val() == pageIndex) {
-                			return false;
+                		if (type == "userList") {
+                			if ($(this).val() > totalPage || $(this).val() < 1 || $(this).val() == pageIndex) {
+                    			return false;
+                    		}
+                    		else {
+                    			pageIndex = $(this).val();
+                        		radio_click();
+                    		}
                 		}
-                		else {
-                			pageIndex = $(this).val();
-                    		radio_click();
+                		else if (type == "userDis") {
+                			if ($(this).val() > totalPage_dis || $(this).val() < 1 || $(this).val() == pageIndex_dis) {
+                    			return false;
+                    		}
+                    		else {
+                    			pageIndex_dis = $(this).val();
+                    			getUserDis();
+                    		}
                 		}
                 	}
                 	else {
@@ -175,9 +209,19 @@
             });
     	}
     	
-    	function pageClick(sel_page) {
-    		pageIndex = sel_page;
-    		radio_click();
+    	function pageClick(sel_page,pagetype) {
+    		if (pagetype == "userList") {
+    			pageIndex = sel_page;
+        		radio_click();
+    		}
+    		else if (pagetype == "userBrand") {
+    			pageIndex_brand = sel_page;
+    			getUserBrand();
+    		}
+    		else if (pagetype == "userDis") {
+    			pageIndex_dis = sel_page;
+    			getUserDis();
+    		}
     	}
     	
     	function td_tip(e) {
@@ -253,7 +297,7 @@
                 	rows = json.data;
                  	totalPage = Math.ceil(json.total/pageSize);
                	 	//$(".admin-panel").setTemplateElement("Template-List-user-show");
-               	 	$(".admin-panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/listUser.tpl");
+               	 	$(".admin-panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/userList.tpl");
 	         		$(".admin-panel").setParam('rowCount', json.total);
 	         		$(".admin-panel").setParam('pageSize', pageSize);
 	         		$(".admin-panel").setParam('pageIndex', pageIndex);
@@ -265,8 +309,8 @@
 	                
 	                //bindTdClick();
 	                pageSel();
-	                pageEnter();
-	                bindTrClick();
+	                pageEnter("userList");
+	                bindTrClick("userList");
 	              	//调用全选插件
 	        	    $.fn.check({ checkall_name: "checkall", checkbox_name: "row_id" });
 	              	
@@ -443,26 +487,83 @@
     		
     	}
     	
-    	function showUserDis(userid) {
+    	function getUserBrand() {
+    		
+    		var par = {};
+    		par.parentid = parentid;
+    		par.userid = set_user.id;
+    		par.pageIndex = pageIndex_brand-1;
+    		par.pageSize = pageSize_brand;
+    		par.isPage = true;
+    		
     		$.ajax({
     			async:false,
-                url: "${pageContext.request.contextPath}/orderUserDis/listUserStandard.htmls",
-                data: {'parentid':parentid,'userid':userid},
+                url: "${pageContext.request.contextPath}/orderUserDis/listUserBrand.htmls",
+                data: par,
                 type: "post",
                 dataType:"json",
                 success: function (json) {
-                	$(".setUserDisDiv").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/setUserDis.tpl");
-             		$(".setUserDisDiv").setParam('radio_value', radio_value);
-             		$(".setUserDisDiv").setParam('rowCount', json.total);
-             		$(".setUserDisDiv").setParam('path', '${pageContext.request.contextPath}/');
-                    $(".setUserDisDiv").processTemplate(json.data);
+                	var totalPage_brand = Math.ceil(json.total/pageSize_brand);
+                	$(".userBrandDiv_panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/userBrand.tpl");
+                	$(".userBrandDiv_panel").setParam('pageSize', pageSize_brand);
+	         		$(".userBrandDiv_panel").setParam('pageIndex', pageIndex_brand);
+	         		$(".userBrandDiv_panel").setParam('totalPage', totalPage_brand);
+             		$(".userBrandDiv_panel").setParam('rowCount', json.total);
+             		$(".userBrandDiv_panel").setParam('path', '${pageContext.request.contextPath}');
+                    $(".userBrandDiv_panel").processTemplate(json.data);
+                    
+                    bindTrClick("userBrand");
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                 	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
                 }
            });
-    		
-    		
+    	}
+    	function getUserDis() {
+    		if (sel_brandid == "") {
+    			var tmp = [];
+    			$(".setUserDisDiv_panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/setUserDis.tpl");
+         		$(".setUserDisDiv_panel").setParam('rowCount', 0);
+         		$(".setUserDisDiv_panel").setParam('pageSize', pageSize_dis);
+         		$(".setUserDisDiv_panel").setParam('pageIndex', 1);
+         		$(".setUserDisDiv_panel").setParam('totalPage', 0);
+         		$(".setUserDisDiv_panel").setParam('path', '${pageContext.request.contextPath}/');
+                $(".setUserDisDiv_panel").processTemplate(tmp);
+    		}
+    		else {
+    			var par = {};
+        		par.parentid = parentid;
+        		par.userid = set_user.id;
+        		par.brandid = sel_brandid;
+        		par.pageIndex = pageIndex_dis-1;
+        		par.pageSize = pageSize_dis;
+        		par.isPage = true;
+    			$.ajax({
+        			async:false,
+                    url: "${pageContext.request.contextPath}/orderUserDis/listUserStandard.htmls",
+                    data: par,
+                    type: "post",
+                    dataType:"json",
+                    success: function (json) {
+                    	totalPage_dis = Math.ceil(json.total/pageSize_dis);
+                    	$(".setUserDisDiv_panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/setUserDis.tpl");
+                 		$(".setUserDisDiv_panel").setParam('rowCount', json.total);
+                 		$(".setUserDisDiv_panel").setParam('pageSize', pageSize_dis);
+                 		$(".setUserDisDiv_panel").setParam('pageIndex', pageIndex_dis);
+                 		$(".setUserDisDiv_panel").setParam('totalPage', totalPage_dis);
+                 		$(".setUserDisDiv_panel").setParam('path', '${pageContext.request.contextPath}/');
+                        $(".setUserDisDiv_panel").processTemplate(json.data);
+                        
+                        pageEnter("userDis");
+                        bindTrClick("userDis");
+                      //调用全选插件
+    	        	    $.fn.check({ checkall_name: "checkall_dis", checkbox_name: "row_id_dis" });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                    	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+                    }
+               });
+    		}
     	}
     	
     	function setUserDis(userid) {
@@ -480,12 +581,14 @@
 	   		var sel_user_arr = [];
 	   		sel_user_arr.push(set_user);
 	   		
-	   		$(".selUserDiv").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/setUserAction.tpl");
-     		$(".selUserDiv").setParam('radio_value', radio_value);
-     		$(".selUserDiv").setParam('rowCount', 1);
-            $(".selUserDiv").processTemplate(sel_user_arr);
+	   		$(".selUserDiv-panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/setUserAction.tpl");
+     		$(".selUserDiv-panel").setParam('radio_value', radio_value);
+     		$(".selUserDiv-panel").setParam('rowCount', 1);
+            $(".selUserDiv-panel").processTemplate(sel_user_arr);
             
-            showUserDis(userid);
+          	//显示品牌
+	   		getUserBrand();
+	   		getUserDis();
 	   		
     		$(".userDiv").slideToggle(1000,function(){
     			//alert("滑动向上缩小完毕");
@@ -493,21 +596,33 @@
     		$(".selUserDiv").slideToggle(1000,function() {
     			
     		});
+    		$(".userBrandDiv").slideToggle(1000,function() {
+    			$("input[name=brand_row_id]").click(function(){
+    				sel_brandid = $(this).val();
+    				pageIndex_dis = 1;
+        			getUserDis();
+      			});
+			});
     		$(".setUserDisDiv").slideToggle(1000,function() {
-    			//alert("滑动向下放大完毕");
     		});
     		return false;
     	}
     	
     	function showUserList() {
     		$(".userDiv").slideToggle(1000,function() {
-    			//alert("滑动向下放大完毕");
+    			set_user = "";
     		});  
     		$(".selUserDiv").slideToggle(1000,function() {
     			//alert("滑动向下放大完毕");
     		});
+    		$(".userBrandDiv").slideToggle(1000,function() {
+    			pageIndex_brand = 1;
+			});
+    		
     		$(".setUserDisDiv").slideToggle(1000,function() {
     			//alert("滑动向下放大完毕");
+    			sel_brandid = "";
+    			pageIndex_dis = 1;
     		});
     	}
     	
@@ -517,12 +632,15 @@
 <body>
 	<%@ include file="/view/order/header.jsp" %>
 	<!--内容-->
-	<div class="layout" style="margin-bottom: 50px;">
+	<div class="layout" style="margin-bottom: 150px;">
 		<ul class="bread bg">
 			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
 			<li><a href="javascript:;" >客户利益设置</a></li>
 		</ul>
-		<div class="selUserDiv" style="display:none;padding:20px 60px;"></div>
+		<div class="selUserDiv" style="display:none;padding:20px 60px;">
+			<div><div class="float-left" style="margin-bottom: 10px;">设置采购利益的机构</div></div>
+			<div class="selUserDiv-panel"></div>
+		</div>
 		<div class="userDiv" style="padding: 20px 60px;">
 			<form onsubmit="return false;" class="form-x" method="post">
 				<div class="form-group float-right" style="width:300px">
@@ -544,8 +662,35 @@
 			<div class="admin-panel">
 			</div>
 		</div>
-		<div class="setUserDisDiv" style="display:none;padding:20px 60px;">
-			
+		<div class="userBrandDiv" style="display:none;padding:0px 60px;">
+			<div>
+				<table style="width:100%;margin-bottom: 10px;">
+					<tr>
+						<td align="left">设置机构能采购的品牌</td>
+						<td align="right">
+							<a href="javascript:;" class="button bg-sub button-small" onclick="addBrand()">添加品牌</a>
+							<a href="javascript:;" class="button bg-dot button-small" onclick="delBrand()">删除品牌</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="userBrandDiv_panel">
+			</div>
+		</div>
+		<div class="setUserDisDiv" style="display:none;padding:20px 60px;margin-bottom: 20px;">
+			<div>
+				<table style="width:100%;margin-bottom: 10px;">
+					<tr>
+						<td align="left">设置机构的采购利益标准</td>
+						<td align="right">
+							<a href="javascript:;" class="button bg-sub button-small" onclick="addBrand()">添加商品</a>
+							<a href="javascript:;" class="button bg-dot button-small" onclick="delBrand()">删除商品</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="setUserDisDiv_panel">
+			</div>
 		</div>
 	</div>
 	<!--底部-->

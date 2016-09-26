@@ -51,9 +51,9 @@
 					<td id="td_state" v="{$T.row.isopen}" onmouseover="td_tip(this)" onmouseout="td_tip_over(this)">{#if $T.row.isopen == 1}正常{#else}<span style="color:red">禁用</span>{#/if}</td>
 					<td>{$T.row.sort}</td>
 					<td>
-						<button class="button button-small border-sub" onclick="return updateUser('{$T.row.id}')">修改</button>
+						<a href="javascript:;" class="button button-small border-sub" onclick="return showUpdateUser('{$T.row.id}')">修改</a>
 						{#if $P.radio_value == "C"}
-						<button class="button button-small border-sub" onclick="return updateUserTuijian('{$T.row.id}')">推荐人</button>
+						<a href="javascript:;" class="button button-small border-sub" onclick="return updateUserTuijian('{$T.row.id}')">推荐人</a>
 						{#/if}
 					</td>
 				</tr>
@@ -69,20 +69,24 @@
 <table class="table table-bordered table-hover text-small" style="border: solid 0px #ddd;">
 	<tfoot>
 	<tr class="">
-		{#if $P.parentid == "1"}
 		<td align="center"><input type="checkbox" value="0" name="checkall"></td>
 		<td colspan="6" class="tr pr10" style="text-align:left" >
+			{#if $P.parentid == "1"}
 			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'isopen')">批量开通</a>
 			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'isopen')">批量禁用</a>
-			{#if $P.radio_value == 'A' || $P.radio_value == 'C'} | 
+			| 
 			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'setreturn')">批量接收分成</a>
-			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'setreturn')">批量禁用接收分成</a> | 
-			{#/if}
+			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'setreturn')">批量禁用接收分成</a>
+			|
 			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="delbatch()">批量删除</a>
+			|
+			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'tuijianman')">批量清空推荐人</a>
+			{#elseif $P.radio_value == 'A' || $P.radio_value == 'C'}
+			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'tuijianman')">批量清空推荐人</a>
+			{#/if}
 		</td>
-		{#else}
 		
-		{#/if}
+		
 		<td colspan="9" style="text-align:right" >
 			<div class="page">
 				<span>每页显示</span>

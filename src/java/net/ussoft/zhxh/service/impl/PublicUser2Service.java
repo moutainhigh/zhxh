@@ -24,6 +24,7 @@ import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.dao.PublicUserBrandDao;
 import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.dao.PublicUserLinkDao;
+import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
@@ -129,7 +130,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 	 * @see net.ussoft.zhxh.service.IPublicUser2Service#list_user_brand(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<Public_brand> list_user_brand(String parentid, String userid) {
+	public PageBean<Public_brand> list_user_brand(String parentid, String userid,String brandname,PageBean<Public_brand> p) {
 		//1、获取父id下的子id集合
 		Public_user_brand userBrand = new Public_user_brand();
 		userBrand.setParentid(parentid);
@@ -139,7 +140,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 		
 		//如果是空的。直接返回空
 		if (null == userBrandList || userBrandList.size() == 0) {
-			List<Public_brand> tmpList = new ArrayList<Public_brand>();
+			PageBean<Public_brand> tmpList = new PageBean<Public_brand>();
 			return tmpList;
 		}
 		
@@ -159,7 +160,13 @@ public class PublicUser2Service implements IPublicUser2Service{
 		sb.append(")");
 		values.addAll(idsList);
 		
-		return brandDao.search(sb.toString(), values);
+		if (null != brandname && !"".equals(brandname)) {
+			sb.append(" and brandname like '"+brandname+"'");
+		}
+		
+		sb.append(" order by sort");
+		
+		return p = brandDao.search(sb.toString(), values, p);
 	}
 
 	/*
@@ -352,6 +359,165 @@ public class PublicUser2Service implements IPublicUser2Service{
 		
 		return true;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#listUserStandard(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, net.ussoft.zhxh.model.PageBean)
+	 */
+	@Override
+	public PageBean<Map<String, Object>> listUserStandard(String parentid, String userid, String brandid, String productid,
+			String state,String productname, PageBean<Map<String,Object>> p) {
+		//1.获取被设置者能操作的品牌
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		
+		PageBean<Map<String,Object>> resultList = new PageBean<Map<String,Object>>();
+		
+		sb.append("select * from public_user_brand where parentid=? and userid=?");
+		values.add(parentid);
+		values.add(userid);
+		
+		if (null != brandid && !"".equals(brandid)) {
+			sb.append(" and brandid=?");
+			values.add(brandid);
+		}
+		
+		List<Public_user_brand> uBrandList = userBrandDao.search(sb.toString(), values);
+		
+		if (null == uBrandList || uBrandList.size() == 0) {
+			return resultList;
+		}
+		
+		//2.根据被设置者能操作的品牌，获取利益表数据
+		List<String> brandidList = new ArrayList<String>();
+		for (Public_user_brand uBrand : uBrandList) {
+			brandidList.add(uBrand.getBrandid());
+		}
+		
+		sb.setLength(0);
+		values.clear();
+		sb.append("select * from public_set_user_standard where parentid=? and userid=? and brandid in (");
+		
+		values.add(parentid);
+		values.add(userid);
+		
+		Serializable[] ss=new Serializable[brandidList.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(brandidList);
+		
+		//加入搜索条件
+		if (null != productname && !"".equals(productname)) {
+			StringBuffer sbSearch = new StringBuffer();
+			List<Object> valuesSearch = new ArrayList<Object>();
+			sbSearch.append("select * from public_product_size where productname like '%"+productname+"%' and brandid in (");
+			
+			Serializable[] ss3=new Serializable[brandidList.size()];
+			Arrays.fill(ss3, "?");
+			sbSearch.append(StringUtils.join(ss3,','));
+			sbSearch.append(")");
+			valuesSearch.addAll(brandidList);
+			
+			List<Public_product_size> searchSizeList = sizeDao.search(sbSearch.toString(), valuesSearch);
+			
+			if (searchSizeList.size() == 0) {
+				return resultList;
+			}
+			
+			List<String> searchSizeIdList = new ArrayList<String>();
+			for (Public_product_size size : searchSizeList) {
+				searchSizeIdList.add(size.getId());
+			}
+			
+			sb.append(" and sizeid in (");
+			Serializable[] ss4=new Serializable[searchSizeIdList.size()];
+			Arrays.fill(ss4, "?");
+			sb.append(StringUtils.join(ss4,','));
+			sb.append(")");
+			values.addAll(brandidList);
+		}
+		
+		if (null != productid && !"".equals(productid)) {
+			sb.append(" and productid=?");
+			values.add(productid);
+		}
+		if (null != state && !"".equals(state)) {
+			sb.append(" and state=?");
+			values.add(state);
+		}
+		
+		sb.append(" order by brandid,productid");
+		
+		PageBean<Map<String,Object>> usPageBean = userStandardDao.searchForMap(sb.toString(), values, p);
+		
+		if (null == usPageBean || usPageBean.getList().size() == 0) {
+			return resultList;
+		}
+		
+		//3.为取出的数据添加设置者信息、被设置者基本信息
+		Public_user pUser = userDao.get(parentid);
+		Public_user user = userDao.get(userid);
+		
+		for (Map<String,Object> map : usPageBean.getList()) {
+			map.put("parentname", pUser.getCompanyname());
+			map.put("username", user.getUsername());
+			map.put("companyname", user.getCompanyname());
+		}
+		
+		//4.为取出的数据添加品牌信息
+		sb.setLength(0);
+		values.clear();
+		sb.append("select * from public_brand where id in (");
+		
+		Serializable[] ss1=new Serializable[brandidList.size()];
+		Arrays.fill(ss1, "?");
+		sb.append(StringUtils.join(ss1,','));
+		sb.append(")");
+		values.addAll(brandidList);
+		
+		List<Public_brand> brandList = brandDao.search(sb.toString(), values);
+		//反正循环一次，顺带获取规格id。用在后面添加商品信息
+		List<String> sizeidList = new ArrayList<String>();
+		for (Map<String,Object> map : usPageBean.getList()) {
+			sizeidList.add(map.get("sizeid").toString());
+			for (Public_brand brand : brandList) {
+				if (map.get("brandid").toString().equals(brand.getId())) {
+					map.put("brandname", brand.getBrandname());
+					break;
+				}
+			}
+		}
+		
+		//5.为取出的数据添加商品信息
+		sb.setLength(0);
+		values.clear();
+		sb.append("select * from public_product_size where id in (");
+		
+
+		Serializable[] ss2=new Serializable[sizeidList.size()];
+		Arrays.fill(ss2, "?");
+		sb.append(StringUtils.join(ss2,','));
+		sb.append(")");
+		values.addAll(sizeidList);
+		
+		List<Public_product_size> sizeList = sizeDao.search(sb.toString(), values);
+		
+		for (Map<String,Object> map : usPageBean.getList()) {
+			for (Public_product_size size : sizeList) {
+				if (map.get("sizeid").toString().equals(size.getId())) {
+					map.put("sizeid", size.getId());
+					map.put("productpic", size.getProductpic());
+					map.put("productname", size.getProductname());
+					map.put("productsize", size.getProductsize());
+					map.put("price", size.getPrice());
+					break;
+				}
+			}
+		}
+		
+		return usPageBean;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -367,6 +533,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 		sb.append(" left join public_user up ON up.id = d.parentid");
 		sb.append(" left join public_user u ON u.id = d.userid");
 		sb.append(" left join public_brand b On d.brandid = b.id");
+		sb.append(" left join public_user_brand ub On d.brandid = ub.id");
 		sb.append(" where d.parentid=? and d.userid=?");
 		
 		List<Object> values = new ArrayList<Object>();
@@ -387,6 +554,8 @@ public class PublicUser2Service implements IPublicUser2Service{
 			sb.append(" and d.state=?");
 			values.add(state);
 		}
+		
+		sb.append(" and productname like '%菁纯新生%'");
 		
 		sb.append(" order by s.sizesort");
 		

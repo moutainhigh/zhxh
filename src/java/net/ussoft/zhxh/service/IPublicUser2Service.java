@@ -4,8 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_product_size;
+import net.ussoft.zhxh.model.Public_set_user_standard;
 import net.ussoft.zhxh.model.Public_user;
 
 /**
@@ -57,9 +59,11 @@ public interface IPublicUser2Service {
 	 * 获取机构能操作的品牌
 	 * @param parentid
 	 * @param userid
+	 * @param brandname		检索条件。模糊检索品牌名称
+	 * @param PageBean		
 	 * @return
 	 * */
-	public List<Public_brand> list_user_brand(String parentid,String userid);
+	public PageBean<Public_brand> list_user_brand(String parentid,String userid,String brandname,PageBean<Public_brand> p);
 	
 	/**
 	 * 删除机构对应的品牌
@@ -94,6 +98,20 @@ public interface IPublicUser2Service {
 	 * @return
 	 * */
 	public List<Public_product_size> list_select_size(String parentid,String userid,String productid);
+	
+	/**
+	 * 获取机构采购利益表数据。采购利益表为主表。个人中心表为从表。还有品牌表，商品表。采用sql联合查询太复杂。本方法为获取数据后，独立查找各种信息，再补全。
+	 * @param parentid			设置者	
+	 * @param userid			被设置者
+	 * @param brandid			品牌id。可选 null或空字符将不参与条件
+	 * @param productid			商品id，可选
+	 * @param state				状态，可选
+	 * @param productname		商品名称。可选。检索条件，是规格表的商品名称，（注意：这个名称可能与商品表一致，也可能不一致。）模糊检索。
+	 * @param p					分页pageBean
+	 * @return
+	 */
+	public PageBean<Map<String,Object>> listUserStandard(String parentid,String userid,String brandid,
+			String productid,String state,String productname,PageBean<Map<String,Object>> p);
 	
 	
 	/**

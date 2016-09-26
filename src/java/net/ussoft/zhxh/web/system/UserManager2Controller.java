@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_user;
@@ -101,10 +102,13 @@ public class UserManager2Controller extends BaseConstroller{
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		List<Public_brand> brandList = userService.list_user_brand(parentid, userid);
+		PageBean<Public_brand> p = new PageBean<Public_brand>();
+		p.setIsPage(false);
 		
-		map.put("total", brandList.size());
-		map.put("data", brandList);
+		p = userService.list_user_brand(parentid, userid,"",p);
+		
+		map.put("total",p.getRowCount());
+		map.put("data", p.getList());
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
@@ -200,10 +204,17 @@ public class UserManager2Controller extends BaseConstroller{
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		List<Map<String, Object>> userStandardList = userService.listUserStandard(parentid, userid,productid,"","");
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		p.setIsPage(false);
 		
-		map.put("total", userStandardList.size());
-		map.put("data", userStandardList);
+		p = userService.listUserStandard(parentid, userid, null, productid, "", "", p);
+		
+//		List<Map<String, Object>> userStandardList = userService.listUserStandard(parentid, userid,productid,"","");
+		
+//		map.put("total", userStandardList.size());
+//		map.put("data", userStandardList);
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);

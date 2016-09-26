@@ -93,12 +93,12 @@
 					{#if $P.pageIndex == 1}
 						<a href="javascript:void(0);" class="ui-pager-prev">上一页</a>
 					{#else}
-						<a href="javascript:void(0);" class="ui-pager-prev" onclick="pageClick({$P.pageIndex-1})">上一页</a>
+						<a href="javascript:void(0);" class="ui-pager-prev" onclick="pageClick({$P.pageIndex-1},'userBurand')">上一页</a>
 					{#/if}
 					{#if $P.pageIndex == $P.totalPage || $P.totalPage == 0}
 						<a href="javascript:void(0);" class="ui-pager-next">下一页</a>
 					{#else}
-						<a href="javascript:void(0);" class="ui-pager-next" onclick="pageClick({$P.pageIndex + 1 })">下一页</a>
+						<a href="javascript:void(0);" class="ui-pager-next" onclick="pageClick({$P.pageIndex + 1 },'userBurand')">下一页</a>
 					{#/if}
 					</div>
 				</div>

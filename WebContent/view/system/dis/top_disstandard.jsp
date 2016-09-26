@@ -124,20 +124,21 @@
         		columns: [
         		          { type: "checkcolumn",headerAlign:"center",width: 30},
       	                  { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
-	      	              { field: "productpic",name:"productpic", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片"},
+      	                  { field: "productpic",name:"productpic", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片"},
+      	                  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称"},
 	      	              { field: "buyerdis",name:"buyerdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "采购折扣" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "rebatesdis",name:"rebatesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "返利标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "bonusesdis",name:"bonusesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "奖励标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "state",name:"state",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁止采购"},{"id":"1","text":"可采购"}] } },
+	      	              { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准"},
+						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价" },
 	      	              { field: "parentname",name:"parentname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "设置者" },
     	                  { field: "username",name:"username", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "被设置者" },
     	                  { field: "companyname",name:"companyname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "机构名称" },
-						  { field: "brandname",name:"brandname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "品牌"},
-						  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称"},
-						  { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准"},
-						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价" },
+						  { field: "brandname",name:"brandname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "品牌"}
+						  
 						  //{ field: "saleprice",name:"saleprice", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "特价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25  } },
-						  { field: "sizesort",name:"sizesort", width: 40, headerAlign: "center", align:"center",allowSort: false, header: "排序" }
+						  //{ field: "sizesort",name:"sizesort", width: 40, headerAlign: "center", align:"center",allowSort: false, header: "排序" }
 						  //{ field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
 						  //{ field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"下架"},{"id":"1","text":"上架"}] } }
 					],
@@ -247,18 +248,20 @@
         		          { type: "checkcolumn",headerAlign:"center",width: 30},
       	                  { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
 	      	              { field: "productpic",name:"productpic", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片"},
+	      	              { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称"},
 	      	              { field: "buyerdis",name:"buyerdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "采购折扣" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "rebatesdis",name:"rebatesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "返利标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "bonusesdis",name:"bonusesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "奖励标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "state",name:"state",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁止采购"},{"id":"1","text":"可采购"}] } },
+	      	              { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准"},
+						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价" },
 	      	              { field: "parentname",name:"parentname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "设置者" },
     	                  { field: "username",name:"username", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "被设置者" },
-    	                  { field: "companyname",name:"companyname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "机构名称" },
-						  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称"},
-						  { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准"},
-						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价" },
+    	                  { field: "companyname",name:"companyname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "机构名称" }
+						  
+						  
 						  //{ field: "saleprice",name:"saleprice", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "特价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25  } },
-						  { field: "sizesort",name:"sizesort", width: 40, headerAlign: "center", align:"center",allowSort: false, header: "排序" }
+						  //{ field: "sizesort",name:"sizesort", width: 40, headerAlign: "center", align:"center",allowSort: false, header: "排序" }
 						  //{ field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
 						  //{ field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"下架"},{"id":"1","text":"上架"}] } }
 					],
@@ -1189,7 +1192,7 @@
 				</div>
 				<div showCollapseButton="true">
 					<div class="mini-splitter" style="width:100%;height:100%;" borderStyle="border:0;">
-		   				<div size="30%" showCollapseButton="false" style="border-width: 1;">
+		   				<div size="15%" showCollapseButton="false" style="border-width: 1;">
 					    	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
 						        <table style="width:100%;">
 						            <tbody>

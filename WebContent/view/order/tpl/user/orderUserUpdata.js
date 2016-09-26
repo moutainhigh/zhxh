@@ -28,18 +28,18 @@ function insertUser() {
 	//alert(getRootPath_web());
 	var row = getData();
 	if (row == false) {
-			return;
+			return false;
 		}
-		else {
-			row.identity = radio_value;
-			row._state = 'added';
-			if (row.identity != "Z") {
-				row.companycode = row.phonenumber;
-			}
-			var rowArr = [];
-			rowArr.push(row);
-			var json = JSON.stringify(rowArr);
-			$.ajax({
+	else {
+		row.identity = radio_value;
+		row._state = 'added';
+		if (row.identity != "Z") {
+			row.companycode = row.phonenumber;
+		}
+		var rowArr = [];
+		rowArr.push(row);
+		var json = JSON.stringify(rowArr);
+		$.ajax({
 			async:false,
             url: getRootPath_web() + "/orderUser/save.htmls",
             data: {'objs':json},
@@ -48,8 +48,8 @@ function insertUser() {
             success: function (text) {
              	if (text == 'success') {
              		layer.msg("保存成功1。",{icon:6});
-             		//radio_click();
-             		return;
+             		radio_click();
+             		return false;
              	}
              	else if (text == "codeerror") {
              		layer.msg("手机短信验证码错误，请输入正确，再尝试，或与开发商联系。",{icon:5});
@@ -62,6 +62,54 @@ function insertUser() {
             	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
             }
        });
+	}
+}
+
+function updateUser() {
+	var row = getData();
+	if (row == false) {
+			return false;
+	}
+	else {
+		//询问框
+  		layer.confirm('确定要修改客户信息吗？', {
+  			btn: ['确认', '取消']
+  		},
+  		function()	{
+  			row._state = 'modified';
+  			row.updatePhone = "0";
+  			if (row.identity != "Z") {
+  				row.companycode = row.phonenumber;
+  			}
+  			var rowArr = [];
+  			rowArr.push(row);
+  			var json = JSON.stringify(rowArr);
+  			$.ajax({
+    			async:false,
+                url: getRootPath_web() + "/orderUser/save.htmls",
+                data: {'objs':json},
+                type: "post",
+                dataType:"text",
+                success: function (text) {
+                 	if (text == 'success') {
+                 		layer.msg("保存成功。",{icon:6});
+                 		radio_click();
+                 	}
+                 	else if (text == "codeerror") {
+                 		layer.msg("手机短信验证码错误，请输入正确，再尝试，或与开发商联系。",{icon:5});
+                 	}
+                 	else {
+                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+                 	}
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+                }
+           });
+  		}, 
+  		function(){
+  			
+  		});
 	}
 }
 

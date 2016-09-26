@@ -515,9 +515,17 @@ public class PublicUserService implements IPublicUserService{
 		
 		//判断是什么类型的接触
 		sb.append("update public_user set ");
-		sb.append(field).append("=?");
+		//如果是批量清空推荐人
+		if (field.equals("tuijianman")) {
+			sb.append("tuijianid='',");
+			sb.append("tuijianman=''");
+		}
+		else {
+			sb.append(field).append("=?");
+			values.add(fieldValue);
+		}
+		
 		sb.append(" where id in (");
-		values.add(fieldValue);
 		
 		Serializable[] ss=new Serializable[idsList.size()];
 		Arrays.fill(ss, "?");

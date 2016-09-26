@@ -340,6 +340,37 @@
     		});
     	}
     	
+    	function showUpdateUser(userid) {
+    		var updateRow = "";
+	   		for (var i=0;i<rows.length;i++) {
+	   			if (rows[i].id == userid) {
+	   				updateRow = rows[i];
+	   				break;
+	   			}
+	   		}
+	   		
+	   		if (updateRow == "") {
+	   			layer.msg("未找到要修改的记录，请重新登录再次尝试或与管理员联系。",{icon:5});
+	   			return false;
+	   		}
+    		$(".addUser").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/user/updateUser.tpl");
+    		$(".addUser").setParam('path', '${pageContext.request.contextPath}');
+    		$(".addUser").setParam('identity', radio_value);
+    		$(".addUser").setParam('updatePhone', 0);
+            $(".addUser").processTemplate(updateRow);
+           
+    		$(".admin").slideToggle(800,function(){
+    			//alert("滑动向上缩小完毕");
+    		});
+    		
+    		$(".addUser").slideToggle(800,function() {
+    			 laydate({
+      			   elem: '#birthday'
+      			})
+	   			$('#username').focus();
+    		});
+    	}
+    	
     	function resetUserlist() {
     		
     		$(".admin").slideToggle(800,function(){
@@ -347,6 +378,7 @@
     		});
     		
     		$(".addUser").css('display','none'); 
+    		$(".addUser").html("");
     		
     		/* $(".addUser").slideToggle(1000,function() {
     			
@@ -421,7 +453,7 @@
 			    }
 			});
     	}
-    	function updateUser(userid) {
+    	function updateUser2(userid) {
     		var pHeight = $(window.parent).height();
 	   		var pWidth = $(window.parent).width();
 	   		
@@ -629,7 +661,10 @@
 			}
 			
 			var txt = "正常";
-    		if (v == 0) {
+			if (t == "tuijianman") {
+				txt = "清空";
+			}
+			else if (v == 0) {
     			txt = "禁用";
     		}
     		
@@ -637,6 +672,9 @@
     		var cf = "状态为[";
     		if (t == "setreturn") {
     			cf = "接收分成为[";
+    		}
+    		else if (t == "tuijianman") {
+    			cf = "推荐人[";
     		}
     		
     		layer.confirm('确定要批量修改选中客户的'+cf+txt+']吗？', {
