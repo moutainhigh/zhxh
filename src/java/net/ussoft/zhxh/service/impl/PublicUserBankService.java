@@ -141,6 +141,25 @@ public class PublicUserBankService implements IPublicUserBankService{
 	}
 	
 	/**
+	 * 订货单-已发货
+	 * @param order
+	 * */
+	@Transactional("txManager")
+	@Override
+	public int sendoutorder(Public_order order){
+		//改变订单状态
+		order.setOrderstatus(2);	//已发货
+		order.setOrderstatusmemo("已发货");
+		order = orderDao.update(order);
+		//日志
+		Public_log log = saveLog(order.getParentid(), order.getUserid(), "sendorder", order.getOrdernumber()+"-已发货", order.getOrdertotal(), order.getId());
+		if(order !=null && log != null){
+			return 1;
+		}
+		return 0;
+	}
+	
+	/**
 	 * 充值
 	 * */
 	@Override

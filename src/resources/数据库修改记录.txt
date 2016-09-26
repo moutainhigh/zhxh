@@ -262,5 +262,7 @@ INSERT INTO sys_data_dic VALUES('55','public_log','logtype','withdrawal','提现
 2016-09-26
 数据字典
 INSERT INTO sys_data_dic VALUES('58','public_log','logtype','paymentorder','已付款');
-INSERT INTO sys_data_dic VALUES('59','public_log','logtype','cancelorder','取消订单');
+INSERT INTO sys_data_dic VALUES('59','public_log','logtype','cancelorder','已取消');
+INSERT INTO sys_data_dic VALUES('60','public_log','logtype','sendorder','已发货');
+INSERT INTO sys_data_dic VALUES('61','public_log','logtype','signorder','已签收');
 

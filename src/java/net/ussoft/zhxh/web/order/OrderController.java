@@ -383,7 +383,7 @@ public class OrderController extends BaseConstroller {
 	
 	/**
 	 * 我的账户余额（可支配账户）
-	 * @param id
+	 * @param orderid
 	 * */
 	@RequestMapping(value="/mybank",method=RequestMethod.POST)
 	public void mybank(String orderid, HttpServletResponse response) throws Exception {
@@ -407,7 +407,7 @@ public class OrderController extends BaseConstroller {
 	
 	/**
 	 * 付款
-	 * @param id
+	 * @param orderid
 	 * */
 	@RequestMapping(value="/paymentorder",method=RequestMethod.POST)
 	public void paymentorder(String orderid, HttpServletResponse response) throws Exception {
@@ -445,7 +445,7 @@ public class OrderController extends BaseConstroller {
 	
 	/**
 	 * 取消订单
-	 * @param id
+	 * @param orderid
 	 * */
 	@RequestMapping(value="/cancelorder",method=RequestMethod.POST)
 	public void cancelorder(String orderid, HttpServletResponse response) throws Exception {
@@ -470,6 +470,33 @@ public class OrderController extends BaseConstroller {
 			}
 		}else{
 			out.print("2");	//订单已发货-不能取消订单
+		}
+		return;
+	}
+	
+	/**
+	 * 确认发货
+	 * @param orderid
+	 * @param deliverynum 快递单号
+	 * */
+	@RequestMapping(value="/sendout",method=RequestMethod.POST)
+	public void sendout(String orderid,String deliverynum, HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		Public_order order = orderService.getById(orderid);
+		order.setDeliverynum(deliverynum);
+		int num = bankService.sendoutorder(order);
+		if(num >0){
+//				Public_user pu = userService.getById(order.getParentid());
+//				SendSMS.sendMessage(pu.getPhonenumber(), "");
+			out.print("1");	//成功
+		}else{
+			out.print("0");	//失败
 		}
 		return;
 	}

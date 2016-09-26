@@ -220,6 +220,11 @@
 			});
     	}
     	
+    	//确认收货
+    	function signorder(id){
+    		alert(id);
+    	}
+    	
     	//订单详情
     	function orderdetails(id){
     		$("#admin_order").slideToggle(800,function(){

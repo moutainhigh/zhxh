@@ -70,6 +70,11 @@ public interface IPublicUserBankService {
 	 * */
 	public int cancelorder(Public_user_bank bank,Public_order order);
 	
+	/**
+	 * 订货单-已发货
+	 * @param order
+	 * */
+	public int sendoutorder(Public_order order);
 	
 	/**
 	 * 充值

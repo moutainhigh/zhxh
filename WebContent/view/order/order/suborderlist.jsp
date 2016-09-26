@@ -62,7 +62,7 @@
     	//加载数据-订单列表
     	function loadData_orderlist(){
     		var _data = {};
-    		_data.orderType = "sub";
+    		_data.orderType = "my";
     		_data.ordernum = $("#ordernum").val();
     		_data.parentid = $("#parentid").val();;
     		_data.ordertime = $("#ordertime").val();
@@ -140,7 +140,30 @@
     	
     	//发货
     	function sendOut(id){
-    		alert(id);
+    		layer.prompt({
+   				title: '请输入运单号，并确认',
+   				formType: 0 //prompt风格，支持0-2
+   			}, function(deliverynum){
+   				$.ajax({
+   	    			async:false,
+   	                url: "${pageContext.request.contextPath}/order/sendout.htmls",
+   	                data: {orderid:id,deliverynum:deliverynum},
+   	                type: "post",
+   	                dataType:"text",
+   	                success: function (text) {
+   	                	alert(text);
+   	                	if(text == "1"){
+   	                		loadData_orderlist();
+   	                		layer.msg("操作成功",{icon:6});
+   	                	}else{
+   	                		layer.msg("操作失败，请稍后再试！",{icon:6});
+   	                	}
+   	                },
+   	                error: function (jqXHR, textStatus, errorThrown) {
+   	                    alert(jqXHR.responseText);
+   	                }
+   	           	});
+   			});
     	}
     	
     	/*---------订单详情---------*/
