@@ -315,10 +315,11 @@ SET FOREIGN_KEY_CHECKS = 1;
 =================
 
 3、数据字典增加
-insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '62', 'public_message', 'messagetype', '1', '系统消息');
-insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '63', 'public_message', 'messagetype', '2', '站内信');
-insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '64', 'public_message', 'messagestate', '0', '未读');
-insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '65', 'public_message', 'messagestate', '1', '已读');
+insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '62', 'public_message', 'messagetype', '0', '系统消息');
+insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '63', 'public_message', 'messagetype', '1', '业务消息');
+insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '64', 'public_message', 'messagetype', '2', '站内信');
+insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '65', 'public_message', 'messagestate', '0', '未读');
+insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '66', 'public_message', 'messagestate', '1', '已读');
 
 4、删除表public_order_product 订单商品表
 	(1)rebatesnum int（11） 本次返利数量
