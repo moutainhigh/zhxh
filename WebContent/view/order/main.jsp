@@ -122,11 +122,12 @@
 										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">我的利益</a>
 									</li>
 								</c:if>
-								<c:if test="${sessionScope.pc_user_sessiion.identity == 'A'}">
-									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
-										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">客户利益设置</a>
-									</li>
-								</c:if>
+								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+									<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">客户利益设置</a>
+								</li>
+								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+									<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userRatioList">奖励转货款设置</a>
+								</li>
 							</ul>
 						</div>
 					</li>

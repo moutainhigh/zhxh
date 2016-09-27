@@ -169,6 +169,8 @@
 2、修改表filesdown
 	（1）增加isshow int 11 是否显示
 	
+//================官网实施后
+	
 20160908
 1、修改表public_user
 	(1)增加 createtime varchar（100） 创建时间。叫time的精确到时分秒 叫date的精确到日期
@@ -278,5 +280,45 @@ CREATE TABLE `public_product_size_rebate` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+2016-09-27
+1、修改表 public_order_product 订单商品表
+	(1)增加rebatesnum int（11） 本次返利数量
+	(2)增加rebatespay decimal（11,2） 本次返利金额
+	(3)增加nextrebatesnum decimal（11,2） 下次返利数量
+	
+2、增加表public_message 消息表
+======== 执行===========
+
+DROP TABLE IF EXISTS `public_message`;
+CREATE TABLE `public_message` (
+  `id` varchar(40) NOT NULL,
+  `sendid` varchar(40) DEFAULT NULL,
+  `sendname` varchar(500) DEFAULT NULL,
+  `receiveid` varchar(40) DEFAULT NULL,
+  `receivename` varchar(500) DEFAULT NULL,
+  `messagetype` int(11) DEFAULT NULL,
+  `messagetxt` varchar(2000) DEFAULT NULL,
+  `messagestate` int(11) DEFAULT NULL,
+  `messagetime` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+//==
+消息分类：区分消息的分类。系统消息 1   站内信 2 
+状态：0 未读  1 已读
+时间：发送时间。精确到秒
+
+=================
+
+3、数据字典增加
+insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '62', 'public_message', 'messagetype', '1', '系统消息');
+insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '63', 'public_message', 'messagetype', '2', '站内信');
+insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '64', 'public_message', 'messagestate', '0', '未读');
+insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '65', 'public_message', 'messagestate', '1', '已读');
+	
 
 
