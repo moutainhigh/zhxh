@@ -92,12 +92,14 @@ public interface IPublicUser2Service {
 	
 	/**
 	 * 为机构选择规格
-	 * @param parentid
-	 * @param userid
-	 * @param productid
+	 * @param parentid			设置者
+	 * @param userid			被设置者
+	 * @param brandid			品牌id。可选   空或null，将不参与条件
+	 * @param productid			商品id。可选   空或null 将不参与条件
+	 * @param p					分页。可选   null 将不分页
 	 * @return
 	 * */
-	public List<Public_product_size> list_select_size(String parentid,String userid,String productid);
+	public PageBean<Public_product_size> list_select_size(String parentid,String userid,String brandid,String productid,PageBean<Public_product_size> p);
 	
 	/**
 	 * 获取机构采购利益表数据。采购利益表为主表。个人中心表为从表。还有品牌表，商品表。采用sql联合查询太复杂。本方法为获取数据后，独立查找各种信息，再补全。
@@ -163,6 +165,14 @@ public interface IPublicUser2Service {
 	public boolean updateUserSizeStandard(String parentid,String userid,String updatekey,String updatevalue);
 	
 	/**
+	 * 按采购标准id，批量更新
+	 * @param ids
+	 * @param updateKey
+	 * @param updateValue
+	 * @return
+	 */
+	public boolean updateUserSizeStandard(String ids ,String updateKey,String updateValue);
+	/**
 	 * 保存机构的规格设置标准
 	 * @param objs
 	 * @return
@@ -170,6 +180,13 @@ public interface IPublicUser2Service {
 	 * @throws IllegalAccessException 
 	 */
 	public boolean saveStandard(List<Map<String, String>> rows) throws IllegalAccessException, InvocationTargetException;
+	
+	/**
+	 * 删除机构的采购利益标准
+	 * @param ids
+	 * @return
+	 */
+	public boolean delUserStandard(String ids);
 	
 	/**
 	 * 获取机构的奖励转货款系数

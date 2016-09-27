@@ -187,10 +187,10 @@ public class UserManager2Controller extends BaseConstroller{
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		List<Public_product_size> sizeList = userService.list_select_size(parentid, userid,productid);
+		PageBean<Public_product_size> sizeList = userService.list_select_size(parentid, userid,null,productid,null);
 		
-		map.put("total", sizeList.size());
-		map.put("data", sizeList);
+		map.put("total",sizeList.getList().size());
+		map.put("data", sizeList.getList());
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);

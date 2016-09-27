@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/pintuer.js"></script>
     <script src="${pageContext.request.contextPath}/js/pintuer/respond.js"></script>
-    
+    <script src="${pageContext.request.contextPath}/js/jquery-jtemplates.js"></script>
     <script src="${pageContext.request.contextPath}/js/echarts/echarts.min.js"></script>
 	<!-- 引入 vintage 主题 -->
 	<script src="${pageContext.request.contextPath}/js/echarts/theme/shine.js"></script>
@@ -51,8 +51,8 @@
     </style>
     
     <script type="text/javascript">
+    	var userid = '${sessionScope.pc_user_sessiion.id}';
 	    $(function(){
-	    	parent.removeMenuCurrent();
 	    	// 基于准备好的dom，初始化echarts实例
 	    	var myChart = echarts.init(document.getElementById('main'));
 	    	var option = {
@@ -126,7 +126,32 @@
 	        // 使用刚指定的配置项和数据显示图表。
 	        myChart.setOption(option);
 	        window.onresize = myChart.resize; 
+	        
+	        getUserBank();
 	    })
+	    
+	    function getUserBank() {
+    		
+    		var par = {};
+    		par.userid = userid;
+    		
+    		$.ajax({
+    			async:false,
+                url: "${pageContext.request.contextPath}/orderUserBank/listUserBank.htmls",
+                data: par,
+                type: "post",
+                dataType:"json",
+                success: function (json) {
+                	$(".x5").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/bankList.tpl");
+                    $(".x5").processTemplate(json.data);
+                    
+                    
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+                }
+           });
+    	}
  		
     </script>
 </head>
@@ -135,15 +160,15 @@
 	<!--内容-->
 	<div class="layout" style="margin-bottom: 50px">
 		<ul class="bread bg">
-			<li><a href="#" class="icon-home">首页</a> </li>
-			<li></li>
+			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
+			<li><a href="javascript:;" >资金帐户</a></li>
 		</ul>
 		<div class="admin">
 			<div class="line-big">
-				<div class="x7">
+				<div class="x5">
 					<div class="panel border-sub">
 						<div class="panel-head">
-							<strong>今日简报[我的采购单]</strong>
+							<strong>我的帐户[众恒信和]</strong>
 						</div>
 						<div class="panel-body">
 							<table class="table">
@@ -215,7 +240,7 @@
 					</div>
 					<br>
 				</div>
-				<div class="x5">
+				<div class="x7">
 					<div class="panel border-sub">
 						<div class="panel-head">
 							<strong>待处理订单</strong>

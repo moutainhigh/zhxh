@@ -41,7 +41,7 @@
     	
     	//采购标准设置翻页
     	var pageIndex_dis = 1;
-    	var pageSize_dis = 10;
+    	var pageSize_dis = 30;
     	var totalPage_dis = 0;
     	
     	var rows = [];
@@ -55,15 +55,6 @@
     	var sel_brandid= "";
     	
     	$(function(){
-    		/* layer.prompt({
-    			formType: 0,
-    			value: '0.2',
-    			title: '请输入值'
-    		}, function(value, index, elem) {
-    			alert(value); //得到value
-    			layer.close(index);
-    		}); */
-    		
     		$("input[name=radio_user]:eq(0)").attr("checked",'checked');
     		radio_click();
     		$("input[name=radio_user]").click(function(){
@@ -126,19 +117,6 @@
     		}) 
     	}
     	
-    	
-    	/* var cat1 = Cat.createNew("asdflkjjjjj");
-    		alert(cat1.load("asf"));
-    		
-    		cat1.set({
-    			url:"http://www.baidu.com",
-    			columns: [
-							{ type: "checkcolumn",headerAlign:"center",width: 30},
-	      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:40}
-	      	            ]
-    		});
-    		
-    		alert(cat1.getUrl()); */
     	//绑定数量的TD <!-- test.js 是为测试td编辑。这里没有用到 -->
     	function bindTdClick() {
     		$('.update td').unbind('click').click(function(){
@@ -256,9 +234,7 @@
         	    	tips: [1, color]
     	    	    //time: 2000
     	    	});
-    		
     		}
-    		
     	}
     	
     	function td_tip_over(e) {
@@ -341,72 +317,58 @@
 			
     	}
     	
-    	function updateUser(userid) {
+    	function addBrand() {
     		var pHeight = $(window.parent).height();
 	   		var pWidth = $(window.parent).width();
 	   		
-	   		var updateRow = "";
-	   		for (var i=0;i<rows.length;i++) {
-	   			if (rows[i].id == userid) {
-	   				updateRow = rows[i];
-	   				break;
-	   			}
-	   		}
-	   		
-	   		if (updateRow == "") {
-	   			layer.msg("未找到要修改的记录，请重新登录再次尝试或与管理员联系。",{icon:5});
+	   		if (set_user == "") {
+	   			layer.msg("未找到要添加品牌的客户的记录，请重新登录再次尝试或与管理员联系。",{icon:5});
 	   			return false;
 	   		}
 	   		
     		layer.open({
 			    type: 2,
-			    title:'修改客户',
-			    area: ['700px', (pHeight-100) +'px'],
+			    title:'为客户添加可采购的品牌',
+			    area: [(pWidth-280) + 'px', (pHeight-200) +'px'],
 			    fix: false, //不固定
 			    maxmin: false,
 			    scrollbar:false,
-			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/updateUser",
+			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/selectBrand",
 			    success: function(layero, index){
 			    	var win = window['layui-layer-iframe' + index].window;
 			    	var data = [];
-			    	data.updateRow = updateRow;
-			    	data.updatePhone = 0;
+			    	data.parentid = parentid;
+			    	data.userid = set_user.id;
+			    	data.checktype = "checkbox";
 			    	win.setData(data);
 			    },
-			    btn: ['保存', '取消'],
+			    btn: ['选择', '取消'],
 			  	yes: function(index,layero){
 			  		var win = window['layui-layer-iframe' + index].window;
-			  		var row = win.getData();
+			  		var rowids = win.getData();
 			  		
-			  		if (row == false) {
+			  		if (rowids == "") {
 			  			return;
 			  		}
 			  		//询问框
-			  		layer.confirm('确定要修改客户信息吗？', {
+			  		layer.confirm('确定要为客户添加能采购的品牌吗？', {
 			  			btn: ['确认', '取消']
 			  		}, 
 			  		function()	{
-			  			row._state = 'modified';
-			  			row.updatePhone = "0";
-			  			if (row.identity != "Z") {
-			  				row.companycode = row.phonenumber;
-			  			}
-			  			var rowArr = [];
-			  			rowArr.push(row);
-			  			var json = JSON.stringify(rowArr);
+			  			var par = {};
+			  			par.parentid = parentid;
+			  			par.userid = set_user.id;
+			  			par.brandids = rowids;
 			  			$.ajax({
 			    			async:false,
-			                url: "${pageContext.request.contextPath}/orderUser/save.htmls",
-			                data: {'objs':json},
+			                url: "${pageContext.request.contextPath}/orderUserDis/saveUserBrand.htmls",
+			                data: par,
 			                type: "post",
 			                dataType:"text",
 			                success: function (text) {
 			                 	if (text == 'success') {
 			                 		layer.msg("保存成功。",{icon:6});
-			                 		radio_click();
-			                 	}
-			                 	else if (text == "codeerror") {
-			                 		layer.msg("手机短信验证码错误，请输入正确，再尝试，或与开发商联系。",{icon:5});
+			                 		getUserBrand();
 			                 	}
 			                 	else {
 			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
@@ -430,6 +392,177 @@
 			    }
 			});
     		return false;
+    	}
+    	
+    	function delBrand() {
+    		if (sel_brandid == "") {
+    			layer.msg("请先选择要删除的品牌.",{icon:6});
+				return;
+    		}
+    		
+    		layer.confirm('确定要删除客户能购买的品牌吗？<br><span style="color:red">注意：删除后，客户不采购该品牌下的商品。</span>', {
+	  			btn: ['确认', '取消']
+	  		}, 
+	  		function()	{
+	  			var par = {};
+	    		par.parentid = parentid;
+	    		par.userid = set_user.id;
+	    		par.brandid = sel_brandid;
+	    		
+	    		$.ajax({
+	    			async:false,
+	                url: "${pageContext.request.contextPath}/orderUserDis/delUserBrand.htmls",
+	                data: par,
+	                type: "post",
+	                dataType:"text",
+	                success: function (text) {
+	                 	if (text == 'success') {
+	                 		layer.msg("保存成功。",{icon:6});
+	                 		getUserBrand();
+	                 	}
+	                 	else {
+	                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+	                 	}
+	                },
+	                error: function (jqXHR, textStatus, errorThrown) {
+	                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+	                }
+	           });
+	  		}, 
+	  		function(){
+	  			
+	  		});
+    	}
+    	
+    	function addSize() {
+    		var pHeight = $(window.parent).height();
+	   		var pWidth = $(window.parent).width();
+	   		
+	   		if (set_user == "") {
+	   			layer.msg("未找到客户的记录，请先选择客户。",{icon:5});
+	   			return false;
+	   		}
+	   		
+	   		if (sel_brandid == "") {
+	   			layer.msg("未找到品牌记录，请先选择品牌。",{icon:5});
+	   			return false;
+	   		}
+	   		
+    		layer.open({
+			    type: 2,
+			    title:'为客户添加可采购的商品',
+			    area: [(pWidth-280) + 'px', (pHeight-200) +'px'],
+			    fix: false, //不固定
+			    maxmin: false,
+			    scrollbar:false,
+			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/selectSize",
+			    success: function(layero, index){
+			    	var win = window['layui-layer-iframe' + index].window;
+			    	var data = [];
+			    	data.parentid = parentid;
+			    	data.userid = set_user.id;
+			    	data.brandid = sel_brandid;
+			    	win.setData(data);
+			    },
+			    btn: ['选择', '取消'],
+			  	yes: function(index,layero){
+			  		var win = window['layui-layer-iframe' + index].window;
+			  		var rowids = win.getData();
+			  		
+			  		if (rowids == "") {
+			  			return;
+			  		}
+			  		//询问框
+			  		layer.confirm('确定要为客户添加能采购的商品吗？', {
+			  			btn: ['确认', '取消']
+			  		}, 
+			  		function()	{
+			  			var par = {};
+			  			par.parentid = parentid;
+			  			par.userid = set_user.id;
+			  			par.brandid = sel_brandid;
+			  			par.sizeids = rowids;
+			  			$.ajax({
+			    			async:false,
+			                url: "${pageContext.request.contextPath}/orderUserDis/saveUserSizeStandard.htmls",
+			                data: par,
+			                type: "post",
+			                dataType:"text",
+			                success: function (text) {
+			                 	if (text == 'success') {
+			                 		layer.msg("保存成功。",{icon:6});
+			                 		getUserDis();
+			                 		win.pageIndex = 1;
+			                 		win.loadData();
+			                 	}
+			                 	else {
+			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+			                 	}
+			                },
+			                error: function (jqXHR, textStatus, errorThrown) {
+			                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+			                }
+			           });
+			  		}, 
+			  		function(){
+			  			
+			  		});
+			  		
+			  	},
+			  	btn2: function(){
+			    	layer.closeAll();
+			  	},
+			    end: function(){
+			    	//alert(123);
+			    }
+			});
+    		return false;
+    	}
+    	
+    	function delSize() {
+    		var ids = "";
+			$('input:checkbox[name=row_id_dis]:checked').each(function(i) {
+				if(0==i){
+					ids = $(this).val();
+			 	}else{
+			 		ids += (","+$(this).val());
+			    }
+			});
+			if (ids == "") {
+				layer.msg("请先选择要删除的采购利益标准",{icon:6});
+				return;
+			}
+			
+			layer.confirm('确定要删除客户的采购利益标准吗？<br><span style="color:red">注意：客户将不能采购这些被删除的商品.', {
+	  			btn: ['确认', '取消']
+	  		}, 
+	  		function()	{
+	  			var par = {};
+	  			par.ids = ids;
+	  			$.ajax({
+	    			async:false,
+	                url: "${pageContext.request.contextPath}/orderUserDis/delUserStandard.htmls",
+	                data: par,
+	                type: "post",
+	                dataType:"text",
+	                success: function (text) {
+	                 	if (text == 'success') {
+	                 		layer.msg("保存成功。",{icon:6});
+	                 		getUserDis();
+	                 	}
+	                 	else {
+	                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+	                 	}
+	                },
+	                error: function (jqXHR, textStatus, errorThrown) {
+	                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+	                }
+	           });
+	  		}, 
+	  		function(){
+	  			
+	  		});
+			
     	}
     	
     	function updatebatch(v,t) {
@@ -626,6 +759,116 @@
     		});
     	}
     	
+    	function updateUserSizeStandard(key,v) {
+    		
+    		var sel_ids = "";
+   			$('.userDis input:checkbox[name=row_id_dis]:checked').each(function(i) {
+   				if(0==i){
+   					sel_ids = $(this).val();
+   			 	}else{
+   			 		sel_ids += (","+$(this).val());
+   			    }
+   			});
+   			
+   			if (sel_ids == "") {
+   				layer.msg("未找到要设置的记录，请重新登录再次尝试或与管理员联系。",{icon:5});
+	   			return false;
+   			}
+   			
+     		var cf = "确定要批量设置选中商品的";
+     		var txt = "";
+    		if (key == "buyerdis") {
+    			txt = "[折扣]";
+    		}
+    		else if (key == "rebatesdis") {
+    			txt = "[返利]";
+    		}
+    		else if (key == "bonusesdis") {
+    			txt = "[奖励]";
+    		}
+    		else if (key == "state") {
+    			if (v == '1') {
+    				txt = "[状态]为[可采购]";
+    			}
+    			else {
+    				txt = "[状态]为[禁止采购]";
+    			}
+    		}
+    		else {
+    			layer.msg("参数错误，请重新登录再次尝试或与管理员联系。",{icon:5});
+	   			return false;
+    		}
+    		cf += txt + "吗？";
+    		
+    		if (key == "state") {
+    			layer.confirm(cf, {
+    	  			btn: ['确认', '取消']
+    	  		}, 
+    	  		function()	{
+    	  			$.ajax({
+       	    			async:false,
+       	                url: "${pageContext.request.contextPath}/orderUserDis/updateUserSizeStandard.htmls",
+       	                data: {ids:sel_ids,updateKey:key,updateValue:v},
+       	                type: "post",
+       	                dataType:"text",
+       	                success: function (text) {
+       	                	if(text == "success"){
+       	                		getUserDis();
+       	                		layer.msg("操作成功",{icon:6});
+       	                	}else{
+       	                		layer.msg("操作失败，请稍后再试！",{icon:6});
+       	                	}
+       	                },
+       	                error: function (jqXHR, textStatus, errorThrown) {
+       	                    alert(jqXHR.responseText);
+       	                }
+       	           	});
+    	  		}, 
+    	  		function(){
+    	  			
+    	  		});
+    		}
+    		else {
+    			layer.prompt({
+       				title: '请输入'+txt+'，并确认',
+       				formType: 0
+       			}, function(num){
+       				if (num == "") {
+       					layer.msg("请输入值。",{icon:5});
+       		   			return false;
+       				}
+       				else if (!isNumber(num)) {
+       					layer.msg("请输入数字。",{icon:5});
+       		   			return false;
+       				}
+       				
+       				if (num < 0) {
+       					layer.msg("请输入大约0的数字。",{icon:5});
+       		   			return false;
+       				}
+       				
+       				$.ajax({
+       	    			async:false,
+       	                url: "${pageContext.request.contextPath}/orderUserDis/updateUserSizeStandard.htmls",
+       	                data: {ids:sel_ids,updateKey:key,updateValue:num},
+       	                type: "post",
+       	                dataType:"text",
+       	                success: function (text) {
+       	                	if(text == "success"){
+       	                		getUserDis();
+       	                		layer.msg("操作成功",{icon:6});
+       	                	}else{
+       	                		layer.msg("操作失败，请稍后再试！",{icon:6});
+       	                	}
+       	                },
+       	                error: function (jqXHR, textStatus, errorThrown) {
+       	                    alert(jqXHR.responseText);
+       	                }
+       	           	});
+       			});
+    		}
+    	}
+    	
     	
     </script>
 </head>
@@ -635,10 +878,10 @@
 	<div class="layout" style="margin-bottom: 150px;">
 		<ul class="bread bg">
 			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
-			<li><a href="javascript:;" >客户利益设置</a></li>
+			<li><a href="javascript:;" >客户采购利益设置</a></li>
 		</ul>
 		<div class="selUserDiv" style="display:none;padding:20px 60px;">
-			<div><div class="float-left" style="margin-bottom: 10px;">设置采购利益的机构</div></div>
+			<div><div class="float-left" style="margin-bottom: 10px;">客户列表</div></div>
 			<div class="selUserDiv-panel"></div>
 		</div>
 		<div class="userDiv" style="padding: 20px 60px;">
@@ -666,7 +909,7 @@
 			<div>
 				<table style="width:100%;margin-bottom: 10px;">
 					<tr>
-						<td align="left">设置机构能采购的品牌</td>
+						<td align="left">设置客户能采购的品牌</td>
 						<td align="right">
 							<a href="javascript:;" class="button bg-sub button-small" onclick="addBrand()">添加品牌</a>
 							<a href="javascript:;" class="button bg-dot button-small" onclick="delBrand()">删除品牌</a>
@@ -681,10 +924,22 @@
 			<div>
 				<table style="width:100%;margin-bottom: 10px;">
 					<tr>
-						<td align="left">设置机构的采购利益标准</td>
+						<td align="left">设置客户的采购利益标准</td>
 						<td align="right">
-							<a href="javascript:;" class="button bg-sub button-small" onclick="addBrand()">添加商品</a>
-							<a href="javascript:;" class="button bg-dot button-small" onclick="delBrand()">删除商品</a>
+							<div class="button-group border-blue button-small" style="margin-top: -2px">
+								<button type="button" class="button button-small dropdown-hover">
+									批量设置 <span class="downward"></span>
+								</button>
+								<ul class="drop-menu" style="text-align:left;width:15px">
+									<li><a href="javascript:;" onclick="updateUserSizeStandard('buyerdis')">批量设置[折扣]</a></li>
+									<li><a href="javascript:;" onclick="updateUserSizeStandard('rebatesdis')">批量设置[返利]</a></li>
+									<li><a href="javascript:;" onclick="updateUserSizeStandard('bonusesdis')">批量设置[奖励]</a></li>
+									<li><a href="javascript:;" onclick="updateUserSizeStandard('state','1')">批量[可采购]</a></li>
+									<li><a href="javascript:;" onclick="updateUserSizeStandard('state','0')">批量[禁止采购]</a></li>
+								</ul>
+							</div>
+							<a href="javascript:;" class="button bg-sub button-small" onclick="addSize()">添加商品</a>
+							<a href="javascript:;" class="button bg-dot button-small" onclick="delSize()">删除商品</a>
 						</td>
 					</tr>
 				</table>

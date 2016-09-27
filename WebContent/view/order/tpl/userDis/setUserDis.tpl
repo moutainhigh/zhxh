@@ -15,7 +15,6 @@
 			<th width="60">返利标准</th>
 			<th width="60">奖励标准</th>
 			<th width="60">状态</th>
-			<th width="80">操作</th>
 		</tr>
 		{#if $P.rowCount > 0}
 			{#foreach $T as row}
@@ -34,9 +33,6 @@
 					<td>{$T.row.rebatesdis}</td>
 					<td>{$T.row.bonusesdis}</td>
 					<td>{#if $T.row.state==0}<span style="color:red">禁止采购</span>{#else}可采购{#/if}</td>
-					<td>
-						<a href="javascript:;" class="button button-small border-sub" onclick="showUserList()">爱的色放</a>
-					</td>
 				</tr>
 			{#/for}
 		{#else}

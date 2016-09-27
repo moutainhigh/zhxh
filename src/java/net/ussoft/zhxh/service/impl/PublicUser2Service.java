@@ -300,44 +300,125 @@ public class PublicUser2Service implements IPublicUser2Service{
 	 * @see net.ussoft.zhxh.service.IPublicUser2Service#list_select_size(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<Public_product_size> list_select_size(String parentid, String userid, String productid) {
+	public PageBean<Public_product_size> list_select_size(String parentid, String userid,String brandid, String productid,PageBean<Public_product_size> p) {
 		
-		String sql = "";
+		StringBuffer sb = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
 		
-		//获取商品下全部规格
-		sql = "select * from public_product_size where productid=? order by sizesort";
-		values.add(productid);
+		//获取已设置的商品
+		sb.append("select * from public_set_user_standard where parentid=? and userid=?");
 		
-		
-		List<Public_product_size> allSizeList = sizeDao.search(sql, values);
-		if (allSizeList.size() == 0) {
-			return allSizeList;
-		}
-		
-		//获取parentid,userid   已经赋予了哪些，去除后返回，供前台选择
-		sql = "select * from public_set_user_standard where parentid=? and userid=? and productid=?";
-		values.clear();
 		values.add(parentid);
 		values.add(userid);
-		values.add(productid);
-		List<Public_set_user_standard> userStandardList = userStandardDao.search(sql, values);
 		
-		//如果是空的。直接返回空
-		if (null != userStandardList && userStandardList.size() > 0) {
-			Iterator<Public_product_size> iter = allSizeList.iterator();
-	        while(iter.hasNext()){
-	        	Public_product_size b = iter.next();
-	            for (Public_set_user_standard userStandard : userStandardList) {
-					if (b.getId().equals(userStandard.getSizeid())) {
-						iter.remove();
-						break;
-					}
-				}
-	        }
+		if (null != brandid && !"".equals(brandid)) {
+			sb.append(" and brandid = ?");
+			values.add(brandid);
 		}
-				
-		return allSizeList;
+		if (null != productid && !"".equals(productid)) {
+			sb.append(" and productid = ?");
+			values.add(productid);
+		}
+		List<Public_set_user_standard> userStandardList = userStandardDao.search(sb.toString(), values);
+		
+		List<String> isExistsList = new ArrayList<String>();
+		if (null != userStandardList && userStandardList.size() > 0) {
+			for (Public_set_user_standard s : userStandardList) {
+				isExistsList.add(s.getSizeid());
+			}
+		}
+		
+		sb.setLength(0);
+		values.clear();
+		
+		sb.append("select * from public_product_size where 1=1");
+		
+		if (null != brandid && !"".equals(brandid)) {
+			sb.append(" and brandid = ?");
+			values.add(brandid);
+		}
+		if (null != productid && !"".equals(productid)) {
+			sb.append(" and productid = ?");
+			values.add(productid);
+		}
+		
+		if (isExistsList.size() > 0) {
+			sb.append(" and id not in (");
+			
+			Serializable[] ss=new Serializable[isExistsList.size()];
+			Arrays.fill(ss, "?");
+			sb.append(StringUtils.join(ss,','));
+			sb.append(")");
+			values.addAll(isExistsList);
+		}
+		
+		sb.append(" order by productname");
+		
+		List<Public_product_size> resultList = new ArrayList<Public_product_size>();
+		if (null == p) {
+			resultList = sizeDao.search(sb.toString(), values);
+			PageBean<Public_product_size> resultP = new PageBean<Public_product_size>();
+			resultP.setList(resultList);
+			return resultP;
+		}
+		else {
+			p = sizeDao.search(sb.toString(), values,p);
+		}
+		return p;
+		
+//		
+//		String sql = "";
+//		List<Object> values = new ArrayList<Object>();
+//		
+//		//获取商品下全部规格
+//		sql = "select * from public_product_size where 1=1";
+//		
+//		if (null != brandid && !"".equals(brandid)) {
+//			sql += " and brandid = ?";
+//			values.add(brandid);
+//		}
+//		if (null != productid && !"".equals(productid)) {
+//			sql += " and productid = ?";
+//			values.add(productid);
+//		}
+//		sql += "order by sizesort";
+//		
+//		List<Public_product_size> allSizeList = sizeDao.search(sql, values);
+//		if (allSizeList.size() == 0) {
+//			return allSizeList;
+//		}
+//		
+//		//获取parentid,userid   已经赋予了哪些，去除后返回，供前台选择
+//		sql = "select * from public_set_user_standard where parentid=? and userid=?";
+//		values.clear();
+//		values.add(parentid);
+//		values.add(userid);
+//		
+//		if (null != brandid && !"".equals(brandid)) {
+//			sql += " and brandid = ?";
+//			values.add(brandid);
+//		}
+//		if (null != productid && !"".equals(productid)) {
+//			sql += " and productid = ?";
+//			values.add(productid);
+//		}
+//		List<Public_set_user_standard> userStandardList = userStandardDao.search(sql, values);
+//		
+//		//如果是空的。直接返回空
+//		if (null != userStandardList && userStandardList.size() > 0) {
+//			Iterator<Public_product_size> iter = allSizeList.iterator();
+//	        while(iter.hasNext()){
+//	        	Public_product_size b = iter.next();
+//	            for (Public_set_user_standard userStandard : userStandardList) {
+//					if (b.getId().equals(userStandard.getSizeid())) {
+//						iter.remove();
+//						break;
+//					}
+//				}
+//	        }
+//		}
+//				
+//		return allSizeList;
 	}
 
 	/*
@@ -358,10 +439,19 @@ public class PublicUser2Service implements IPublicUser2Service{
 		tmp.setParentid(parentid);
 		tmp.setUserid(userid);
 		tmp.setBrandid(brandid);
-		tmp.setProductid(productid);
+		if (null != productid && !"".equals(productid)) {
+			tmp.setProductid(productid);
+		}
+		
 		for (String string : idArr) {
 			tmp.setId(UUID.randomUUID().toString());
 			tmp.setSizeid(string);
+			
+			if (null == productid || "".equals(productid)) {
+				Public_product_size size = sizeDao.get(string);
+				tmp.setProductid(size.getProductid());
+			}
+			
 			userStandardDao.save(tmp);
 		}
 		
@@ -806,6 +896,57 @@ public class PublicUser2Service implements IPublicUser2Service{
 	        	ratioDao.update(s);
 	        }
 	    }
+		
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#updateUserSizeStandard(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public boolean updateUserSizeStandard(String ids, String updateKey, String updateValue) {
+		String[] idsArr = ids.split(",");
+		List<String> idList = Arrays.asList(idsArr);
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		sb.append("update public_set_user_standard set ");
+		sb.append(updateKey).append("=?");
+		
+		values.add(updateValue);
+		sb.append("where id in (");
+		
+		Serializable[] ss=new Serializable[idList.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(idList);
+		
+		userStandardDao.update(sb.toString(), values);
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#delUserStandard(java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public boolean delUserStandard(String ids) {
+		String[] idsArr = ids.split(",");
+		List<String> idList = Arrays.asList(idsArr);
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		sb.append("delete from public_set_user_standard where id in (");
+		
+		Serializable[] ss=new Serializable[idList.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(idList);
+		
+		userStandardDao.del(sb.toString(), values);
 		
 		return true;
 	}

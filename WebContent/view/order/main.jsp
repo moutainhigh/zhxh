@@ -47,6 +47,7 @@
 			$(".side-menu  a").click(function(){
     			var funcode = $(this).attr("funcode");
     			curInd = $(this).attr("curInd");
+    			
     			var url = funcode;
     			if (url == 'index') {
     				$("#mainFrame").attr("src","${pageContext.request.contextPath}/view/system/h.jsp");
@@ -55,11 +56,20 @@
     				$("#mainFrame").attr("src",url);
     			}
     			Public.Ui.Menu.curInd = curInd;
-    			
     			/* $("#navbar1 li").removeClass("active");
     			$(this).parent().addClass("active"); */
     		});
+			updateCur();
 		})
+		
+		function updateCur() {
+			var identity = '${sessionScope.pc_user_sessiion.identity}';
+			if (identity == "C") {
+				$(".pay a").attr("curInd","2");
+				$(".message a").attr("curInd","3");
+				$(".report a").attr("curInd","4");
+			}
+		}
 		
 		function removeMenuCurrent() {
 			$(".side-menu-li").removeClass("current");
@@ -97,6 +107,7 @@
 							</ul>
 						</div>
 					</li>
+					<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
 					<li class="pr side-menu-li li-crop menu1" id="customer" code="WBM_CUSTOMER">
 						<a class="customer side-menu-a new-con-p" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">
 							<i class="icon"></i>客户
@@ -119,7 +130,8 @@
 							</ul>
 						</div>
 					</li>
-					<li class="pr side-menu-li li-crop menu1" id="product" code="WBM_PRODUCT">
+					</c:if>
+					<li class="product pr side-menu-li li-crop menu1" id="product" code="WBM_PRODUCT">
 						<a class="product side-menu-a new-con-p" href="http://corp.dinghuo123.com/product/product?action=list&amp;status=0">
 							<i class="icon"></i>商品<span class="ui-new-func"></span>
 						</a>
@@ -156,7 +168,7 @@
 							</ul>
 						</div>
 					</li>
-					<li class="pr side-menu-li li-crop menu1" id="pay" code="WBM_FUND">
+					<li class="pay pr side-menu-li li-crop menu1" id="pay" code="WBM_FUND">
 						<a class="pay side-menu-a new-con-p" href="http://corp.dinghuo123.com/pay/payment?action=list">
 							<i class="icon"></i>资金
 						</a>
@@ -166,7 +178,8 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">资金管理</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_FUND_RECEIPT_CONFIRM">
-											<a class="third-nav-a new-con" target="mainFrame" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/account">资金账户</a>
+											<a class="sec-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/bankList">资金账户</a>
+											<%-- <a class="third-nav-a new-con" target="mainFrame" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/account">资金账户</a> --%>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_FUND_ONLINE_PAYMENT">
 											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/onlinePayAccount?action=onlinePayAccountManage">在线支付</a>
@@ -193,7 +206,7 @@
 							</ul>
 						</div>
 					</li>
-					<li class="pr side-menu-li li-crop menu1" id="message" code="WBM_NOTIFY">
+					<li class="message pr side-menu-li li-crop menu1" id="message" code="WBM_NOTIFY">
 						<a class="message side-menu-a new-con-p" href="http://corp.dinghuo123.com/message/notification?action=list">
 							<i class="icon"></i>通知
 						</a>
@@ -227,7 +240,7 @@
 							</ul>
 						</div>
 					</li>
-					<li class="pr side-menu-li li-crop menu1" id="report" code="WBM_REPORT">
+					<li class="report pr side-menu-li li-crop menu1" id="report" code="WBM_REPORT">
 						<a class="report side-menu-a new-con-p" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=business&amp;statisticsType=2&amp;dateSegment=4">
 							<i class="icon"></i>报表
 						</a>
