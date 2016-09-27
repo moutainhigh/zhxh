@@ -501,4 +501,28 @@ public class OrderController extends BaseConstroller {
 		return;
 	}
 	
+	/**
+	 * 确认签收
+	 * @param orderid
+	 * */
+	@RequestMapping(value="/signorder",method=RequestMethod.POST)
+	public void signorder(String orderid,HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		Public_order order = orderService.getById(orderid);
+		int num = bankService.sendoutorder(order);
+		if(num >0){
+//				Public_user pu = userService.getById(order.getParentid());
+//				SendSMS.sendMessage(pu.getPhonenumber(), "");
+			out.print("1");	//成功
+		}else{
+			out.print("0");	//失败
+		}
+		return;
+	}
 }

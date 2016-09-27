@@ -77,6 +77,12 @@ public interface IPublicUserBankService {
 	public int sendoutorder(Public_order order);
 	
 	/**
+	 * 订货单-已签收
+	 * @param order
+	 * */
+	public int signorder(Public_order order);
+	
+	/**
 	 * 充值
 	 * @param bill 充值账单流水
 	 * @param identity 身份

@@ -1,32 +1,32 @@
 package net.ussoft.zhxh.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicLogDao;
 import net.ussoft.zhxh.dao.PublicOrderDao;
+import net.ussoft.zhxh.dao.PublicOrderProductDao;
 import net.ussoft.zhxh.dao.PublicPhoneCodeLogDao;
+import net.ussoft.zhxh.dao.PublicProductSizeRebateDao;
 import net.ussoft.zhxh.dao.PublicSetBonusesRatioDao;
 import net.ussoft.zhxh.dao.PublicTradeBillDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.model.Public_log;
 import net.ussoft.zhxh.model.Public_order;
+import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_phone_code_log;
+import net.ussoft.zhxh.model.Public_product_size_rebate;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.service.IPublicUserBankService;
-import net.ussoft.zhxh.util.CommonUtils;
-import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PublicUserBankService implements IPublicUserBankService{
@@ -43,6 +43,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 	private PublicPhoneCodeLogDao codelogDao;
 	@Resource
 	private PublicOrderDao orderDao;
+	@Resource
+	private PublicOrderProductDao orderProductDao;
+	@Resource
+	private PublicProductSizeRebateDao rebateDao;
 	
 	@Override
 	public Public_user_bank getById(String id) {
@@ -153,6 +157,52 @@ public class PublicUserBankService implements IPublicUserBankService{
 		order = orderDao.update(order);
 		//日志
 		Public_log log = saveLog(order.getParentid(), order.getUserid(), "sendorder", order.getOrdernumber()+"-已发货", order.getOrdertotal(), order.getId());
+		if(order !=null && log != null){
+			return 1;
+		}
+		return 0;
+	}
+	
+	/**
+	 * 订货单-已签收
+	 * @param order
+	 * */
+	@Transactional("txManager")
+	@Override
+	public int signorder(Public_order order){
+		//改变订单状态
+		order.setOrderstatus(3);	//已签收
+		order.setOrderstatusmemo("已签收");
+		order = orderDao.update(order);
+		//日志
+		Public_log log = saveLog(order.getUserid(), order.getParentid(), "sendorder", order.getOrdernumber()+"-已签收", order.getOrdertotal(), order.getId());
+		//返利
+		List<Public_order_product> list = getOrderProducts(order.getId());	//订单商品
+		for(Public_order_product obj:list){
+			//商品返利剩余数量
+			Public_product_size_rebate rebate = getProductSizeRebate(order.getUserid(), order.getParentid(), obj.getId());
+			if(rebate != null){
+				if(obj.getProductnum() > rebate.getQuantity()){
+					rebate.getQuantity();//返利数量
+					rebate.setQuantity(obj.getProductnum());	//重新设置返利余额
+					
+				}else{
+					
+				}
+			}else{
+				//首次添加-商品返利余额
+				Public_product_size_rebate sizerebate = new Public_product_size_rebate();
+				sizerebate.setId(UUID.randomUUID().toString());
+				sizerebate.setUserid(order.getUserid());
+				sizerebate.setParentid(order.getParentid());
+				sizerebate.setSizeid(obj.getId());
+				sizerebate.setQuantity(obj.getProductnum());
+				rebateDao.save(sizerebate);
+			}
+		}
+		//奖励
+		
+		
 		if(order !=null && log != null){
 			return 1;
 		}
@@ -651,6 +701,35 @@ public class PublicUserBankService implements IPublicUserBankService{
 		codeLog.setSendtype(sendType);	//类型
 		codeLog.setIp("");
 		codelogDao.save(codeLog);
+	}
+	
+	/**
+	 * 返利商品
+	 * @param userid
+	 * @param parentid
+	 * @param sizeid
+	 * @return
+	 * */
+	private Public_product_size_rebate getProductSizeRebate(String userid,String parentid,String sizeid){
+		String sql = "SELECT * FROM public_product_size_rebate WHERE userid=? AND parentid=? sizeid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(userid);
+		values.add(parentid);
+		values.add(sizeid);
+		List<Public_product_size_rebate> list = rebateDao.search(sql, values);
+		return list.size()>0 ? list.get(0) : null;
+	}
+	
+	/**
+	 * 返利商品
+	 * @param orderid
+	 * @return
+	 * */
+	private List<Public_order_product> getOrderProducts(String orderid){
+		String sql = "SELECT * FROM public_order_product WHERE orderid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(orderid);
+		return orderProductDao.search(sql, values);
 	}
 	
 }
