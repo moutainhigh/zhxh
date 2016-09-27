@@ -59,7 +59,7 @@
     			/* $("#navbar1 li").removeClass("active");
     			$(this).parent().addClass("active"); */
     		});
-			updateCur();
+			//updateCur(); 如果菜单有隐藏，需要调整curInd的号码。这里暂时不需要
 		})
 		
 		function updateCur() {
@@ -107,31 +107,34 @@
 							</ul>
 						</div>
 					</li>
-					<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
+					
 					<li class="pr side-menu-li li-crop menu1" id="customer" code="WBM_CUSTOMER">
 						<a class="customer side-menu-a new-con-p" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">
 							<i class="icon"></i>客户
 						</a>
 						<div class="float-menu" style="top: 0px;">
 							<ul class="sec-nav">
-								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">
-									<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">客户列表</a>
-								</li>
+								<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
+									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">
+										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">客户列表</a>
+									</li>
+								</c:if>
 								<c:if test="${sessionScope.pc_user_sessiion.id != '1'}">
 									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
 										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">我的利益</a>
 									</li>
 								</c:if>
-								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
-									<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">客户利益设置</a>
-								</li>
-								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
-									<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userRatioList">奖励转货款设置</a>
-								</li>
+								<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
+									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">客户利益设置</a>
+									</li>
+									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userRatioList">奖励转货款设置</a>
+									</li>
+								</c:if>
 							</ul>
 						</div>
 					</li>
-					</c:if>
 					<li class="product pr side-menu-li li-crop menu1" id="product" code="WBM_PRODUCT">
 						<a class="product side-menu-a new-con-p" href="http://corp.dinghuo123.com/product/product?action=list&amp;status=0">
 							<i class="icon"></i>商品<span class="ui-new-func"></span>

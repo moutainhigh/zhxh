@@ -873,53 +873,13 @@
 	<div class="layout" style="margin-bottom: 150px;">
 		<ul class="bread bg">
 			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
-			<li><a href="javascript:;" >客户采购利益设置</a></li>
+			<li><a href="javascript:;" >客户奖励转货款设置</a></li>
 		</ul>
-		<div class="selUserDiv" style="display:none;padding:20px 60px;">
-			<div><div class="float-left" style="margin-bottom: 10px;">客户列表</div></div>
-			<div class="selUserDiv-panel"></div>
-		</div>
 		<div class="userDiv" style="padding: 20px 60px;">
-			<form onsubmit="return false;" class="form-x" method="post">
-				<div class="form-group float-right" style="width:300px">
-					<c:choose>
-	    				<c:when test="${sessionScope.pc_user_sessiion.id == '1' }">
-	    					<input name="radio_user" type="radio" value="A"> 代理
-	    					<input name="radio_user" type="radio" value="C"> 门店
-	    				</c:when>
-	    				<c:when test="${sessionScope.pc_user_sessiion.identity == 'A' }">
-	    					<input name="radio_user" type="radio" value="C"> 门店
-	    				</c:when>
-	    				<c:otherwise>
-	    				</c:otherwise>
-	    			</c:choose>
-					<input type="text" id="searchTxt" name="searchTxt" class="input input-auto" style="width:120px;margin-left: 20px"/>
-					<a id="searchBtn" href="javascript:;" class="button bg-main button-small" onclick="searchUser()">检索</a>
-				</div>
-			</form>
-			<div class="admin-panel">
-			</div>
-		</div>
-		<div class="userBrandDiv" style="display:none;padding:0px 60px;">
 			<div>
 				<table style="width:100%;margin-bottom: 10px;">
 					<tr>
-						<td align="left">设置客户能采购的品牌</td>
-						<td align="right">
-							<a href="javascript:;" class="button bg-sub button-small" onclick="addBrand()">添加品牌</a>
-							<a href="javascript:;" class="button bg-dot button-small" onclick="delBrand()">删除品牌</a>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div class="userBrandDiv_panel">
-			</div>
-		</div>
-		<div class="setUserDisDiv" style="display:none;padding:20px 60px;margin-bottom: 20px;">
-			<div>
-				<table style="width:100%;margin-bottom: 10px;">
-					<tr>
-						<td align="left">设置客户的采购利益标准</td>
+						<td align="left">设置客户的奖励转货款系数</td>
 						<td align="right">
 							<div class="button-group border-blue button-small" style="margin-top: -2px">
 								<button type="button" class="button button-small dropdown-hover">
@@ -933,13 +893,15 @@
 									<li><a href="javascript:;" onclick="updateUserSizeStandard('state','0')">批量[禁止采购]</a></li>
 								</ul>
 							</div>
-							<a href="javascript:;" class="button bg-sub button-small" onclick="addSize()">添加商品</a>
-							<a href="javascript:;" class="button bg-dot button-small" onclick="delSize()">删除商品</a>
+							<a href="javascript:;" class="button bg-sub button-small" onclick="addSize()">添加客户</a>
+							<a href="javascript:;" class="button bg-dot button-small" onclick="delSize()">删除客户</a>
+							<input type="text" id="searchTxt" name="searchTxt" class="input input-auto" style="width:120px;margin-left: 20px"/>
+							<a id="searchBtn" href="javascript:;" class="button bg-main button-small" onclick="searchUser()">检索</a>
 						</td>
 					</tr>
 				</table>
 			</div>
-			<div class="setUserDisDiv_panel">
+			<div class="admin-panel">
 			</div>
 		</div>
 	</div>

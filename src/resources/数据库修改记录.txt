@@ -285,7 +285,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 1、修改表 public_order_product 订单商品表
 	(1)增加rebatesnum int（11） 本次返利数量
 	(2)增加rebatespay decimal（11,2） 本次返利金额
-	(3)增加nextrebatesnum decimal（11,2） 下次返利数量
+	(3)增加nextrebatesnum int（11） 下次返利数量
 	
 2、增加表public_message 消息表
 ======== 执行===========
@@ -319,6 +319,42 @@ insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_
 insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '63', 'public_message', 'messagetype', '2', '站内信');
 insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '64', 'public_message', 'messagestate', '0', '未读');
 insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '65', 'public_message', 'messagestate', '1', '已读');
+
+4、删除表public_order_product 订单商品表
+	(1)rebatesnum int（11） 本次返利数量
+	(2)rebatespay decimal（11,2） 本次返利金额
+	(3)nextrebatesnum int（11） 下次返利数量
+
+5、增加表public_dis_details   返利奖励明细表
+//============
+
+DROP TABLE IF EXISTS `public_dis_details`;
+CREATE TABLE `public_dis_details` (
+  `id` varchar(40) NOT NULL,
+  `aid` varchar(40) DEFAULT NULL,
+  `acompanyname` varchar(500) DEFAULT NULL,
+  `uid` varchar(40) DEFAULT NULL,
+  `uname` varchar(100) DEFAULT NULL,
+  `ucompanyname` varchar(500) DEFAULT NULL,
+  `tid` varchar(40) DEFAULT NULL,
+  `tname` varchar(100) DEFAULT NULL,
+  `tcompanyname` varchar(500) DEFAULT NULL,
+  `detailstype` int(11) DEFAULT NULL,
+  `detailsnum` int(11) DEFAULT NULL,
+  `detailspay` decimal(11,2) DEFAULT NULL,
+  `nextrebatesnum` int(11) DEFAULT NULL,
+  `detailstxt` varchar(1000) DEFAULT NULL,
+  `orderid` varchar(40) DEFAULT NULL,
+  `sizeid` varchar(40) DEFAULT NULL,
+  `createtime` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+//========================
+
 	
 
 

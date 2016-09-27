@@ -26,9 +26,6 @@ public class Public_order_product {
 	private Float buyerdis;					//商品采购折扣
 	private Float rebatesdis;				//返利标准
 	private Float bonusesdis;				//奖励标准
-	private Integer rebatesnum;				//本次返利数量
-	private Float rebatespay;				//本次返利金额
-	private Integer nextrebatesnum;			//下次可返利数量
 	
 	public Public_order_product() {
 		this.setProductnum(0);
@@ -40,9 +37,6 @@ public class Public_order_product {
 		this.setBuyerdis(0f);
 		this.setRebatesdis(0f);
 		this.setBonusesdis(0f);
-		this.setRebatesnum(0);
-		this.setRebatespay(0f);
-		this.setNextrebatesnum(0);
 	}
 	
 	
@@ -161,35 +155,5 @@ public class Public_order_product {
 		this.brandname = brandname;
 	}
 
-
-	public Integer getRebatesnum() {
-		return rebatesnum;
-	}
-
-
-	public void setRebatesnum(Integer rebatesnum) {
-		this.rebatesnum = rebatesnum;
-	}
-
-
-	public Float getRebatespay() {
-		return rebatespay;
-	}
-
-
-	public void setRebatespay(Float rebatespay) {
-		this.rebatespay = rebatespay;
-	}
-
-
-	public Integer getNextrebatesnum() {
-		return nextrebatesnum;
-	}
-
-
-	public void setNextrebatesnum(Integer nextrebatesnum) {
-		this.nextrebatesnum = nextrebatesnum;
-	}
-	
 	
 }
