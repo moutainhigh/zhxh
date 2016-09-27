@@ -23,7 +23,9 @@ public class Public_dis_details {
 	private Integer nextrebatesnum;
 	private String detailstxt;
 	private String orderid;
+	private String ordernumber;
 	private String sizeid;
+	private String productname;
 	private String createtime;
 	
 	public Public_dis_details(String id) {
@@ -145,6 +147,22 @@ public class Public_dis_details {
 	}
 	public void setCreatetime(String createtime) {
 		this.createtime = createtime;
+	}
+
+	public String getOrdernumber() {
+		return ordernumber;
+	}
+
+	public void setOrdernumber(String ordernumber) {
+		this.ordernumber = ordernumber;
+	}
+
+	public String getProductname() {
+		return productname;
+	}
+
+	public void setProductname(String productname) {
+		this.productname = productname;
 	}
 	
 	
