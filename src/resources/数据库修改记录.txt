@@ -301,6 +301,7 @@ CREATE TABLE `public_message` (
   `messagetxt` varchar(2000) DEFAULT NULL,
   `messagestate` int(11) DEFAULT NULL,
   `messagetime` varchar(100) DEFAULT NULL,
+  `activeid` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

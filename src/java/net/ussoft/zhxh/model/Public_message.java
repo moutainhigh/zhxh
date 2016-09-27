@@ -17,6 +17,7 @@ public class Public_message {
 	private String messagetxt;			//消息内容
 	private Integer messagestate;		//消息状态  0：未读	1：已读
 	private String messagetime;			//发送时间。精确到秒
+	private String activeid;			//业务id。例如订单id。方便从消息直接查看
 	
 	
 	@Id
@@ -74,6 +75,12 @@ public class Public_message {
 	}
 	public void setReceivename(String receivename) {
 		this.receivename = receivename;
+	}
+	public String getActiveid() {
+		return activeid;
+	}
+	public void setActiveid(String activeid) {
+		this.activeid = activeid;
 	}
 	
 	
