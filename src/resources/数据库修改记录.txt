@@ -360,5 +360,20 @@ SET FOREIGN_KEY_CHECKS = 1;
 //========================
 
 	
+//表初始
+-- 用户
+DELETE FROM public_user;
+-- 关系
+DELETE FROM public_user_link;
+-- 账户
+DELETE FROM public_user_bank;
+-- 品牌
+DELETE FROM public_user_brand;
+-- 地址
+DELETE FROM public_user_path;
+-- 设置采购各种标准
+DELETE FROM public_set_user_standard;
+-- 设置奖励转货款标准
+DELETE FROM public_set_bonuses_ratio;
 
 

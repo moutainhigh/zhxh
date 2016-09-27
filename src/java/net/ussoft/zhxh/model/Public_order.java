@@ -26,6 +26,12 @@ public class Public_order {
 	
 	private String u_username;	//临时字段-userid对应的username
 	private String p_username;	//临时字段-parentid对应的username
+	private String u_companyname;	//机构名称
+	private String p_companyanme;	//
+	private String tid;				//推荐人ID
+	private String t_username;		//推荐人姓名
+	private String t_companyname;	//推荐人机构名称
+	
 	private List<Public_order_product> orderProList;
 	
 	
@@ -142,6 +148,41 @@ public class Public_order {
 	}
 	public void setP_username(String p_username) {
 		this.p_username = p_username;
+	}
+	@Transient
+	public String getU_companyname() {
+		return u_companyname;
+	}
+	public void setU_companyname(String u_companyname) {
+		this.u_companyname = u_companyname;
+	}
+	@Transient
+	public String getP_companyanme() {
+		return p_companyanme;
+	}
+	public void setP_companyanme(String p_companyanme) {
+		this.p_companyanme = p_companyanme;
+	}
+	@Transient
+	public String getT_username() {
+		return t_username;
+	}
+	public void setT_username(String t_username) {
+		this.t_username = t_username;
+	}
+	@Transient
+	public String getT_companyname() {
+		return t_companyname;
+	}
+	public void setT_companyname(String t_companyname) {
+		this.t_companyname = t_companyname;
+	}
+	@Transient
+	public String getTid() {
+		return tid;
+	}
+	public void setTid(String tid) {
+		this.tid = tid;
 	}
 	
 }
