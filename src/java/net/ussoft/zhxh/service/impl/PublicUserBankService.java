@@ -2,6 +2,7 @@ package net.ussoft.zhxh.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -731,5 +732,28 @@ public class PublicUserBankService implements IPublicUserBankService{
 		values.add(orderid);
 		return orderProductDao.search(sql, values);
 	}
+	
+	//===============
+	@Override
+	public List<Map<String, Object>> getUserBankList(String parentid, String userid) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select k.*,u.companyname from public_user_bank k ,public_user u where 1=1");
+		List<Object> values = new ArrayList<Object>();
+		
+		if(null != userid && !"".equals(userid)){
+			sb.append(" and userid = ?");
+			values.add(userid);
+			sb.append(" and k.parentid = u.id");
+		}
+		if(null != parentid && !"".equals(parentid)){
+			sb.append(" and parentid = ?");
+			values.add(parentid);
+			sb.append(" and k.userid = u.id");
+		}
+		
+		List<Map<String, Object>> list = userBankDao.searchForMap(sb.toString(),values);
+		return list;
+	}
+	
 	
 }

@@ -1,6 +1,7 @@
 package net.ussoft.zhxh.service;
 
 import java.util.List;
+import java.util.Map;
 
 import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_trade_bill;
@@ -127,4 +128,13 @@ public interface IPublicUserBankService {
 	 * 平台售额
 	 * */
 	public int platformSale();
+	
+	//=============
+		/**
+		 * 获取机构的帐户列表。
+		 * @param parentid
+		 * @param userid
+		 * @return
+		 */
+	public List<Map<String,Object>> getUserBankList(String parentid,String userid);
 }
