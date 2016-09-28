@@ -30,35 +30,11 @@
     	var pageIndex = 1;
     	var pageSize = 10;
     	var totalPage = 0;
-    	//品牌分页
-    	var pageIndex_brand = 1;
-    	var pageSize_brand = 5;
-    	
-    	//采购标准设置翻页
-    	var pageIndex_dis = 1;
-    	var pageSize_dis = 30;
-    	var totalPage_dis = 0;
-    	
-    	var rows = [];
     	
     	var searchmap = "";
-    	var radio_value = "";
-    	
-    	//设置用
-    	var set_user = "";
-    	
-    	var sel_brandid= "";
     	
     	$(function(){
-    		$("input[name=radio_user]:eq(0)").attr("checked",'checked');
-    		radio_click();
-    		$("input[name=radio_user]").click(function(){
-    			$(this).val();
-    			pageIndex = 1;
-    			searchmap = "";
-    			$("#searchTxt").val("");
-    			radio_click();
-  			});
+    		listUserRatio();
     		//调用全选插件
     	    $.fn.check({ checkall_name: "checkall", checkbox_name: "row_id" });
     		
@@ -70,37 +46,55 @@
     	    
     	});
     	
-    	function bindTrClick(type) {
-    		if (type == "userList") {
-    			//除了表头（第一行）以外所有的行添加click事件.
-                $("tr").first().nextAll().click(function (e) {
-                	if (e.target.tagName == "TD") {
-                		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
-                    	firstInput.attr("checked",!firstInput.is(':checked'));
-                	}
-                });
+    	function listUserRatio() {
+    		var par = {};
+    		par.parentid = parentid;
+    		par.pageIndex = pageIndex-1;
+    		par.pageSize = pageSize;
+    		par.isPage = true;
+    		
+    		if (searchmap != "") {
+    			par.mapObj = JSON.stringify(searchmap);
     		}
-    		else if (type == "userBrand") {
-    			 $(".userBrand tr").first().nextAll().click(function (e) {
-                 	if (e.target.tagName == "TD") {
-                 		var $radio = $(this).find("input[type=radio]");
-                        $flag  = $radio.is(":checked");
-		                if( !$flag ){
-		                    $radio.prop("checked",true).trigger("click");
-		                }
-                 		//var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
-                     	//firstInput.attr("checked",!firstInput.is(':checked'));
-                 	}
-                 });
-    		}
-    		else if (type == "userDis") {
-    			 $(".userDis tr").first().nextAll().click(function (e) {
-                 	if (e.target.tagName == "TD") {
-                 		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
-                     	firstInput.attr("checked",!firstInput.is(':checked'));
-                 	}
-                 });
-    		}
+    		
+    		$.ajax({
+    			async:false,
+                url: "${pageContext.request.contextPath}/orderUserDis/listUserRatio.htmls",
+                data: par,
+                type: "post",
+                dataType:"json",
+                success: function (json) {
+                 	totalPage = Math.ceil(json.total/pageSize);
+               	 	//$(".admin-panel").setTemplateElement("Template-List-user-show");
+               	 	$(".admin-panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/userRatioList.tpl");
+	         		$(".admin-panel").setParam('rowCount', json.total);
+	         		$(".admin-panel").setParam('pageSize', pageSize);
+	         		$(".admin-panel").setParam('pageIndex', pageIndex);
+	         		$(".admin-panel").setParam('totalPage', totalPage);
+	         		$(".admin-panel").setParam('parentid', parentid);
+	                $(".admin-panel").processTemplate(json.data);
+	                
+	                //bindTdClick();
+	                pageSel();
+	                pageEnter();
+	              	//调用全选插件
+	              	bindTrClick();
+	        	    $.fn.check({ checkall_name: "checkall", checkbox_name: "row_id" });
+	              	
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+                }
+           });
+    	}
+    	
+    	function bindTrClick() {
+    		$(".table tr").first().nextAll().click(function (e) {
+            	if (e.target.tagName == "TD") {
+            		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
+                	firstInput.attr("checked",!firstInput.is(':checked'));
+            	}
+            });
     	}
     	
     	function pageSel() {
@@ -108,9 +102,155 @@
     			var p1=$(this).children('option:selected').val();//这就是selected的值
     			pageIndex = 1;
     			pageSize = p1;
-    			radio_click();
+    			listUserRatio();
     		}) 
     	}
+    	
+    	function pageEnter(type) {
+    		$('.ui-pager-inp').bind('keypress',function(event) {
+                if(event.keyCode == "13") {
+                	if (isInteger($(this).val())) {
+                		if ($(this).val() > totalPage || $(this).val() < 1 || $(this).val() == pageIndex) {
+                			return false;
+                		}
+                		else {
+                			pageIndex = $(this).val();
+                			listUserRatio();
+                		}
+                	}
+                	else {
+                		
+                	}
+                    return false;
+                }
+            });
+    	}
+    	
+    	function pageClick(sel_page,pagetype) {
+    		pageIndex = sel_page;
+    		listUserRatio();
+    	}
+    	
+    	function addUser() {
+    		var pHeight = $(window.parent).height();
+	   		var pWidth = $(window.parent).width();
+	   		
+    		layer.open({
+			    type: 2,
+			    title:'添加奖励转货款客户',
+			    area: [(pWidth-350) + 'px', (pHeight-200) +'px'],
+			    fix: false, //不固定
+			    maxmin: false,
+			    scrollbar:false,
+			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/selectUserNoPage",
+			    success: function(layero, index){
+			    	var win = window['layui-layer-iframe' + index].window;
+			    	var data = [];
+			    	data.parentid = parentid;
+			    	win.setData(data);
+			    },
+			    btn: ['选择', '取消'],
+			  	yes: function(index,layero){
+			  		var win = window['layui-layer-iframe' + index].window;
+			  		var rowids = win.getData();
+			  		
+			  		if (rowids == "") {
+			  			return;
+			  		}
+			  		//询问框
+			  		layer.confirm('确定要将选择的客户添加[奖励转货款]吗？', {
+			  			btn: ['确认', '取消']
+			  		}, 
+			  		function()	{
+			  			var par = {};
+			  			par.parentid = parentid;
+			  			par.ids = rowids;
+			  			$.ajax({
+			    			async:false,
+			                url: "${pageContext.request.contextPath}/orderUserDis/UserRatioSel.htmls",
+			                data: par,
+			                type: "post",
+			                dataType:"text",
+			                success: function (text) {
+			                 	if (text == 'success') {
+			                 		layer.msg("保存成功。",{icon:6});
+			                 		listUserRatio();
+			                 		win.pageIndex = 1;
+			                 		win.loadData();
+			                 		
+			                 	}
+			                 	else {
+			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+			                 	}
+			                },
+			                error: function (jqXHR, textStatus, errorThrown) {
+			                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+			                }
+			           });
+			  		}, 
+			  		function(){
+			  			
+			  		});
+			  		
+			  	},
+			  	btn2: function(){
+			    	layer.closeAll();
+			  	},
+			    end: function(){
+			    	//alert(123);
+			    }
+			});
+    		return false;
+    	}
+    	
+    	function delRatio() {
+    		var ids = "";
+			$('input:checkbox[name=row_id]:checked').each(function(i) {
+				if(0==i){
+					ids = $(this).val();
+			 	}else{
+			 		ids += (","+$(this).val());
+			    }
+			});
+			if (ids == "") {
+				layer.msg("请先选择要删除的奖励转货款客户.",{icon:6});
+				return;
+			}
+			
+			layer.confirm('确定要删除客户的奖励转货款吗？', {
+	  			btn: ['确认', '取消']
+	  		}, 
+	  		function()	{
+	  			var par = {};
+	  			par.ids = ids;
+	  			$.ajax({
+	    			async:false,
+	                url: "${pageContext.request.contextPath}/orderUserDis/delRatio.htmls",
+	                data: par,
+	                type: "post",
+	                dataType:"text",
+	                success: function (text) {
+	                 	if (text == 'success') {
+	                 		layer.msg("保存成功。",{icon:6});
+	                 		listUserRatio();
+	                 	}
+	                 	else {
+	                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+	                 	}
+	                },
+	                error: function (jqXHR, textStatus, errorThrown) {
+	                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+	                }
+	           });
+	  		}, 
+	  		function(){
+	  			
+	  		});
+			
+    	}
+    	
+    	
+    	//==========
     	
     	//绑定数量的TD <!-- test.js 是为测试td编辑。这里没有用到 -->
     	function bindTdClick() {
@@ -151,51 +291,6 @@
     		})
     	}
     	
-    	function pageEnter(type) {
-    		$('.ui-pager-inp').bind('keypress',function(event) {
-                if(event.keyCode == "13") {
-                	if (isInteger($(this).val())) {
-                		if (type == "userList") {
-                			if ($(this).val() > totalPage || $(this).val() < 1 || $(this).val() == pageIndex) {
-                    			return false;
-                    		}
-                    		else {
-                    			pageIndex = $(this).val();
-                        		radio_click();
-                    		}
-                		}
-                		else if (type == "userDis") {
-                			if ($(this).val() > totalPage_dis || $(this).val() < 1 || $(this).val() == pageIndex_dis) {
-                    			return false;
-                    		}
-                    		else {
-                    			pageIndex_dis = $(this).val();
-                    			getUserDis();
-                    		}
-                		}
-                	}
-                	else {
-                		
-                	}
-                    return false;
-                }
-            });
-    	}
-    	
-    	function pageClick(sel_page,pagetype) {
-    		if (pagetype == "userList") {
-    			pageIndex = sel_page;
-        		radio_click();
-    		}
-    		else if (pagetype == "userBrand") {
-    			pageIndex_brand = sel_page;
-    			getUserBrand();
-    		}
-    		else if (pagetype == "userDis") {
-    			pageIndex_dis = sel_page;
-    			getUserDis();
-    		}
-    	}
     	
     	function td_tip(e) {
     		//'#td_state'
@@ -244,53 +339,7 @@
     		//layer.closeAll('tips');
     	}
     	
-    	function radio_click() {
-    		radio_value = $("input[name='radio_user']:checked").val();
-    		
-    		var par = {};
-    		par.parentid = parentid;
-    		par.identity = radio_value;
-    		par.pageIndex = pageIndex-1;
-    		par.pageSize = pageSize;
-    		
-    		if (searchmap != "") {
-    			par.mapObj = JSON.stringify(searchmap);
-    		}
-    		
-    		$.ajax({
-    			async:false,
-                url: "${pageContext.request.contextPath}/orderUser/list.htmls",
-                data: par,
-                //data: {'parentid':parentid,identity:radio_value,pageIndex:pageIndex-1,pageSize:pageSize},
-                type: "post",
-                dataType:"json",
-                success: function (json) {
-                	rows = json.data;
-                 	totalPage = Math.ceil(json.total/pageSize);
-               	 	//$(".admin-panel").setTemplateElement("Template-List-user-show");
-               	 	$(".admin-panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/userList.tpl");
-	         		$(".admin-panel").setParam('rowCount', json.total);
-	         		$(".admin-panel").setParam('pageSize', pageSize);
-	         		$(".admin-panel").setParam('pageIndex', pageIndex);
-	         		$(".admin-panel").setParam('radio_value', radio_value);
-	         		$(".admin-panel").setParam('totalPage', totalPage);
-	         		$(".admin-panel").setParam('parentid', parentid);
-	         		//$("#admin-panel").setParam('docAuthArr', docAuthArr);
-	                $(".admin-panel").processTemplate(json.data);
-	                
-	                //bindTdClick();
-	                pageSel();
-	                pageEnter("userList");
-	                bindTrClick("userList");
-	              	//调用全选插件
-	        	    $.fn.check({ checkall_name: "checkall", checkbox_name: "row_id" });
-	              	
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
-                }
-           });
-    	}
+    	
     	
     	function searchUser() {
     		var key = $("#searchTxt").val();
@@ -429,136 +478,6 @@
 	  		});
     	}
     	
-    	function addSize() {
-    		var pHeight = $(window.parent).height();
-	   		var pWidth = $(window.parent).width();
-	   		
-	   		if (set_user == "") {
-	   			layer.msg("未找到客户的记录，请先选择客户。",{icon:5});
-	   			return false;
-	   		}
-	   		
-	   		if (sel_brandid == "") {
-	   			layer.msg("未找到品牌记录，请先选择品牌。",{icon:5});
-	   			return false;
-	   		}
-	   		
-    		layer.open({
-			    type: 2,
-			    title:'为客户添加可采购的商品',
-			    area: [(pWidth-280) + 'px', (pHeight-200) +'px'],
-			    fix: false, //不固定
-			    maxmin: false,
-			    scrollbar:false,
-			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/selectSize",
-			    success: function(layero, index){
-			    	var win = window['layui-layer-iframe' + index].window;
-			    	var data = [];
-			    	data.parentid = parentid;
-			    	data.userid = set_user.id;
-			    	data.brandid = sel_brandid;
-			    	win.setData(data);
-			    },
-			    btn: ['选择', '取消'],
-			  	yes: function(index,layero){
-			  		var win = window['layui-layer-iframe' + index].window;
-			  		var rowids = win.getData();
-			  		
-			  		if (rowids == "") {
-			  			return;
-			  		}
-			  		//询问框
-			  		layer.confirm('确定要为客户添加能采购的商品吗？', {
-			  			btn: ['确认', '取消']
-			  		}, 
-			  		function()	{
-			  			var par = {};
-			  			par.parentid = parentid;
-			  			par.userid = set_user.id;
-			  			par.brandid = sel_brandid;
-			  			par.sizeids = rowids;
-			  			$.ajax({
-			    			async:false,
-			                url: "${pageContext.request.contextPath}/orderUserDis/saveUserSizeStandard.htmls",
-			                data: par,
-			                type: "post",
-			                dataType:"text",
-			                success: function (text) {
-			                 	if (text == 'success') {
-			                 		layer.msg("保存成功。",{icon:6});
-			                 		getUserDis();
-			                 		win.pageIndex = 1;
-			                 		win.loadData();
-			                 	}
-			                 	else {
-			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
-			                 	}
-			                },
-			                error: function (jqXHR, textStatus, errorThrown) {
-			                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
-			                }
-			           });
-			  		}, 
-			  		function(){
-			  			
-			  		});
-			  		
-			  	},
-			  	btn2: function(){
-			    	layer.closeAll();
-			  	},
-			    end: function(){
-			    	//alert(123);
-			    }
-			});
-    		return false;
-    	}
-    	
-    	function delSize() {
-    		var ids = "";
-			$('input:checkbox[name=row_id_dis]:checked').each(function(i) {
-				if(0==i){
-					ids = $(this).val();
-			 	}else{
-			 		ids += (","+$(this).val());
-			    }
-			});
-			if (ids == "") {
-				layer.msg("请先选择要删除的采购利益标准",{icon:6});
-				return;
-			}
-			
-			layer.confirm('确定要删除客户的采购利益标准吗？<br><span style="color:red">注意：客户将不能采购这些被删除的商品.', {
-	  			btn: ['确认', '取消']
-	  		}, 
-	  		function()	{
-	  			var par = {};
-	  			par.ids = ids;
-	  			$.ajax({
-	    			async:false,
-	                url: "${pageContext.request.contextPath}/orderUserDis/delUserStandard.htmls",
-	                data: par,
-	                type: "post",
-	                dataType:"text",
-	                success: function (text) {
-	                 	if (text == 'success') {
-	                 		layer.msg("保存成功。",{icon:6});
-	                 		getUserDis();
-	                 	}
-	                 	else {
-	                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
-	                 	}
-	                },
-	                error: function (jqXHR, textStatus, errorThrown) {
-	                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
-	                }
-	           });
-	  		}, 
-	  		function(){
-	  			
-	  		});
-			
-    	}
     	
     	function updatebatch(v,t) {
     		var sel_userid = "";
@@ -881,20 +800,9 @@
 					<tr>
 						<td align="left">设置客户的奖励转货款系数</td>
 						<td align="right">
-							<div class="button-group border-blue button-small" style="margin-top: -2px">
-								<button type="button" class="button button-small dropdown-hover">
-									批量设置 <span class="downward"></span>
-								</button>
-								<ul class="drop-menu" style="text-align:left;width:15px">
-									<li><a href="javascript:;" onclick="updateUserSizeStandard('buyerdis')">批量设置[折扣]</a></li>
-									<li><a href="javascript:;" onclick="updateUserSizeStandard('rebatesdis')">批量设置[返利]</a></li>
-									<li><a href="javascript:;" onclick="updateUserSizeStandard('bonusesdis')">批量设置[奖励]</a></li>
-									<li><a href="javascript:;" onclick="updateUserSizeStandard('state','1')">批量[可采购]</a></li>
-									<li><a href="javascript:;" onclick="updateUserSizeStandard('state','0')">批量[禁止采购]</a></li>
-								</ul>
-							</div>
-							<a href="javascript:;" class="button bg-sub button-small" onclick="addSize()">添加客户</a>
-							<a href="javascript:;" class="button bg-dot button-small" onclick="delSize()">删除客户</a>
+							<a href="javascript:;" class="button bg-sub button-small" onclick="addUser()">添加客户</a>
+							<a href="javascript:;" class="button bg-dot button-small" onclick="delRatio()">删除客户</a>
+							<a href="javascript:;" class="button border-sub button-small" onclick="delSize()">批量设置</a>
 							<input type="text" id="searchTxt" name="searchTxt" class="input input-auto" style="width:120px;margin-left: 20px"/>
 							<a id="searchBtn" href="javascript:;" class="button bg-main button-small" onclick="searchUser()">检索</a>
 						</td>

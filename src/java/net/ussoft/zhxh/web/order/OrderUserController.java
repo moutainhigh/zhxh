@@ -47,7 +47,8 @@ public class OrderUserController extends BaseConstroller {
 	private IPublicPhoneCodeLogService codeLogService;
 	
 	@RequestMapping(value="/list",method=RequestMethod.POST)
-	public void list(String parentid,String identity,String mapObj,int pageIndex,int pageSize,@RequestParam(value="showtype", defaultValue="1") int showtype,HttpServletResponse response) throws IOException {
+	public void list(String parentid,String identity,String mapObj,int pageIndex,
+			int pageSize,@RequestParam(value="showtype", defaultValue="1") int showtype,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();

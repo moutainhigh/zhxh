@@ -194,7 +194,7 @@ public interface IPublicUser2Service {
 	 * @param userid
 	 * @return
 	 */
-	public List<Map<String,Object>> listUserRatio(String parentid);
+	public PageBean<Map<String,Object>> listUserRatio(String parentid,Map<String, Object> searchMap,PageBean<Map<String,Object>> pageBean);
 	
 	/**
 	 * 获取要添加机构到奖励转货款的机构列表
@@ -218,6 +218,13 @@ public interface IPublicUser2Service {
 	 * @throws IllegalAccessException 
 	 */
 	public boolean saveRatio(List<Map<String, String>> rows) throws IllegalAccessException, InvocationTargetException;
+	
+	/**
+	 * 根据id删除奖励转货款
+	 * @param ids
+	 * @return
+	 */
+	public boolean delRatio(String ids);
 	
 	
 	

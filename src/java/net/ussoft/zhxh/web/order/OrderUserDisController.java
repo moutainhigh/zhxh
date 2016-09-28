@@ -2,6 +2,7 @@ package net.ussoft.zhxh.web.order;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_product_size;
+import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUser2Service;
 import net.ussoft.zhxh.service.IPublicUserLinkService;
@@ -267,6 +269,113 @@ public class OrderUserDisController extends BaseConstroller {
 		PrintWriter out = response.getWriter();
 		
 		userService.updateUserSizeStandard(ids, updateKey, updateValue);
+		
+		out.print("success");
+	}
+	
+	/**
+	 * 获取机构的奖励转货款系数
+	 * @param parentid
+	 * @param userid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/listUserRatio",method=RequestMethod.POST)
+	public void listUserRatio(String parentid,String mapObj,int pageIndex,int pageSize,
+			@RequestParam(value="isPage", defaultValue="false") boolean isPage,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Map<String,Object>> pageBean = new PageBean<Map<String,Object>>();
+		//分页
+		if (isPage) {
+			pageBean.setPageSize(pageSize);
+			pageBean.setPageNo(pageIndex + 1);
+		}
+		else {
+			pageBean.setIsPage(false);
+		}
+		
+		Map<String, Object> searchMap = new HashMap<String,Object>();
+		
+		if (null != mapObj && !"".equals(mapObj)) {
+			searchMap = (Map<String, Object>) JSON.parse(mapObj);
+		}
+		
+		pageBean = userService.listUserRatio(parentid,searchMap,pageBean);
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("total", pageBean.getRowCount());
+		map.put("data", pageBean.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 获取parentid对应的没有加入到奖励转货款系数表的机构列表
+	 * @param parentid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/listSelectUserC",method=RequestMethod.POST)
+	public void listSelectUserC(String parentid,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
+		List<Public_user> userList = userService.listSelectUserC(parentid);
+		
+		map.put("total", userList.size());
+		map.put("data", userList);
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 为奖励转贷款表插入选择的机构
+	 * @param ids
+	 * @param parentid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/UserRatioSel",method=RequestMethod.POST)
+	public void UserRatioSel(String ids,String parentid,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		userService.UserRatioSel(ids, parentid);
+		
+		out.print("success");
+	}
+	
+	/**
+	 * 保存机构奖励转贷款系数
+	 * @param objs
+	 * @param response
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	@RequestMapping(value="/delRatio",method=RequestMethod.POST)
+	public void delRatio(String ids,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "success";
+		
+		if (null == ids || "".equals(ids)) {
+			out.print(result);
+			return;
+		}
+		//
+		userService.delRatio(ids);
 		
 		out.print("success");
 	}

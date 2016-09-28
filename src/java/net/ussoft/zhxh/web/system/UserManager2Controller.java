@@ -300,10 +300,14 @@ public class UserManager2Controller extends BaseConstroller{
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		List<Map<String,Object>> ratioList = userService.listUserRatio(parentid);
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
 		
-		map.put("total", ratioList.size());
-		map.put("data", ratioList);
+		p.setIsPage(false);
+		
+		p = userService.listUserRatio(parentid,null,p);
+		
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);

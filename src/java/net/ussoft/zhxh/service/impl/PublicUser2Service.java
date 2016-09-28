@@ -7,7 +7,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
@@ -801,12 +803,97 @@ public class PublicUser2Service implements IPublicUser2Service{
 	 * @see net.ussoft.zhxh.service.IPublicUser2Service#listUserRatio(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<Map<String, Object>> listUserRatio(String parentid) {
-		String sql = "select r.*,u.username,u.companyname,u.companyname,u.companypath from public_set_bonuses_ratio r,public_user u where r.userid = u.id and r.parentid=?";
+	public PageBean<Map<String, Object>> listUserRatio(String parentid,Map<String, Object> searchMap,PageBean<Map<String,Object>> pageBean) {
+//		String sql = "select r.*,u.username,u.companyname,u.companypath from public_set_bonuses_ratio r,public_user u "
+//				+ "where r.userid = u.id and r.parentid=?";
 		
+		StringBuffer sb = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
+		
+		//1获取关联的帐户。如果没有，直接返回
+		sb.append("select * from public_user_link where parentid = ?");
 		values.add(parentid);
-		return ratioDao.searchForMap(sql, values);
+		List<Public_user_link> userLinkList = linkDao.search(sb.toString(), values);
+		
+		if (null == userLinkList || userLinkList.size() == 0) {
+			return pageBean;
+		}
+		
+		List<String> userid = new ArrayList<String>();
+		for (Public_user_link userLink : userLinkList) {
+			userid.add(userLink.getUserid());
+		}
+				
+		//2.如果有检索。
+//		List<String> searchUserIdList = new ArrayList<String>();
+		List<Public_user> tmpUserList = new ArrayList<Public_user>();
+		sb.setLength(0);
+		values.clear();
+		sb.append("select * from public_user where 1=1");
+		if (null != searchMap && searchMap.size() > 0) {
+			Set<Entry<String, Object>> set = searchMap.entrySet();
+	        Iterator iterator=set.iterator();
+	        sb.append(" and (");
+	        for (int i = 0; i < set.size(); i++) {
+	            Map.Entry mapEntry=(Entry) iterator.next();
+	            if (null != mapEntry.getValue() && !"".equals(mapEntry.getValue().toString())) {
+	            	sb.append(mapEntry.getKey()+" like '%"+mapEntry.getValue()+"%' or");
+	            }
+	        }
+	        sb.delete(sb.length()-3, sb.length());
+	        sb.append(")");
+		}
+		
+		sb.append(" and id in (");
+        Serializable[] ss=new Serializable[userid.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(userid);
+		
+		sb.append(" and identity=?");
+		values.add("C");
+        
+        tmpUserList = userDao.search(sb.toString(), values);
+        
+        if (null == tmpUserList || tmpUserList.size() == 0) {
+        	return pageBean;
+        }
+        userid.clear();
+        for (Public_user user : tmpUserList) {
+        	userid.add(user.getId());
+		}
+        
+		sb.setLength(0);
+		values.clear();
+		
+		sb.append("select * from public_set_bonuses_ratio where parentid=?");
+		
+		values.add(parentid);
+		sb.append(" and userid in (");
+		Serializable[] ss1=new Serializable[userid.size()];
+		Arrays.fill(ss1, "?");
+		sb.append(StringUtils.join(ss1,','));
+		sb.append(")");
+		values.addAll(userid);
+		
+		pageBean = ratioDao.searchForMap(sb.toString(), values, pageBean);
+		PageBean<Map<String,Object>> resultList = new PageBean<Map<String,Object>>();
+		if (null == pageBean || pageBean.getList().size() == 0) {
+			return resultList;
+		}
+		
+		for (Map<String,Object> map : pageBean.getList()) {
+			for (Public_user user : tmpUserList) {
+				if (map.get("userid").equals(user.getId())) {
+					map.put("username", user.getUsername());
+					map.put("companyname", user.getCompanyname());
+					map.put("companypath", user.getCompanypath());
+				}
+			}
+		}
+		
+		return pageBean;
 	}
 
 	/*
@@ -897,6 +984,20 @@ public class PublicUser2Service implements IPublicUser2Service{
 	        }
 	    }
 		
+		return true;
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#delRatio(java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public boolean delRatio(String ids) {
+		String[] idsArr = ids.split(",");
+		
+		for (String id : idsArr) {
+			ratioDao.del(id);
+		}
 		return true;
 	}
 
