@@ -56,9 +56,14 @@
 							<li><a href="javascript:;" style="background-color: #00a7e4;color: #fff;">7*24小时服务</a></li>
 						</ul>
 					</li>
-					<li><a class="" target="_blank" href="login.html"><span class="icon-sign-out"></span>注销</a></li>
+					<li><a class="" href="javascript:;" onclick="logout()"><span class="icon-sign-out"></span>注销</a></li>
 				</ul>
 			</div>
 		</div>
 	</div>
 </div>
+<script>
+	function logout(){
+		parent.window.location.href = '${pageContext.request.contextPath}/pcMain/plogout.htmls';
+	}
+</script>

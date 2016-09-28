@@ -1,4 +1,5 @@
 {#foreach $T as row}
+{#if $T.row.userid != "1"}
 <div class="panel border-sub">
 	<div class="panel-head">
 		<strong>我的帐户[<span style="color:red">{$T.row.companyname}</span>]</strong>
@@ -94,5 +95,6 @@
 		</table>
 	</div>
 </div>
+{#/if}
 <br>
 {#/for}
