@@ -17,6 +17,7 @@ import net.ussoft.zhxh.dao.PublicProductSizeRebateDao;
 import net.ussoft.zhxh.dao.PublicSetBonusesRatioDao;
 import net.ussoft.zhxh.dao.PublicTradeBillDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
+import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.model.Public_dis_details;
 import net.ussoft.zhxh.model.Public_log;
 import net.ussoft.zhxh.model.Public_message;
@@ -26,6 +27,7 @@ import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_product_size_rebate;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_trade_bill;
+import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.util.DateUtil;
@@ -56,6 +58,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 	private PublicMessageDao msgDao;
 	@Resource
 	private PublicDisDetailsDao disDetailsDao;
+	@Resource
+	private PublicUserDao userDao;
 	
 	@Override
 	public Public_user_bank getById(String id) {
@@ -210,7 +214,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 			List<Public_order_product> list = getOrderProducts(order.getId());	//订单商品
 			for(Public_order_product obj:list){
 				//商品返利剩余数量
-				Public_product_size_rebate rebate = getProductSizeRebate(order.getUserid(), order.getParentid(), obj.getId());
+				Public_product_size_rebate rebate = getProductSizeRebate(order.getUserid(), order.getParentid(), obj.getProductid());
 				if(rebate != null){
 					int rebate_num = 0;			//本次返利数量
 					int next_rebate_num = 0;	//下次返利数量
@@ -255,7 +259,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					sizerebate.setId(UUID.randomUUID().toString());
 					sizerebate.setUserid(order.getUserid());
 					sizerebate.setParentid(order.getParentid());
-					sizerebate.setSizeid(obj.getId());
+					sizerebate.setSizeid(obj.getProductid());
 					sizerebate.setQuantity(obj.getProductnum());
 					rebateDao.save(sizerebate);
 				}
@@ -289,6 +293,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 	/**
 	 * 充值
 	 * */
+	@Transactional("txManager")
 	@Override
 	public int recharge(Public_trade_bill bill,String identity){
 		//第三方支付返回成功后执行，此处是否需要添加线程锁-例如服务器返回了两次（应该不会）
@@ -303,13 +308,13 @@ public class PublicUserBankService implements IPublicUserBankService{
 		//平台账户变更
 		bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
 		bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
-		
+		bank.setDepositbank(bank.getDepositbank() + amount);		//充值累计（当前操作账户）
 		String logmemo = "货款充值";	//日志内容
 		if("A".equals(identity)){
-			if(bill.getTrantype() == 1)	{
+			if(bill.getTrantype() == 3)	{
 				//货款充值
 				bank.setHavebank(bank.getHavebank() + amount);	//增加代理商可支配账户
-			}else if(bill.getTrantype() == 2){
+			}else if(bill.getTrantype() == 4){
 				//现金充值
 				bank.setTakenbank(bank.getTakenbank() + amount);	//增加代理可提现账户
 				bank.setIncomebank(bank.getIncomebank() + amount);	//增加代理收入总和
@@ -622,12 +627,18 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Transactional("txManager")
 	@Override
 	public int setQuota(String userid,String parentid,float amount) {
+		Public_user uuser = userDao.get(userid);
+		Public_user puser = userDao.get(parentid);
 		Public_user_bank bank = getUserBank(userid, parentid);
 		bank.setQuotabank(bank.getQuotabank() + amount);	//配额累计
 		bank.setHavebank(bank.getHavebank() + amount);		//增加可支配账户
 		bank = userBankDao.update(bank);
 		//日志
 		Public_log log = saveLog(userid, parentid, "quota","配额",amount,"");
+		//业务消息
+		int messagetype = 1;	//业务消息
+		String messagetxt = "尊敬的客户您好，"+puser.getUsername()+"给您设置了配额，金额："+amount;
+		createMsg(puser.getId(), puser.getUsername(), uuser.getId(), uuser.getUsername(), messagetype, messagetxt,"");
 		if(bank != null && log != null){
 			return 1;
 		}
@@ -641,20 +652,33 @@ public class PublicUserBankService implements IPublicUserBankService{
 		Public_set_bonuses_ratio ratio = getBonusersRatio(userid, parentid);
 		
 		Public_user_bank bank = getUserBank(userid, parentid);
-		bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);	//冲减奖励可提现账户
-		//
-		if(ratio.getBonuses_ratio() > 0){
-			float _amount = amount * ratio.getBonuses_ratio();
-			bank.setHavebank(bank.getHavebank() + _amount);	//增加可支配账户
+		//金额验证
+		if(bank.getBonusestakenbank() > amount){
+			bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);	//冲减奖励可提现账户
+			//
+			if(ratio != null){
+				if(ratio.getBonuses_ratio() > 0){
+					float _amount = amount * ratio.getBonuses_ratio();
+					bank.setHavebank(bank.getHavebank() + _amount);	//增加可支配账户
+				}else{
+					bank.setHavebank(bank.getHavebank() + amount);	//增加可支配账户
+				}
+			}else{
+				bank.setHavebank(bank.getHavebank() + amount);	//增加可支配账户
+			}
+			
+			bank = userBankDao.update(bank);
+			//日志
+			Public_log log = saveLog(userid, parentid, "bonuses_ratio", "奖励转贷款", amount,"");
+			//业务消息
+			//还未添加
+			if(bank != null && log != null)
+				return 1;	//成功
 		}else{
-			bank.setHavebank(bank.getHavebank() + amount);	//增加可支配账户
+			return -1;	//金额不足
 		}
-		bank = userBankDao.update(bank);
-		//日志
-		Public_log log = saveLog(userid, parentid, "bonuses_ratio", "奖励转贷款", amount,"");
-		if(bank != null && log != null)
-			return 1;
-		return 0;
+		
+		return 0;	//失败
 	}
 
 	@Transactional("txManager")
@@ -817,7 +841,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 	 * @param parentid
 	 * @return obj:null
 	 * */
-	private Public_set_bonuses_ratio getBonusersRatio(String userid,String parentid){
+	@Override
+	public Public_set_bonuses_ratio getBonusersRatio(String userid,String parentid){
 		String sql = "SELECT * FROM public_set_bonuses_ratio WHERE userid = ? AND parentid = ?";
 		List<Object> values = new ArrayList<Object>();
 		values.add(userid);
@@ -866,7 +891,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 	 * @return
 	 * */
 	private Public_product_size_rebate getProductSizeRebate(String userid,String parentid,String sizeid){
-		String sql = "SELECT * FROM public_product_size_rebate WHERE userid=? AND parentid=? sizeid=?";
+		String sql = "SELECT * FROM public_product_size_rebate WHERE userid=? AND parentid=? AND sizeid=?";
 		List<Object> values = new ArrayList<Object>();
 		values.add(userid);
 		values.add(parentid);
@@ -891,7 +916,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Override
 	public List<Map<String, Object>> getUserBankList(String parentid, String userid) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select k.*,u.companyname from public_user_bank k ,public_user u where 1=1");
+		sb.append("select k.*,u.companyname,u.identity from public_user_bank k ,public_user u where 1=1");
 		List<Object> values = new ArrayList<Object>();
 		
 		if(null != userid && !"".equals(userid)){
@@ -900,7 +925,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 			sb.append(" and k.parentid = u.id");
 		}
 		if(null != parentid && !"".equals(parentid)){
-			sb.append(" and parentid = ?");
+			sb.append(" and k.parentid = ?");
 			values.add(parentid);
 			sb.append(" and k.userid = u.id");
 		}

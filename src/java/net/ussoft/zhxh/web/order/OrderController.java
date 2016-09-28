@@ -176,6 +176,7 @@ public class OrderController extends BaseConstroller {
 			params.put("userid= ", user.getId());
 			p = orderService.list(params, p);
 		}else if("sub".equals(orderType)){
+			params.put("orderstatus > ", 0);
 			params.put("parentid= ", user.getId());
 			p = orderService.list(params, p);
 		}

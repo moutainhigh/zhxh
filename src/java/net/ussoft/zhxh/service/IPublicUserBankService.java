@@ -1,9 +1,11 @@
 package net.ussoft.zhxh.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import net.ussoft.zhxh.model.Public_order;
+import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user_bank;
 
@@ -113,6 +115,14 @@ public interface IPublicUserBankService {
 	 * @return
 	 * */
 	public int transfBuyBank(String userid,String parentid,float amount); 
+	
+	/**
+	 * 获取转货款系数
+	 * @param userid
+	 * @param parentid
+	 * @return
+	 */
+	public Public_set_bonuses_ratio getBonusersRatio(String userid,String parentid);
 	
 	/**
 	 * 返利

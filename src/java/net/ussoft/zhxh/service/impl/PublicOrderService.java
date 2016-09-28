@@ -71,10 +71,12 @@ public class PublicOrderService implements IPublicOrderService{
 		order.setP_companyanme(puser.getCompanyname());	//
 		
 		//推荐人 - 后期修改推荐人的查找方式
-		Public_user tuser = userDao.get(user.getTuijianid());
-		order.setT_username(tuser.getUsername());
-		order.setT_companyname(tuser.getCompanyname());
-		
+		if(user.getTuijianid() != null && !"".equals(user.getTuijianid())){
+			Public_user tuser = userDao.get(user.getTuijianid());
+			order.setTid(tuser.getId());
+			order.setT_username(tuser.getUsername());
+			order.setT_companyname(tuser.getCompanyname());
+		}
 		return order;
 	}
 	

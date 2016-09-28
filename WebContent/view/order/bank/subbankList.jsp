@@ -58,7 +58,7 @@
 	    
 	    function getUserBank() {
     		var par = {};
-    		par.userid = userid;
+    		par.parentid = userid;
     		$.ajax({
     			async:false,
                 url: "${pageContext.request.contextPath}/orderUserBank/listUserBank.htmls",
@@ -66,7 +66,7 @@
                 type: "post",
                 dataType:"json",
                 success: function (json) {
-                	$("#banks").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/bankList.tpl");
+                	$("#banks").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/subbankList.tpl");
                 	$("#banks").setParam("identity",json.identity);
                 	$("#banks").processTemplate(json.data);
                 },
@@ -75,22 +75,21 @@
                 }
            });
     	}
-	    //充值
-	    function recharge(pid){
+	    function setQuota(userid){
 	    	layer.prompt({
-   				title: '请输入充值金额，并确认',
+   				title: '请输入配额金额，并确认',
    				formType: 0 //prompt风格，支持0-2
    			}, function(amount){
    				$.ajax({
    	    			async:false,
-   	                url: "${pageContext.request.contextPath}/orderUserBank/recharge.htmls",
-   	                data: {parentid:pid,amount:amount},
+   	                url: "${pageContext.request.contextPath}/orderUserBank/setQuota.htmls",
+   	                data: {userid:userid,amount:amount},
    	                type: "post",
    	                dataType:"text",
    	                success: function (text) {
    	                	if(text == "success"){
    	                		getUserBank();
-   	                		layer.msg("充值成功",{icon:6});
+   	                		layer.msg("配额添加成功",{icon:6});
    	                	}else{
    	                		layer.msg("操作失败，请稍后再试！",{icon:6});
    	                	}
@@ -102,78 +101,6 @@
    			});
 	    }
  		
-	    //转货款
-	    function transfBuyBank(pid,amount){
-	    	layer.prompt({
-   				title: '请输入充值金额，并确认',
-   				value:amount,
-   				formType: 0 //prompt风格，支持0-2
-   			}, function(trans_amount){
-   				if(trans_amount > amount){
-   					parent.layer.msg("账户余额不足，请重新输入！",{icon:6});
-   					return;
-   				}else{
-   					//获取系数
-   					var coef = getTransfCoef(pid);
-   					var subtotal = trans_amount * coef;
-   					var cf = "<p>转货款金额￥"+trans_amount+"，转货款系数"+coef+"倍，总金额：￥"+subtotal+"</P>";
-   					layer.confirm(cf+'【确定要转货款吗？】', {
-   						title:'系统消息',
-   					  btn: ['确定','取消'] //按钮
-   					}, function(){
-   						//提交服务器
-   						$.ajax({
-   		   	    			async:false,
-   		   	                url: "${pageContext.request.contextPath}/orderUserBank/transfBuyBank.htmls",
-   		   	                data: {parentid:pid,amount:trans_amount},
-   		   	                type: "post",
-   		   	                dataType:"text",
-   		   	                success: function (text) {
-   		   	                	if(text == "success"){
-   		   	                		getUserBank();
-   		   	                		layer.msg("转货款成功！",{icon:6});
-   		   	                	}else{
-   		   	                		layer.msg("操作失败，请稍后再试！",{icon:6});
-   		   	                	}
-   		   	                },
-   		   	                error: function (jqXHR, textStatus, errorThrown) {
-   		   	                    alert(jqXHR.responseText);
-   		   	                }
-   		   	           	});
-   					}, function(){
-   					  
-   					});
-   				}
-   			});
-	    }
-	    //获取转货款系数
-	    function getTransfCoef(pid){
-	    	var coef = 0;
-	    	$.ajax({
-    			async:false,
-                url: "${pageContext.request.contextPath}/orderUserBank/getTransfCoef.htmls",
-                data: {parentid:pid},
-                type: "post",
-                dataType:"text",
-                success: function (text) {
-                	if(text != "error"){
-                		//系数应该是大于0的数
-                		coef = text;
-                	}else{
-                		coef = 0;
-                	}
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    //alert(jqXHR.responseText);
-                    coef = 0;
-                }
-           	});
-	    	return coef;
-	    }
-	    //提现
-	    function withdrawal(id){
-	    	alert(id);
-	    }
     </script>
 </head>
 <body>
@@ -182,7 +109,8 @@
 	<div class="layout" style="margin-bottom: 50px">
 		<ul class="bread bg">
 			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
-			<li><a href="javascript:;" >资金帐户</a></li>
+			<li><a href="javascript:;" >资金管理</a></li>
+			<li><a href="javascript:;" >我的客户资金帐户</a></li>
 		</ul>
 		<div class="admin">
 			<div class="line-big">

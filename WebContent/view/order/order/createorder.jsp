@@ -229,7 +229,7 @@
     						if (id == objArr[i].id) {
     							objArr[i].quantity = val; //变更数量
     							total = total - objArr[i].subtotal; //减去该商品数量变更前的小计
-    							if(parseInt(objArr[i].buyerdis) > 0){
+    							if(parseFloat(objArr[i].buyerdis) > 0){
     								objArr[i].subtotal = objArr[i].price * objArr[i].buyerdis * objArr[i].quantity;	//小计
     							}else{
     								objArr[i].subtotal = objArr[i].price * objArr[i].quantity;	//小计

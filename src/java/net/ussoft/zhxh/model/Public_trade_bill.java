@@ -5,7 +5,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name="public_bankget_list")
+@Table(name="public_trade_bill")
 public class Public_trade_bill {
 
 	private String id;

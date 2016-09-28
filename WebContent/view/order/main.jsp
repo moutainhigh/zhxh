@@ -189,7 +189,7 @@
 										</li>
 										<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
 										<li class="third-nav-li menu2" code="WBM_FUND_ONLINE_PAYMENT">
-											<a class="third-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/bankList">我的客户资金帐户</a>
+											<a class="third-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/subbankList">我的客户资金帐户</a>
 										</li>
 										</c:if>
 										<li class="third-nav-li menu2" code="WBM_FUND_BANK_ACCOUNT">
