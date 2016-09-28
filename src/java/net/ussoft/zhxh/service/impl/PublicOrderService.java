@@ -14,6 +14,7 @@ import net.ussoft.zhxh.dao.PublicOrderProductDao;
 import net.ussoft.zhxh.dao.PublicProductSizeDao;
 import net.ussoft.zhxh.dao.PublicSetUserStandardDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
+import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.dao.PublicUserPathDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_cat;
@@ -52,12 +53,31 @@ public class PublicOrderService implements IPublicOrderService{
 	PublicSetUserStandardDao standardDao;	//
 	@Resource
 	PublicUserBankDao bankDao;	//账户
+	@Resource
+	PublicUserDao userDao;
 	
 	@Override
 	public Public_order getById(String id) {
 		return orderDao.get(id);
 	}
 
+	@Override
+	public Public_order getAuserOrder(String id,Public_user user) {
+		Public_order order = orderDao.get(id);
+		Public_user puser = userDao.get(order.getParentid());
+		order.setU_username(user.getUsername());
+		order.setU_companyname(user.getCompanyname());//机构名称
+		order.setP_username(puser.getUsername());
+		order.setP_companyanme(puser.getCompanyname());	//
+		
+		//推荐人 - 后期修改推荐人的查找方式
+		Public_user tuser = userDao.get(user.getTuijianid());
+		order.setT_username(tuser.getUsername());
+		order.setT_companyname(tuser.getCompanyname());
+		
+		return order;
+	}
+	
 	@Override
 	public List<Public_order> list() {
 		return orderDao.getAll();

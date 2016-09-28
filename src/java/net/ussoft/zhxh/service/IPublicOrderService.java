@@ -23,6 +23,14 @@ public interface IPublicOrderService {
 	public Public_order getById(String id);
 	
 	/**
+	 * 根据ID,user获取订单，订单中包含u_username,p_username
+	 * @param id
+	 * @param user
+	 * @return Public_order
+	 * */
+	public Public_order getAuserOrder(String id,Public_user user);
+	
+	/**
 	 * 查询所有
 	 * @return list
 	 * */

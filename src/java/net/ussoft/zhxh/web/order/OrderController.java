@@ -418,9 +418,9 @@ public class OrderController extends BaseConstroller {
 			out.print("error");
 			return;
 		}
-		Public_order order = orderService.getById(orderid);
+		Public_user user = getSessionUser();
+		Public_order order = orderService.getAuserOrder(orderid,user);
 		if(order.getOrderstatus() == 0){	//未支付状态
-			Public_user user = getSessionUser();
 			Public_user_bank bank = bankService.getUserBank(user.getId(), order.getParentid());
 			if(bank.getBankstate() == 1){
 				if(bank.getHavebank() > order.getOrdertotal()){
@@ -456,9 +456,9 @@ public class OrderController extends BaseConstroller {
 			out.print("error");
 			return;
 		}
-		Public_order order = orderService.getById(orderid);
+		Public_user user = getSessionUser();
+		Public_order order = orderService.getAuserOrder(orderid,user);
 		if(order.getOrderstatus() == 1){	//待发货状态
-			Public_user user = getSessionUser();
 			Public_user_bank bank = bankService.getUserBank(user.getId(), order.getParentid());
 			int num = bankService.cancelorder(bank,order);
 			if(num >0){
@@ -488,7 +488,8 @@ public class OrderController extends BaseConstroller {
 			out.print("error");
 			return;
 		}
-		Public_order order = orderService.getById(orderid);
+		Public_user user = getSessionUser();
+		Public_order order = orderService.getAuserOrder(orderid,user);
 		order.setDeliverynum(deliverynum);
 		int num = bankService.sendoutorder(order);
 		if(num >0){
@@ -514,8 +515,10 @@ public class OrderController extends BaseConstroller {
 			out.print("error");
 			return;
 		}
-		Public_order order = orderService.getById(orderid);
-		int num = bankService.sendoutorder(order);
+		Public_user user = getSessionUser();
+		Public_order order = orderService.getAuserOrder(orderid,user);
+		
+		int num = bankService.signorder(order);
 		if(num >0){
 //				Public_user pu = userService.getById(order.getParentid());
 //				SendSMS.sendMessage(pu.getPhonenumber(), "");

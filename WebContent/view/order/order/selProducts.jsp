@@ -131,8 +131,8 @@
 					<th width="60">折扣</th>
 				</tr>
 				{#foreach $T as row}
-				<tr class="tr" id="{$T.row.id}">
-					<td align="center"><input type="checkbox" value="{$T.row.id}" name="id"></td>
+				<tr class="tr" id="{$T.row.sizeid}">
+					<td align="center"><input type="checkbox" value="{$T.row.sizeid}" name="id"></td>
 					<td align="center">{$T.row.brandname}</td>
 					<td>{$T.row.productname}</td>
 					<td align="center">{$T.row.productsize}</td>

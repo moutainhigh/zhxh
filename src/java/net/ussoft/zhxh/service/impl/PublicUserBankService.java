@@ -7,7 +7,9 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import net.ussoft.zhxh.dao.PublicDisDetailsDao;
 import net.ussoft.zhxh.dao.PublicLogDao;
+import net.ussoft.zhxh.dao.PublicMessageDao;
 import net.ussoft.zhxh.dao.PublicOrderDao;
 import net.ussoft.zhxh.dao.PublicOrderProductDao;
 import net.ussoft.zhxh.dao.PublicPhoneCodeLogDao;
@@ -15,7 +17,9 @@ import net.ussoft.zhxh.dao.PublicProductSizeRebateDao;
 import net.ussoft.zhxh.dao.PublicSetBonusesRatioDao;
 import net.ussoft.zhxh.dao.PublicTradeBillDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
+import net.ussoft.zhxh.model.Public_dis_details;
 import net.ussoft.zhxh.model.Public_log;
+import net.ussoft.zhxh.model.Public_message;
 import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_phone_code_log;
@@ -48,6 +52,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 	private PublicOrderProductDao orderProductDao;
 	@Resource
 	private PublicProductSizeRebateDao rebateDao;
+	@Resource
+	private PublicMessageDao msgDao;
+	@Resource
+	private PublicDisDetailsDao disDetailsDao;
 	
 	@Override
 	public Public_user_bank getById(String id) {
@@ -116,6 +124,11 @@ public class PublicUserBankService implements IPublicUserBankService{
 		order = orderDao.update(order);
 		//日志
 		Public_log log = saveLog(bank.getUserid(), bank.getParentid(), "paymentorder", order.getOrdernumber()+"-已付款", order.getOrdertotal(), order.getId());
+		//订单已取消-消息
+		int messagetype = 1;	//业务消息
+		String messagetxt = order.getU_username()+"提交了订单，请及时处理！订单号："+order.getOrdernumber();
+		createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		
 		if(bank != null && order !=null && log != null){
 			return 1;
 		}
@@ -139,6 +152,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 		order = orderDao.update(order);
 		//日志
 		Public_log log = saveLog(bank.getUserid(), bank.getParentid(), "cancelorder", order.getOrdernumber()+"-已取消", order.getOrdertotal(), order.getId());
+		//订单已取消-消息
+		int messagetype = 1;	//业务消息
+		String messagetxt = order.getU_username()+"取消了订单！订单号："+order.getOrdernumber();
+		createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
 		if(bank != null && order !=null && log != null){
 			return 1;
 		}
@@ -158,7 +175,11 @@ public class PublicUserBankService implements IPublicUserBankService{
 		order = orderDao.update(order);
 		//日志
 		Public_log log = saveLog(order.getParentid(), order.getUserid(), "sendorder", order.getOrdernumber()+"-已发货", order.getOrdertotal(), order.getId());
-		if(order !=null && log != null){
+		//消息
+		int messagetype = 1;	//业务消息
+		String messagetxt = "尊敬的客户您好，您的订单已发货，订单号："+order.getOrdernumber();
+		Public_message msg = createMsg(order.getParentid(), order.getP_username(), order.getUserid(), order.getU_username(), messagetype, messagetxt,order.getId());
+		if(order !=null && log != null && msg != null){
 			return 1;
 		}
 		return 0;
@@ -175,21 +196,59 @@ public class PublicUserBankService implements IPublicUserBankService{
 		order.setOrderstatus(3);	//已签收
 		order.setOrderstatusmemo("已签收");
 		order = orderDao.update(order);
-		//日志
+		//订单操作日志
 		Public_log log = saveLog(order.getUserid(), order.getParentid(), "sendorder", order.getOrdernumber()+"-已签收", order.getOrdertotal(), order.getId());
-		//返利
+		//订单已签收-消息
+		int messagetype = 1;	//业务消息
+		String messagetxt = order.getU_username()+"，的订单已签收！订单号："+order.getOrdernumber();
+		createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		
+		/*目前没有考虑关闭返利、奖励的情况*/
+		
+		float rebate_total = 0;	//本次返利总额
+		float award_total = 0;	//本次奖励总额
 		List<Public_order_product> list = getOrderProducts(order.getId());	//订单商品
 		for(Public_order_product obj:list){
 			//商品返利剩余数量
 			Public_product_size_rebate rebate = getProductSizeRebate(order.getUserid(), order.getParentid(), obj.getId());
 			if(rebate != null){
+				int rebate_num = 0;			//本次返利数量
+				int next_rebate_num = 0;	//下次返利数量
 				if(obj.getProductnum() > rebate.getQuantity()){
-					rebate.getQuantity();//返利数量
-					rebate.setQuantity(obj.getProductnum());	//重新设置返利余额
-					
+					rebate_num = rebate.getQuantity();			//本次返利数量
+					next_rebate_num = obj.getProductnum();		//下次返利数量
+					rebate.setQuantity(obj.getProductnum());	//重新设置下次返利数量
+					rebateDao.update(rebate);
 				}else{
-					
+					rebate_num = obj.getProductnum();			//本次返利数量
+					next_rebate_num = rebate.getQuantity();		//下次返利数量
 				}
+				//计算本次返利额 = 商品折扣价后 X 返利比例 X 数量
+				float rebate_money = obj.getPrice() * obj.getBuyerdis() * obj.getRebatesdis() * rebate_num;
+				rebate_total += rebate_money;					//返利金额合计
+				//返利奖励明细表
+				Public_dis_details rebate_details = new Public_dis_details();
+				rebate_details.setDetailsnum(rebate_num); 			//本次返利数量
+				rebate_details.setNextrebatesnum(next_rebate_num);	//下次返利数量
+				rebate_details.setDetailspay(rebate_money);		//本次返利金额
+				rebate_details.setDetailstype(1);	//返利
+				//添加返利记录
+				savePublicDisDetails(rebate_details,order,obj);
+				
+				//判断是否有推荐人
+				if(order.getTid() != null && !"".equals(order.getTid())){
+					//计算奖励 —— 奖励标准 X 数量(同返利的数量)
+					float award_money = obj.getBonusesdis() * rebate_num;
+					award_total += award_money;
+					Public_dis_details award_details = new Public_dis_details();
+					award_details.setDetailsnum(rebate_num); 			//本次奖励数量
+					award_details.setNextrebatesnum(next_rebate_num);	//下次返利数量
+					award_details.setDetailspay(rebate_money);			//本次奖励金额
+					award_details.setDetailstype(2);					//奖励
+					//添加奖励记录
+					savePublicDisDetails(award_details,order,obj);
+				}
+				
 			}else{
 				//首次添加-商品返利余额
 				Public_product_size_rebate sizerebate = new Public_product_size_rebate();
@@ -201,13 +260,30 @@ public class PublicUserBankService implements IPublicUserBankService{
 				rebateDao.save(sizerebate);
 			}
 		}
-		//奖励
-		
-		
-		if(order !=null && log != null){
-			return 1;
+		if(rebate_total > 0){
+			//添加返利账户金额
+			Public_user_bank bank = getUserBank(order.getUserid(), order.getParentid());	//当前的操作账户
+			bank.setRebatesbank(bank.getRebatesbank() + rebate_total);
+			userBankDao.update(bank);
+			//添加返利消息
+			messagetype = 1;	//业务消息
+			messagetxt = order.getU_username()+"的订单已返利！订单号："+order.getOrdernumber();
+			createMsg(order.getParentid(), order.getP_username(),order.getUserid(), order.getU_username(),  messagetype, messagetxt,order.getId());
+			//奖励
+			if(award_total > 0){
+				//奖励(奖励累计、奖励可提现)
+				Public_user_bank tbank = getUserBank(order.getTid(),order.getParentid());
+				tbank.setBonusesbank(tbank.getBonusesbank() + award_total);				//奖励累计
+				tbank.setBonusestakenbank(tbank.getBonusestakenbank() + award_total);	//奖励可提现账户
+				userBankDao.update(tbank);
+				//添加奖励消息
+				messagetype = 1;	//业务消息
+				messagetxt = "尊敬的客户您好，您推荐的"+order.getU_username()+"，已产生了订单给予您"+award_total+"元奖励！";
+				createMsg(order.getParentid(), order.getP_username(),order.getTid(),order.getT_username(), messagetype, messagetxt,order.getId());
+			}
 		}
-		return 0;
+		
+		return 1;
 	}
 	
 	/**
@@ -658,6 +734,84 @@ public class PublicUserBankService implements IPublicUserBankService{
 	}
 	
 	/**
+	 * 业务消息
+	 * @param sendid 发送者
+	 * @param sendname
+	 * @param receiveid 接收者
+	 * @param receivename
+	 * @param messagetype 消息类型
+	 * @param messagetxt 消息内容
+	 * @param activeid 关联ID
+	 * @return
+	 * */
+	private Public_message createMsg(String sendid,String sendname,String receiveid,String receivename,int messagetype,String messagetxt,String activeid){
+		Public_message msg = new Public_message();
+		msg.setId(UUID.randomUUID().toString());
+		msg.setSendid(sendid);			//发送者
+		msg.setSendname(sendname);
+		msg.setReceiveid(receiveid);	//接收者
+		msg.setReceivename(receivename);
+		msg.setMessagetype(messagetype);
+		msg.setMessagetxt(messagetxt);
+		msg.setMessagetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		msg.setMessagestate(0);		//状态
+		msg.setActiveid(activeid);
+		return msgDao.save(msg);
+	}
+	
+	/**
+	 * 返利奖励明细表
+	 * @param details
+	 * @param order
+	 * @param product
+	 * @return
+	 * */
+	private Public_dis_details savePublicDisDetails(Public_dis_details details,Public_order order,Public_order_product product){
+		Public_dis_details dis_details = new Public_dis_details();
+		dis_details.setId(UUID.randomUUID().toString());
+		dis_details.setDetailsnum(details.getDetailsnum()); 			//本次返利数量
+		dis_details.setNextrebatesnum(details.getNextrebatesnum());	//下次返利数量
+		dis_details.setDetailspay(details.getDetailspay());		//本次返利金额
+		dis_details.setDetailstype(details.getDetailstype());	//类别 1:返利，2:奖励
+		dis_details.setSizeid(product.getProductid());	//规格ID
+		dis_details.setProductname(product.getProductname()); //商品名称
+		dis_details.setOrderid(order.getId());
+		dis_details.setOrdernumber(order.getOrdernumber());
+		dis_details.setAid(order.getParentid());
+		dis_details.setAcompanyname(order.getP_companyanme());
+		dis_details.setUid(order.getUserid());
+		dis_details.setUname(order.getU_username());
+		dis_details.setUcompanyname(order.getU_companyname());
+		dis_details.setTid(order.getTid());
+		dis_details.setTname(order.getT_username());
+		dis_details.setTcompanyname(order.getT_companyname());
+		dis_details.setCreatetime(DateUtil.getNowTime("yyy-MM-dd HH:mm:ss"));			//创建时间
+		return disDetailsDao.save(dis_details);
+	}
+	/*private Public_dis_details savePublicDisDetails(Public_dis_details details){
+		Public_dis_details obj = new Public_dis_details();
+		obj.setId(UUID.randomUUID().toString());
+		obj.setAid(details.getAid());						//机构ID
+		obj.setAcompanyname(details.getAcompanyname());		//机构名称
+		obj.setUid(details.getUid());						//发起者ID
+		obj.setUname(details.getUname());					//发起者姓名
+		obj.setUcompanyname(details.getUcompanyname());		//发起者机构名称
+		obj.setTid(details.getTid());						//推荐人ID
+		obj.setTname(details.getTname());					//推荐人姓名
+		obj.setTcompanyname(details.getTcompanyname());		//推荐人机构名称
+		obj.setDetailstype(details.getDetailstype());		//类别 1:返利，2:奖励
+		obj.setDetailsnum(details.getDetailsnum());			//返利数量
+		obj.setDetailspay(details.getDetailspay());			//金额
+		obj.setNextrebatesnum(details.getNextrebatesnum());	//下次返利数量
+		obj.setDetailstxt(details.getDetailstxt());			//描述
+		obj.setOrderid(details.getOrderid());				//订单ID
+		obj.setSizeid(details.getSizeid());					//商品规格ID
+		obj.setCreatetime(DateUtil.getNowTime("yyy-MM-dd HH:mm:ss"));			//创建时间
+		return disDetailsDao.save(obj);
+	}*/
+	
+	
+	/**
 	 * 查找账户奖励转货款标准
 	 * @param userid
 	 * @param parentid
@@ -722,7 +876,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 	}
 	
 	/**
-	 * 返利商品
+	 * 订单商品
 	 * @param orderid
 	 * @return
 	 * */
