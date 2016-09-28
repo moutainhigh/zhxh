@@ -267,9 +267,12 @@ public class OrderController extends BaseConstroller {
 		PrintWriter out = response.getWriter();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		Public_user user = getSessionUser();
+		PageBean<Public_brand> p = new PageBean<Public_brand>();
+		p.setIsPage(false);
 		//获取机构经销的品牌
-		PageBean<Public_brand> p = user2Service.list_user_brand(parentid, user.getId(),"",null);
+		p = user2Service.list_user_brand(parentid, user.getId(),"",p);
 		
+		map.put("total", p.getRowCount());
 		map.put("data", p.getList());
 		
 		String json = JSON.toJSONString(map);

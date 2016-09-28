@@ -96,6 +96,7 @@
 						<a class="order side-menu-a new-con-p" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist">
 							<i class="icon"></i>订单
 						</a>
+						<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
 						<div class="float-menu" style="top: 0px;">
 							<ul class="sec-nav">
 								<li class="sec-nav-li menu2" code="WBM_ORDER_RETURNED">
@@ -104,8 +105,10 @@
 								<li class="sec-nav-li menu2" code="WBM_ORDER_OUTSTOCK">
 									<a class="sec-nav-a new-con" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/suborderlist">客户订单</a>
 								</li>
+								
 							</ul>
 						</div>
+						</c:if>
 					</li>
 					
 					<li class="pr side-menu-li li-crop menu1" id="customer" code="WBM_CUSTOMER">

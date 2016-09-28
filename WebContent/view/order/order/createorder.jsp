@@ -37,9 +37,6 @@
     		//选择商家
     		$("#f_comp").change(function(){
     			var _brand = $(this).val();
-    			if(_brand != "0")
-    				layer.tips('点击选择品牌', '#brand_btn', {tips: [1, '#FF9901'],time: 5000,});
-    			
     			if(objArr.length > 0){
     				var cf = "您确定要变更采购商家吗？<br><p style='font-size:12px; color:red'>注意：变更后，已选择的商品将被清除。</p>";
     				layer.confirm(cf, {title:'系统提示',icon:3,
@@ -105,27 +102,35 @@
     	
     	//品牌
     	function brand(id){
-    		$.ajax({
-    			async:false,
-                url: "${pageContext.request.contextPath}/order/brandlist.htmls",
-                data: {parentid:id},
-                type: "post",
-                dataType:"json",
-                success: function (json) {
-                	var data = json.data;
-                	$("#brand").html("");
-                	for(i=0;i<data.length;i++){
-                		$('<li><a href="javascript:;" onclick="selPro(\''+data[i].id+'\')">'+data[i].brandname+'</a> </li>').appendTo($("#brand"));
-                	}
-                	if(data.length > 0)
-                		$("#brand_btn").removeAttr("disabled");	//解除
-                	else
-                		$("#brand_btn").attr("disabled","disabled");	//禁用
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert(jqXHR.responseText);
-                }
-           	});
+    		if(id != "0"){
+    			layer.tips('点击选择品牌', '#brand_btn', {tips: [1, '#FF9901'],time: 5000,});
+        		$.ajax({
+        			async:false,
+                    url: "${pageContext.request.contextPath}/order/brandlist.htmls",
+                    data: {parentid:id},
+                    type: "post",
+                    dataType:"json",
+                    success: function (json) {
+                    	if(json.total > 0){
+                    		var data = json.data;
+                        	$("#brand").html("");
+                        	for(i=0;i<data.length;i++){
+                        		$('<li><a href="javascript:;" onclick="selPro(\''+data[i].id+'\')">'+data[i].brandname+'</a> </li>').appendTo($("#brand"));
+                        	}
+                        	$("#brand_btn").removeAttr("disabled");	//解除
+                    	}else{
+                    		$("#brand_btn").attr("disabled","disabled");	//禁用 
+                    		layer.tips('该机构下没有设置品牌', '#brand_btn', {tips: [1, '#FF9901'],time: 5000,});
+                    	}
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(jqXHR.responseText);
+                    }
+               	});
+    		}else{
+    			$("#brand_btn").attr("disabled","disabled");	//禁用 
+    		}
+			
     	}
     	
     	//选择商品
@@ -194,7 +199,7 @@
 			obj.buyerdis = data.buyerdis;	//折扣
 			obj.quantity = data.quantity; 	//数量
 			var _subtotal = 0;
-			if(parseInt(data.buyerdis) > 0){
+			if(parseFloat(data.buyerdis) > 0){
 				_subtotal = data.price * data.buyerdis * data.quantity;	//小计
 			}else{
 				_subtotal = data.price * data.quantity;	//小计
@@ -286,7 +291,7 @@
 				total_sum = 0;
 				for(var i=0;i<objArr.length;i++){
 					var subtotal = 0;
-					if(parseInt(objArr[i].buyerdis) > 0){
+					if(parseFloat(objArr[i].buyerdis) > 0){
 						subtotal = objArr[i].price * objArr[i].buyerdis * objArr[i].quantity;	//小计
 					}else{
 						subtotal = objArr[i].price * objArr[i].quantity;	//小计

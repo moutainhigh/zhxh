@@ -290,7 +290,7 @@
 			obj.buyerdis = formatFloat(data.buyerdis,2);	//折扣
 			obj.quantity = data.productnum; 	//数量
 			var _subtotal = 0;
-			if(parseInt(data.buyerdis) > 0){
+			if(parseFloat(data.buyerdis) > 0){
 				_subtotal = data.price * data.buyerdis * data.productnum;	//小计
 			}else{
 				_subtotal = data.price * data.productnum;	//小计
