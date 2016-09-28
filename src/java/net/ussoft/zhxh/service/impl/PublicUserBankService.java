@@ -277,13 +277,15 @@ public class PublicUserBankService implements IPublicUserBankService{
 				if(award_total > 0){
 					//奖励(奖励累计、奖励可提现)
 					Public_user_bank tbank = getUserBank(order.getTid(),order.getParentid());
-					tbank.setBonusesbank(tbank.getBonusesbank() + award_total);				//奖励累计
-					tbank.setBonusestakenbank(tbank.getBonusestakenbank() + award_total);	//奖励可提现账户
-					userBankDao.update(tbank);
-					//添加奖励消息
-					messagetype = 1;	//业务消息
-					messagetxt = "尊敬的客户您好，您推荐的"+order.getU_username()+"，已产生了订单给予您"+award_total+"元奖励！";
-					createMsg(order.getParentid(), order.getP_username(),order.getTid(),order.getT_username(), messagetype, messagetxt,order.getId());
+					if(tbank != null && !"".equals(tbank.getId())){
+						tbank.setBonusesbank(tbank.getBonusesbank() + award_total);				//奖励累计
+						tbank.setBonusestakenbank(tbank.getBonusestakenbank() + award_total);	//奖励可提现账户
+						userBankDao.update(tbank);
+						//添加奖励消息
+						messagetype = 1;	//业务消息
+						messagetxt = "尊敬的客户您好，您推荐的"+order.getU_username()+"，已产生了订单给予您"+award_total+"元奖励！";
+						createMsg(order.getParentid(), order.getP_username(),order.getTid(),order.getT_username(), messagetype, messagetxt,order.getId());
+					}
 				}
 			}
 		}
