@@ -62,7 +62,7 @@
     	//加载数据-订单列表
     	function loadData_orderlist(){
     		var _data = {};
-    		_data.orderType = "my";
+    		_data.orderType = "sub";
     		_data.ordernum = $("#ordernum").val();
     		_data.parentid = $("#parentid").val();;
     		_data.ordertime = $("#ordertime").val();
@@ -151,7 +151,6 @@
    	                type: "post",
    	                dataType:"text",
    	                success: function (text) {
-   	                	alert(text);
    	                	if(text == "1"){
    	                		loadData_orderlist();
    	                		layer.msg("操作成功",{icon:6});
@@ -220,7 +219,7 @@
 			obj.buyerdis = formatFloat(data.buyerdis,2);	//折扣
 			obj.quantity = data.productnum; 	//数量
 			var _subtotal = 0;
-			if(parseInt(data.buyerdis) > 0){
+			if(parseFloat(data.buyerdis) > 0){
 				_subtotal = data.price * data.buyerdis * data.productnum;	//小计
 			}else{
 				_subtotal = data.price * data.productnum;	//小计

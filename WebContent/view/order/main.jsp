@@ -176,7 +176,7 @@
 						</div>
 					</li>
 					<li class="pay pr side-menu-li li-crop menu1" id="pay" code="WBM_FUND">
-						<a class="pay side-menu-a new-con-p" href="http://corp.dinghuo123.com/pay/payment?action=list">
+						<a class="pay side-menu-a new-con-p" href="javascript:;"  curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/bankList">
 							<i class="icon"></i>资金
 						</a>
 						<div class="float-menu" style="display: none; top: 0px;">

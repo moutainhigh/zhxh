@@ -53,88 +53,12 @@
     <script type="text/javascript">
     	var userid = '${sessionScope.pc_user_sessiion.id}';
 	    $(function(){
-	    	// 基于准备好的dom，初始化echarts实例
-	    	var myChart = echarts.init(document.getElementById('main'));
-	    	var option = {
-		    	    title : {
-		    	        text: '订单及销售额',
-		    	        subtext: '2016年度'
-		    	    },
-		    	    tooltip : {
-		    	        trigger: 'axis'
-		    	    },
-		    	    legend: {
-		    	        data:['订单量[个数]','销售额[元]']
-		    	    },
-		    	    toolbox: {
-		    	        show : true,
-		    	        feature : {
-		    	            dataView : {show: true, readOnly: false},
-		    	            magicType : {show: true, type: ['line', 'bar']},
-		    	            restore : {show: true},
-		    	            saveAsImage : {show: true}
-		    	        }
-		    	    },
-		    	    calculable : true,
-		    	    xAxis : [
-		    	        {
-		    	            type : 'category',
-		    	            data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
-		    	        }
-		    	    ],
-		    	    yAxis : [
-		    	        {
-		    	            type : 'value'
-		    	        }
-		    	    ],
-		    	    series : [
-		    	        {
-		    	            name:'订单量[个数]',
-		    	            type:'bar',
-		    	            data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
-		    	            markPoint : {
-		    	                data : [
-		    	                    {type : 'max', name: '最大值'},
-		    	                    {type : 'min', name: '最小值'}
-		    	                ]
-		    	            },
-		    	            markLine : {
-		    	                data : [
-		    	                    {type : 'average', name: '平均值'}
-		    	                ]
-		    	            }
-		    	        },
-		    	        {
-		    	            name:'销售额[元]',
-		    	            type:'bar',
-		    	            data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
-		    	            markPoint : {
-		    	                data : [
-		    	                    {name : '年最高', value : 182.2, xAxis: 7, yAxis: 183},
-		    	                    {name : '年最低', value : 2.3, xAxis: 11, yAxis: 3}
-		    	                ]
-		    	            },
-		    	            markLine : {
-		    	                data : [
-		    	                    {type : 'average', name : '平均值'}
-		    	                ]
-		    	            }
-		    	        }
-		    	    ]
-		    	};
-	    	
-	        // 使用刚指定的配置项和数据显示图表。
-	        myChart.setOption(option);
-	        window.onresize = myChart.resize; 
-	        
 	        getUserBank();
 	    })
 	    
 	    function getUserBank() {
-    		
     		var par = {};
     		par.userid = userid;
-    		
     		$.ajax({
     			async:false,
                 url: "${pageContext.request.contextPath}/orderUserBank/listUserBank.htmls",
@@ -142,10 +66,8 @@
                 type: "post",
                 dataType:"json",
                 success: function (json) {
-                	$(".x5").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/bankList.tpl");
-                    $(".x5").processTemplate(json.data);
-                    
-                    
+                	$("#banks").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/bankList.tpl");
+                    $("#banks").processTemplate(json.data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                 	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
@@ -165,80 +87,8 @@
 		</ul>
 		<div class="admin">
 			<div class="line-big">
-				<div class="x5">
-					<div class="panel border-sub">
-						<div class="panel-head">
-							<strong>我的帐户[众恒信和]</strong>
-						</div>
-						<div class="panel-body">
-							<table class="table">
-								<tbody>
-									<tr>
-										<td style="border-top: 0px solid #ddd;" width="200"></td>
-										<td style="border-top: 0px solid #ddd;">订货单</td>
-										<td style="border-top: 0px solid #ddd;" width="200" align="right">订货金额</td>
-									</tr>
-									<tr>
-										<td align="center">今日</td>
-										<td>0笔</td>
-										<td align="right">￥0</td>
-									</tr>
-									<tr>
-										<td align="center">本月</td>
-										<td>0笔</td>
-										<td align="right">￥0</td>
-									</tr>
-									<tr>
-										<td align="center">本年</td>
-										<td>0笔</td>
-										<td align="right">￥0</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-					<br>
-					<div class="panel border-sub">
-						<div class="panel-head">
-							<strong>今日简报[客户订货单]</strong>
-						</div>
-						<div class="panel-body">
-							<table class="table">
-								<tbody>
-									<tr>
-										<td style="border-top: 0px solid #ddd;" width="200"></td>
-										<td style="border-top: 0px solid #ddd;">订货单</td>
-										<td style="border-top: 0px solid #ddd;" width="200" align="right">订货金额</td>
-									</tr>
-									<tr>
-										<td align="center">今日</td>
-										<td>0笔</td>
-										<td align="right">￥0</td>
-									</tr>
-									<tr>
-										<td align="center">本月</td>
-										<td>0笔</td>
-										<td align="right">￥0</td>
-									</tr>
-									<tr>
-										<td align="center">本年</td>
-										<td>0笔</td>
-										<td align="right">￥0</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-					<br>
-					<div class="panel border-sub" >
-						<div class="panel-head">
-							<strong>年度订单及销售额</strong>
-						</div>
-						<div class="panel-body" style="height:500px;">
-							<div id="main" style="width: 100%;height:100%;"></div>
-						</div>
-					</div>
-					<br>
+				<div id="banks" class="x5">
+					
 				</div>
 				<div class="x7">
 					<div class="panel border-sub">

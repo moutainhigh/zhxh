@@ -222,7 +222,30 @@
     	
     	//确认收货
     	function signorder(id){
-    		alert(id);
+    		var cf = "您确定要确认收货吗？";
+			layer.confirm(cf, {title:'系统提示',icon:3,
+				btn: ['确定','取消'] //按钮
+			}, function(index){
+				$.ajax({
+	    			async:false,
+	                url: "${pageContext.request.contextPath}/order/signorder.htmls",
+	                data: {orderid:id},
+	                type: "post",
+	                dataType:"text",
+	                success: function (text) {
+	                	if(text == "1"){
+	                		loadData_orderlist();//加载数据
+	                	}else{
+	                		layer.msg("操作失败！",{icon:6});
+	                	}
+	                },
+	                error: function (jqXHR, textStatus, errorThrown) {
+	                    alert(jqXHR.responseText);
+	                }
+	           	});
+	   			layer.close(index);
+			}, function(){
+			});
     	}
     	
     	//订单详情
