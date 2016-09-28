@@ -700,6 +700,7 @@
                  		$(".setUserDisDiv_panel").setParam('pageSize', pageSize_dis);
                  		$(".setUserDisDiv_panel").setParam('pageIndex', pageIndex_dis);
                  		$(".setUserDisDiv_panel").setParam('totalPage', totalPage_dis);
+                 		$(".setUserDisDiv_panel").setParam('radio_value', set_user.identity);
                  		$(".setUserDisDiv_panel").setParam('path', '${pageContext.request.contextPath}/');
                         $(".setUserDisDiv_panel").processTemplate(json.data);
                         
