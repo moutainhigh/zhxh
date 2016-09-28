@@ -330,6 +330,46 @@ public class PublicUser2Service implements IPublicUser2Service{
 			}
 		}
 		
+		//获取parentid能操作的
+		sb.setLength(0);
+		values.clear();
+		
+		List<String> sizeidList = new ArrayList<String>();
+		
+		if (!"1".equals(parentid)) {
+			sb.append("select * from public_set_user_standard where 1=1");
+			sb.append(" and userid=?");
+			values.add(parentid);
+			
+			if (null != brandid && !"".equals(brandid)) {
+				sb.append(" and brandid = ?");
+				values.add(brandid);
+			}
+			if (null != productid && !"".equals(productid)) {
+				sb.append(" and productid = ?");
+				values.add(productid);
+			}
+			
+			if (isExistsList.size() > 0) {
+				sb.append(" and sizeid not in (");
+				
+				Serializable[] ss=new Serializable[isExistsList.size()];
+				Arrays.fill(ss, "?");
+				sb.append(StringUtils.join(ss,','));
+				sb.append(")");
+				values.addAll(isExistsList);
+			}
+			
+			List<Public_set_user_standard> pStandardList = userStandardDao.search(sb.toString(), values);
+			
+			if (null != pStandardList && pStandardList.size() > 0) {
+				for (Public_set_user_standard s : pStandardList) {
+					sizeidList.add(s.getSizeid());
+				}
+			}
+		}
+		
+		
 		sb.setLength(0);
 		values.clear();
 		
@@ -344,7 +384,16 @@ public class PublicUser2Service implements IPublicUser2Service{
 			values.add(productid);
 		}
 		
-		if (isExistsList.size() > 0) {
+		if (sizeidList.size() > 0) {
+			sb.append(" and id in (");
+			
+			Serializable[] ss=new Serializable[sizeidList.size()];
+			Arrays.fill(ss, "?");
+			sb.append(StringUtils.join(ss,','));
+			sb.append(")");
+			values.addAll(sizeidList);
+		}
+		else {
 			sb.append(" and id not in (");
 			
 			Serializable[] ss=new Serializable[isExistsList.size()];
@@ -367,60 +416,6 @@ public class PublicUser2Service implements IPublicUser2Service{
 			p = sizeDao.search(sb.toString(), values,p);
 		}
 		return p;
-		
-//		
-//		String sql = "";
-//		List<Object> values = new ArrayList<Object>();
-//		
-//		//获取商品下全部规格
-//		sql = "select * from public_product_size where 1=1";
-//		
-//		if (null != brandid && !"".equals(brandid)) {
-//			sql += " and brandid = ?";
-//			values.add(brandid);
-//		}
-//		if (null != productid && !"".equals(productid)) {
-//			sql += " and productid = ?";
-//			values.add(productid);
-//		}
-//		sql += "order by sizesort";
-//		
-//		List<Public_product_size> allSizeList = sizeDao.search(sql, values);
-//		if (allSizeList.size() == 0) {
-//			return allSizeList;
-//		}
-//		
-//		//获取parentid,userid   已经赋予了哪些，去除后返回，供前台选择
-//		sql = "select * from public_set_user_standard where parentid=? and userid=?";
-//		values.clear();
-//		values.add(parentid);
-//		values.add(userid);
-//		
-//		if (null != brandid && !"".equals(brandid)) {
-//			sql += " and brandid = ?";
-//			values.add(brandid);
-//		}
-//		if (null != productid && !"".equals(productid)) {
-//			sql += " and productid = ?";
-//			values.add(productid);
-//		}
-//		List<Public_set_user_standard> userStandardList = userStandardDao.search(sql, values);
-//		
-//		//如果是空的。直接返回空
-//		if (null != userStandardList && userStandardList.size() > 0) {
-//			Iterator<Public_product_size> iter = allSizeList.iterator();
-//	        while(iter.hasNext()){
-//	        	Public_product_size b = iter.next();
-//	            for (Public_set_user_standard userStandard : userStandardList) {
-//					if (b.getId().equals(userStandard.getSizeid())) {
-//						iter.remove();
-//						break;
-//					}
-//				}
-//	        }
-//		}
-//				
-//		return allSizeList;
 	}
 
 	/*

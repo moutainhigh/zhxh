@@ -12,8 +12,10 @@
 			<th width="60">规格标准</th>
 			<th width="60">售价</th>
 			<th width="60">采购折扣</th>
+			{#if $P.radio_value == 'C'}
 			<th width="60">返利标准</th>
 			<th width="60">奖励标准</th>
+			{#/if}
 			<th width="60">状态</th>
 		</tr>
 		{#if $P.rowCount > 0}
@@ -30,14 +32,16 @@
 					<td>{$T.row.productsize}</td>
 					<td>{$T.row.price}</td>
 					<td>{$T.row.buyerdis}</td>
+					{#if $P.radio_value == 'C'}
 					<td>{$T.row.rebatesdis}</td>
 					<td>{$T.row.bonusesdis}</td>
+					{#/if}
 					<td>{#if $T.row.state==0}<span style="color:red">禁止采购</span>{#else}可采购{#/if}</td>
 				</tr>
 			{#/for}
 		{#else}
 			<tr class="tr" style="height:150px;">
-				<td align="center" colspan="16">还没有数据...首先选择品牌再添加商品采购利益标准</td>
+				<td align="center" colspan="{#if $P.radio_value == 'C'}14{#else}12{#/if}">还没有数据...首先选择品牌再添加商品采购利益标准</td>
 			</tr>
 		{#/if}
 		

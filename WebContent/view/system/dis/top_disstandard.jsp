@@ -127,8 +127,8 @@
       	                  { field: "productpic",name:"productpic", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片"},
       	                  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称"},
 	      	              { field: "buyerdis",name:"buyerdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "采购折扣" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-	      	              { field: "rebatesdis",name:"rebatesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "返利标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-	      	              { field: "bonusesdis",name:"bonusesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "奖励标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	      	              //{ field: "rebatesdis",name:"rebatesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "返利标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	      	              //{ field: "bonusesdis",name:"bonusesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "奖励标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "state",name:"state",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁止采购"},{"id":"1","text":"可采购"}] } },
 	      	              { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准"},
 						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价" },
@@ -1359,8 +1359,8 @@
 	
 	<ul id="grid_updatedis_a" class="mini-menu" style="display:none;">
     	<li onclick="updateRows('grid_standard_a','buyerdis')" iconCls="icon-edit" name="auth">采购折扣</li>
-    	<li onclick="updateRows('grid_standard_a','rebatesdis')" >返利标准</li>
-    	<li onclick="updateRows('grid_standard_a','bonusesdis')" name="auth">奖励标准</li>
+    	<!-- <li onclick="updateRows('grid_standard_a','rebatesdis')" >返利标准</li>
+    	<li onclick="updateRows('grid_standard_a','bonusesdis')" name="auth">奖励标准</li> -->
     	<li class="separator"></li>
     	<li onclick="updateRows('grid_standard_a','state')" name="auth">状态</li>
     </ul>

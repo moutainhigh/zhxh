@@ -252,6 +252,13 @@
     	function radio_click() {
     		radio_value = $("input[name='radio_user']:checked").val();
     		
+    		if (radio_value == "C") {
+    			$(".dis").css("display","block");
+    		}
+    		else {
+    			$(".dis").css("display","none");
+    		}
+    		
     		var par = {};
     		par.parentid = parentid;
     		par.identity = radio_value;
@@ -932,8 +939,8 @@
 								</button>
 								<ul class="drop-menu" style="text-align:left;width:15px">
 									<li><a href="javascript:;" onclick="updateUserSizeStandard('buyerdis')">批量设置[折扣]</a></li>
-									<li><a href="javascript:;" onclick="updateUserSizeStandard('rebatesdis')">批量设置[返利]</a></li>
-									<li><a href="javascript:;" onclick="updateUserSizeStandard('bonusesdis')">批量设置[奖励]</a></li>
+									<li class="dis"><a href="javascript:;" onclick="updateUserSizeStandard('rebatesdis')">批量设置[返利]</a></li>
+									<li class="dis"><a href="javascript:;" onclick="updateUserSizeStandard('bonusesdis')">批量设置[奖励]</a></li>
 									<li><a href="javascript:;" onclick="updateUserSizeStandard('state','1')">批量[可采购]</a></li>
 									<li><a href="javascript:;" onclick="updateUserSizeStandard('state','0')">批量[禁止采购]</a></li>
 								</ul>
