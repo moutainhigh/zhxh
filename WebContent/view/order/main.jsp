@@ -185,14 +185,15 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">资金管理</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_FUND_RECEIPT_CONFIRM">
-											<a class="sec-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/bankList">资金账户</a>
-											<%-- <a class="third-nav-a new-con" target="mainFrame" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/account">资金账户</a> --%>
+											<a class="sec-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/bankList">我的资金账户</a>
 										</li>
+										<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
 										<li class="third-nav-li menu2" code="WBM_FUND_ONLINE_PAYMENT">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/onlinePayAccount?action=onlinePayAccountManage">在线支付</a>
+											<a class="third-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/bankList">我的客户资金帐户</a>
 										</li>
+										</c:if>
 										<li class="third-nav-li menu2" code="WBM_FUND_BANK_ACCOUNT">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/companyBank?action=list">银行账号</a>
+											<a class="third-nav-a new-con" href="javascript:;">银行账号</a>
 										</li>
 									</ul>
 								</li>
@@ -203,10 +204,10 @@
 											<a class="third-nav-a new-con" href="">资金账户</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_FUND_INCOME_STATISTICS">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/payment?action=queryPaymentReport">订单收款统计</a>
+											<a class="third-nav-a new-con" href="javascript:;">订单收款统计</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_FUND_SEND_STATISTICS">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/pay/logisticsReconciliation?action=list">发货统计</a>
+											<a class="third-nav-a new-con" href="javascript:;">发货统计</a>
 										</li>
 									</ul>
 								</li>
@@ -214,56 +215,56 @@
 						</div>
 					</li>
 					<li class="message pr side-menu-li li-crop menu1" id="message" code="WBM_NOTIFY">
-						<a class="message side-menu-a new-con-p" href="http://corp.dinghuo123.com/message/notification?action=list">
-							<i class="icon"></i>通知
+						<a class="message side-menu-a new-con-p" href="javascript:;">
+							<i class="icon"></i>消息
 						</a>
 						<div class="float-menu" style="display: none; top: 0px; margin-top: 0px;">
 							<ul class="sec-nav clearfix sec-nav-flow" style="width: 249px;">
 								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
-									<a class="sec-nav-a li-a-color" href="javascript:;">通知管理</a>
+									<a class="sec-nav-a li-a-color" href="javascript:;">消息管理</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_NOTIFY_NOTICE">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/message/notification?action=list">通知公告</a>
+											<a class="third-nav-a new-con" href="javascript:;">站内信</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_NOTIFY_AD">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/generalize/view?action=list">广告发布</a>
+											<a class="third-nav-a new-con" href="javascript:;">系统消息</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_NOTIFY_CLASSIFY">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/message/notificationType?action=list">通知分类管理</a>
+											<a class="third-nav-a new-con" href="javascript:;">业务消息</a>
 										</li>
 									</ul>
 								</li>
-								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
+								<!-- <li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
 									<a class="sec-nav-a li-a-color" href="javascript:;">手机短信</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_NOTIFY_SMS_RECHARGE">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/message/sms_recharge">短信充值</a>
+											<a class="third-nav-a new-con" href="javascript:;">短信充值</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_NOTIFY_SMS_SETTING">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/message/sms_setting">短信发送设置</a>
+											<a class="third-nav-a new-con" href="javascript:;">短信发送设置</a>
 										</li>
 									</ul>
-								</li>
+								</li> -->
 							</ul>
 						</div>
 					</li>
 					<li class="report pr side-menu-li li-crop menu1" id="report" code="WBM_REPORT">
-						<a class="report side-menu-a new-con-p" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=business&amp;statisticsType=2&amp;dateSegment=4">
+						<a class="report side-menu-a new-con-p" href="javascript:;">
 							<i class="icon"></i>报表
 						</a>
 						<div class="float-menu" style="top: 0px; margin-top: 0px;">
 							<ul class="sec-nav">
 								<li class="sec-nav-li menu2" code="WBM_REPORT_ORDER">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=business&amp;statisticsType=2&amp;dateSegment=4">订单统计报表</a>
+									<a class="sec-nav-a new-con" href="javascript:;">订单统计报表</a>
 								</li>
 								<li class="sec-nav-li menu2" code="WBM_REPORT_AREA">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=area&amp;statisticsType=5&amp;dateSegment=4">地区统计报表</a>
+									<a class="sec-nav-a new-con" href="javascript:;">代理统计报表</a>
 								</li>
 								<li class="sec-nav-li menu2" code="WBM_REPORT_SALE">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=product&amp;statisticsType=10&amp;dateSegment=4">商品销售报表</a>
+									<a class="sec-nav-a new-con" href="javascript:;">商品销售报表</a>
 								</li>
 								<li class="sec-nav-li menu2" code="WBM_REPORT_INDENT">
-									<a class="sec-nav-a new-con" href="http://corp.dinghuo123.com/report/report?action=load&amp;reportType=customer&amp;statisticsType=8&amp;dateSegment=4">客户订货报表</a>
+									<a class="sec-nav-a new-con" href="javascript:;">客户订货报表</a>
 								</li>
 							</ul>
 						</div>
