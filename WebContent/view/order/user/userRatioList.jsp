@@ -79,6 +79,7 @@
 	                pageEnter();
 	              	//调用全选插件
 	              	bindTrClick();
+	              	bindTdClick();
 	        	    $.fn.check({ checkall_name: "checkall", checkbox_name: "row_id" });
 	              	
                 },
@@ -270,7 +271,7 @@
     		var reltg = e.relatedTarget ? e.relatedTarget : e.fromElement;
     		while (reltg && reltg != this) reltg = reltg.parentNode;
     		if (reltg != this) {
-    			var msg = "奖励转货款系数，例如设置为1.3表示客户将奖励转为货款的倍数。以鼓励客户将获得奖励用于采购。0表示没有倍数";
+    			var msg = "奖励转货款系数，例如设置为1.3表示客户将奖励转为货款的倍数。以鼓励客户将获得奖励用于采购。0表示没有倍数。<span style='color:#C0FF3E'>点击可直接输入编辑。</span>";
         		var color = "#3595CC";
         	    layer.tips(msg, e, {
         	    	tips: [1, color]
@@ -318,8 +319,8 @@
    		   			return false;
    				}
    				
-   				if (num < 0) {
-   					layer.msg("请输入大约0的数字。",{icon:5});
+   				if (num <= 0) {
+   					layer.msg("请输入大于0的数字。",{icon:5});
    		   			return false;
    				}
    				
@@ -344,12 +345,9 @@
 	           });
    			});
     	}
-    	
-    	//==========
-    	
     	//绑定数量的TD <!-- test.js 是为测试td编辑。这里没有用到 -->
     	function bindTdClick() {
-    		$('.update td').unbind('click').click(function(){
+    		$('.updateTd').unbind('click').click(function(){
     			var e = $(this);
     			var html = $(this).html();
     			if (html.indexOf("input") == -1) {
@@ -358,11 +356,37 @@
     				$(".quant").select();
     				$(".quant").blur(function(){
     					var val = $(this).val();
-    					/* if(!(/^(\+|-)?\d+$/.test(val)) || val == 0){
-    				        val = 1; //非正整数为1
-    				    } */
-    				    var m = '<div class="mini-grid-cell-inner  mini-grid-cell-nowrap  grid-cell-dirty" style="">'+val+'</div>';
-    					e.html(m);
+    					if(!isNumber(val) || val == 0){
+    				        val = html; //非正整数为1
+    				    }
+    					
+    					if (val <= 0) {
+    						val = html;
+    					}
+    					e.html(val);
+    					
+    					var id = e.attr("v");
+    					if (val != html) {
+    						$.ajax({
+        		    			async:false,
+        		                url: "${pageContext.request.contextPath}/orderUserDis/updateRatio.htmls",
+        		                data: {'ids':id,'v':val},
+        		                type: "post",
+        		                dataType:"text",
+        		                success: function (text) {
+        		                 	if (text == 'success') {
+        		                 		listUserRatio();
+        		                 	}
+        		                 	else {
+        		                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+        		                 	}
+        		                },
+        		                error: function (jqXHR, textStatus, errorThrown) {
+        		                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+        		                }
+        		           });
+    					}
+    					
     					/* var id = $(e).parent("tr").attr("id");	//当前行ID
     					for(var i=0;i<objArr.length;i++) {
     						if (id == objArr[i].id) {
@@ -379,380 +403,10 @@
     					} */
     					//重新加载数据
     					//loadData();
-    					
-    					
     				})
     			}
     		})
     	}
-    	
-    	
-    	function addBrand() {
-    		var pHeight = $(window.parent).height();
-	   		var pWidth = $(window.parent).width();
-	   		
-	   		if (set_user == "") {
-	   			layer.msg("未找到要添加品牌的客户的记录，请重新登录再次尝试或与管理员联系。",{icon:5});
-	   			return false;
-	   		}
-	   		
-    		layer.open({
-			    type: 2,
-			    title:'为客户添加可采购的品牌',
-			    area: [(pWidth-280) + 'px', (pHeight-200) +'px'],
-			    fix: false, //不固定
-			    maxmin: false,
-			    scrollbar:false,
-			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/selectBrand",
-			    success: function(layero, index){
-			    	var win = window['layui-layer-iframe' + index].window;
-			    	var data = [];
-			    	data.parentid = parentid;
-			    	data.userid = set_user.id;
-			    	data.checktype = "checkbox";
-			    	win.setData(data);
-			    },
-			    btn: ['选择', '取消'],
-			  	yes: function(index,layero){
-			  		var win = window['layui-layer-iframe' + index].window;
-			  		var rowids = win.getData();
-			  		
-			  		if (rowids == "") {
-			  			return;
-			  		}
-			  		//询问框
-			  		layer.confirm('确定要为客户添加能采购的品牌吗？', {
-			  			btn: ['确认', '取消']
-			  		}, 
-			  		function()	{
-			  			var par = {};
-			  			par.parentid = parentid;
-			  			par.userid = set_user.id;
-			  			par.brandids = rowids;
-			  			$.ajax({
-			    			async:false,
-			                url: "${pageContext.request.contextPath}/orderUserDis/saveUserBrand.htmls",
-			                data: par,
-			                type: "post",
-			                dataType:"text",
-			                success: function (text) {
-			                 	if (text == 'success') {
-			                 		layer.msg("保存成功。",{icon:6});
-			                 		getUserBrand();
-			                 	}
-			                 	else {
-			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
-			                 	}
-			                },
-			                error: function (jqXHR, textStatus, errorThrown) {
-			                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
-			                }
-			           });
-			  		}, 
-			  		function(){
-			  			
-			  		});
-			  		
-			  	},
-			  	btn2: function(){
-			    	layer.closeAll();
-			  	},
-			    end: function(){
-			    	//alert(123);
-			    }
-			});
-    		return false;
-    	}
-    	
-    	function delBrand() {
-    		if (sel_brandid == "") {
-    			layer.msg("请先选择要删除的品牌.",{icon:6});
-				return;
-    		}
-    		
-    		layer.confirm('确定要删除客户能购买的品牌吗？<br><span style="color:red">注意：删除后，客户不采购该品牌下的商品。</span>', {
-	  			btn: ['确认', '取消']
-	  		}, 
-	  		function()	{
-	  			var par = {};
-	    		par.parentid = parentid;
-	    		par.userid = set_user.id;
-	    		par.brandid = sel_brandid;
-	    		
-	    		$.ajax({
-	    			async:false,
-	                url: "${pageContext.request.contextPath}/orderUserDis/delUserBrand.htmls",
-	                data: par,
-	                type: "post",
-	                dataType:"text",
-	                success: function (text) {
-	                 	if (text == 'success') {
-	                 		layer.msg("保存成功。",{icon:6});
-	                 		getUserBrand();
-	                 	}
-	                 	else {
-	                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
-	                 	}
-	                },
-	                error: function (jqXHR, textStatus, errorThrown) {
-	                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
-	                }
-	           });
-	  		}, 
-	  		function(){
-	  			
-	  		});
-    	}
-    	
-    	function getUserBrand() {
-    		
-    		var par = {};
-    		par.parentid = parentid;
-    		par.userid = set_user.id;
-    		par.pageIndex = pageIndex_brand-1;
-    		par.pageSize = pageSize_brand;
-    		par.isPage = true;
-    		
-    		$.ajax({
-    			async:false,
-                url: "${pageContext.request.contextPath}/orderUserDis/listUserBrand.htmls",
-                data: par,
-                type: "post",
-                dataType:"json",
-                success: function (json) {
-                	var totalPage_brand = Math.ceil(json.total/pageSize_brand);
-                	$(".userBrandDiv_panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/userBrand.tpl");
-                	$(".userBrandDiv_panel").setParam('pageSize', pageSize_brand);
-	         		$(".userBrandDiv_panel").setParam('pageIndex', pageIndex_brand);
-	         		$(".userBrandDiv_panel").setParam('totalPage', totalPage_brand);
-             		$(".userBrandDiv_panel").setParam('rowCount', json.total);
-             		$(".userBrandDiv_panel").setParam('path', '${pageContext.request.contextPath}');
-                    $(".userBrandDiv_panel").processTemplate(json.data);
-                    
-                    bindTrClick("userBrand");
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
-                }
-           });
-    	}
-    	function getUserDis() {
-    		if (sel_brandid == "") {
-    			var tmp = [];
-    			$(".setUserDisDiv_panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/setUserDis.tpl");
-         		$(".setUserDisDiv_panel").setParam('rowCount', 0);
-         		$(".setUserDisDiv_panel").setParam('pageSize', pageSize_dis);
-         		$(".setUserDisDiv_panel").setParam('pageIndex', 1);
-         		$(".setUserDisDiv_panel").setParam('totalPage', 0);
-         		$(".setUserDisDiv_panel").setParam('path', '${pageContext.request.contextPath}/');
-                $(".setUserDisDiv_panel").processTemplate(tmp);
-    		}
-    		else {
-    			var par = {};
-        		par.parentid = parentid;
-        		par.userid = set_user.id;
-        		par.brandid = sel_brandid;
-        		par.pageIndex = pageIndex_dis-1;
-        		par.pageSize = pageSize_dis;
-        		par.isPage = true;
-    			$.ajax({
-        			async:false,
-                    url: "${pageContext.request.contextPath}/orderUserDis/listUserStandard.htmls",
-                    data: par,
-                    type: "post",
-                    dataType:"json",
-                    success: function (json) {
-                    	totalPage_dis = Math.ceil(json.total/pageSize_dis);
-                    	$(".setUserDisDiv_panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/setUserDis.tpl");
-                 		$(".setUserDisDiv_panel").setParam('rowCount', json.total);
-                 		$(".setUserDisDiv_panel").setParam('pageSize', pageSize_dis);
-                 		$(".setUserDisDiv_panel").setParam('pageIndex', pageIndex_dis);
-                 		$(".setUserDisDiv_panel").setParam('totalPage', totalPage_dis);
-                 		$(".setUserDisDiv_panel").setParam('path', '${pageContext.request.contextPath}/');
-                        $(".setUserDisDiv_panel").processTemplate(json.data);
-                        
-                        pageEnter("userDis");
-                        bindTrClick("userDis");
-                      //调用全选插件
-    	        	    $.fn.check({ checkall_name: "checkall_dis", checkbox_name: "row_id_dis" });
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                    	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
-                    }
-               });
-    		}
-    	}
-    	
-    	function setUserDis(userid) {
-    		for (var i=0;i<rows.length;i++) {
-	   			if (rows[i].id == userid) {
-	   				set_user = rows[i];
-	   				break;
-	   			}
-	   		}
-	   		
-	   		if (set_user == "") {
-	   			layer.msg("未找到要设置的记录，请重新登录再次尝试或与管理员联系。",{icon:5});
-	   			return false;
-	   		}
-	   		var sel_user_arr = [];
-	   		sel_user_arr.push(set_user);
-	   		
-	   		$(".selUserDiv-panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/userDis/setUserAction.tpl");
-     		$(".selUserDiv-panel").setParam('radio_value', radio_value);
-     		$(".selUserDiv-panel").setParam('rowCount', 1);
-            $(".selUserDiv-panel").processTemplate(sel_user_arr);
-            
-          	//显示品牌
-	   		getUserBrand();
-	   		getUserDis();
-	   		
-    		$(".userDiv").slideToggle(1000,function(){
-    			//alert("滑动向上缩小完毕");
-    		});
-    		$(".selUserDiv").slideToggle(1000,function() {
-    			
-    		});
-    		$(".userBrandDiv").slideToggle(1000,function() {
-    			$("input[name=brand_row_id]").click(function(){
-    				sel_brandid = $(this).val();
-    				pageIndex_dis = 1;
-        			getUserDis();
-      			});
-			});
-    		$(".setUserDisDiv").slideToggle(1000,function() {
-    		});
-    		return false;
-    	}
-    	
-    	function showUserList() {
-    		$(".userDiv").slideToggle(1000,function() {
-    			set_user = "";
-    		});  
-    		$(".selUserDiv").slideToggle(1000,function() {
-    			//alert("滑动向下放大完毕");
-    		});
-    		$(".userBrandDiv").slideToggle(1000,function() {
-    			pageIndex_brand = 1;
-			});
-    		
-    		$(".setUserDisDiv").slideToggle(1000,function() {
-    			//alert("滑动向下放大完毕");
-    			sel_brandid = "";
-    			pageIndex_dis = 1;
-    		});
-    	}
-    	
-    	function updateUserSizeStandard(key,v) {
-    		
-    		var sel_ids = "";
-   			$('.userDis input:checkbox[name=row_id_dis]:checked').each(function(i) {
-   				if(0==i){
-   					sel_ids = $(this).val();
-   			 	}else{
-   			 		sel_ids += (","+$(this).val());
-   			    }
-   			});
-   			
-   			if (sel_ids == "") {
-   				layer.msg("未找到要设置的记录，请重新登录再次尝试或与管理员联系。",{icon:5});
-	   			return false;
-   			}
-   			
-     		var cf = "确定要批量设置选中商品的";
-     		var txt = "";
-    		if (key == "buyerdis") {
-    			txt = "[折扣]";
-    		}
-    		else if (key == "rebatesdis") {
-    			txt = "[返利]";
-    		}
-    		else if (key == "bonusesdis") {
-    			txt = "[奖励]";
-    		}
-    		else if (key == "state") {
-    			if (v == '1') {
-    				txt = "[状态]为[可采购]";
-    			}
-    			else {
-    				txt = "[状态]为[禁止采购]";
-    			}
-    		}
-    		else {
-    			layer.msg("参数错误，请重新登录再次尝试或与管理员联系。",{icon:5});
-	   			return false;
-    		}
-    		cf += txt + "吗？";
-    		
-    		if (key == "state") {
-    			layer.confirm(cf, {
-    	  			btn: ['确认', '取消']
-    	  		}, 
-    	  		function()	{
-    	  			$.ajax({
-       	    			async:false,
-       	                url: "${pageContext.request.contextPath}/orderUserDis/updateUserSizeStandard.htmls",
-       	                data: {ids:sel_ids,updateKey:key,updateValue:v},
-       	                type: "post",
-       	                dataType:"text",
-       	                success: function (text) {
-       	                	if(text == "success"){
-       	                		getUserDis();
-       	                		layer.msg("操作成功",{icon:6});
-       	                	}else{
-       	                		layer.msg("操作失败，请稍后再试！",{icon:6});
-       	                	}
-       	                },
-       	                error: function (jqXHR, textStatus, errorThrown) {
-       	                    alert(jqXHR.responseText);
-       	                }
-       	           	});
-    	  		}, 
-    	  		function(){
-    	  			
-    	  		});
-    		}
-    		else {
-    			layer.prompt({
-       				title: '请输入'+txt+'，并确认',
-       				formType: 0
-       			}, function(num){
-       				if (num == "") {
-       					layer.msg("请输入值。",{icon:5});
-       		   			return false;
-       				}
-       				else if (!isNumber(num)) {
-       					layer.msg("请输入数字。",{icon:5});
-       		   			return false;
-       				}
-       				
-       				if (num < 0) {
-       					layer.msg("请输入大约0的数字。",{icon:5});
-       		   			return false;
-       				}
-       				
-       				$.ajax({
-       	    			async:false,
-       	                url: "${pageContext.request.contextPath}/orderUserDis/updateUserSizeStandard.htmls",
-       	                data: {ids:sel_ids,updateKey:key,updateValue:num},
-       	                type: "post",
-       	                dataType:"text",
-       	                success: function (text) {
-       	                	if(text == "success"){
-       	                		getUserDis();
-       	                		layer.msg("操作成功",{icon:6});
-       	                	}else{
-       	                		layer.msg("操作失败，请稍后再试！",{icon:6});
-       	                	}
-       	                },
-       	                error: function (jqXHR, textStatus, errorThrown) {
-       	                    alert(jqXHR.responseText);
-       	                }
-       	           	});
-       			});
-    		}
-    	}
-    	
     	
     </script>
 </head>

@@ -16,7 +16,7 @@
 					<td>{($T.row$index+1)+($P.pageIndex * $P.pageSize - $P.pageSize)}</td>
 					<td>{$T.row.username}</td>
 					<td>{$T.row.companyname}</td>
-					<td>{$T.row.bonuses_ratio}</td>
+					<td v="{$T.row.id}" class="updateTd">{$T.row.bonuses_ratio}</td>
 					<td>{$T.row.companypath}</td>
 				</tr>
 			{#/for}

@@ -950,6 +950,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 			ratio.setId(UUID.randomUUID().toString());
 			ratio.setParentid(parentid);
 			ratio.setUserid(userid);
+			ratio.setBonuses_ratio(1f);
 			ratioDao.save(ratio);
 		}
 		
@@ -975,6 +976,9 @@ public class PublicUser2Service implements IPublicUser2Service{
 	        else if (state.equals("modified") || state.equals(""))	 {
 	        	Public_set_bonuses_ratio s = new Public_set_bonuses_ratio();
 	        	BeanUtils.populate(s, row);
+	        	if (s.getBonuses_ratio() <= 0 ) {
+	        		s.setBonuses_ratio(1f);
+	        	}
 	        	ratioDao.update(s);
 	        }
 	    }
