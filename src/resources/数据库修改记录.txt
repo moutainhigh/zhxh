@@ -376,4 +376,7 @@ DELETE FROM public_set_user_standard;
 -- 设置奖励转货款标准
 DELETE FROM public_set_bonuses_ratio;
 
+-- 插入平台帐户 id为1
+insert into `zhxh`.`public_user` ( `id`, `usercode`, `username`, `phonenumber`, `identity`, `identitymemo`, `dianid`, `shidaiid`, `shengdaiid`, `tuijianid`, `tuijianman`, `tuijiansort`, `setreturn`, `isopen`, `password`, `uid`, `sex`, `birthday`, `companyname`, `companypath`, `parentid`, `belongcode`, `companycode`, `wechar`, `rank`, `createtime`, `sort`) values ( '1', '', '众恒信和', '13701000001', 'A', '平台', '', '', '', '', '', '', '1', '1', 'e10adc3949ba59abbe56e057f20f883e', '', '1', '1977-01-23', '众恒信和公司', '北京市朝阳区', null, '', '13701000001', '', '中国总代理', '2016-09-09', '1');
+
 

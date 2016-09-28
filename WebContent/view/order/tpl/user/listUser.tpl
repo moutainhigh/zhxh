@@ -60,7 +60,8 @@
 			{#/for}
 		{#else}
 			<tr class="tr" style="height:150px;">
-				<td align="center" colspan="15">还没有数据...</td>
+				<td align="center" colspan="{#if $P.radio_value == 'C'}17{#elseif $P.radio_value == 'A'}16{#else}12{#/if}">还没有数据...</td>
+				
 			</tr>
 		{#/if}
 		
