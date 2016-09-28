@@ -4,9 +4,9 @@
 		<tr class="panel-head item">
 			<th width="45" align="center"><input type="checkbox" value="1" name="checkall"></th>
 			<th width="45">序号</th>
-			<th width="80">被设置者</th>
+			<th width="150">被设置者</th>
 			<th width="*">机构名称</th>
-			<th width="200">奖励转货款系数</th>
+			<th width="200" onmouseover="td_tip(this)" onmouseout="td_tip_over(this)">奖励转货款系数</th>
 			<th width="*">机构地址</th>
 		</tr>
 		{#if $P.rowCount > 0}
@@ -33,7 +33,7 @@
 	<tr class="">
 		<td width="45" align="center"><input type="checkbox" value="0" name="checkall"></td>
 		<td colspan="6" class="tr pr10" style="text-align:left" >
-			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'isopen')">批量设置</a>
+			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch()">批量设置</a>
 		</td>
 		<td colspan="9" style="text-align:right" >
 			<div class="page">

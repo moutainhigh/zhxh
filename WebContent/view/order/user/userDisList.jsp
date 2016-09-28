@@ -376,6 +376,8 @@
 			                 	if (text == 'success') {
 			                 		layer.msg("保存成功。",{icon:6});
 			                 		getUserBrand();
+			                 		sel_brandid = "";
+			                 		getUserDis();
 			                 	}
 			                 	else {
 			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
@@ -426,6 +428,8 @@
 	                 	if (text == 'success') {
 	                 		layer.msg("保存成功。",{icon:6});
 	                 		getUserBrand();
+	                 		sel_brandid = "";
+	                 		getUserDis();
 	                 	}
 	                 	else {
 	                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
@@ -449,7 +453,6 @@
 	   			layer.msg("未找到客户的记录，请先选择客户。",{icon:5});
 	   			return false;
 	   		}
-	   		
 	   		if (sel_brandid == "") {
 	   			layer.msg("未找到品牌记录，请先选择品牌。",{icon:5});
 	   			return false;
@@ -653,6 +656,12 @@
                     $(".userBrandDiv_panel").processTemplate(json.data);
                     
                     bindTrClick("userBrand");
+                    
+                    $("input[name=brand_row_id]").unbind("click").click(function(){
+        				sel_brandid = $(this).val();
+        				pageIndex_dis = 1;
+            			getUserDis();
+          			});
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                 	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
@@ -737,7 +746,7 @@
     			
     		});
     		$(".userBrandDiv").slideToggle(1000,function() {
-    			$("input[name=brand_row_id]").click(function(){
+    			$("input[name=brand_row_id]").unbind("click").click(function(){
     				sel_brandid = $(this).val();
     				pageIndex_dis = 1;
         			getUserDis();

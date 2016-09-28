@@ -393,7 +393,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 			sb.append(")");
 			values.addAll(sizeidList);
 		}
-		else {
+		else if (isExistsList.size() > 0) {
 			sb.append(" and id not in (");
 			
 			Serializable[] ss=new Serializable[isExistsList.size()];
@@ -832,7 +832,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 	        for (int i = 0; i < set.size(); i++) {
 	            Map.Entry mapEntry=(Entry) iterator.next();
 	            if (null != mapEntry.getValue() && !"".equals(mapEntry.getValue().toString())) {
-	            	sb.append(mapEntry.getKey()+" like '%"+mapEntry.getValue()+"%' or");
+	            	sb.append(mapEntry.getKey()+" like '%"+mapEntry.getValue()+"%' or ");
 	            }
 	        }
 	        sb.delete(sb.length()-3, sb.length());
@@ -992,6 +992,34 @@ public class PublicUser2Service implements IPublicUser2Service{
 		
 		for (String id : idsArr) {
 			ratioDao.del(id);
+		}
+		return true;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.ussoft.zhxh.service.IPublicUser2Service#updateRatio(java.lang.String, java.lang.String)
+	 */
+	@Transactional("txManager")
+	@Override
+	public boolean updateRatio(String ids, String v) {
+		String[] idsArr = ids.split(",");
+		
+		if (idsArr.length > 0) {
+			StringBuffer sb = new StringBuffer();
+			List<Object> values = new ArrayList<Object>();
+			List<String> idsList = Arrays.asList(idsArr);
+			sb.append("update public_set_bonuses_ratio set bonuses_ratio=? where id in (");
+			
+			values.add(v);
+			
+			Serializable[] ss1=new Serializable[idsList.size()];
+			Arrays.fill(ss1, "?");
+			sb.append(StringUtils.join(ss1,','));
+			sb.append(")");
+			values.addAll(idsList);
+			
+			ratioDao.update(sb.toString(), values);
 		}
 		return true;
 	}

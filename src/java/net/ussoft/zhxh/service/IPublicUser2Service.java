@@ -226,6 +226,14 @@ public interface IPublicUser2Service {
 	 */
 	public boolean delRatio(String ids);
 	
+	/**
+	 * 根据id，更新奖励转货款系数
+	 * @param ids
+	 * @param v
+	 * @return
+	 */
+	public boolean updateRatio(String ids,String v);
+	
 	
 	
 	//================end

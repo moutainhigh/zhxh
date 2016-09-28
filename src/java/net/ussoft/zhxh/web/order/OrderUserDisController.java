@@ -379,6 +379,32 @@ public class OrderUserDisController extends BaseConstroller {
 		
 		out.print("success");
 	}
+	/**
+	 * 批量更改奖励转货款
+	 * @param ids
+	 * @param v
+	 * @param response
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	@RequestMapping(value="/updateRatio",method=RequestMethod.POST)
+	public void updateRatio(String ids,String v,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "success";
+		
+		if (null == ids || "".equals(ids)) {
+			out.print(result);
+			return;
+		}
+		//
+		userService.updateRatio(ids,v);
+		
+		out.print("success");
+	}
 	
 	
 	

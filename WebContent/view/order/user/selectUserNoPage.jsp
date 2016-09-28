@@ -121,7 +121,7 @@
 					<th width="45">序号</th>
 					<th width="80">姓名</th>
 					<th width="100">手机号码</th>
-					<th width="80">生日</th>
+					<th width="120">生日</th>
 					<th width="50">性别</th>
 					<th width="60">身份</th>
 					<th width="200">客户名称</th>

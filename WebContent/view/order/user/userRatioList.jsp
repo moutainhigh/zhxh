@@ -249,6 +249,101 @@
 			
     	}
     	
+    	function searchUser() {
+    		var key = $("#searchTxt").val();
+    		pageIndex = 1;
+    		
+    		if (key != "") {
+    			searchmap = {};
+                searchmap.username = key;
+                searchmap.companyname = key;
+            }
+            else {
+            	searchmap = "";
+            }
+    		listUserRatio();
+			
+    	}
+    	
+    	function td_tip(e) {
+    		if (!e) e = window.event;
+    		var reltg = e.relatedTarget ? e.relatedTarget : e.fromElement;
+    		while (reltg && reltg != this) reltg = reltg.parentNode;
+    		if (reltg != this) {
+    			var msg = "奖励转货款系数，例如设置为1.3表示客户将奖励转为货款的倍数。以鼓励客户将获得奖励用于采购。0表示没有倍数";
+        		var color = "#3595CC";
+        	    layer.tips(msg, e, {
+        	    	tips: [1, color]
+    	    	    //time: 2000
+    	    	});
+    		}
+    	}
+    	
+    	function td_tip_over(e) {
+    		
+    		if (!e) e = window.event;
+    		var reltg = e.relatedTarget ? e.relatedTarget : e.toElement;
+    		while (reltg && reltg != this) reltg = reltg.parentNode;
+    		if (reltg != this) {
+    			// 这里可以编写 onmouseleave 事件的处理代码
+    			layer.closeAll('tips');
+    		}
+    		//layer.closeAll('tips');
+    	}
+    	
+    	function updatebatch() {
+    		var sel_userid = "";
+			$('input:checkbox[name=row_id]:checked').each(function(i) {
+				if(0==i){
+					sel_userid = $(this).val();
+			 	}else{
+			 		sel_userid += (","+$(this).val());
+			    }
+			});
+			if (sel_userid == "") {
+				layer.msg("请先选择要批量操作的客户",{icon:6});
+				return;
+			}
+			
+			layer.prompt({
+   				title: '请输入奖励转货款系数，并确认',
+   				formType: 0
+   			}, function(num){
+   				if (num == "") {
+   					layer.msg("请输入值。",{icon:5});
+   		   			return false;
+   				}
+   				else if (!isNumber(num)) {
+   					layer.msg("请输入数字。",{icon:5});
+   		   			return false;
+   				}
+   				
+   				if (num < 0) {
+   					layer.msg("请输入大约0的数字。",{icon:5});
+   		   			return false;
+   				}
+   				
+   				$.ajax({
+	    			async:false,
+	                url: "${pageContext.request.contextPath}/orderUserDis/updateRatio.htmls",
+	                data: {'ids':sel_userid,'v':num},
+	                type: "post",
+	                dataType:"text",
+	                success: function (text) {
+	                 	if (text == 'success') {
+	                 		layer.msg("保存成功。",{icon:6});
+	                 		listUserRatio();
+	                 	}
+	                 	else {
+	                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+	                 	}
+	                },
+	                error: function (jqXHR, textStatus, errorThrown) {
+	                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+	                }
+	           });
+   			});
+    	}
     	
     	//==========
     	
@@ -291,75 +386,6 @@
     		})
     	}
     	
-    	
-    	function td_tip(e) {
-    		//'#td_state'
-    		
-    		if (!e) e = window.event;
-    		var reltg = e.relatedTarget ? e.relatedTarget : e.fromElement;
-    		while (reltg && reltg != this) reltg = reltg.parentNode;
-    		if (reltg != this) {
-    			var msg = "";
-        		var color = "#3595CC";
-        		var v = $(e).attr("v");
-        		if (e.id == "td_state") {
-        			if (v == "1") {
-        				msg = "状态为[正常]，客户可以登录本系统并进行充值、采购等操作。";
-        			}
-        			else {
-        				msg = "状态为[禁用]，[禁用]后客户将不能登录本系统。";
-        				color = "#EE7942";
-        			}
-        		}
-        		else if (e.id == "td_setreturn") {
-        			if (v == "1") {
-        				msg = "状态为[正常]，允许客户享受采购折扣、返利、奖励等利益分配。";
-        			}
-        			else {
-        				msg = "状态为[禁用]，[禁用]后客户将不享受采购折扣、返利、奖励等利益分配。";
-        				color = "#EE7942";
-        			}
-        		}
-        	    layer.tips(msg, e, {
-        	    	tips: [1, color]
-    	    	    //time: 2000
-    	    	});
-    		}
-    	}
-    	
-    	function td_tip_over(e) {
-    		
-    		if (!e) e = window.event;
-    		var reltg = e.relatedTarget ? e.relatedTarget : e.toElement;
-    		while (reltg && reltg != this) reltg = reltg.parentNode;
-    		if (reltg != this) {
-    			// 这里可以编写 onmouseleave 事件的处理代码
-    			layer.closeAll('tips');
-    		}
-    		//layer.closeAll('tips');
-    	}
-    	
-    	
-    	
-    	function searchUser() {
-    		var key = $("#searchTxt").val();
-    		pageIndex = 1;
-    		
-    		if (key != "") {
-    			searchmap = {};
-                searchmap.username = key;
-                searchmap.phonenumber = key;
-                if (radio_value != "Z") {
-                	searchmap.companyname = key;
-                    searchmap.companypath = key;
-                }
-            }
-            else {
-            	searchmap = "";
-            }
-			radio_click();
-			
-    	}
     	
     	function addBrand() {
     		var pHeight = $(window.parent).height();
@@ -476,62 +502,6 @@
 	  		function(){
 	  			
 	  		});
-    	}
-    	
-    	
-    	function updatebatch(v,t) {
-    		var sel_userid = "";
-			$('input:checkbox[name=row_id]:checked').each(function(i) {
-				if(0==i){
-					sel_userid = $(this).val();
-			 	}else{
-			 		sel_userid += (","+$(this).val());
-			    }
-			});
-			if (sel_userid == "") {
-				layer.msg("请先选择要批量操作的客户",{icon:6});
-				return;
-			}
-			
-			var txt = "正常";
-    		if (v == 0) {
-    			txt = "禁用";
-    		}
-    		
-    		var updatefield = t;
-    		var cf = "状态为[";
-    		if (t == "setreturn") {
-    			cf = "接收分成为[";
-    		}
-    		
-    		layer.confirm('确定要批量修改选中客户的'+cf+txt+']吗？', {
-	  			btn: ['确认', '取消']
-	  		}, 
-	  		function()	{
-	  			$.ajax({
-	    			async:false,
-	                url: "${pageContext.request.contextPath}/orderUser/updateBatch.htmls",
-	                data: {'updateUserids':sel_userid,'field':t,'fieldValue':v},
-	                type: "post",
-	                dataType:"text",
-	                success: function (text) {
-	                 	if (text == 'success') {
-	                 		layer.msg("保存成功。",{icon:6});
-	                 		radio_click();
-	                 	}
-	                 	else {
-	                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
-	                 	}
-	                },
-	                error: function (jqXHR, textStatus, errorThrown) {
-	                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
-	                }
-	           });
-	  		}, 
-	  		function(){
-	  			
-	  		});
-    		
     	}
     	
     	function getUserBrand() {
@@ -802,7 +772,7 @@
 						<td align="right">
 							<a href="javascript:;" class="button bg-sub button-small" onclick="addUser()">添加客户</a>
 							<a href="javascript:;" class="button bg-dot button-small" onclick="delRatio()">删除客户</a>
-							<a href="javascript:;" class="button border-sub button-small" onclick="delSize()">批量设置</a>
+							<a href="javascript:;" class="button border-sub button-small" onclick="updatebatch()">批量设置</a>
 							<input type="text" id="searchTxt" name="searchTxt" class="input input-auto" style="width:120px;margin-left: 20px"/>
 							<a id="searchBtn" href="javascript:;" class="button bg-main button-small" onclick="searchUser()">检索</a>
 						</td>
