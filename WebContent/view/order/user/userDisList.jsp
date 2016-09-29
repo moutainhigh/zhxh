@@ -834,6 +834,11 @@
        	                	if(text == "success"){
        	                		getUserDis();
        	                		layer.msg("操作成功",{icon:6});
+       	                		var strs= new Array(); //定义一数组 
+	       	             		strs = sel_ids.split(","); //字符分割 
+	       	             		for (i=0;i<strs.length ;i++ ) {
+	       	             			$('.userDis input:checkbox[value='+strs[i]+']').attr("checked","checked");
+	       	             		}
        	                	}else{
        	                		layer.msg("操作失败，请稍后再试！",{icon:6});
        	                	}
@@ -876,6 +881,11 @@
        	                	if(text == "success"){
        	                		getUserDis();
        	                		layer.msg("操作成功",{icon:6});
+       	                		var strs= new Array(); //定义一数组 
+	       	             		strs = sel_ids.split(","); //字符分割 
+	       	             		for (i=0;i<strs.length ;i++ ) {
+	       	             			$('.userDis input:checkbox[value='+strs[i]+']').attr("checked","checked");
+	       	             		}
        	                	}else{
        	                		layer.msg("操作失败，请稍后再试！",{icon:6});
        	                	}

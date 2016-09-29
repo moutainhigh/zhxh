@@ -117,11 +117,9 @@
 						</a>
 						<div class="float-menu" style="top: 0px;">
 							<ul class="sec-nav">
-								<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
-									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">
-										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">客户列表</a>
-									</li>
-								</c:if>
+								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">
+									<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">客户列表</a>
+								</li>
 								<c:if test="${sessionScope.pc_user_sessiion.id != '1'}">
 									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
 										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">我的利益</a>
@@ -139,7 +137,7 @@
 						</div>
 					</li>
 					<li class="product pr side-menu-li li-crop menu1" id="product" code="WBM_PRODUCT">
-						<a class="product side-menu-a new-con-p" href="http://corp.dinghuo123.com/product/product?action=list&amp;status=0">
+						<a class="product side-menu-a new-con-p"  href="javascript:;">
 							<i class="icon"></i>商品<span class="ui-new-func"></span>
 						</a>
 						<div class="float-menu" style="display: none; top: 0px;">
@@ -148,13 +146,13 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">商品管理</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_PRODUCT_LIST">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/product?action=list&amp;status=0">商品列表</a>
+											<a class="third-nav-a new-con"  href="javascript:;">商品列表</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_PRODUCT_TYPE">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/type?action=list">商品类别</a>
+											<a class="third-nav-a new-con" href="javascript:;">商品类别</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_PRODUCT_UNIT">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/unit?action=list">计量单位</a>
+											<a class="third-nav-a new-con" href="javascript:;">计量单位</a>
 										</li>
 									</ul>
 								</li>
@@ -162,13 +160,13 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">促销管理</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_PRODUCT_PROMOTION">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/promotion?action=productStrategyList">商品促销</a>
+											<a class="third-nav-a new-con"  href="javascript:;">商品促销</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_PRODUCT_ORDER_PROMOTION">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/promotion?action=orderStrategyList">订单促销</a>
+											<a class="third-nav-a new-con" href="javascript:;">订单促销</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_PRODUCT_MIX_PROMOTION">
-											<a class="third-nav-a new-con" href="http://corp.dinghuo123.com/product/promotion?action=complexStrategyList">组合促销<span class="ui-new-func"></span></a>
+											<a class="third-nav-a new-con" href="javascript:;">组合促销<span class="ui-new-func"></span></a>
 										</li>
 									</ul>
 								</li>
