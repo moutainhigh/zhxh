@@ -107,7 +107,7 @@ public class PloginController extends BaseConstroller {
 	@RequestMapping(value="/pcMain/plogout")
 	public String logout(HttpServletRequest request,ModelMap modelMap) {
 		request.getSession().removeAttribute(Constants.PC_USER_SESSION);
-		request.getSession().invalidate();
+//		request.getSession().invalidate();
 		return "redirect:/pcMain/pcindex.htmls";
 	}
 	

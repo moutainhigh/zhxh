@@ -15,6 +15,7 @@
     
 
 	    var grid;
+	    var parentid = "";
 	    var identity = "";
 	    var multiSelect = true;
 	   	$(function(){
@@ -65,10 +66,10 @@
                 searchmap.companypath = key;
                 
                 var mapObj = mini.encode(searchmap);
-                grid.load({identity:identity,mapObj: mapObj });
+                grid.load({parentid:parentid,identity:identity,mapObj: mapObj });
             }
             else {
-            	grid.load({identity:identity });
+            	grid.load({parentid:parentid,identity:identity});
             }
             
         }
@@ -81,8 +82,9 @@
 			data = mini.clone(data);    //必须
 			//跨页面传递的数据
 			identity = data.identity;
+			parentid = data.parentid;
 			multiSelect = data.multiSelect;
-			grid.load({identity:identity});
+			grid.load({parentid:parentid,identity:identity});
 			grid.setMultiSelect(multiSelect);
 		}
         

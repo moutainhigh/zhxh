@@ -211,12 +211,20 @@
             var buttonEdit = e.sender;
         	var record = grid_user_c.getEditorOwnerRow(buttonEdit);
         	
+        	var rows = grid_user_a.getSelecteds();
+			var parentid = "";
+       	 	if (rows.length == 0) {
+       	 		parent.parent.layer.msg("请选择代理.",{icon:6});
+       		 	return;
+       	 	}
+       	 	parentid = rows[0].id;
+       	 	
             mini.open({
             	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectUser",
                 title: "选择推荐人", width: 800, height: 500,
                 onload: function () {
                     var iframe = this.getIFrameEl();
-                    var data = { identity: "A,C",multiSelect:false};
+                    var data = {parentid:parentid,identity: "C",multiSelect:false};
                     iframe.contentWindow.SetData(data);
                 },
                 ondestroy: function (action) {
@@ -225,6 +233,10 @@
                         var rows = iframe.contentWindow.GetData();
                         
                         if (rows != null && rows.length == 1) {
+                        	if (record.id == rows[0].id) {
+                        		parent.parent.layer.msg("不允许自己推荐自己，如有疑问请与开发商联系。",{icon:6});
+                        		return;
+                        	}
                         	var tuijianid = rows[0].id;
                         	var tuijianman = rows[0].companyname;
                         	grid_user_c.updateRow(record, { tuijianid: tuijianid,tuijianman:tuijianman});

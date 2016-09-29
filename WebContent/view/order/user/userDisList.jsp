@@ -378,6 +378,8 @@
 			                 		getUserBrand();
 			                 		sel_brandid = "";
 			                 		getUserDis();
+			                 		win.pageIndex = 1;
+			                 		win.loadData();
 			                 	}
 			                 	else {
 			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});

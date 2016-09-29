@@ -362,11 +362,22 @@ public class PublicUser2Service implements IPublicUser2Service{
 			
 			List<Public_set_user_standard> pStandardList = userStandardDao.search(sb.toString(), values);
 			
+			if (null == pStandardList || pStandardList.size() == 0) {
+				List<Public_product_size> resultList = new ArrayList<Public_product_size>();
+				if (null == p) {
+					PageBean<Public_product_size> resultP = new PageBean<Public_product_size>();
+					return resultP;
+				}
+				else {
+					return p;
+				}
+			}
 			if (null != pStandardList && pStandardList.size() > 0) {
 				for (Public_set_user_standard s : pStandardList) {
 					sizeidList.add(s.getSizeid());
 				}
 			}
+			
 		}
 		
 		

@@ -267,6 +267,7 @@ public class OrderUserController extends BaseConstroller {
 	            update(row,request);
 	        }
 	    }
+		CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
 		out.print(result);
 	}
 	

@@ -91,7 +91,7 @@ public class LoginController extends BaseConstroller {
 	@RequestMapping(value="/logout")
 	public String logout(HttpServletRequest request,ModelMap modelMap) {
 		request.getSession().removeAttribute(Constants.user_in_session);
-		request.getSession().invalidate();
+//		request.getSession().invalidate();
 //		return "login";
 		return "redirect:/login.htmls";
 //		return "view/system/login";
