@@ -62,10 +62,17 @@ public class PublicUserService implements IPublicUserService{
 		if (identity.equals("Z")) {
 			sb.append("select DISTINCT(u.id),u.* from public_user u where 1=1");
 		}
+		else if (identity.equals("C")) {
+			if (null != parentid && !"".equals(parentid)) {
+				sb.append("select DISTINCT(u.id),u.*,l.parentid as parentid,l.tuijianman as tuijianman from public_user u,public_user_link l where 1=1");
+			}
+			else {
+				sb.append("select DISTINCT(u.id),u.* from public_user u,public_user_link l where 1=1");
+			}
+		}
 		else {
 			sb.append("select DISTINCT(u.id),u.* from public_user u,public_user_link l where 1=1");
 		}
-		
 		
 		List<Object> values = new ArrayList<Object>();
 		
@@ -163,6 +170,14 @@ public class PublicUserService implements IPublicUserService{
 			userLink.setId(UUID.randomUUID().toString());
 			userLink.setUserid(user.getId());
 			userLink.setParentid(user.getParentid());
+			userLink.setTuijianid("");
+			userLink.setTuijianman("");
+			
+			if (null != user.getTuijianid() && !"".equals(user.getTuijianid())) {
+				userLink.setTuijianid(user.getTuijianid());
+				userLink.setTuijianman(user.getTuijianman());
+			}
+			
 			userLink = linkDao.save(userLink);
 			
 			//创建个人账户-（代理、店）
@@ -210,8 +225,21 @@ public class PublicUserService implements IPublicUserService{
 		}
 		
 		Public_user obj = userDao.update(user);
-		if(obj != null) {
+		
+		//判断是否更改了推荐人
+		if (null != user.getParentid() && !"".equals(user.getParentid())) {
+			Public_user_link userLink = new Public_user_link();
+			userLink.setUserid(user.getId());
+			userLink.setParentid(user.getParentid());
+			userLink = linkDao.searchOne(userLink);
 			
+			if (null == userLink.getTuijianid() || "".equals(userLink.getTuijianid()) || !userLink.getTuijianid().equals(user.getTuijianid())) {
+				userLink.setTuijianid(user.getTuijianid());
+				userLink.setTuijianman(user.getTuijianman());
+				linkDao.update(userLink);
+			}
+		}
+		if(obj != null) {
 			return 1;
 		}
 			
@@ -501,7 +529,7 @@ public class PublicUserService implements IPublicUserService{
 	 */
 	@Transactional("txManager")
 	@Override
-	public boolean updateBatch(String updateUserids, String field, String fieldValue) {
+	public boolean updateBatch(String parentid,String updateUserids, String field, String fieldValue) {
 		if (null == updateUserids || "".equals(updateUserids)) {
 			return false;
 		}
@@ -513,19 +541,21 @@ public class PublicUserService implements IPublicUserService{
 		StringBuffer sb = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
 		
-		//判断是什么类型的接触
-		sb.append("update public_user set ");
 		//如果是批量清空推荐人
 		if (field.equals("tuijianman")) {
+			sb.append("update public_user_link set ");
 			sb.append("tuijianid='',");
 			sb.append("tuijianman=''");
+			sb.append(" where parentid=? and userid in (");
+			
+			values.add(parentid);
 		}
 		else {
+			sb.append("update public_user set ");
 			sb.append(field).append("=?");
 			values.add(fieldValue);
+			sb.append(" where id in (");
 		}
-		
-		sb.append(" where id in (");
 		
 		Serializable[] ss=new Serializable[idsList.size()];
 		Arrays.fill(ss, "?");

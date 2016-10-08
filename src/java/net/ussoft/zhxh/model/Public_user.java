@@ -18,8 +18,6 @@ public class Public_user {
 	private String dianid;			//	店id
 	private String shidaiid;		//	市代id
 	private String shengdaiid;		//	省代id
-	private String tuijianid;		//	推荐人id
-	private String tuijianman;		//	推荐人
 	private String tuijiansort;		//	推荐顺序
 	private Integer setreturn;		//	是否接收分成
 	private Integer isopen;			//	开关
@@ -41,6 +39,8 @@ public class Public_user {
 	private String parentid; 		//存储机构（代理或店）的直属上级id
 	private String createtime;		//创建时间
 	private String addressid;		//收货地址
+	private String tuijianid;		//	推荐人id
+	private String tuijianman;		//	推荐人
 	
 	public Public_user() {
 		super();
@@ -128,12 +128,6 @@ public class Public_user {
 	public void setShengdaiid(String shengdaiid) {
 		this.shengdaiid = shengdaiid;
 	}
-	public String getTuijianid() {
-		return tuijianid;
-	}
-	public void setTuijianid(String tuijianid) {
-		this.tuijianid = tuijianid;
-	}
 	public String getTuijiansort() {
 		return tuijiansort;
 	}
@@ -163,12 +157,6 @@ public class Public_user {
 	}
 	public void setUid(String uid) {
 		this.uid = uid;
-	}
-	public String getTuijianman() {
-		return tuijianman;
-	}
-	public void setTuijianman(String tuijianman) {
-		this.tuijianman = tuijianman;
 	}
 	public int getSex() {
 		return sex;
@@ -255,6 +243,20 @@ public class Public_user {
 	}
 	public void setAddressid(String addressid) {
 		this.addressid = addressid;
+	}
+	@Transient
+	public String getTuijianman() {
+		return tuijianman;
+	}
+	public void setTuijianman(String tuijianman) {
+		this.tuijianman = tuijianman;
+	}
+	@Transient
+	public String getTuijianid() {
+		return tuijianid;
+	}
+	public void setTuijianid(String tuijianid) {
+		this.tuijianid = tuijianid;
 	}
 	
 }

@@ -152,6 +152,6 @@ public interface IPublicUserService {
 	 * @param fieldValue
 	 * @return
 	 */
-	public boolean updateBatch(String updateUserids,String field,String fieldValue);
+	public boolean updateBatch(String parentid,String updateUserids,String field,String fieldValue);
 	
 }

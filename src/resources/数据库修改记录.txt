@@ -380,3 +380,11 @@ DELETE FROM public_set_bonuses_ratio;
 insert into `zhxh`.`public_user` ( `id`, `usercode`, `username`, `phonenumber`, `identity`, `identitymemo`, `dianid`, `shidaiid`, `shengdaiid`, `tuijianid`, `tuijianman`, `tuijiansort`, `setreturn`, `isopen`, `password`, `uid`, `sex`, `birthday`, `companyname`, `companypath`, `parentid`, `belongcode`, `companycode`, `wechar`, `rank`, `createtime`, `sort`) values ( '1', '', '众恒信和', '13701000001', 'A', '平台', '', '', '', '', '', '', '1', '1', 'e10adc3949ba59abbe56e057f20f883e', '', '1', '1977-01-23', '众恒信和公司', '北京市朝阳区', null, '', '13701000001', '', '中国总代理', '2016-09-09', '1');
 
 
+2016-10-08
+1、public_user_link  机构关联表
+	（1）增加 tuijianid	varchar（40）		推荐人id
+	（2）增加 tuijianman	varchar（100）		推荐人
+2、public_user		机构管理表
+	（1） tuijianid			删除		改为临时字段
+	（2） tuijianman			删除		改为临时字段
+

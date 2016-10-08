@@ -490,6 +490,8 @@
 	   			}
 	   		}
 	   		
+	   		alert(updateRow.parentid);
+	   		
 	   		if (updateRow == "") {
 	   			layer.msg("未找到要修改推荐人的的记录，请重新登录再次尝试或与管理员联系。",{icon:5});
 	   			return false;
@@ -614,7 +616,7 @@
 	  			$.ajax({
 	    			async:false,
 	                url: "${pageContext.request.contextPath}/orderUser/updateBatch.htmls",
-	                data: {'updateUserids':sel_userid,'field':t,'fieldValue':v},
+	                data: {'parentid':parentid,'updateUserids':sel_userid,'field':t,'fieldValue':v},
 	                type: "post",
 	                dataType:"text",
 	                success: function (text) {

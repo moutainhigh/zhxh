@@ -406,14 +406,14 @@ public class OrderUserController extends BaseConstroller {
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/updateBatch",method=RequestMethod.POST)
-	public void updateBatch(String updateUserids,String field,String fieldValue,HttpServletResponse response) throws IOException {
+	public void updateBatch(String parentid,String updateUserids,String field,String fieldValue,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
 		String flag = "error";
 		
-		boolean isok = userService.updateBatch(updateUserids, field, fieldValue);
+		boolean isok = userService.updateBatch(parentid,updateUserids, field, fieldValue);
 		
 		if (isok) {
 			flag = "success";
