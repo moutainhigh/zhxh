@@ -126,7 +126,7 @@
     				$(this).html("<input type='text' class='input input-small quant' value='"+html+"'/>");
     				$(".quant").focus();
     				$(".quant").select();
-    				$(".quant").blur(function(){
+    				$(".quant").blur(function(){2
     					var val = $(this).val();
     					/* if(!(/^(\+|-)?\d+$/.test(val)) || val == 0){
     				        val = 1; //非正整数为1

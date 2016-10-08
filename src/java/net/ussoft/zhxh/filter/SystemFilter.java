@@ -91,7 +91,7 @@ public class SystemFilter implements Filter {
                 	System.out.println("==================session is no ================");
                     boolean isAjaxRequest = isAjaxRequest(httpRequest);
                     if (isAjaxRequest) {
-                    	httpResponse.setHeader("sessionstatus", "timeout");
+                    	httpResponse.setHeader("sessionstatus", "timeout2");
                     	httpResponse.sendError(518, "session timeout.");
                         return;  
                     }

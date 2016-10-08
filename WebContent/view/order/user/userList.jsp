@@ -119,7 +119,7 @@
     	
     	function bindTrClick() {
     		//除了表头（第一行）以外所有的行添加click事件.
-            $("tr").first().nextAll().click(function (e) {
+            $(".table tr").first().nextAll().click(function (e) {
             	if (e.target.tagName == "TD") {
             		var firstInput = $(this).children("td:eq(0)").children("input:eq(0)");  // 第一个checkBox
                 	firstInput.attr("checked",!firstInput.is(':checked'));
@@ -249,6 +249,94 @@
     		//layer.closeAll('tips');
     	}
     	
+    	/* $("input").focus(function() {
+			this.value = "";
+		}).blur(function() {
+			var self = this;
+			setTimeout(function() {
+				self.value = "默认值";
+			}, 300)
+		});
+		$("div").click(function() {//这部分不变 
+			var value = $("input").val();
+			console.log(value);
+		}); */
+    	
+    	function updateTd() {
+    		$('.u').unbind('click').click(function(){
+    	        if(!$(this).is('.input_td')){
+    	        	var thisid = $(this).parent().attr("id");
+    	        	var editor = $(this).attr("editor");
+    	        	var field = $(this).attr("field");
+    	        	var html = $(this).text();
+    	        	
+   	        		$(this).addClass('input_td').html('<input type="text" id="'+field+'" name="'+field+'" class="input input-small" value="'+ $(this).text() +'" onfocus=this.select() />').find('input').focus().blur(function(){    
+   	        			// var thisid = $(this).parent().siblings("th:eq(0)").text();  
+       	                var self = $(this);
+   	        			var value=$(this).val();
+   	        			if (value == html) {
+   	        				self.parent().removeClass('input_td').html(self.val() || 0); 
+   	        				return;
+   	        			}
+       	                var vtype = $(this).parent().attr("vtype");
+       	                if(typeof(vtype) != "undefined" && vtype != ""){
+       	                	var vtypeArr = vtype.split(";");
+       	                	for(var i=0;i<vtypeArr.length;i++) {
+       	                		if (vtypeArr[i] == "") {
+       	                			break;
+       	                		}
+       	                		else if (vtypeArr[i] == "required") {
+       	                			if (value == "") {
+       	                				$(this).focus();
+       	                				layer.msg("不能为空。请填写内容。",{icon:5});
+       	                	   			return false;
+       	                			}
+       	                		}
+       	                		else if (vtypeArr[i] == "int") {
+       	                			if (!isInteger(value)) {
+       	                				$(this).focus();
+       	                				layer.msg("请输入数字。",{icon:5});
+       	                	   			return false;
+       	                			}
+       	                		}
+       	                	}
+       	                }
+       	                
+       	                var par = {};
+       	                par.updateUserids = thisid;
+       	                par.field = field;
+       	                par.fieldValue = value;
+       	                 
+       	                $.ajax({    
+       	                   type: 'POST',    
+       	                   url: '${pageContext.request.contextPath}/orderUser/updateBatch.htmls',
+       	                   //data: "updateUserids="+thisid+"&thisclass="+thisclass+"&thisvalue="+thisvalue
+       	                   data:par
+       	                });
+       	                //clearTimeout(timerId);
+       	             	var timerId = setTimeout(function(){ 
+       	             		self.parent().removeClass('input_td').html(self.val() || 0);    
+       	            	},300) 
+       	                
+       	            });
+   	        		if (editor == "datebox") {
+   	        			laydate({
+   	        			   elem: '#' + field
+   	        			})
+   	        		}
+    	        }    
+    	    });
+    		/* .hover(function(){    
+    	        $(this).addClass('hover');    
+    	    },function(){    
+    	        $(this).removeClass('hover');    
+    	    });   */
+    	}
+		
+		function reload() {
+			radio_click();
+		}
+    	
     	function radio_click() {
     		radio_value = $("input[name='radio_user']:checked").val();
     		
@@ -288,6 +376,7 @@
 	                pageSel();
 	                pageEnter();
 	                bindTrClick();
+	                updateTd();
 	              	//调用全选插件
 	        	    $.fn.check({ checkall_name: "checkall", checkbox_name: "row_id" });
 	              	
@@ -364,7 +453,7 @@
     		});
     		
     		$(".addUser").slideToggle(800,function() {
-    			 laydate({
+    			laydate({
       			   elem: '#birthday'
       			})
 	   			$('#username').focus();
@@ -383,165 +472,6 @@
     		/* $(".addUser").slideToggle(1000,function() {
     			
     		}); */
-    	}
-    	
-    	function addUser2() {
-    		
-    		var pHeight = $(window.parent).height();
-	   		var pWidth = $(window.parent).width();
-	   		
-    		layer.open({
-			    type: 2,
-			    title:'新建客户',
-			    area: ['700px', (pHeight-100) +'px'],
-			    fix: false, //不固定
-			    maxmin: false,
-			    scrollbar:false,
-			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/addUser",
-			    success: function(layero, index){
-			    	/* var win = parent.window['layui-layer-iframe' + index].window;
-			    	var data = {};
-			    	data.identity = "Z";
-			    	win.setData(data); */
-			    },
-			    btn: ['保存', '取消'],
-			  	yes: function(index,layero){
-			  		var win = window['layui-layer-iframe' + index].window;
-			  		var row = win.getData();
-			  		
-			  		if (row == false) {
-			  			return;
-			  		}
-			  		else {
-			  			row.identity = radio_value;
-			  			row._state = 'added';
-			  			if (row.identity != "Z") {
-			  				row.companycode = row.phonenumber;
-			  			}
-			  			var rowArr = [];
-			  			rowArr.push(row);
-			  			var json = JSON.stringify(rowArr);
-			  			$.ajax({
-			    			async:false,
-			                url: "${pageContext.request.contextPath}/orderUser/save.htmls",
-			                data: {'objs':json},
-			                type: "post",
-			                dataType:"text",
-			                success: function (text) {
-			                 	if (text == 'success') {
-			                 		layer.msg("保存成功。",{icon:6});
-			                 		radio_click();
-			                 	}
-			                 	else if (text == "codeerror") {
-			                 		layer.msg("手机短信验证码错误，请输入正确，再尝试，或与开发商联系。",{icon:5});
-			                 	}
-			                 	else {
-			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
-			                 	}
-			                },
-			                error: function (jqXHR, textStatus, errorThrown) {
-			                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
-			                }
-			           });
-			  		}
-			  	},
-			  	btn2: function(){
-			    	layer.closeAll();
-			  	},
-			    end: function(){
-			    	//alert(123);
-			    }
-			});
-    	}
-    	function updateUser2(userid) {
-    		var pHeight = $(window.parent).height();
-	   		var pWidth = $(window.parent).width();
-	   		
-	   		var updateRow = "";
-	   		for (var i=0;i<rows.length;i++) {
-	   			if (rows[i].id == userid) {
-	   				updateRow = rows[i];
-	   				break;
-	   			}
-	   		}
-	   		
-	   		if (updateRow == "") {
-	   			layer.msg("未找到要修改的记录，请重新登录再次尝试或与管理员联系。",{icon:5});
-	   			return false;
-	   		}
-	   		
-    		layer.open({
-			    type: 2,
-			    title:'修改客户',
-			    area: ['700px', (pHeight-100) +'px'],
-			    fix: false, //不固定
-			    maxmin: false,
-			    scrollbar:false,
-			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/updateUser",
-			    success: function(layero, index){
-			    	var win = window['layui-layer-iframe' + index].window;
-			    	var data = [];
-			    	data.updateRow = updateRow;
-			    	data.updatePhone = 0;
-			    	win.setData(data);
-			    },
-			    btn: ['保存', '取消'],
-			  	yes: function(index,layero){
-			  		var win = window['layui-layer-iframe' + index].window;
-			  		var row = win.getData();
-			  		
-			  		if (row == false) {
-			  			return;
-			  		}
-			  		//询问框
-			  		layer.confirm('确定要修改客户信息吗？', {
-			  			btn: ['确认', '取消']
-			  		}, 
-			  		function()	{
-			  			row._state = 'modified';
-			  			row.updatePhone = "0";
-			  			if (row.identity != "Z") {
-			  				row.companycode = row.phonenumber;
-			  			}
-			  			var rowArr = [];
-			  			rowArr.push(row);
-			  			var json = JSON.stringify(rowArr);
-			  			$.ajax({
-			    			async:false,
-			                url: "${pageContext.request.contextPath}/orderUser/save.htmls",
-			                data: {'objs':json},
-			                type: "post",
-			                dataType:"text",
-			                success: function (text) {
-			                 	if (text == 'success') {
-			                 		layer.msg("保存成功。",{icon:6});
-			                 		radio_click();
-			                 	}
-			                 	else if (text == "codeerror") {
-			                 		layer.msg("手机短信验证码错误，请输入正确，再尝试，或与开发商联系。",{icon:5});
-			                 	}
-			                 	else {
-			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
-			                 	}
-			                },
-			                error: function (jqXHR, textStatus, errorThrown) {
-			                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
-			                }
-			           });
-			  		}, 
-			  		function(){
-			  			
-			  		});
-			  		
-			  	},
-			  	btn2: function(){
-			    	layer.closeAll();
-			  	},
-			    end: function(){
-			    	//alert(123);
-			    }
-			});
-    		return false;
     	}
     	
     	function updateUserTuijian(userid) {

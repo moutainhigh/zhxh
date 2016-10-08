@@ -11,6 +11,8 @@ public class Public_user_link {
 	private String id;
 	private String parentid;			//用户的父节点id，即该机构与不同上级关联
 	private String userid;
+	private String tuijianid;
+	private String tuijianman;
 	
 	
 	@Id
@@ -33,5 +35,19 @@ public class Public_user_link {
 	public void setUserid(String userid) {
 		this.userid = userid;
 	}
+	public String getTuijianid() {
+		return tuijianid;
+	}
+	public void setTuijianid(String tuijianid) {
+		this.tuijianid = tuijianid;
+	}
+	public String getTuijianman() {
+		return tuijianman;
+	}
+	public void setTuijianman(String tuijianman) {
+		this.tuijianman = tuijianman;
+	}
+	
+	
 	
 }

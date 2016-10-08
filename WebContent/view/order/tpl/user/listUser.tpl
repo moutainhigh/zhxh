@@ -1,4 +1,4 @@
-<table class="table table-bordered table-hover text-small update">
+<table class="table table-bordered table-hover text-small">
 	<tbody>
 		<tr class="panel-head item">
 			<th width="45" align="center"><input type="checkbox" value="1" name="checkall"></th>
@@ -27,19 +27,19 @@
 		</tr>
 		{#if $P.rowCount > 0}
 			{#foreach $T as row}
-				<tr class="tr">
+				<tr class="tr" id="{$T.row.id}">
 					<td align="center"><input type="checkbox" value="{$T.row.id}" name="row_id"></td>
 					<td>{($T.row$index+1)+($P.pageIndex * $P.pageSize - $P.pageSize)}</td>
-					<td>{$T.row.username}</td>
+					<td class="u" editor="textbox" vtype="required;" field="username">{$T.row.username}</td>
 					<td>{$T.row.phonenumber}</td>
 					<td>{$T.row.birthday}</td>
 					<td>{#if $T.row.sex == 1}男{#else}女{#/if}</td>
 					<td>{$T.row.identitymemo}</td>
 					{#if $P.radio_value == 'A' || $P.radio_value == 'C'}
-					<td>{$T.row.companyname}</td>
-					<td>{$T.row.companypath}</td>
+					<td class="u" editor="textbox" vtype="required;" field="companyname">{$T.row.companyname}</td>
+					<td class="u" editor="textbox" vtype="required;" field="companypath">{$T.row.companypath}</td>
 					<td>{$T.row.companycode}</td>
-					<td>{$T.row.rank}</td>
+					<td class="u" editor="textbox" vtype="" field="rank">{$T.row.rank}</td>
 					<td id="td_setreturn" v="{$T.row.setreturn}" onmouseover="td_tip(this)" onmouseout="td_tip_over(this)">{#if $T.row.setreturn == 1}正常{#else}<span style="color:red">禁用</span>{#/if}</td>
 					{#elseif $P.radio_value == 'Z'}
 					<td>{$T.row.belongcode}</td>
@@ -47,9 +47,9 @@
 					{#if $P.radio_value == "C"}
 					<td>{$T.row.tuijianman}</td>
 					{#/if}
-					<td>{$T.row.wechar}</td>
+					<td class="u" editor="textbox" vtype="" field="wechar">{$T.row.wechar}</td>
 					<td id="td_state" v="{$T.row.isopen}" onmouseover="td_tip(this)" onmouseout="td_tip_over(this)">{#if $T.row.isopen == 1}正常{#else}<span style="color:red">禁用</span>{#/if}</td>
-					<td>{$T.row.sort}</td>
+					<td class="u" editor="textbox" vtype="required;int" field="sort">{$T.row.sort}</td>
 					<td>
 						<a href="javascript:;" class="button button-small border-sub" onclick="return showUpdateUser('{$T.row.id}')">修改</a>
 						{#if $P.radio_value == "C"}
@@ -73,18 +73,16 @@
 		<td align="center"><input type="checkbox" value="0" name="checkall"></td>
 		<td colspan="6" class="tr pr10" style="text-align:left" >
 			{#if $P.parentid == "1"}
-			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'isopen')">批量开通</a>
-			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'isopen')">批量禁用</a>
-			| 
-			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'setreturn')">批量接收分成</a>
-			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'setreturn')">批量禁用接收分成</a>
-			|
-			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="delbatch()">批量删除</a>
-			|
-			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'tuijianman')">批量清空推荐人</a>
-			{#elseif $P.radio_value == 'A' || $P.radio_value == 'C'}
-			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'tuijianman')">批量清空推荐人</a>
+			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'isopen')">批量开通</a> | 
+			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'isopen')">批量禁用</a> | 
+			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'setreturn')">批量接收分成</a> | 
+			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'setreturn')">批量禁用接收分成</a> | 
+			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="delbatch()">批量删除</a> | 
 			{#/if}
+			{#if $P.radio_value == 'C'}
+			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'tuijianman')">批量清空推荐人</a> | 
+			{#/if}
+			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="reload()">刷新</a>
 		</td>
 		
 		
