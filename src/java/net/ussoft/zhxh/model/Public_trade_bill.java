@@ -4,6 +4,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Table(name="public_trade_bill")
 public class Public_trade_bill {
@@ -21,6 +22,13 @@ public class Public_trade_bill {
 	private String trantypetxt;				//交易类型文本	
 	private Integer status;					//状态
 	private String billmemo	;				//交易描述
+	
+	//临时字段
+	private String username;
+	private String p_useranme;
+	
+	//trantype:交易类型, 0:普通购买,1:充值-货款充值,2:充值-现金充值,3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
+	public String[] TRANTYPE_TXT = {"普通购买","充值-货款充值","充值-现金充值","提现-现金账户","提现-奖励账户","提现-平台售额"};	
 	
 	public Public_trade_bill() {
 		this.setAmount(0f);
@@ -108,6 +116,21 @@ public class Public_trade_bill {
 	public void setBillmemo(String billmemo) {
 		this.billmemo = billmemo;
 	}
-	
+	@Transient
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	@Transient
+	public String getP_useranme() {
+		return p_useranme;
+	}
+
+	public void setP_useranme(String p_useranme) {
+		this.p_useranme = p_useranme;
+	}
 	
 }

@@ -13,12 +13,6 @@
 <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
 
-<style type="text/css">
-	.shoplist img {
-		width:160px
-	}
-</style>
-
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
@@ -26,8 +20,8 @@
 	<!--头部-->
 	<%@include file="/view/pc/header.jsp" %>
 	
-	<div class="HTML-con">
-	    <h3 class="shoplist-tit">${pro_list.brandname }</h3>
+	<div class="HTML-con" style="padding-left: 90px;">
+	    <h3 class="shoplist-tit" style="padding-right: 90px;">${pro_list.brandname }</h3>
 	    <div class="shoplist clearfix">
 	    <c:forEach var="item" items="${productList}">
 	    	<dl>
@@ -36,7 +30,7 @@
 	            		<img src="${pageContext.request.contextPath}/${item.productpic }" height="200px" />
 	            	</a>
 	            </dt>
-	            <dd class="fl">
+	            <dd class="fl" style="padding: 0px 20px 0px 15px">
 	                <span>${item.productname }</span>
 	                <em>
 	                <c:if test="${fn:length(item.productmemo)>80 }">${fn:substring(item.productmemo ,0,80)} ...</c:if>

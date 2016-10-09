@@ -75,8 +75,8 @@
                 }
            });
     	}
-	    //充值
-	    function recharge(pid){
+	    //充值,trantype:充值类型
+	    function recharge(pid,trantype){
 	    	layer.prompt({
    				title: '请输入充值金额，并确认',
    				formType: 0 //prompt风格，支持0-2
@@ -84,7 +84,7 @@
    				$.ajax({
    	    			async:false,
    	                url: "${pageContext.request.contextPath}/orderUserBank/recharge.htmls",
-   	                data: {parentid:pid,amount:amount},
+   	                data: {parentid:pid,amount:amount,trantype:trantype},
    	                type: "post",
    	                dataType:"text",
    	                success: function (text) {
@@ -115,7 +115,10 @@
    				}else{
    					//获取系数
    					var coef = getTransfCoef(pid);
-   					var subtotal = trans_amount * coef;
+   					var subtotal = trans_amount;
+   					if(coef != 0){
+   						subtotal = trans_amount * coef;	
+   					}
    					var cf = "<p>转货款金额￥"+trans_amount+"，转货款系数"+coef+"倍，总金额：￥"+subtotal+"</P>";
    					layer.confirm(cf+'【确定要转货款吗？】', {
    						title:'系统消息',
@@ -170,9 +173,39 @@
            	});
 	    	return coef;
 	    }
+	    
 	    //提现
-	    function withdrawal(id){
-	    	alert(id);
+	    function withdrawal(pid,amount,trantype){
+	    	layer.prompt({
+   				title: '请输入提现金额，并确认',
+   				value:amount,
+   				formType: 0 //prompt风格，支持0-2
+   			}, function(withdraw_amount){
+   				if(withdraw_amount > amount){
+   					parent.layer.msg("账户余额不足，请重新输入！",{icon:6});
+   					return;
+   				}else{
+					//提交服务器
+					$.ajax({
+	   	    			async:false,
+	   	                url: "${pageContext.request.contextPath}/orderUserBank/withdrawal.htmls",
+	   	                data: {parentid:pid,amount:withdraw_amount,trantype:trantype},
+	   	                type: "post",
+	   	                dataType:"text",
+	   	                success: function (text) {
+	   	                	if(text == "success"){
+	   	                		getUserBank();
+	   	                		layer.msg("提现成功！",{icon:6});
+	   	                	}else{
+	   	                		layer.msg("操作失败，请稍后再试！",{icon:6});
+	   	                	}
+	   	                },
+	   	                error: function (jqXHR, textStatus, errorThrown) {
+	   	                    alert(jqXHR.responseText);
+	   	                }
+	   	           	});
+   				}
+   			});
 	    }
     </script>
 </head>

@@ -16,9 +16,11 @@ import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.service.IPublicTradeBillService;
 import net.ussoft.zhxh.service.IPublicUserBankService;
+import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.OrderNO;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,6 +41,8 @@ public class OrderUserBankController extends BaseConstroller {
 	private IPublicUserBankService userBankService;
 	@Resource
 	private IPublicTradeBillService billService;
+	@Resource
+	private IPublicUserService userService;
 	
 	/**
 	 * 获取机构的资金帐户
@@ -68,14 +72,15 @@ public class OrderUserBankController extends BaseConstroller {
 	}
 	
 	/**
-	 * 充值 - 货款充值
+	 * 充值
 	 * @param parentid
 	 * @param amount
+	 * @param trantype 交易类型
 	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/recharge",method=RequestMethod.POST)
-	public void recharge(String parentid,float amount,HttpServletResponse response) throws IOException {
+	public void recharge(String parentid,float amount,int trantype,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -88,17 +93,63 @@ public class OrderUserBankController extends BaseConstroller {
 		bill.setId(UUID.randomUUID().toString());
 		bill.setBillid(OrderNO.getOrderNo());
 		bill.setParentid(parentid);
+		Public_user p_user = userService.getById(parentid);
+		bill.setP_useranme(p_user.getUsername());
 		bill.setUserid(user.getId());
+		bill.setUsername(user.getUsername());
 		bill.setAmount(amount);
 		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 //		bill.setPaytype(paytype); //支付类型
-		bill.setTrantype(3);//交易类型	trantype:交易类型, 1：购买、2：提现 3：货款充值 4：现金充值
-		bill.setTrantypetxt("货款充值");
+		bill.setTrantype(trantype);//交易类型	trantype:交易类型, 0:普通购买,1:充值-货款充值,2:充值-现金充值,3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
+		bill.setTrantypetxt(bill.TRANTYPE_TXT[trantype]);
 		bill.setStatus(0);	//状态：0失败，1成功
 		
 		bill = billService.insert(bill);
 		if(bill != null){
 			int num = userBankService.recharge(bill, user.getIdentity());
+			if(num > 0){
+				out.print("success");
+				return;
+			}
+		}
+		out.print("error");
+	}
+	
+	/**
+	 * 提现
+	 * @param parentid
+	 * @param amount
+	 * @param trantype 交易类型
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/withdrawal",method=RequestMethod.POST)
+	public void withdrawal(String parentid,float amount,int trantype,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if(parentid == null || "".equals(parentid) || amount <=0){
+			out.print("error");
+			return;
+		}
+		Public_user user = getSessionUser();
+		Public_trade_bill bill = new Public_trade_bill();
+		bill.setId(UUID.randomUUID().toString());
+		bill.setBillid(OrderNO.getOrderNo());
+		bill.setParentid(parentid);
+		Public_user p_user = userService.getById(parentid);
+		bill.setP_useranme(p_user.getUsername());
+		bill.setUserid(user.getId());
+		bill.setUsername(user.getUsername());
+		bill.setAmount(amount);
+		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+//		bill.setPaytype(paytype); //支付类型
+		bill.setTrantype(trantype);//交易类型	trantype:交易类型, 0:普通购买,1:充值-货款充值,2:充值-现金充值,3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
+		bill.setTrantypetxt(bill.TRANTYPE_TXT[trantype]);
+		bill.setStatus(0);	//状态：0失败，1成功
+		bill = billService.insert(bill);
+		if(bill != null){
+			int num = userBankService.withdrawal(bill, user.getIdentity());
 			if(num > 0){
 				out.print("success");
 				return;

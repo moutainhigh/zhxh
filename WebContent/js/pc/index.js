@@ -187,7 +187,7 @@ var searchToggle={
                 $(".width-100").css({"top":"0"});
 			}else{
 				$(".width-100").css({position:'absolute'})
-                $(".width-100").css({"top":"80px"});
+                $(".width-100").css({"top":"60px"});
 			}
 		})
 	}	

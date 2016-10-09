@@ -42,11 +42,11 @@
 	<!--头部 页面头部不一样 程序注意-->
 	<div class="index-header">
 	  	<div class="indexheader header clearfix">
-	    		<h1 class="logo fl"><a href="javascript:;"><img src="${pageContext.request.contextPath}/${logo.pic_path}" /></a></h1>
+	    		<h1 class="logo fl"><a href="javascript:;"><img style="width: 60px;height: 60px;" src="${pageContext.request.contextPath}/${logo.pic_path}" /></a></h1>
 	    		<ul class="header-user fr">
 	    			 <c:choose>
 	    				<c:when test="${sessionScope.pc_user_sessiion != null }">
-	    					<li class="name1" style="line-height:42px;color:#fff;"><a style="color:#000;font-weight: bold;" href="${pageContext.request.contextPath}/porder/orders.htmls" title="个人中心">${sessionScope.pc_user_sessiion.phonenumber}</a></li>
+	    					<li class="name1" style="line-height:42px;color:#fff;"><a style="color:#000;font-weight: bold;" href="${pageContext.request.contextPath}/porder/orders.htmls" title="个人中心">${sessionScope.pc_user_sessiion.username}</a></li>
 	    				</c:when>
 	    				<c:otherwise>
 	    					<li class="name"><a href="javascript:;" title="个人中心"></a></li>
@@ -111,10 +111,12 @@
             index++;
             if (index >= $('#banner_img li').length ) {
                 index = 0
-            }  
-
-            $("#banner_img li").hide().stop(true,true).eq(index).fadeIn("slow");
-            time = setTimeout(showimg, 3000);
+            }
+            var len = $('#banner_img li').length;
+			if(len > 1){
+				$("#banner_img li").hide().stop(true,true).eq(index).fadeIn("slow");
+	            time = setTimeout(showimg, 6000);
+			}
          }
          
          /* var time = "";

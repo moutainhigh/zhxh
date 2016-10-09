@@ -21,6 +21,14 @@ public interface IPublicUserLinkService {
 	public Public_user_link getById(String id);
 	
 	/**
+	 * 获取对象
+	 * @param userid
+	 * @param parentid
+	 * @return Public_user_link
+	 * */
+	public Public_user_link getUserLink(String userid,String parentid);
+	
+	/**
 	 * 查询所有
 	 * @return list
 	 * */

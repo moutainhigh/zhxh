@@ -15,6 +15,7 @@ import net.ussoft.zhxh.dao.PublicOrderProductDao;
 import net.ussoft.zhxh.dao.PublicPhoneCodeLogDao;
 import net.ussoft.zhxh.dao.PublicProductSizeRebateDao;
 import net.ussoft.zhxh.dao.PublicSetBonusesRatioDao;
+import net.ussoft.zhxh.dao.PublicSetUserStandardDao;
 import net.ussoft.zhxh.dao.PublicTradeBillDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.dao.PublicUserDao;
@@ -26,6 +27,7 @@ import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_product_size_rebate;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
+import net.ussoft.zhxh.model.Public_set_user_standard;
 import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
@@ -33,6 +35,7 @@ import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.util.DateUtil;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -60,6 +63,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 	private PublicDisDetailsDao disDetailsDao;
 	@Resource
 	private PublicUserDao userDao;
+	@Resource
+	PublicSetUserStandardDao standardDao;	//
 	
 	@Override
 	public Public_user_bank getById(String id) {
@@ -241,8 +246,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 					
 					//判断是否有推荐人
 					if(order.getTid() != null && !"".equals(order.getTid())){
+						//采购各种标准 - 查找推荐人的奖励标准
+						Public_set_user_standard standard = getProStandard(order.getTid(), order.getParentid(), obj.getProductid());
 						//计算奖励 —— 奖励标准 X 数量(同返利的数量)
-						float award_money = obj.getBonusesdis() * rebate_num;
+						float award_money = standard.getBonusesdis() * rebate_num;
 						award_total += award_money;
 						Public_dis_details award_details = new Public_dis_details();
 						award_details.setDetailsnum(rebate_num); 			//本次奖励数量
@@ -295,334 +302,128 @@ public class PublicUserBankService implements IPublicUserBankService{
 	/**
 	 * 充值
 	 * */
+//	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	@Transactional("txManager")
 	@Override
-	public int recharge(Public_trade_bill bill,String identity){
+	public synchronized int recharge(Public_trade_bill bill,String identity){
 		//第三方支付返回成功后执行，此处是否需要添加线程锁-例如服务器返回了两次（应该不会）
-		//当前账户
-		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
-		//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
-		Public_user_bank bank_PT = getUserBank("1", "1");
-		//代理
-		Public_user_bank bank_A = getUserBank(bill.getParentid(), ""); //目前结构，代理的账户是唯一的
-		//充值金额
-		float amount = bill.getAmount();
-		//平台账户变更
-		bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
-		bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
-		bank.setDepositbank(bank.getDepositbank() + amount);		//充值累计（当前操作账户）
-		String logmemo = "货款充值";	//日志内容
-		if("A".equals(identity)){
-			if(bill.getTrantype() == 3)	{
-				//货款充值
-				bank.setHavebank(bank.getHavebank() + amount);	//增加代理商可支配账户
-			}else if(bill.getTrantype() == 4){
-				//现金充值
-				bank.setTakenbank(bank.getTakenbank() + amount);	//增加代理可提现账户
-				bank.setIncomebank(bank.getIncomebank() + amount);	//增加代理收入总和
-				logmemo = "现金充值";
+		try {
+			//当前账户
+			Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
+			//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
+			Public_user_bank bank_PT = getUserBank("1", "1");
+			//充值金额
+			float amount = bill.getAmount();
+			//平台账户变更
+			bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
+			bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
+			bank.setDepositbank(bank.getDepositbank() + amount);		//充值累计（当前操作账户）
+			if("A".equals(identity)){
+				if(bill.getTrantype() == 1)	{
+					//货款充值
+					bank.setHavebank(bank.getHavebank() + amount);	//增加代理商可支配账户
+				}else if(bill.getTrantype() == 2){
+					//现金充值
+					bank.setTakenbank(bank.getTakenbank() + amount);	//增加代理可提现账户
+					bank.setIncomebank(bank.getIncomebank() + amount);	//增加代理收入总和
+				}
+			}else if("C".equals(identity)){
+				bank.setHavebank(bank.getHavebank() + amount);	//增加店可支配账户
+				//非直营店,parentid 不等于1就代表非直营店
+				if(!"1".equals(bill.getParentid())){
+					//代理
+					Public_user_bank bank_A = getUserBank(bill.getParentid(), ""); //目前结构，代理的账户是唯一的
+					bank_A.setTakenbank(bank_A.getTakenbank() + amount);		//增加代理可提现账户
+					bank_A.setIncomebank(bank_A.getIncomebank() + amount);	//增加代理收入总和
+					//代理账户变更
+					bank_A = userBankDao.update(bank_A);
+				}
 			}
-		}else if("C".equals(identity)){
-			bank.setHavebank(bank.getHavebank() + amount);	//增加店可支配账户
-			//非直营店,parentid 不等于1就代表非直营店
-			if(!"1".equals(bill.getParentid())){
-				bank_A.setTakenbank(bank_A.getTakenbank() + amount);		//增加代理可提现账户
-				bank_A.setIncomebank(bank_A.getIncomebank() + amount);	//增加代理收入总和
-				//代理账户变更
-				bank_A = userBankDao.update(bank_A);
-			}
-		}
-		
-		//平台账户变更
-		bank_PT = userBankDao.update(bank_PT);
-		//当前账户
-		bank = userBankDao.update(bank);
-		//更新流水表状态
-		bill = updateBillStatus(bill);
-		//加日志 
-		String logtype = "deposit";	//充值
-		Public_log log = saveLog(bill, logtype, logmemo);
-		
-		if(bank_PT != null && bank_A != null && bank != null && bill != null && log != null){
-			return 1;
-		}
-		
-		return 0;
-	}
-
-	/**
-	 * 充值-代理充值
-	 * */
-	public int rechargeA(Public_trade_bill bill){
-		//当前账户
-		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
-		//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
-		Public_user_bank bank_PT = getUserBank("1", "1");
-		//充值金额
-		float amount = bill.getAmount();
-		//平台账户变更
-		bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
-		bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
-		
-		String logmemo = "";	//日志内容
-		if(bill.getTrantype() == 1)	{
-			//货款充值
-			bank.setHavebank(bank.getHavebank() + amount);	//增加代理商可支配账户
-			logmemo = "货款充值";
-		}else if(bill.getTrantype() == 2){
-			//现金充值
-			bank.setTakenbank(bank.getTakenbank() + amount);	//增加代理可提现账户
-			bank.setIncomebank(bank.getIncomebank() + amount);	//增加代理收入总和
-			logmemo = "现金充值";
-		}
-		
-		//平台账户变更
-		bank_PT = userBankDao.update(bank_PT);
-		//代理账户变更
-		bank = userBankDao.update(bank);
-		//更新流水表状态
-		bill = updateBillStatus(bill);
-		//加日志 
-		String logtype = "deposit";	//充值
-		Public_log log = saveLog(bill, logtype, logmemo);
-		
-		if(bank_PT != null && bank != null && bill != null && log != null){
-			return 1;
-		}
-		return 0;
-	}
-	
-	/**
-	 * 充值-店充值
-	 * @param bill
-	 * @param type 1:直营店，2:非直营店
-	 * */
-	public int rechargeC(Public_trade_bill bill,int type){
-		/*
-		 一、非直营店
-		 1.店可支配账户
-		 2.平台可提现账户 增加
-		 3.平台收入总和
-		 4.代理商可提现账户
-		 5.代理商收入总和 
-		 二、直营店
-		 1.店可支配账户
-		 2.平台可提现账户 增加
-		 3.平台收入总和
-		 */
-		
-		//当前账户
-		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
-		//平台账户
-		Public_user_bank bank_PT = getUserBank("1", "1");
-		//充值金额
-		float amount = bill.getAmount();
-		
-		//平台账户变更
-		bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);	//增加平台可提现账户
-		bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
-		//店
-		bank.setHavebank(bank.getHavebank() + amount);	//增加店可支配账户
-		
-		String logmemo = "货款充值";	//日志内容
-		
-		//平台账户变更
-		bank_PT = userBankDao.update(bank_PT);
-		//店账户变更
-		bank = userBankDao.update(bank);
-		//更新流水表状态
-		bill = updateBillStatus(bill);
-		//加日志 
-		String logtype = "deposit";	//充值
-		Public_log log = saveLog(bill, logtype, logmemo);
-				
-		if(type == 1)	{
-			//直营店
-			if(bank_PT != null && bank != null && bill != null && log != null){
-				return 1;
-			}
-		}else if(type == 2){
-			//非直营店
-			Public_user_bank bank_A = getUserBank(bill.getParentid(), "");//代理
-			bank_A.setTakenbank(bank_A.getTakenbank() + amount);		//增加代理可提现账户
-			bank_A.setIncomebank(bank_A.getIncomebank() + amount);	//增加代理收入总和
-			//代理账户变更
-			bank_A = userBankDao.update(bank_A);
 			
-			if(bank_PT != null && bank_A != null && bank != null && bill != null && log != null){
-				return 1;
-			}
+			//平台账户变更
+			bank_PT = userBankDao.update(bank_PT);
+			//当前账户
+			bank = userBankDao.update(bank);
+			//更新流水表状态
+			bill.setStatus(1); //成功
+			bill = updateBillStatus(bill);
+			//加日志 
+			String logtype = "deposit";	//充值
+			saveLog(bill, logtype, bill.getTrantypetxt());
+			//添加充值消息
+			int messagetype = 1;	//业务消息
+			String messagetxt = bill.getUsername()+",进行了充值，充值金额为："+amount;
+			createMsg(bill.getUserid(), bill.getUsername(),bill.getParentid(),bill.getP_useranme(), messagetype, messagetxt,bill.getId());
+			
+			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return 0;
-	}
-	
-	@Override
-	public int withdrawal(String userid, String parentid) {
-		//代理提现
-		
-		//店提提现
-		/*
-		 1.奖励提现
-		 2.平台售额提现
-		 */
-		
 		return 0;
 	}
 
 	/**
-	 * 代理提现
+	 * 提现
+	 * @param bill	交易流水
+	 * @param identity 身份
 	 * */
-	public int withdrawalA(Public_trade_bill bill) {
-		//提现之前是否要先验证下级的可提现账户金额，是否允许提现- 如需要在外面进行验证
-		//1.冲减平台可提现账户
-		//2.冲减代理、店可提现账户
-		//3.增加平台支出（总和)
-		//4.加日志
+	@Transactional("txManager")
+	@Override
+	public synchronized int withdrawal(Public_trade_bill bill,String identity) {
+		//上级账户的金额判断，提现的第三方流程是什么样的方式
 		
-		//当前账户
-		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
-		//平台账户
-		Public_user_bank bank_PT = getUserBank("1", "1");
-		//提现金额
-		float amount = bill.getAmount();
-		//平台账户变更
-		bank_PT.setTakenbank(bank_PT.getTakenbank() - amount);		//冲减平台可提现账户
-		bank_PT.setCostbank(bank_PT.getCostbank() + amount);		//增加平台支出总和
-		
-		String logmemo = "提现";	//日志内容
-		//代理
-		bank.setTakenbank(bank.getTakenbank() - amount);		//冲减代理可提现账户
-		
-		//平台账户变更
-		bank_PT = userBankDao.update(bank_PT);
-		//代理账户变更
-		bank = userBankDao.update(bank);
-		//更新流水表状态
-		bill = updateBillStatus(bill);
-		//加日志 
-		String logtype = "withdrawal";	//提现
-		Public_log log = saveLog(bill, logtype, logmemo);
-		
-		if(bank_PT != null && bank != null && bill != null && log != null){
-			return 1;
-		}
-		return 0;
-	}
-	
-	/**
-	 * 店提现 注意当banktype 为2平台售额，type值永远为1（此时的1不是代表直营店，而是业务不做任何操作），考虑分开
-	 * @param bill
-	 * @param banktype  提现账户 1:奖励 , 2:平台售额
-	 * @param type 1：直营店 ， 2:非直营店
-	 * */
-	public int withdrawalC(Public_trade_bill bill,int banktype,int type) {
-		//奖励可提现账户
-		/*
-		 一、非直营的店
-		 1.冲减店奖励账户
-		 2.冲减代理可提现账户
-		 3.增加代理商支出（总和）
-		 4.冲减平台可提现账户
-		 5.增加平台支出（总和）
-		 
-		 二、直营店
-		 1.冲减店奖励账户
-		 3.冲减平台可提现账户
-		 4.增加平台支出（总和）
-		 
-		 */
-		//平台售额可提现账户 
-		/*
-		 1.冲减店售额可提现账户
-		 3.冲减平台可提现账户
-		 4.增加平台支出（总和） 
-		 */
-		
-		//当前账户
-		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
-		//平台账户
-		Public_user_bank bank_PT = getUserBank("1", "1");
-		//提现金额
-		float amount = bill.getAmount();
-		//平台账户变更
-		bank_PT.setTakenbank(bank_PT.getTakenbank() - amount);		//冲减平台可提现账户
-		bank_PT.setCostbank(bank_PT.getCostbank() + amount);		//增加平台支出总和
-		String logmemo = "";	//日志内容
-		//店
-		if(banktype == 1){
-			bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);		//冲减店奖励可提现账户
-			logmemo = "奖励提现";	//日志内容
-		}else if(banktype == 2){
-			bank.setSelltakenbank(bank.getSelltakenbank() - amount);		//冲减店平台售额可提现账户
-			logmemo = "平台售额提现";	//日志内容
-		}
-		
-		//平台账户变更
-		bank_PT = userBankDao.update(bank_PT);
-		//店
-		bank = userBankDao.update(bank);
-		//更新流水表状态
-		bill = updateBillStatus(bill);
-		//加日志 
-		String logtype = "withdrawal";	//提现
-		Public_log log = saveLog(bill, logtype, logmemo);
-		
-		if(type == 1){
-			//直营店
-			if(bank_PT != null && bank != null && bill != null && log != null){
-				return 1;
+		try {
+			//当前账户
+			Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
+			//平台账户
+			Public_user_bank bank_PT = getUserBank("1", "1");
+			//提现金额
+			float amount = bill.getAmount();
+			//平台账户变更
+			bank_PT.setTakenbank(bank_PT.getTakenbank() - amount);		//冲减平台可提现账户
+			bank_PT.setCostbank(bank_PT.getCostbank() + amount);		//增加平台支出总和
+			
+			if("A".equals(identity)){
+				//可提现账户-提现
+				bank.setTakenbank(bank.getTakenbank() - amount);		//冲减可提现账户 - 当前操作账户
+			}else if("C".equals(identity)){
+				//trantype——3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
+				if(bill.getTrantype() == 4){
+					//奖励账户-提现
+					bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);		//冲减店奖励可提现账户
+					//非直营店
+					if(!"1".equals(bill.getParentid())){
+						Public_user_bank bank_A = getUserBank(bill.getParentid(), "");	//代理账户
+						bank_A.setTakenbank(bank_A.getTakenbank() - amount);	//冲减代理可提现账户
+						bank_A.setCostbank(bank_A.getCostbank() + amount);		//增加代理支出总和
+						//代理账户变更
+						bank_A = userBankDao.update(bank_A);
+					}
+				}else if(bill.getTrantype() == 5){
+					//平台售额-提现
+					bank.setSelltakenbank(bank.getSelltakenbank() - amount);		//冲减店平台售额可提现账户
+				}
 			}
-		}else if(type == 2){
-			//非直营店
-			Public_user_bank bank_A = getUserBank(bill.getParentid(), "");	//代理账户
-			bank_A.setTakenbank(bank_A.getTakenbank() - amount);	//冲减代理可提现账户
-			bank_A.setCostbank(bank_A.getCostbank() + amount);		//增加代理支出总和
+			
+			//平台账户变更
+			bank_PT = userBankDao.update(bank_PT);
 			//代理账户变更
-			bank_A = userBankDao.update(bank_A);
-			if(bank_PT != null && bank_A != null && bank != null && bill != null && log != null){
-				return 1;
-			}
-		}
-		
-		return 0;
-	}
-	
-	/**
-	 * 店提现 - 平台售额可提现账户 
-	 * */
-	public int withdrawalC(Public_trade_bill bill) {
-		//平台售额可提现账户 
-		/*
-		 1.冲减店售额可提现账户
-		 3.冲减平台可提现账户
-		 4.增加平台支出（总和） 
-		 */
-		
-		//当前账户
-		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
-		//平台账户
-		Public_user_bank bank_PT = getUserBank("1", "1");
-		//提现金额
-		float amount = bill.getAmount();
-		//平台账户变更
-		bank_PT.setTakenbank(bank_PT.getTakenbank() - amount);		//冲减平台可提现账户
-		bank_PT.setCostbank(bank_PT.getCostbank() + amount);		//增加平台支出总和
-		//店
-		bank.setSelltakenbank(bank.getSelltakenbank() - amount);		//冲减店平台售额可提现账户
-		
-		String logmemo = "平台售额提现";	//日志内容
-		//店
-		bank = userBankDao.update(bank);
-		//更新流水表状态
-		bill = updateBillStatus(bill);
-		//加日志 
-		String logtype = "withdrawal";	//提现
-		Public_log log = saveLog(bill, logtype, logmemo);
-		
-		if(bank_PT != null && bank != null && bill != null && log != null){
+			bank = userBankDao.update(bank);
+			//更新流水表状态
+			bill.setStatus(1);	//成功
+			bill = updateBillStatus(bill);
+			//加日志 
+			String logtype = "withdrawal";	//提现
+			saveLog(bill, logtype, bill.TRANTYPE_TXT[bill.getTrantype()]);
+			//添加提现消息
+			int messagetype = 1;	//业务消息
+			String messagetxt = bill.getUsername()+",进行了提现，提现金额为："+amount;
+			createMsg(bill.getUserid(), bill.getUsername(),bill.getParentid(),bill.getP_useranme(), messagetype, messagetxt,bill.getId());
+			
 			return 1;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
 		return 0;
 	}
 	
@@ -900,6 +701,23 @@ public class PublicUserBankService implements IPublicUserBankService{
 		values.add(sizeid);
 		List<Public_product_size_rebate> list = rebateDao.search(sql, values);
 		return list.size()>0 ? list.get(0) : null;
+	}
+	
+	/**
+	 * 获取商品的商品折扣
+	 * @param userid
+	 * @param parentid
+	 * @param sizeid
+	 * @return
+	 * */
+	private Public_set_user_standard getProStandard(String userid,String parentid,String sizeid){
+		String sql = "SELECT * FROM public_set_user_standard WHERE userid=? AND parentid=? AND sizeid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(userid);
+		values.add(parentid);
+		values.add(sizeid);
+		List<Public_set_user_standard> list = standardDao.search(sql,values);
+		return list.size() > 0 ? list.get(0): new Public_set_user_standard();
 	}
 	
 	/**

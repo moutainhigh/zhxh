@@ -15,6 +15,7 @@ import net.ussoft.zhxh.dao.PublicProductSizeDao;
 import net.ussoft.zhxh.dao.PublicSetUserStandardDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.dao.PublicUserDao;
+import net.ussoft.zhxh.dao.PublicUserLinkDao;
 import net.ussoft.zhxh.dao.PublicUserPathDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_cat;
@@ -25,6 +26,7 @@ import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_set_user_standard;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
+import net.ussoft.zhxh.model.Public_user_link;
 import net.ussoft.zhxh.model.Public_user_path;
 import net.ussoft.zhxh.service.IPublicOrderService;
 import net.ussoft.zhxh.util.DateUtil;
@@ -38,23 +40,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class PublicOrderService implements IPublicOrderService{
 
 	@Resource
-	PublicOrderDao orderDao;
+	private PublicOrderDao orderDao;
 	@Resource
-	PublicOrderProductDao orderProDao;
+	private PublicOrderProductDao orderProDao;
 	@Resource
-	PublicCatDao catDao;
+	private PublicCatDao catDao;
 	@Resource
-	PublicProductSizeDao proSizeDao;
+	private PublicProductSizeDao proSizeDao;
 	@Resource
-	PublicUserPathDao userPathDao;
+	private PublicUserPathDao userPathDao;
 	@Resource
-	PublicOrderPathDao orderPathDao;
+	private PublicOrderPathDao orderPathDao;
 	@Resource
-	PublicSetUserStandardDao standardDao;	//
+	private PublicSetUserStandardDao standardDao;	//
 	@Resource
-	PublicUserBankDao bankDao;	//账户
+	private PublicUserBankDao bankDao;	//账户
 	@Resource
-	PublicUserDao userDao;
+	private PublicUserDao userDao;
+	@Resource
+	private PublicUserLinkDao userlinkDao;
 	
 	@Override
 	public Public_order getById(String id) {
@@ -69,10 +73,10 @@ public class PublicOrderService implements IPublicOrderService{
 		order.setU_companyname(user.getCompanyname());//机构名称
 		order.setP_username(puser.getUsername());
 		order.setP_companyanme(puser.getCompanyname());	//
-		
-		//推荐人 - 后期修改推荐人的查找方式
-		if(user.getTuijianid() != null && !"".equals(user.getTuijianid())){
-			Public_user tuser = userDao.get(user.getTuijianid());
+		//查找推荐人ID
+		String tuijinaid = getUserLink_ID(order.getUserid(), order.getParentid());
+		if(tuijinaid != null){
+			Public_user tuser = userDao.get(tuijinaid);
 			order.setTid(tuser.getId());
 			order.setT_username(tuser.getUsername());
 			order.setT_companyname(tuser.getCompanyname());
@@ -349,6 +353,28 @@ public class PublicOrderService implements IPublicOrderService{
 		values.add(orderstatusmemo);
 		values.add(id);
 		return orderDao.update(sql, values);
+	}
+	
+	/**
+	 * 获取账户的推荐人ID
+	 * @param userid
+	 * @param parentid
+	 * @return userid
+	 * */
+	public String getUserLink_ID(String userid,String parentid) {
+		String sql = "SELECT * FROM public_user_link WHERE userid=? AND parentid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(userid);
+		values.add(parentid);
+		List<Public_user_link> list = userlinkDao.search(sql, values);
+		if(null != list && list.size() > 0){
+			Public_user_link link = list.get(0);
+			String tuijianid = link.getTuijianid();
+			if(null != tuijianid && !"".equals(tuijianid)){
+				return tuijianid;
+			}
+		}
+		return null;
 	}
 	
 }

@@ -95,8 +95,10 @@ public interface IPublicUserBankService {
 	
 	/**
 	 * 提现
+	 * @param bill	交易流水
+	 * @param identity 身份
 	 * */
-	public int withdrawal(String userid,String parentid);
+	public int withdrawal(Public_trade_bill bill,String identity);
 	
 	/**
 	 * 设置配额

@@ -52,7 +52,7 @@
 	                $("#banner_img li").hide().stop(true,true).eq(icon).fadeIn("slow");
 	             }, function () { 
 	                index=$(this).index();
-	                time = setTimeout(showimg, 3000);
+	                time = setTimeout(showimg, 5000);
 	             });
 	         });
 	
@@ -65,7 +65,7 @@
 	            console.log("index: "+index)
 	            $(".slide span").removeClass("cur").eq(index).addClass("cur");
 	            $("#banner_img li").hide().stop(true,true).eq(index).fadeIn("slow");
-	            time = setTimeout(showimg, 3000);
+	            time = setTimeout(showimg, 5000);
 	         }
 	</script>
 	
@@ -77,7 +77,7 @@
 	              <div class="shop-Img">
 	              	<c:forEach var="item" items="${bfList }" begin="0" end="0">
 	    				<div class="title clearfix"><span>${item.title }</span><a href='${item.righttitleurl !="" ?item.righttitleurl:"javascript:;" }' >&nbsp;&nbsp;${item.righttitle }</a></div>
-	                  	<a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' ><img src="${pageContext.request.contextPath}/${item.firstpic}" height="903px" /></a>
+	                  	<a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' ><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
 	    			</c:forEach>
 	                  <!--注  图片要传和这个大小一样的 940*1134-->
 	              </div> 
@@ -86,13 +86,13 @@
 	          <c:forEach var="item" items="${bfList }" begin="1" end="1">
 	              <div class="shop-Img top-0">
 	                  <div class="title clearfix"><span>&nbsp;${item.title }</span><a href='${item.righttitleurl !="" ?item.righttitleurl:"javascript:;" }' >&nbsp;&nbsp;${item.righttitle }</a></div>
-	                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' ><img src="${pageContext.request.contextPath}/${item.firstpic}" height="404px"/></a>
+	                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' ><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
 	              </div>
 	          </c:forEach>
 	          <c:forEach var="item" items="${bfList }" begin="2" end="2">
 	              <div class="shop-Img bottom-0">
 	                  <div class="title clearfix"><span>${item.title }</span><a href='${item.righttitleurl !="" ?item.righttitleurl:"javascript:;" }' >&nbsp;&nbsp;${item.righttitle }</a></div>
-	                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' ><img src="${pageContext.request.contextPath}/${item.firstpic}" height="404px" /></a>
+	                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' ><img src="${pageContext.request.contextPath}/${item.firstpic}"  /></a>
 	              </div> 
 	          </c:forEach>
 	          </div>
@@ -104,7 +104,7 @@
 	      			<div class="shop-con-r fr">
 			          <div class="shop-Img">
 			              <div class="title clearfix"><span>${item.title }</span><a href='${item.righttitleurl !="" ?item.righttitleurl:"javascript:;" }' >&nbsp;&nbsp;${item.righttitle }</a></div>
-		                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' ><img src="${pageContext.request.contextPath}/${item.firstpic}" height="404px" /></a>
+		                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' ><img src="${pageContext.request.contextPath}/${item.firstpic}"  /></a>
 			          </div>
 			      </div>
 	      		</c:when>
@@ -112,7 +112,7 @@
 	      			<div class="shop-con-l fl">
 				          <div class="shop-Img">
 				          	  <div class="title clearfix"><span>${item.title }</span><a href='${item.righttitleurl !="" ?item.righttitleurl:"javascript:;" }' >&nbsp;&nbsp;${item.righttitle }</a></div>
-			                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' ><img src="${pageContext.request.contextPath}/${item.firstpic}" height="404px"/></a>
+			                  <a href='${item.firstpicurl !="" ?item.firstpicurl:"javascript:;" }' ><img src="${pageContext.request.contextPath}/${item.firstpic}" /></a>
 				              <!--注  图片要传和这个大小一样的 940*506-->
 				          </div>
 				      </div>

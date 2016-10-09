@@ -20,10 +20,10 @@ p span{ overflow:hidden;}
 .fr{ float: right;}
 .bg{ width: 100%; height: 100%; position:fixed; left:0; background-color:#000; filter:alpha(opacity=30); opacity:0.3; top:0; display: none;}
 .index-header{ position:relative; z-index: 999; background: #fff; height:15%;}/*首页头部*/
-.header-width{ margin: auto; height: 80px; width:1524px;}
+.header-width{ margin: auto; height: 60px; width:1524px;}
 .header-one{ height: 100px; width: 100%; background: #040a2b; position: relative; }
 .header-two{ height: 100px; width: 100%; background: #3a6232; position: relative; }
-.header-three{ height: 80px; width: 100%; background: #000; position: relative; }
+.header-three{ height: 60px; width: 100%; background: #000; position: relative; }
 .HTML-con{ width: 1200px; margin: auto;}
 .tan-bg{ width: 100%; height: 100%; position:fixed; left:0; background-color:#000; filter:alpha(opacity=30); opacity:0.3; top:0; display:none; z-index: 9999;}
 
@@ -33,7 +33,7 @@ p span{ overflow:hidden;}
 /*index header*/
 .indexheader{margin: auto; position: relative;padding-top:1.5%; width:75%;}
 .header h1{ width:5%;}
-.header h1 img{ width:100%; display:block}
+.header h1 img{ width:138px;height:27px; display:block}
 ul.header-user{ height:42px; margin-top:1%; }
 ul.header-user li{ float: left; padding: 0 27px; border-right: solid 1px #e0e0e0; height: 42px;}
 ul.header-user li.name a{ width:16px ; height:18px ; background: url(../../images/icon.png) 0 0 no-repeat; display: block; margin-top: 13px;}
@@ -54,7 +54,7 @@ ul.header-user li.del a{ width:16px ; height:16px ; background: url(../../images
 #banner_img{ width:100%; height:85%;}
 #banner_img li{ float: left;width:100%; height:100%; overflow:hidden;}
 #banner_img li img{width:100%; height:auto;}
-.imgnum{ margin-top:1%;}
+.imgnum{ margin-top:4%;}
 .imgnum a,.imgnum-bottom a{ font-size: 16px; margin-right: 42px;}
 .imgnum a.onselect{ color: #000; font-weight: bold;}
 .imgnum-bottom{ margin-top: 1%;}
@@ -74,12 +74,12 @@ ul.header-user li.del a{ width:16px ; height:16px ; background: url(../../images
 
 
 /*其他头部*/
-.header-width h1.logo{ margin-top:9px; width: 62px; height: 62px;}
+.header-width h1.logo{ margin-top:15px; width: 62px; height: 62px;}
 .nav{  text-align: center;}
-.nav a{display: inline-block; line-height: 25px; font-size: 16px; color: #fff; margin: 30px 22px 0 22px;}
+.nav a{display: inline-block; line-height: 25px; font-size: 16px; color: #fff; margin: 18px 22px 0 22px;}
 .nav a.cur,.nav a:hover{ border-bottom: solid 4px #fff;}
-a.header-pic{ margin-top: 32px; display: block; margin-right: 33px;}
-.user-header{ height: 42px; margin-top: 20px;}
+a.header-pic{ margin-top: 20px; display: block; margin-right: 33px;}
+.user-header{ height: 42px; margin-top: 10px;}
 .user-header li{float: left; padding: 0 27px; height: 42px; border-left:solid 1px ;	color: rgba(255, 255, 255, 0.4);}
 .user-header li.name a{ width:16px ; height:18px ; background: url(../../images/icon.png) -22px -80px no-repeat; display: block; margin-top: 13px;}
 .user-header li.shop-cart a{ width:17px ; height:17px ; background: url(../../images/icon.png) -22px -30px no-repeat; display: block; margin-top: 13px;}
@@ -88,9 +88,9 @@ a.header-pic{ margin-top: 32px; display: block; margin-right: 33px;}
 .user-header li.del a{ width:16px ; height:16px ; background: url(../../images/icon.png) -22px -103px no-repeat; display: block; margin-top: 13px;}
 
 /*商品展示-banner*/
-.shop-banner{margin:20px auto 0; position: relative;}
+.shop-banner{margin:1px auto 0; position: relative;}
 .slide{margin: -30px 0;position: absolute; text-align: center; width: 100%;}
-.slide span{ width:15px ; height:15px ; border-radius: 50%; border: solid 1px #fff; display: inline-block; margin-right: 12px;}
+.slide span{ width:12px ; height:12px ; border-radius: 50%; border: solid 1px #fff; display: inline-block; margin-right: 12px;}
 .slide span.cur{ background: #fff;}
 
 /*分页*/

@@ -1,5 +1,6 @@
 package net.ussoft.zhxh.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,16 @@ public class PublicUserLinkService implements IPublicUserLinkService{
 		return userlinkDao.get(id);
 	}
 
+	@Override
+	public Public_user_link getUserLink(String userid,String parentid) {
+		String sql = "SELECT * FROM public_user_link WHERE userid=? AND parentid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(userid);
+		values.add(parentid);
+		List<Public_user_link> list = userlinkDao.search(sql, values);
+		return list.size() > 0 ? list.get(0) : null;
+	}
+	
 	@Override
 	public List<Public_user_link> list(Map<String, Object> map) {
 		Map<String, Object> resultMap  = MakeQuerySql.search(Public_user.class, map);
