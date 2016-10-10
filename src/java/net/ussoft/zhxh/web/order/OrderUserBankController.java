@@ -2,7 +2,10 @@ package net.ussoft.zhxh.web.order;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -11,16 +14,17 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.service.IPublicTradeBillService;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserService;
+import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.OrderNO;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -101,7 +105,7 @@ public class OrderUserBankController extends BaseConstroller {
 		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 //		bill.setPaytype(paytype); //支付类型
 		bill.setTrantype(trantype);//交易类型	trantype:交易类型, 0:普通购买,1:充值-货款充值,2:充值-现金充值,3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
-		bill.setTrantypetxt(bill.TRANTYPE_TXT[trantype]);
+		bill.setTrantypetxt(Constants.TRANTYPE_TXT[trantype]);
 		bill.setStatus(0);	//状态：0失败，1成功
 		
 		bill = billService.insert(bill);
@@ -145,7 +149,7 @@ public class OrderUserBankController extends BaseConstroller {
 		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 //		bill.setPaytype(paytype); //支付类型
 		bill.setTrantype(trantype);//交易类型	trantype:交易类型, 0:普通购买,1:充值-货款充值,2:充值-现金充值,3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
-		bill.setTrantypetxt(bill.TRANTYPE_TXT[trantype]);
+		bill.setTrantypetxt(Constants.TRANTYPE_TXT[trantype]);
 		bill.setStatus(0);	//状态：0失败，1成功
 		bill = billService.insert(bill);
 		if(bill != null){
@@ -230,5 +234,40 @@ public class OrderUserBankController extends BaseConstroller {
 		}
 		out.print("error");
 	}
+	
+	/**
+	 * 获取资金帐户明细
+	 * @param parentid
+	 * @param userid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/accountDetail",method=RequestMethod.POST)
+	public void accountDetail(String parentid,String userid,String trantype,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		List<String> trantypes = new ArrayList<String>();
+		if(null != trantype && !"".equals(trantype)){
+			String[] arr = trantype.split(",");
+			Collections.addAll(trantypes, arr);
+		}
+		p = billService.list(userid, parentid, trantypes, p);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	
 	
 }

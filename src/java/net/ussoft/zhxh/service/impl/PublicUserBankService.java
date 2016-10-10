@@ -32,10 +32,10 @@ import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.service.IPublicUserBankService;
+import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -414,7 +414,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 			bill = updateBillStatus(bill);
 			//加日志 
 			String logtype = "withdrawal";	//提现
-			saveLog(bill, logtype, bill.TRANTYPE_TXT[bill.getTrantype()]);
+			saveLog(bill, logtype, Constants.TRANTYPE_TXT[bill.getTrantype()]);
 			//添加提现消息
 			int messagetype = 1;	//业务消息
 			String messagetxt = bill.getUsername()+",进行了提现，提现金额为："+amount;

@@ -1,17 +1,22 @@
 package net.ussoft.zhxh.service.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicTradeBillDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.service.IPublicTradeBillService;
+import net.ussoft.zhxh.util.MakeQuerySql;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PublicTradeBillService implements IPublicTradeBillService{
@@ -40,10 +45,39 @@ public class PublicTradeBillService implements IPublicTradeBillService{
 	}
 
 	@Override
-	public PageBean<Public_trade_bill> list(PageBean<Public_trade_bill> pageBean) {
-		return null;
+	public PageBean<Public_trade_bill> list(Map<String, Object> map,PageBean<Public_trade_bill> pageBean) {
+		Map<String, Object> resultMap  = MakeQuerySql.search(Public_trade_bill.class, map);
+		String sql = (String) resultMap.get("sql");
+		List<Object> values = (List<Object>) resultMap.get("values");
+		return bankgetListDao.search(sql, values, pageBean);
 	}
 
+	@Override
+	public PageBean<Map<String,Object>> list(String userid,String parentid,List<String> trantype,PageBean<Map<String,Object>> pageBean) {
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		sb.append("SELECT t.*,p.username AS u_username,p.companyname AS u_companyname,p1.username AS p_username,p1.companyname AS p_companyname FROM public_trade_bill t,public_user p,public_user p1 WHERE t.userid = p.id AND t.parentid = p1.id ");
+		if(null != userid && !"".equals(userid)){
+			sb.append(" AND t.userid= ?");
+			values.add(userid);
+		}
+		if(null != parentid && !"".equals(parentid)){
+			sb.append(" AND t.parentid= ?");
+			values.add(parentid);
+		}
+		if(null != trantype && trantype.size() > 0){
+			sb.append(" AND t.trantype in(");
+			Serializable[] ss=new Serializable[trantype.size()];
+			Arrays.fill(ss, "?");
+			sb.append(StringUtils.join(ss,','));
+			sb.append(")");
+			values.addAll(trantype);
+		}
+		sb.append(" AND t.status=1");
+		
+		return bankgetListDao.searchForMap(sb.toString(), values, pageBean);
+	}
+	
 	@Transactional("txManager")
 	@Override
 	public int update(Public_trade_bill tradebill) {

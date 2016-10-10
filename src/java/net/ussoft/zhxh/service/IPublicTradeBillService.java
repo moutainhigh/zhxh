@@ -1,6 +1,7 @@
 package net.ussoft.zhxh.service;
 
 import java.util.List;
+import java.util.Map;
 
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_trade_bill;
@@ -34,10 +35,21 @@ public interface IPublicTradeBillService {
 	
 	/**
 	 * 查询所有 分页
+	 * @param map
 	 * @param pageBean
 	 * @return pagebean
 	 * */
-	public PageBean<Public_trade_bill> list(PageBean<Public_trade_bill> pageBean);
+	public PageBean<Public_trade_bill> list(Map<String, Object> map,PageBean<Public_trade_bill> pageBean);
+	
+	/**
+	 * 查询所有 分页
+	 * @param userid
+	 * @param parentid
+	 * @param trantype
+	 * @param pageBean
+	 * @return pagebean
+	 * */
+	public PageBean<Map<String,Object>> list(String userid,String parentid,List<String> trantype,PageBean<Map<String,Object>> pageBean);
 	
 	/**
 	 * 添加

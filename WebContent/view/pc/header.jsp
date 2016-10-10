@@ -30,7 +30,7 @@
 
 <div class="header-three" style="background: ${brand.brandcolor}">
 	  	<div class="header header-width clearfix">
-	    		<h1 class="logo fl"><a href="${pageContext.request.contextPath}/pcMain/pcindex.htmls"><img src='${pageContext.request.contextPath}/${brand.brandlogo == null ? logo.pic_path:brand.brandlogo}' /></a></h1>
+	    		<h1 class="logo fl" style='${brand.brandlogo == null ? "margin-top: 0px;":""}'><a href="${pageContext.request.contextPath}/pcMain/pcindex.htmls"><img style='${brand.brandlogo == null ? "width: 60px;height: 60px;":""}' src='${pageContext.request.contextPath}/${brand.brandlogo == null ? logo.pic_path:brand.brandlogo}' /></a></h1>
 	    		<ul class="user-header fr">
 	    			<c:choose>
 	    				<c:when test="${sessionScope.pc_user_sessiion != null }">

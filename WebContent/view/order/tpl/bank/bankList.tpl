@@ -16,7 +16,7 @@
 					<tr>
 						<td align="center">收入总计</td>
 						<td>￥{$T.row.incomebank}</td>
-						<td align="right"><a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="accountDetail('{$T.row.userid}','{$T.row.parentid}',1)">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">支出总计</td>
@@ -37,7 +37,7 @@
 					<tr>
 						<td align="center">收入总计</td>
 						<td>￥{$T.row.incomebank}</td>
-						<td align="right"><a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="accountDetail('','{$T.row.userid}','1,2')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">支出总计</td>

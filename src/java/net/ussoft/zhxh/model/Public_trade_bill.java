@@ -18,7 +18,7 @@ public class Public_trade_bill {
 	private String createtime;				//创建时间	
 	private String banktime;				//支付回执时间	
 	private String paytype;					//支付类型	
-	private Integer trantype;				//交易类型	
+	private Integer trantype;				//交易类型	//trantype:交易类型, 0:普通购买,1:充值-货款充值,2:充值-现金充值,3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
 	private String trantypetxt;				//交易类型文本	
 	private Integer status;					//状态
 	private String billmemo	;				//交易描述
@@ -26,9 +26,6 @@ public class Public_trade_bill {
 	//临时字段
 	private String username;
 	private String p_useranme;
-	
-	//trantype:交易类型, 0:普通购买,1:充值-货款充值,2:充值-现金充值,3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
-	public String[] TRANTYPE_TXT = {"普通购买","充值-货款充值","充值-现金充值","提现-现金账户","提现-奖励账户","提现-平台售额"};	
 	
 	public Public_trade_bill() {
 		this.setAmount(0f);
