@@ -3,7 +3,7 @@
 		<tr class="panel-head item">
 			<th width="45" align="center"><input type="checkbox" value="1" name="checkall"></th>
 			<th width="45">序号</th>
-			<th width="80">姓名</th>
+			<th id="tip_username" width="80">姓名</th>
 			<th width="100">手机号码</th>
 			<th width="80">生日</th>
 			<th width="50">性别</th>

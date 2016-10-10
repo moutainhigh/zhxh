@@ -115,6 +115,9 @@
                 }
             });
     	    
+    	  	//提示信息
+    		layer.tips('可点击客户信息，直接编辑并自动保存。', '#tip_username', {tips: [1, '#FF9901'],time: 5000,});
+    	    
     	});
     	
     	function bindTrClick() {
