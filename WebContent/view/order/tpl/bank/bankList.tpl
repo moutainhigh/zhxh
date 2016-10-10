@@ -93,7 +93,7 @@
 					<tr>
 						<td align="center">可支配账户</td>
 						<td>￥{$T.row.havebank}</td>
-						<td align="right"><a href="javascript:;" onclick="recharge('{$T.row.parentid}')">充值</a></td>
+						<td align="right"><a href="javascript:;" onclick="recharge('{$T.row.parentid}',1)">充值</a></td>
 					</tr>
 					<tr>
 						<td align="center">返利</td>

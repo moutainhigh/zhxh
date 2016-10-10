@@ -15,9 +15,9 @@
 			<td style="text-align: left;">{$T.row.productname}</td>
 			<td>{$T.row.productsize}</td>
 			<td>{$T.row.quantity}</td>
-			<td style="text-align: right;">￥{$T.row.price}</td>
+			<td style="text-align: right;">￥{$T.row.price_txt}</td>
 			<td>{$T.row.buyerdis}</td>
-			<td style="text-align: right;">￥{$T.row.subtotal}</td>
+			<td style="text-align: right;">￥{$T.row.subtotal_txt}</td>
 		</tr>
 		{#/for}
 	</tbody>
