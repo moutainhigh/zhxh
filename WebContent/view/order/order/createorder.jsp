@@ -195,7 +195,8 @@
     		obj.brandname = data.brandname;
 			obj.productname = data.productname;
 			obj.productsize = data.productsize;
-			obj.price = formatFloat(data.price,2);		//售价
+			obj.price = data.price;		//售价
+			obj.price_txt = formatFloat(data.price,2);
 			obj.buyerdis = data.buyerdis;	//折扣
 			obj.quantity = data.quantity; 	//数量
 			var _subtotal = 0;
@@ -204,7 +205,8 @@
 			}else{
 				_subtotal = data.price * data.quantity;	//小计
 			}
-			obj.subtotal = formatFloat(_subtotal,2);
+			obj.subtotal = _subtotal;
+			obj.subtotal_txt = formatFloat(_subtotal,2);
 			total = parseFloat(total) + parseFloat(obj.subtotal);
 			return obj;
     	}
@@ -231,8 +233,10 @@
     							total = total - objArr[i].subtotal; //减去该商品数量变更前的小计
     							if(parseFloat(objArr[i].buyerdis) > 0){
     								objArr[i].subtotal = objArr[i].price * objArr[i].buyerdis * objArr[i].quantity;	//小计
+    								objArr[i].subtotal_txt = formatFloat(objArr[i].price * objArr[i].buyerdis * objArr[i].quantity,2);	//小计输出
     							}else{
     								objArr[i].subtotal = objArr[i].price * objArr[i].quantity;	//小计
+    								objArr[i].subtotal_txt = formatFloat(objArr[i].price * objArr[i].quantity,2);	//小计输出
     							}
     							total = total + objArr[i].subtotal;	//把新的小计加到合计中
     							break;
@@ -408,9 +412,9 @@
 					<td style="text-align: left;">{$T.row.productname}</td>
 					<td>{$T.row.productsize}</td>
 					<td class="quantity">{$T.row.quantity}</td>
-					<td style="text-align: right;">￥{$T.row.price}</td>
+					<td style="text-align: right;">￥{$T.row.price_txt}</td>
 					<td>{$T.row.buyerdis}</td>
-					<td style="text-align: right;">￥{$T.row.subtotal}</td>
+					<td style="text-align: right;">￥{$T.row.subtotal_txt}</td>
 				</tr>
 				{#/for}
 			</tbody>

@@ -18,36 +18,18 @@
 	<!-- 引入 vintage 主题 -->
 	<script src="${pageContext.request.contextPath}/js/echarts/theme/shine.js"></script>
     <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
+    
+    <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/view/order/tpl/bank/bank.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/order/tpl/bank/page.css">
+    
     <style type="text/css">
-	    .doc-naver {
-		    padding-top: 10px;
-		    padding-bottom: 10px;
-		}
-		.doc-header.fixed-top .doc-naver {
-		    padding-top: 10px;
-		    padding-bottom: 10px;
-		    background-color: #fff;
-		}
-		.admin {
-		    width: 100%;
-		    padding: 20px;
-		    background: #fff;
-		    right: 0;
-		    bottom: 0;
-		    top: 87px;
-		    overflow: auto;
-		}
+    	.doc-naver { padding-top: 10px;padding-bottom: 10px;}
+		.doc-header.fixed-top .doc-naver {padding-top: 10px;padding-bottom: 10px;background-color: #fff;}
+		.admin {width: 100%; padding: 20px;background: #fff;right: 0; bottom: 0;top: 87px;overflow: auto;}
+		.nav-inline li a {line-height: 22px;}
+		.border-back {border-color:#b5cfd9;}
 		
-		.nav-inline li a {
-			line-height: 22px;
-		}
-		
-		.border-back {
-    		border-color:#b5cfd9;
-		}
-		/* .panel-back {
-			background-color: #f7f7f7;
-		} */
     </style>
     
     <script type="text/javascript">
@@ -120,53 +102,15 @@
 				<div class="x7">
 					<div class="panel border-sub">
 						<div class="panel-head">
-							<strong>待处理订单</strong>
+							<strong>资金明细</strong>
+							<input type="hidden" id="_userid" />
+							<input type="hidden" id="_parentid" />
+							<input type="hidden" id="_trantype" />
 						</div>
-						<div class="panel-body">
-							<table class="table">
-								<tbody>
-									<tr>
-										<td style="border-top: 0px solid #ddd;"><a href="javascript:;">我的采购单:4笔</a></td>
-										<td style="border-top: 0px solid #ddd;" width="200" align="right">￥66645</td>
-									</tr>
-									<tr>
-										<td style="border-top: 0px solid #ddd;"><a href="javascript:;">客户订货单:4笔</a></td>
-										<td style="border-top: 0px solid #ddd;" width="200" align="right">￥66645</td>
-									</tr>
-								</tbody>
-							</table>
+						<div id="accountdetail" class="panel-body">
+							<p>暂无数据</p>
 						</div>
 					</div>
-					<br>
-					<div class="panel border-sub">
-						<div class="panel-head">
-							<strong>最新消息</strong>
-							<a href="javascript:;"><span class="float-right">更多</span></a>
-						</div>
-						<div class="panel-body">
-							<table class="table">
-								<tbody>
-									<tr>
-										<td style="border-top: 0px solid #ddd;"><a href="javascript:;">[浙江丽美美容院]充值成功..</a></td>
-										<td style="border-top: 0px solid #ddd;" width="200" align="right">2016-04-05</td>
-									</tr>
-									<tr>
-										<td style="border-top: 0px solid #ddd;"><a href="javascript:;">[浙江丽美美容院]充值成功..</a></td>
-										<td style="border-top: 0px solid #ddd;" width="200" align="right">2016-04-05</td>
-									</tr>
-									<tr>
-										<td style="border-top: 0px solid #ddd;"><a href="javascript:;">[浙江丽美美容院]充值成功..</a></td>
-										<td style="border-top: 0px solid #ddd;" width="200" align="right">2016-04-05</td>
-									</tr>
-									<tr>
-										<td style="border-top: 0px solid #ddd;"><a href="javascript:;">[浙江丽美美容院]充值成功..</a></td>
-										<td style="border-top: 0px solid #ddd;" width="200" align="right">2016-04-05</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-					<br>
 				</div>
 			</div>
 		</div>

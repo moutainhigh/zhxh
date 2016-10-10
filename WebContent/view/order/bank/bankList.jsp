@@ -21,101 +21,14 @@
     
     <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/view/order/tpl/bank/bank.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/view/order/tpl/bank/page.css">
+    
     <style type="text/css">
 	    .doc-naver { padding-top: 10px;padding-bottom: 10px;}
 		.doc-header.fixed-top .doc-naver {padding-top: 10px;padding-bottom: 10px;background-color: #fff;}
 		.admin {width: 100%; padding: 20px;background: #fff;right: 0; bottom: 0;top: 87px;overflow: auto;}
 		.nav-inline li a {line-height: 22px;}
 		.border-back {border-color:#b5cfd9;}
-		
-		
-.page {
-    float: right;
-    display: inline-block;
-    vertical-align: middle;
-    width: 350px;
-    line-height: 26px;
-    margin: 10px;
-}
-
-
-.page-total {
-    float: left;
-    line-height: 26px;
-    margin: 10px 10px 0;
-    display: block;
-    float: right;
-}
-.page span {
-    float: left;
-    margin-left: 5px;
-}
-
-.page .pageSel {
-    float: left;
-    display: block;
-    color: #666;
-    margin: 0 0 0 10px;
-    border: 1px solid #d6dee3;
-    padding: 4px;
-    font-size: 12px;
-    height: 26px;
-}
-.page-number {
-    margin-left: 130px;
-}
-
-.page .pn {
-    float: right;
-}
-.page .pn, .page .pn a {
-    margin-left: 5px;
-}
-
-.page .ui-pager-next, .page .ui-pager-prev {
-    margin-left: 5px;
-}
-
-.ui-pager-next, .ui-pager-prev {
-    background: url(/view/order/images/icon8.png) no-repeat;
-    display: inline-block;
-    width: 25px;
-    height: 0;
-    padding-top: 25px;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.ui-pager-next {
-    background-color: #fafafa;
-    border: 1px solid #c7ced1;
-    background-position: 10px -51px;
-}
-.ui-pager-prev {
-    background-color: #fafafa;
-    border: 1px solid #c7ced1;
-    background-position: 9px -34px;
-}
-
-.ui-pager-inp {
-    padding: 0 5px;
-    height: 25px;
-    line-height: 25px;
-    border: 1px solid #d6dee3;
-    color: #555;
-    width: 30px;
-    display: inline-block;
-    float: left;
-    vertical-align: middle;
-    outline: 0;
-    font-family: verdana,'宋体','Microsoft Yahei',Tahoma,Arial;
-    margin-left: 5px;
-    font-size: 12px;
-}
-.table-bordered td {
-	border:none;
-    border-top: 1px solid #ddd;
-}
     </style>
     
     <script type="text/javascript">
