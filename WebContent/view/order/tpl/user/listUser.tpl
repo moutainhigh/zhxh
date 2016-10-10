@@ -33,14 +33,14 @@
 					<td class="u" editor="textbox" vtype="required;" field="username">{$T.row.username}</td>
 					<td>{$T.row.phonenumber}</td>
 					<td>{$T.row.birthday}</td>
-					<td>{#if $T.row.sex == 1}男{#else}女{#/if}</td>
+					<td class="u" editor="combobox" editdate="[{'id':'0','text':'女'},{'id':'1','text':'男'}]" field="sex">{#if $T.row.sex == 1}男{#else}女{#/if}</td>
 					<td>{$T.row.identitymemo}</td>
 					{#if $P.radio_value == 'A' || $P.radio_value == 'C'}
 					<td class="u" editor="textbox" vtype="required;" field="companyname">{$T.row.companyname}</td>
 					<td class="u" editor="textbox" vtype="required;" field="companypath">{$T.row.companypath}</td>
 					<td>{$T.row.companycode}</td>
 					<td class="u" editor="textbox" vtype="" field="rank">{$T.row.rank}</td>
-					<td id="td_setreturn" v="{$T.row.setreturn}" onmouseover="td_tip(this)" onmouseout="td_tip_over(this)">{#if $T.row.setreturn == 1}正常{#else}<span style="color:red">禁用</span>{#/if}</td>
+					<td class="u" editor="combobox" field="setreturn" id="td_setreturn" v="{$T.row.setreturn}" onmouseover="td_tip(this)" onmouseout="td_tip_over(this)">{#if $T.row.setreturn == 1}正常{#else}<span style="color:red">禁用</span>{#/if}</td>
 					{#elseif $P.radio_value == 'Z'}
 					<td>{$T.row.belongcode}</td>
 					{#/if}

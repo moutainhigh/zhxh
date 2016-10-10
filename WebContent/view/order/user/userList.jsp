@@ -136,7 +136,7 @@
     		}) 
     	}
     	
-    	//绑定数量的TD
+    	//绑定的TD
     	function bindTdClick() {
     		$('.update td').unbind('click').click(function(){
     			var e = $(this);
@@ -270,60 +270,115 @@
     	        	var field = $(this).attr("field");
     	        	var html = $(this).text();
     	        	
-   	        		$(this).addClass('input_td').html('<input type="text" id="'+field+'" name="'+field+'" class="input input-small" value="'+ $(this).text() +'" onfocus=this.select() />').find('input').focus().blur(function(){    
-   	        			// var thisid = $(this).parent().siblings("th:eq(0)").text();  
-       	                var self = $(this);
-   	        			var value=$(this).val();
-   	        			if (value == html) {
-   	        				self.parent().removeClass('input_td').html(self.val() || 0); 
-   	        				return;
+    	        	if (editor == "textbox") {
+    	        		$(this).addClass('input_td').html('<input type="text" id="'+field+'" name="'+field+'" class="input input-small" value="'+ $(this).text() +'" onfocus=this.select() />').find('input').focus().blur(function(){    
+       	        			// var thisid = $(this).parent().siblings("th:eq(0)").text();  
+           	                var self = $(this);
+       	        			var value=$(this).val();
+       	        			if (value == html) {
+       	        				self.parent().removeClass('input_td').html(self.val() || 0); 
+       	        				return;
+       	        			}
+           	                var vtype = $(this).parent().attr("vtype");
+           	                if(typeof(vtype) != "undefined" && vtype != ""){
+           	                	var vtypeArr = vtype.split(";");
+           	                	for(var i=0;i<vtypeArr.length;i++) {
+           	                		if (vtypeArr[i] == "") {
+           	                			break;
+           	                		}
+           	                		else if (vtypeArr[i] == "required") {
+           	                			if (value == "") {
+           	                				$(this).focus();
+           	                				layer.msg("不能为空。请填写内容。",{icon:5});
+           	                	   			return false;
+           	                			}
+           	                		}
+           	                		else if (vtypeArr[i] == "int") {
+           	                			if (!isInteger(value)) {
+           	                				$(this).focus();
+           	                				layer.msg("请输入数字。",{icon:5});
+           	                	   			return false;
+           	                			}
+           	                		}
+           	                	}
+           	                }
+           	                
+           	                var par = {};
+           	                par.updateUserids = thisid;
+           	                par.field = field;
+           	                par.fieldValue = value;
+           	                 
+           	                $.ajax({    
+           	                   type: 'POST',    
+           	                   url: '${pageContext.request.contextPath}/orderUser/updateBatch.htmls',
+           	                   //data: "updateUserids="+thisid+"&thisclass="+thisclass+"&thisvalue="+thisvalue
+           	                   data:par
+           	                });
+           	                //clearTimeout(timerId);
+           	             	var timerId = setTimeout(function(){ 
+           	             		self.parent().removeClass('input_td').html(self.val() || 0);    
+           	            	},300) 
+           	            	radio_click();
+           	            });
+    	        	}
+    	        	else if (editor == "combobox") {
+    	        		
+   	        			$(this).addClass('input_td');
+   	        			var html = "<select  id='"+field+"' name='"+field+"'>";
+   	        			if (field == "sex") {
+    	        			if ($(this).text() == "男") {
+    	        				html += "<option value='1' selected='selected'>男</option>";
+    	        			}
+    	        			else {
+    	        				html += "<option value='1'>男</option>";
+    	        			}
+    	        			if ($(this).text() == "女") {
+    	        				html += "<option value='0' selected='selected'>女</option>";
+    	        			}
+    	        			else {
+    	        				html += "<option value='0'>女</option>";
+    	        			}
    	        			}
-       	                var vtype = $(this).parent().attr("vtype");
-       	                if(typeof(vtype) != "undefined" && vtype != ""){
-       	                	var vtypeArr = vtype.split(";");
-       	                	for(var i=0;i<vtypeArr.length;i++) {
-       	                		if (vtypeArr[i] == "") {
-       	                			break;
-       	                		}
-       	                		else if (vtypeArr[i] == "required") {
-       	                			if (value == "") {
-       	                				$(this).focus();
-       	                				layer.msg("不能为空。请填写内容。",{icon:5});
-       	                	   			return false;
-       	                			}
-       	                		}
-       	                		else if (vtypeArr[i] == "int") {
-       	                			if (!isInteger(value)) {
-       	                				$(this).focus();
-       	                				layer.msg("请输入数字。",{icon:5});
-       	                	   			return false;
-       	                			}
-       	                		}
-       	                	}
-       	                }
-       	                
-       	                var par = {};
-       	                par.updateUserids = thisid;
-       	                par.field = field;
-       	                par.fieldValue = value;
-       	                 
-       	                $.ajax({    
-       	                   type: 'POST',    
-       	                   url: '${pageContext.request.contextPath}/orderUser/updateBatch.htmls',
-       	                   //data: "updateUserids="+thisid+"&thisclass="+thisclass+"&thisvalue="+thisvalue
-       	                   data:par
-       	                });
-       	                //clearTimeout(timerId);
-       	             	var timerId = setTimeout(function(){ 
-       	             		self.parent().removeClass('input_td').html(self.val() || 0);    
-       	            	},300) 
-       	                
-       	            });
+   	        			else if (field == "setreturn") {
+   	        				html += "<option value='1'>正常</option>";
+   	        				html += "<option value='0'>禁用</option>";
+   	        			}
+   	        			html += "</select>";
+   	        			
+   	        			$(this).html(html);
+   	        			
+   	        			$("#"+field).focus().blur(function(){ 
+   	        				var self = $(this);
+   	        				var p1=$(this).children('option:selected').val();//这就是selected的值
+   	        				var p1_text = $(this).children('option:selected').text();
+   	        				var par = {};
+              	                par.updateUserids = thisid;
+              	                par.field = field;
+              	                par.fieldValue = p1;
+              	                
+              	                 
+              	                $.ajax({    
+              	                   type: 'POST',    
+              	                   url: '${pageContext.request.contextPath}/orderUser/updateBatch.htmls',
+              	                   //data: "updateUserids="+thisid+"&thisclass="+thisclass+"&thisvalue="+thisvalue
+              	                   data:par
+              	                });
+              	                //clearTimeout(timerId);
+              	             	var timerId = setTimeout(function(){
+              	             		self.parent().removeClass('input_td').html(p1_text || 0);
+              	            	},300)
+              	            	radio_click();
+   	        			})
+   	        			$("#"+field).trigger("mousedown");
+    	        		//$("#"+field).click();
+    	        	}
+   	        		
    	        		if (editor == "datebox") {
    	        			laydate({
    	        			   elem: '#' + field
    	        			})
    	        		}
+   	        		
     	        }    
     	    });
     		/* .hover(function(){    
@@ -332,6 +387,9 @@
     	        $(this).removeClass('hover');    
     	    });   */
     	}
+		function test() {
+			$("#sex").trigger("mousedown");
+		}
 		
 		function reload() {
 			radio_click();
@@ -362,7 +420,7 @@
                  	totalPage = Math.ceil(json.total/pageSize);
                  	//totalPage = ((json.total%pageSize==0)?(json.total/pageSize):(json.total/pageSize+1));   
                	 	//$(".admin-panel").setTemplateElement("Template-List-user-show");
-               	 	$(".admin-panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/user/listUser.tpl");
+               	 	$(".admin-panel").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/user/listUser.tpl",null,{filter_data: true});
 	         		$(".admin-panel").setParam('rowCount', json.total);
 	         		$(".admin-panel").setParam('pageSize', pageSize);
 	         		$(".admin-panel").setParam('pageIndex', pageIndex);
@@ -489,8 +547,6 @@
 	   				break;
 	   			}
 	   		}
-	   		
-	   		alert(updateRow.parentid);
 	   		
 	   		if (updateRow == "") {
 	   			layer.msg("未找到要修改推荐人的的记录，请重新登录再次尝试或与管理员联系。",{icon:5});

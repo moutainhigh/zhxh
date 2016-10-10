@@ -97,15 +97,19 @@
 							<i class="icon"></i>订单
 						</a>
 						<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
-						<div class="float-menu" style="top: 0px;">
-							<ul class="sec-nav">
-								<li class="sec-nav-li menu2" code="WBM_ORDER_RETURNED">
-									<a class="sec-nav-a new-con" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist">我的订单</a>
+						<div class="float-menu" style="display: none; top: 0px; margin-top: 0px;">
+							<ul class="sec-nav clearfix sec-nav-flow" style="width: 249px;">
+								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
+									<a class="sec-nav-a li-a-color" href="javascript:;">订单管理</a>
+									<ul class="third-nav-ul">
+										<li class="sec-nav-li menu2" code="WBM_ORDER_RETURNED">
+											<a class="sec-nav-a new-con" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist">我的订单</a>
+										</li>
+										<li class="sec-nav-li menu2" code="WBM_ORDER_OUTSTOCK">
+											<a class="sec-nav-a new-con" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/suborderlist">客户订单</a>
+										</li>
+									</ul>
 								</li>
-								<li class="sec-nav-li menu2" code="WBM_ORDER_OUTSTOCK">
-									<a class="sec-nav-a new-con" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/suborderlist">客户订单</a>
-								</li>
-								
 							</ul>
 						</div>
 						</c:if>
@@ -115,24 +119,29 @@
 						<a class="customer side-menu-a new-con-p" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">
 							<i class="icon"></i>客户
 						</a>
-						<div class="float-menu" style="top: 0px;">
-							<ul class="sec-nav">
-								<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">
-									<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">客户列表</a>
+						<div class="float-menu" style="display: none; top: 0px; margin-top: 0px;">
+							<ul class="sec-nav clearfix sec-nav-flow" style="width: 249px;">
+								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
+									<a class="sec-nav-a li-a-color" href="javascript:;">客户管理</a>
+									<ul class="third-nav-ul">
+										<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">
+											<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">客户列表</a>
+										</li>
+										<c:if test="${sessionScope.pc_user_sessiion.id != '1'}">
+											<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+												<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">我的利益</a>
+											</li>
+										</c:if>
+										<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
+											<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+												<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">客户利益设置</a>
+											</li>
+											<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+												<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userRatioList">奖励转货款设置</a>
+											</li>
+										</c:if>
+									</ul>
 								</li>
-								<c:if test="${sessionScope.pc_user_sessiion.id != '1'}">
-									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
-										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">我的利益</a>
-									</li>
-								</c:if>
-								<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
-									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
-										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userDisList">客户利益设置</a>
-									</li>
-									<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
-										<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userRatioList">奖励转货款设置</a>
-									</li>
-								</c:if>
 							</ul>
 						</div>
 					</li>

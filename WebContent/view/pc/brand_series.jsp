@@ -12,6 +12,12 @@
 <script src="${pageContext.request.contextPath}/js/pc/jquery-1.9.1.min.js" type="text/javascript"></script> 
 <script src="${pageContext.request.contextPath}/js/pc/index.js" type="text/javascript"></script> 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/pc/koala.min.1.5.js"></script>
+<script type="text/javascript">
+	$(function(){
+		var height = $("#D1pic1").height();
+		$("#fsD1").height(height);
+	})
+</script>
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->
