@@ -309,8 +309,9 @@
     		obj.brandname = data.brandname;
 			obj.productname = data.productname;
 			obj.productsize = data.productsize;
-			obj.price = formatFloat(data.price,2);		//售价
-			obj.buyerdis = formatFloat(data.buyerdis,2);	//折扣
+			obj.price = data.price;		//售价
+			obj.price_txt = formatFloat(data.price,2);
+			obj.buyerdis = data.buyerdis;	//折扣
 			obj.quantity = data.productnum; 	//数量
 			var _subtotal = 0;
 			if(parseFloat(data.buyerdis) > 0){
@@ -318,7 +319,8 @@
 			}else{
 				_subtotal = data.price * data.productnum;	//小计
 			}
-			obj.subtotal = formatFloat(_subtotal,2);
+			obj.subtotal = _subtotal;
+			obj.subtotal_txt = formatFloat(_subtotal,2);
 			total = parseFloat(total) + parseFloat(obj.subtotal);
 			return obj;
     	}
