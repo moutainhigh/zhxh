@@ -147,5 +147,18 @@ public class Constants{
 	 * trantype:交易类型, 0:普通购买,1:充值-货款充值,2:充值-现金充值,3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
 	 * */
 	public static String[] TRANTYPE_TXT = {"普通购买","充值-货款充值","充值-现金充值","提现-现金账户","提现-奖励账户","提现-平台售额"};	
+	
+	/**
+	 * 系统消息
+	 */
+	public static final String ORDER_MESSAGE0_SESSION = "order_message0_session";
+	/**
+	 * 业务消息
+	 */
+	public static final String ORDER_MESSAGE1_SESSION = "order_message1_session";
+	/**
+	 * 站内信
+	 */
+	public static final String ORDER_MESSAGE2_SESSION = "order_message2_session";
 }
 

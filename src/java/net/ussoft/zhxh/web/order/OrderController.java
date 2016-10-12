@@ -10,7 +10,18 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
@@ -22,6 +33,7 @@ import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Public_user_path;
+import net.ussoft.zhxh.service.IPublicMessageService;
 import net.ussoft.zhxh.service.IPublicOrderPathService;
 import net.ussoft.zhxh.service.IPublicOrderProductService;
 import net.ussoft.zhxh.service.IPublicOrderService;
@@ -29,17 +41,8 @@ import net.ussoft.zhxh.service.IPublicUser2Service;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserPathService;
 import net.ussoft.zhxh.service.IPublicUserService;
-import net.ussoft.zhxh.util.SendSMS;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSON;
+import net.ussoft.zhxh.util.CommonUtils;
+import net.ussoft.zhxh.util.Constants;
 
 
 @Controller
@@ -60,6 +63,8 @@ public class OrderController extends BaseConstroller {
 	private IPublicOrderProductService orderProServivce;
 	@Resource
 	private IPublicOrderPathService orderPathService;
+	@Resource
+	private IPublicMessageService messageService;
 	/**
 	 * 跳转到某个页面。
 	 * @param page		跳转到参数指定的页面
@@ -76,6 +81,25 @@ public class OrderController extends BaseConstroller {
 			}  
 		}
 		return page;
+	}
+	@RequestMapping(value="/ordermain")
+	public ModelAndView ordermain(ModelMap modelMap,HttpServletRequest request) throws Exception {
+		
+		CommonUtils.removeSessionAttribute(request, Constants.ORDER_MESSAGE0_SESSION);
+		CommonUtils.removeSessionAttribute(request, Constants.ORDER_MESSAGE1_SESSION);
+		CommonUtils.removeSessionAttribute(request, Constants.ORDER_MESSAGE2_SESSION);
+		
+		Public_user userSession = (Public_user) CommonUtils.getSessionAttribute(request, Constants.PC_USER_SESSION);
+		//获取系统消息数量
+		int m0 = messageService.getMessageNum(userSession.getId(), 0);
+		int m1 = messageService.getMessageNum(userSession.getId(), 1);
+		int m2 = messageService.getMessageNum(userSession.getId(), 2);
+		
+		CommonUtils.setSessionAttribute(request, Constants.ORDER_MESSAGE0_SESSION, m0);
+		CommonUtils.setSessionAttribute(request, Constants.ORDER_MESSAGE1_SESSION, m1);
+		CommonUtils.setSessionAttribute(request, Constants.ORDER_MESSAGE2_SESSION, m2);
+		
+		return new ModelAndView("/view/order/main", modelMap);
 	}
 	
 	/**

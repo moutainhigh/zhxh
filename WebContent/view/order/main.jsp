@@ -81,6 +81,51 @@
 	            window.location.href = "${pageContext.request.contextPath}/logout.htmls";
 	        };
 	    }
+		
+		function resetFunc(resetType) {
+			var topFunc = false;
+			//标注的修改=========
+			if (resetType == "message") {
+				$.ajax({
+	    			async:false,
+	                url: "${pageContext.request.contextPath}/orderMessage/getNum.htmls",
+	                data: {'numType':resetType},
+	                type: "post",
+	                dataType:"json",
+	                success: function (json) {
+	                	if (resetType == "message") {
+	                		$("#messageTopFunc").html("");
+		                	$("#message0Func").html("");
+		                	$("#message1Func").html("");
+		                	$("#message2Func").html("");
+		                 	if (json.m0 > 0) {
+		                 		$("#message0Func").html('<span class="ui-new-func"></span>');
+		                 		topFunc = true;
+		                 	}
+		                 	if (json.m1 > 0) {
+		                 		$("#message1Func").html('<span class="ui-new-func"></span>');
+		                 		topFunc = true;
+		                 	}
+		                 	if (json.m2 > 0) {
+		                 		$("#message2Func").html('<span class="ui-new-func"></span>');
+		                 		topFunc = true;
+		                 	}
+		                 	
+		                 	if (topFunc) {
+		                 		$("#messageTopFunc").html('<span class="ui-new-func"></span>');
+		                 	}
+		                 	
+		                 	document.getElementById("mainFrame").contentWindow.resetMessage(json);
+	                	}
+	                },
+	                error: function (jqXHR, textStatus, errorThrown) {
+	                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+	                }
+	           });
+			}
+			
+			//====================
+		}
 	</script>
 </head>
 
@@ -222,22 +267,55 @@
 						</div>
 					</li>
 					<li class="message pr side-menu-li li-crop menu1" id="message" code="WBM_NOTIFY">
-						<a class="message side-menu-a new-con-p" href="javascript:;">
+						<a class="message side-menu-a new-con-p" href="javascript:;" curInd="4" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'1'}">
 							<i class="icon"></i>消息
+							<span id="messageTopFunc">
+							<c:choose>
+								<c:when test="${sessionScope.order_message0_session > 0}">
+									<span class="ui-new-func">
+								</c:when>
+								<c:when test="${sessionScope.order_message1_session > 0}">
+								 	<span class="ui-new-func">
+								</c:when>
+								<c:when test="${sessionScope.order_message2_session > 0}">
+								 	<span class="ui-new-func">
+								</c:when>
+								<c:otherwise>
+								</c:otherwise>
+							</c:choose>
+							</span>
 						</a>
 						<div class="float-menu" style="display: none; top: 0px; margin-top: 0px;">
 							<ul class="sec-nav clearfix sec-nav-flow" style="width: 249px;">
 								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
 									<a class="sec-nav-a li-a-color" href="javascript:;">消息管理</a>
 									<ul class="third-nav-ul">
+										<li class="third-nav-li menu2" code="WBM_NOTIFY_CLASSIFY">
+											<a class="third-nav-a new-con" href="javascript:;" curInd="4" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'1'}">业务消息
+												<span id="message1Func">
+												<c:if test="${sessionScope.order_message1_session > 0}">
+													<span class="ui-new-func"></span>
+												</c:if>
+												</span>
+											</a>
+										</li>
 										<li class="third-nav-li menu2" code="WBM_NOTIFY_NOTICE">
-											<a class="third-nav-a new-con" href="javascript:;">站内信</a>
+											<a class="third-nav-a new-con" href="javascript:;" curInd="4" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'2'}">站内信
+											<span id="message2Func">
+											<c:if test="${sessionScope.order_message2_session > 0}">
+												<span class="ui-new-func"></span>
+											</c:if>
+											</span>
+											</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_NOTIFY_AD">
-											<a class="third-nav-a new-con" href="javascript:;">系统消息</a>
-										</li>
-										<li class="third-nav-li menu2" code="WBM_NOTIFY_CLASSIFY">
-											<a class="third-nav-a new-con" href="javascript:;">业务消息</a>
+											<a class="third-nav-a new-con" href="javascript:;" curInd="4" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'0'}">系统消息
+											<span id="message0Func">
+											<c:if test="${sessionScope.order_message0_session > 0}">
+												<span class="ui-new-func"></span>
+											</c:if>
+											</span>
+											</a>
 										</li>
 									</ul>
 								</li>

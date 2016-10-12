@@ -25,26 +25,46 @@
 						</ul>
 					</li>
 					<li class="active">
-						<a class="" href="javascript:;">
+						<a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'2'}">
 							<span class="icon-envelope-o"></span>&nbsp;
-							<span class="badge bg-blue">5+</span>
+							<span id="m2Top">
+							<c:if test="${sessionScope.order_message2_session > 0}">
+							<span class="badge bg-blue">${sessionScope.order_message2_session}+</span>
+							</c:if>
+							</span>
 							<span class="downward"></span>
 						</a>
 						<ul class="drop-menu">
-							<li><a class="" target="_blank" href="javascript:;"><span class="icon-envelope"></span>&nbsp;您有16封邮件</a></li>
-							<li><a class="bg-gray" target="_blank" href="javascript:;"><span class="icon-envelope"></span>&nbsp;查阅更多...</a></li>
+							<span id="m2Num">
+							<c:if test="${sessionScope.order_message2_session > 0}">
+							<li><a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'2'}"><span class="icon-envelope"></span>&nbsp;您有${sessionScope.order_message2_session}封邮件</a></li>
+							</c:if>
+							</span>
+							<li><a class="bg-gray" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'2'}"><span class="icon-envelope"></span>&nbsp;查阅更多...</a></li>
 						</ul>
 					</li>
 					<li>
-						<a class="" href="javascript:;">
+						<a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'1'}">
 							<span class="icon-bell-o"></span>&nbsp;
-							<span class="badge bg-green">99+</span>
+							<span id="m1m0Top">
+							<c:if test="${sessionScope.order_message1_session > 0 || sessionScope.order_message0_session > 0}">
+							<span class="badge bg-green">${sessionScope.order_message1_session+sessionScope.order_message0_session }+</span>
+							</c:if>
+							</span>
 							<span class="downward"></span>
 						</a>
 						<ul class="drop-menu">
-							<li><a class="" target="_blank" href="javascript:;"><span class="icon-comment"></span>&nbsp;您有26条未读消息</a></li>
-							<li><a class="" target="_blank" href="javascript:;"><span class="icon-comments"></span>&nbsp;您有13条回复消息</a></li>
-							<li><a class="bg-gray" target="_blank" href="javascript:;"><span class="icon-envelope"></span>&nbsp;查看更多...</a></li>
+							<span id="m1Num">
+							<c:if test="${sessionScope.order_message1_session > 0}">
+							<li><a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'1'}"><span class="icon-comment"></span>&nbsp;您有${sessionScope.order_message1_session }条未读业务消息</a></li>
+							</c:if>
+							</span>
+							<span id="m0Num">
+							<c:if test="${sessionScope.order_message0_session > 0}">
+							<li><a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'0'}"><span class="icon-comment"></span>&nbsp;您有${sessionScope.order_message0_session }条未读系统消息</a></li>
+							</c:if>
+							</span>
+							<li><a class="bg-gray" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'1'}"><span class="icon-envelope"></span>&nbsp;查看更多...</a></li>
 						</ul>
 					</li>
 					<li>
@@ -65,5 +85,31 @@
 <script>
 	function logout(){
 		parent.window.location.href = '${pageContext.request.contextPath}/pcMain/plogout.htmls';
+	}
+	
+	function resetMessage(json) {
+		$("#m2Top").html("");
+		if (json.m2 > 0) {
+			$("#m2Top").html('<span class="badge bg-blue">'+json.m2+'+</span>');
+		}
+		$("#m2Num").html("");
+		if (json.m2 > 0) {
+			$("#m2Num").html('<li><a class="" target="_blank" href="javascript:;"><span class="icon-envelope"></span>&nbsp;您有'+json.m2+'封邮件</a></li>');
+		}
+		
+		$("#m1m0Top").html("");
+		var aa = json.m1+json.m0;
+		if (json.m1 > 0 || json.m0 > 0) {
+			$("#m1m0Top").html('<span class="badge bg-green">'+aa+'+</span>');
+		}
+		
+		$("#m1Num").html("");
+		if (json.m1 > 0) {
+			$("#m1Num").html('<li><a class="" target="_blank" href="javascript:;"><span class="icon-comment"></span>&nbsp;您有'+json.m1+'条未读业务消息</a></li>');
+		}
+		$("#m0Num").html("");
+		if (json.m0 > 0) {
+			$("#m0Num").html('<li><a class="" target="_blank" href="javascript:;"><span class="icon-comment"></span>&nbsp;您有'+json.m0+'条未读系统消息</a></li>');
+		}
 	}
 </script>
