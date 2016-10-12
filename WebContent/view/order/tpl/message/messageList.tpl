@@ -24,7 +24,7 @@
 					<td>{$T.row.messagetime}</td>
 					<td>
 						{#if $T.row.messagestate == 0}
-						<a href="javascript:;" class="button button-small border-sub" onclick="return showUpdateUser('{$T.row.id}')">已读</a>
+						<a href="javascript:;" class="button button-small border-sub" onclick="return setMessageState('{$T.row.id}')">已读</a>
 						{#/if}
 					</td>
 				</tr>
@@ -44,7 +44,7 @@
 		<td width="45" align="center"><input type="checkbox" value="0" name="checkall"></td>
 		<td colspan="3" class="tr pr10" style="text-align:left" >
 			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'messagestate')">批量已读</a> | 
-			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="del(1,'isopen')">批量删除</a> | 
+			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="delbatch()">批量删除</a> | 
 			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="reload()">刷新</a>
 		</td>
 		<td colspan="5" style="text-align:right" >

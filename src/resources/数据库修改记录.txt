@@ -387,4 +387,13 @@ insert into `zhxh`.`public_user` ( `id`, `usercode`, `username`, `phonenumber`, 
 2、public_user		机构管理表
 	（1） tuijianid			删除		改为临时字段
 	（2） tuijianman			删除		改为临时字段
+	
+2016-10-12
+1、增加收入、支出、配额、返利记录4张表。原交易记录表public_trade_bill作废。
+	收入总计（交易流水）表 	income_bill
+	支出统计（交易流水）		spending_bill
+	配额流水表结构			quota_bill
+	返利、奖励流水表结		rebate_reward_bill
+	
+	表结果见sql文件创建
 

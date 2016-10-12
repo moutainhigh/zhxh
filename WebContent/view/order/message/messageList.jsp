@@ -181,15 +181,31 @@
             });
     	}
     	
+    	function setMessageState(id) {
+    		$.ajax({
+    			async:false,
+                url: "${pageContext.request.contextPath}/orderMessage/updateBatch.htmls",
+                data: {'ids':id,'field':'messagestate','fieldValue':1},
+                type: "post",
+                dataType:"text",
+                success: function (text) {
+                 	if (text == 'success') {
+                 		layer.msg("保存成功。",{icon:6});
+                 		list();
+                 		parent.resetFunc("message");
+                 	}
+                 	else {
+                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+                 	}
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+                }
+           });
+    	}
+    	
     	function updatebatch(v,t) {
-    		var sel_id = "";
-			$('input:checkbox[name=row_id]:checked').each(function(i) {
-				if(0==i){
-					sel_id = $(this).val();
-			 	}else{
-			 		sel_id += (","+$(this).val());
-			    }
-			});
+    		var sel_id = getInfo();
 			if (sel_id == "") {
 				layer.msg("请先选择要批量操作的消息.",{icon:6});
 				return;
@@ -228,41 +244,41 @@
 	  		});
     		
     	}
-    	
-    	//=========
-    	
-    	
+    	function getInfo() {
+    		var sel_id = "";
+			$('input:checkbox[name=row_id]:checked').each(function(i) {
+				if(0==i){
+					sel_id = $(this).val();
+			 	}else{
+			 		sel_id += (","+$(this).val());
+			    }
+			});
+			
+			return sel_id;
+    	}
     	
     	function delbatch() {
-    		var sel_userid = "";
-			$('input:checkbox[name=row_id]:checked').each(function(i) {
-				if (1 != $(this).val()) {
-					if(0==i){
-						sel_userid = $(this).val();
-				 	}else{
-				 		sel_userid += (","+$(this).val());
-				    }
-				}
-			});
-			if (sel_userid == "") {
-				layer.msg("请先选择要批量操作的客户",{icon:6});
+    		var sel_id = getInfo();
+    		if (sel_id == "") {
+				layer.msg("请先选择要批量操作的消息.",{icon:6});
 				return;
 			}
 			
-    		layer.confirm('确定要批量删除选中的客户吗？', {
+    		layer.confirm('确定要批量删除选中的消息吗？', {
 	  			btn: ['确认', '取消']
 	  		}, 
 	  		function()	{
 	  			$.ajax({
 	    			async:false,
-	                url: "${pageContext.request.contextPath}/orderUser/delBatch.htmls",
-	                data: {'receiveid':sel_userid},
+	                url: "${pageContext.request.contextPath}/orderMessage/delete.htmls",
+	                data: {'ids':sel_id},
 	                type: "post",
 	                dataType:"text",
 	                success: function (text) {
 	                 	if (text == 'success') {
 	                 		layer.msg("保存成功。",{icon:6});
-	                 		radio_click();
+	                 		list();
+	                 		parent.resetFunc("message");
 	                 	}
 	                 	else {
 	                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
@@ -297,7 +313,7 @@
 				<input type="text" id="searchTxt" name="searchTxt" class="input input-auto" style="width:120px;margin-left: 20px"/>
 				<a id="searchBtn" href="javascript:;" class="button bg-main button-small" onclick="searchMessage()">检索</a>
 				<a id="addUser" href="javascript:;" onclick="messagestate(1,'messagestate')" style="margin-left: 5px" class="button bg-blue">批量已读</a>
-				<a id="addUser" href="javascript:;" onclick="addUser()" style="margin-left: 5px" class="button button-small border-red">批量删除</a>
+				<a id="addUser" href="javascript:;" onclick="delbatch()" style="margin-left: 5px" class="button button-small border-red">批量删除</a>
 			</div>
 			<div class="admin-panel"></div>
 		</div>

@@ -94,7 +94,7 @@
 		}
 		$("#m2Num").html("");
 		if (json.m2 > 0) {
-			$("#m2Num").html('<li><a class="" target="_blank" href="javascript:;"><span class="icon-envelope"></span>&nbsp;您有'+json.m2+'封邮件</a></li>');
+			$("#m2Num").html('<li><a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={\'radio_value\':\'2\'}"><span class="icon-envelope"></span>&nbsp;您有'+json.m2+'封邮件</a></li>');
 		}
 		
 		$("#m1m0Top").html("");
@@ -105,11 +105,11 @@
 		
 		$("#m1Num").html("");
 		if (json.m1 > 0) {
-			$("#m1Num").html('<li><a class="" target="_blank" href="javascript:;"><span class="icon-comment"></span>&nbsp;您有'+json.m1+'条未读业务消息</a></li>');
+			$("#m1Num").html('<li><a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={\'radio_value\':\'1\'}"><span class="icon-comment"></span>&nbsp;您有'+json.m1+'条未读业务消息</a></li>');
 		}
 		$("#m0Num").html("");
 		if (json.m0 > 0) {
-			$("#m0Num").html('<li><a class="" target="_blank" href="javascript:;"><span class="icon-comment"></span>&nbsp;您有'+json.m0+'条未读系统消息</a></li>');
+			$("#m0Num").html('<li><a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={\'radio_value\':\'0\'}"><span class="icon-comment"></span>&nbsp;您有'+json.m0+'条未读系统消息</a></li>');
 		}
 	}
 </script>

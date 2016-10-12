@@ -2,7 +2,9 @@ package net.ussoft.zhxh.web.order;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -137,6 +139,24 @@ public class OrderMessageController extends BaseConstroller {
 		String json = JSON.toJSONString(numMap);
 		
 		out.print(json);
+	}
+	/**
+	 * 删除消息
+	 * @param ids
+	 * @param response
+	 * @param request
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/delete",method=RequestMethod.POST)
+	public void delete(String ids,HttpServletResponse response,HttpServletRequest request) throws IOException {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		mService.delete(ids);
+		
+		out.print("success");
 	}
 	
 	
