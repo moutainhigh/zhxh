@@ -75,6 +75,12 @@
     	
     	function list() {
     		radio_value = $("input[name='radio_message']:checked").val();
+    		
+    		/* $("#sendM").hide();
+    		if (radio_value == 2) {
+    			$("#sendM").show();
+    		} */
+    		
     		var par = {};
     		par.receiveid = userid;
     		par.pageIndex = pageIndex-1;
@@ -309,11 +315,12 @@
 			<div class="form-group float-right" style="width:580px">
 				<input name="radio_message" type="radio" value="0"> 系统消息
  				<input name="radio_message" type="radio" value="1"> 业务消息
- 				<input name="radio_message" type="radio" value="2"> 站内信
+ 				<!-- <input name="radio_message" type="radio" value="2"> 站内信 -->
 				<input type="text" id="searchTxt" name="searchTxt" class="input input-auto" style="width:120px;margin-left: 20px"/>
 				<a id="searchBtn" href="javascript:;" class="button bg-main button-small" onclick="searchMessage()">检索</a>
 				<a id="addUser" href="javascript:;" onclick="messagestate(1,'messagestate')" style="margin-left: 5px" class="button bg-blue">批量已读</a>
 				<a id="addUser" href="javascript:;" onclick="delbatch()" style="margin-left: 5px" class="button button-small border-red">批量删除</a>
+				<!-- <a id="sendM" href="javascript:;" onclick="delbatch()" style="margin-left: 5px" class="button button-small border-sub">发站内信</a> -->
 			</div>
 			<div class="admin-panel"></div>
 		</div>

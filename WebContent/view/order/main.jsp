@@ -97,7 +97,7 @@
 	                		$("#messageTopFunc").html("");
 		                	$("#message0Func").html("");
 		                	$("#message1Func").html("");
-		                	$("#message2Func").html("");
+		                	//$("#message2Func").html("");
 		                 	if (json.m0 > 0) {
 		                 		$("#message0Func").html('<span class="ui-new-func"></span>');
 		                 		topFunc = true;
@@ -106,10 +106,10 @@
 		                 		$("#message1Func").html('<span class="ui-new-func"></span>');
 		                 		topFunc = true;
 		                 	}
-		                 	if (json.m2 > 0) {
+		                 	/* if (json.m2 > 0) {
 		                 		$("#message2Func").html('<span class="ui-new-func"></span>');
 		                 		topFunc = true;
-		                 	}
+		                 	} */
 		                 	
 		                 	if (topFunc) {
 		                 		$("#messageTopFunc").html('<span class="ui-new-func"></span>');
@@ -277,9 +277,9 @@
 								<c:when test="${sessionScope.order_message1_session > 0}">
 								 	<span class="ui-new-func">
 								</c:when>
-								<c:when test="${sessionScope.order_message2_session > 0}">
+								<%-- <c:when test="${sessionScope.order_message2_session > 0}">
 								 	<span class="ui-new-func">
-								</c:when>
+								</c:when> --%>
 								<c:otherwise>
 								</c:otherwise>
 							</c:choose>
@@ -299,7 +299,7 @@
 												</span>
 											</a>
 										</li>
-										<li class="third-nav-li menu2" code="WBM_NOTIFY_NOTICE">
+										<%-- <li class="third-nav-li menu2" code="WBM_NOTIFY_NOTICE">
 											<a class="third-nav-a new-con" href="javascript:;" curInd="4" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'2'}">站内信
 											<span id="message2Func">
 											<c:if test="${sessionScope.order_message2_session > 0}">
@@ -307,7 +307,7 @@
 											</c:if>
 											</span>
 											</a>
-										</li>
+										</li> --%>
 										<li class="third-nav-li menu2" code="WBM_NOTIFY_AD">
 											<a class="third-nav-a new-con" href="javascript:;" curInd="4" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'0'}">系统消息
 											<span id="message0Func">

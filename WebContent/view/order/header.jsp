@@ -24,7 +24,7 @@
 							<li><a class="icon-key" target="_blank" href="javascript:;"> 修改密码</a></li>
 						</ul>
 					</li>
-					<li class="active">
+					<%-- <li class="active">
 						<a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'2'}">
 							<span class="icon-envelope-o"></span>&nbsp;
 							<span id="m2Top">
@@ -42,7 +42,7 @@
 							</span>
 							<li><a class="bg-gray" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'2'}"><span class="icon-envelope"></span>&nbsp;查阅更多...</a></li>
 						</ul>
-					</li>
+					</li> --%>
 					<li>
 						<a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'1'}">
 							<span class="icon-bell-o"></span>&nbsp;
@@ -88,14 +88,14 @@
 	}
 	
 	function resetMessage(json) {
-		$("#m2Top").html("");
+		/* $("#m2Top").html("");
 		if (json.m2 > 0) {
 			$("#m2Top").html('<span class="badge bg-blue">'+json.m2+'+</span>');
-		}
-		$("#m2Num").html("");
+		} */
+		/* $("#m2Num").html("");
 		if (json.m2 > 0) {
 			$("#m2Num").html('<li><a class="" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={\'radio_value\':\'2\'}"><span class="icon-envelope"></span>&nbsp;您有'+json.m2+'封邮件</a></li>');
-		}
+		} */
 		
 		$("#m1m0Top").html("");
 		var aa = json.m1+json.m0;
