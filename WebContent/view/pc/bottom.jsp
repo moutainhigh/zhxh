@@ -14,7 +14,7 @@
    	   	    <a href="javascript:;" class="map">网站地图</a>
    	    </div>
    	    <div class="fr footer-right">
-   	   	    <span>Copyright © 集丽科技 备案号：京ICP备16003113号</span>
+   	   	    <span>Copyright © 集丽（北京）科技有限公司 备案号：京ICP备16003113号-1</span>
    	    </div>
     </div>
     <div class="footer-tk footer-Itk">

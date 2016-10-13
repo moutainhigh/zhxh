@@ -18,7 +18,7 @@
 	<!-- 引入 vintage 主题 -->
 	<script src="${pageContext.request.contextPath}/js/echarts/theme/shine.js"></script>
     <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
-    
+    <script src="${pageContext.request.contextPath}/js/js.validate.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/view/order/tpl/bank/bank.js" type="text/javascript"></script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/view/order/tpl/bank/page.css">
@@ -49,6 +49,7 @@
                 dataType:"json",
                 success: function (json) {
                 	$("#banks").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/bankList.tpl");
+                	$("#banks").setParam("path","${pageContext.request.contextPath}/js/pintuer/pintuer.js");
                 	$("#banks").setParam("identity",json.identity);
                 	$("#banks").processTemplate(json.data);
                 },
@@ -212,8 +213,10 @@
 							<input type="hidden" id="_userid" />
 							<input type="hidden" id="_parentid" />
 							<input type="hidden" id="_trantype" />
+							<input type="hidden" id="_identity" />
+							<input type="hidden" id="_detailstype" />
 						</div>
-						<div id="accountdetail" class="panel-body">
+						<div id="billDetail" class="panel-body">
 							<p>暂无数据</p>
 						</div>
 					</div>

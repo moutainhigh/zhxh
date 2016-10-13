@@ -1,13 +1,13 @@
 package net.ussoft.zhxh.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
-import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user_bank;
+import net.ussoft.zhxh.model.Spending_bill;
 
 /**
  * 个人账户管理
@@ -91,14 +91,14 @@ public interface IPublicUserBankService {
 	 * @param identity 身份
 	 * @return
 	 * */
-	public int recharge(Public_trade_bill bill,String identity);
+	public int recharge(Income_bill bill,String identity);
 	
 	/**
 	 * 提现
 	 * @param bill	交易流水
 	 * @param identity 身份
 	 * */
-	public int withdrawal(Public_trade_bill bill,String identity);
+	public int withdrawal(Spending_bill bill,String identity);
 	
 	/**
 	 * 设置配额
@@ -107,7 +107,7 @@ public interface IPublicUserBankService {
 	 * @param amount
 	 * @return
 	 * */
-	public int setQuota(String userid,String parentid,float amount);
+	public int setQuota(String userid,String parentid,int amount);
 	
 	/**
 	 * 转货款

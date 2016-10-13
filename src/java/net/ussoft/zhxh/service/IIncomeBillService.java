@@ -3,35 +3,35 @@ package net.ussoft.zhxh.service;
 import java.util.List;
 import java.util.Map;
 
+import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.PageBean;
-import net.ussoft.zhxh.model.Public_trade_bill;
 
 /**
- * 提现记录
+ * 收入-账单流水记录
  * @author guodh
- * @version v1.0 2016.07.27
+ * @version v1.0 2016.10.12
  * */
-public interface IPublicTradeBillService {
+public interface IIncomeBillService {
 
 	/**
 	 * 根据ID获取对象
 	 * @param id
-	 * @return Public_bankget_list
+	 * @return Income_bill
 	 * */
-	public Public_trade_bill getById(String id);
+	public Income_bill getById(String id);
 	
 	/**
 	 * 根据流水单号获取对象
-	 * @param billid
+	 * @param billno
 	 * @return
 	 * */
-	public Public_trade_bill getByBillid(String billid);
+	public Income_bill getByBillno(String billno);
 	
 	/**
 	 * 查询所有
 	 * @return list
 	 * */
-	public List<Public_trade_bill> list();
+	public List<Income_bill> list();
 	
 	/**
 	 * 查询所有 分页
@@ -39,7 +39,7 @@ public interface IPublicTradeBillService {
 	 * @param pageBean
 	 * @return pagebean
 	 * */
-	public PageBean<Public_trade_bill> list(Map<String, Object> map,PageBean<Public_trade_bill> pageBean);
+	public PageBean<Income_bill> list(Map<String, Object> map,PageBean<Income_bill> pageBean);
 	
 	/**
 	 * 查询所有 分页
@@ -54,17 +54,17 @@ public interface IPublicTradeBillService {
 	
 	/**
 	 * 添加
-	 * @param Public_trade_bill
+	 * @param Income_bill
 	 * @return 
 	 * */
-	public Public_trade_bill insert(Public_trade_bill bankgetList);
+	public Income_bill insert(Income_bill bill);
 	
 	/**
 	 * 修改
-	 * @param Public_trade_bill
+	 * @param Income_bill
 	 * @return 
 	 * */
-	public int update(Public_trade_bill bankgetList);
+	public int update(Income_bill bill);
 	
 	/**
 	 * 删除

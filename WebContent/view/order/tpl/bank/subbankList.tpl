@@ -1,11 +1,13 @@
+<script src="{$P.path}"></script>
+<div class="collapse">
 {#foreach $T as row}
 {#if $T.row.userid != "1"}
-<div class="panel border-sub">
+<div class="panel border-sub {$P.current_uid == $T.row.userid ? 'active':''}">
 	<div class="panel-head">
-		<strong>我的帐户[<span style="color:red">{$T.row.companyname}</span>]</strong>
-		<span class="float-right"><strong>状态[<span style="color:{#if $T.row.bankstate == 0}red{#else}blue{#/if}">{$T.row.bankstatetxt}</span>]</strong></span>
+		<strong>客户资金帐户[<span style="color:red">{$T.row.companyname}</span>]</strong>
+		<span class="float-right"><strong>状态[<a href="javascript:;" onclick="setAccountStatus('{$T.row.userid}','{$T.row.parentid}','{$T.row.bankstate}')"><span id="_state" style="color:{#if $T.row.bankstate == 0}red{#else}blue{#/if}">{$T.row.bankstatetxt}</span></a>]</strong></span>
 	</div>
-	<div class="panel-body">
+	<div class="panel-body" id="{$T.row.id}">
 		<table class="table">
 			<tbody>
 				<tr>
@@ -17,7 +19,7 @@
 					<tr>
 						<td align="center">收入总计</td>
 						<td>￥{$T.row.incomebank}</td>
-						<td align="right"><a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="accountDetail('','{$T.row.userid}','1,2','A')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">支出总计</td>
@@ -42,7 +44,7 @@
 					<tr>
 						<td align="center">配额总计</td>
 						<td>￥{$T.row.quotabank}</td>
-						<td align="right"><a href="javascript:;" onclick="setQuota('{$T.row.userid}')">设置配额</a> | <a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="setQuota('{$T.row.userid}')">设置配额</a> | <a href="javascript:;" onclick="quotaBillDetail('{$T.row.userid}','{$T.row.parentid}')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">充值总计</td>
@@ -53,12 +55,12 @@
 					<tr>
 						<td align="center">充值总计</td>
 						<td>￥{$T.row.depositbank}</td>
-						<td align="right"><a href="javascript:;" onclick="accountDetail('{$T.row.userid}','{$T.row.parentid}','1')">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="incomeBillDetail('{$T.row.userid}','{$T.row.parentid}','2','C')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">配额总计</td>
 						<td>￥{$T.row.quotabank}</td>
-						<td align="right"><a href="javascript:;" onclick="setQuota('{$T.row.userid}')">设置配额</a> | <a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="setQuota('{$T.row.userid}')">设置配额</a> | <a href="javascript:;" onclick="quotaBillDetail('{$T.row.userid}','{$T.row.parentid}')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">平台售额总计</td>
@@ -68,7 +70,7 @@
 					<tr>
 						<td align="center">平台售额可提现帐户</td>
 						<td>￥{$T.row.selltakenbank}</td>
-						<td align="right"><a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','3','C')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">可支配账户</td>
@@ -78,17 +80,17 @@
 					<tr>
 						<td align="center">返利</td>
 						<td>￥{$T.row.rebatesbank}</td>
-						<td align="right"><a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="disBillDetail('{$T.row.userid}','{$T.row.parentid}',1)">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">奖励总计</td>
 						<td>￥{$T.row.bonusesbank}</td>
-						<td align="right"><a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="disBillDetail('{$T.row.userid}','{$T.row.parentid}',2)">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">奖励可提现账户</td>
 						<td>￥{$T.row.bonusestakenbank}</td>
-						<td align="right"><a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','4','C')">查看记录</a></td>
 					</tr>
 				{#/if}
 			</tbody>
@@ -96,5 +98,5 @@
 	</div>
 </div>
 {#/if}
-<br>
 {#/for}
+</div>

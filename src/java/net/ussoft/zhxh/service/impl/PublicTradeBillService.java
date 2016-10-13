@@ -53,18 +53,10 @@ public class PublicTradeBillService implements IPublicTradeBillService{
 	}
 
 	@Override
-	public PageBean<Map<String,Object>> list(String userid,String parentid,List<String> trantype,PageBean<Map<String,Object>> pageBean) {
+	public PageBean<Map<String,Object>> list(String userid,String parentid,List<String> trantype,String identity,PageBean<Map<String,Object>> pageBean) {
 		StringBuffer sb = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
 		sb.append("SELECT t.*,p.username AS u_username,p.companyname AS u_companyname,p1.username AS p_username,p1.companyname AS p_companyname FROM public_trade_bill t,public_user p,public_user p1 WHERE t.userid = p.id AND t.parentid = p1.id ");
-		if(null != userid && !"".equals(userid)){
-			sb.append(" AND t.userid= ?");
-			values.add(userid);
-		}
-		if(null != parentid && !"".equals(parentid)){
-			sb.append(" AND t.parentid= ?");
-			values.add(parentid);
-		}
 		if(null != trantype && trantype.size() > 0){
 			sb.append(" AND t.trantype in(");
 			Serializable[] ss=new Serializable[trantype.size()];
@@ -74,6 +66,27 @@ public class PublicTradeBillService implements IPublicTradeBillService{
 			values.addAll(trantype);
 		}
 		sb.append(" AND t.status=1");
+		
+		if("A".equals(identity)){
+			//代理
+			if(!"1".equals(parentid)){
+				sb.append(" AND (");
+				sb.append(" t.trantype=2");//现金充值
+				sb.append(" AND t.userid= ?");
+				values.add(parentid);
+				sb.append(" OR t.parentid= ?");
+				values.add(parentid);
+				sb.append(" ) ");
+			}else{
+				sb.append(" AND t.parentid= ?");
+				values.add(parentid);
+			}
+		}else if("C".equals(identity)){
+			sb.append(" AND t.userid= ?");
+			values.add(userid);
+			sb.append(" AND t.parentid= ?");
+			values.add(parentid);
+		}
 		
 		return bankgetListDao.searchForMap(sb.toString(), values, pageBean);
 	}

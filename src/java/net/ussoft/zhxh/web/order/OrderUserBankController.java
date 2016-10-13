@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -14,16 +13,20 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
-import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user;
-import net.ussoft.zhxh.service.IPublicTradeBillService;
+import net.ussoft.zhxh.model.Public_user_bank;
+import net.ussoft.zhxh.model.Spending_bill;
+import net.ussoft.zhxh.service.IIncomeBillService;
+import net.ussoft.zhxh.service.IPublicDisDetailsService;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserService;
-import net.ussoft.zhxh.util.Constants;
+import net.ussoft.zhxh.service.IQuotaBillService;
+import net.ussoft.zhxh.service.ISpendingBillService;
+import net.ussoft.zhxh.util.BillNO;
 import net.ussoft.zhxh.util.DateUtil;
-import net.ussoft.zhxh.util.OrderNO;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +47,13 @@ public class OrderUserBankController extends BaseConstroller {
 	@Resource
 	private IPublicUserBankService userBankService;
 	@Resource
-	private IPublicTradeBillService billService;
+	private IIncomeBillService incomeBillService;
+	@Resource
+	private IQuotaBillService quotaBillService;
+	@Resource
+	private ISpendingBillService spendingBillService;
+	@Resource
+	private IPublicDisDetailsService disDetailsService;
 	@Resource
 	private IPublicUserService userService;
 	
@@ -76,6 +85,42 @@ public class OrderUserBankController extends BaseConstroller {
 	}
 	
 	/**
+	 * 设置资金账户的状态-开启、冻结
+	 * @param userid
+	 * @param parentid
+	 * @param state
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/setAccountState",method=RequestMethod.POST)
+	public void setAccountState(String userid,String parentid,int state,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if(userid == null || "".equals(userid) || parentid == null || "".equals(parentid)){
+			out.print("error");
+			return;
+		}
+		String result = "";
+		Public_user_bank userbank = userBankService.getUserBank(userid, parentid);
+		if(state == 0){
+			userbank.setBankstate(1);
+			userbank.setBankstatetxt("正常");
+			result = "开启";
+		}else{
+			userbank.setBankstate(0);
+			userbank.setBankstatetxt("冻结");
+			result = "冻结";
+		}
+		int num = userBankService.update(userbank);
+		if(num > 0){
+			out.print(result);
+			return;
+		}
+		out.print("error");
+	}
+	
+	/**
 	 * 充值
 	 * @param parentid
 	 * @param amount
@@ -92,23 +137,31 @@ public class OrderUserBankController extends BaseConstroller {
 			out.print("error");
 			return;
 		}
-		Public_user user = getSessionUser();
-		Public_trade_bill bill = new Public_trade_bill();
+		
+		//充值交易流水
+		Income_bill bill = new Income_bill();
 		bill.setId(UUID.randomUUID().toString());
-		bill.setBillid(OrderNO.getOrderNo());
-		bill.setParentid(parentid);
+		bill.setBillno(BillNO.getBillNo());	//流水号
+//		bill.setOrderid(orderid);
 		Public_user p_user = userService.getById(parentid);
-		bill.setP_useranme(p_user.getUsername());
+		bill.setParentid(parentid);
+		bill.setP_username(p_user.getUsername());
+		bill.setP_company(p_user.getCompanyname());
+		Public_user user = getSessionUser();
 		bill.setUserid(user.getId());
-		bill.setUsername(user.getUsername());
-		bill.setAmount(amount);
+		bill.setU_username(user.getUsername());
+		bill.setU_company(user.getCompanyname());
+		bill.setAccount_receivable(amount);		//应收款
+		bill.setAccount_real(amount);			//实收款
 		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
-//		bill.setPaytype(paytype); //支付类型
-		bill.setTrantype(trantype);//交易类型	trantype:交易类型, 0:普通购买,1:充值-货款充值,2:充值-现金充值,3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
-		bill.setTrantypetxt(Constants.TRANTYPE_TXT[trantype]);
+//		bill.setPaytype(paytype);
+		bill.setTrantype(trantype);	//交易类型——1：现金充值，2：货款充值，3：售额（全），4：售额（分期）
+		String[] TRANTYPE_TXT = {"","现金充值","货款充值","售额（全款）","售额（分期）"};
+		bill.setTrantypetxt(TRANTYPE_TXT[trantype]);
 		bill.setStatus(0);	//状态：0失败，1成功
 		
-		bill = billService.insert(bill);
+		
+		bill = incomeBillService.insert(bill);
 		if(bill != null){
 			int num = userBankService.recharge(bill, user.getIdentity());
 			if(num > 0){
@@ -136,22 +189,25 @@ public class OrderUserBankController extends BaseConstroller {
 			out.print("error");
 			return;
 		}
-		Public_user user = getSessionUser();
-		Public_trade_bill bill = new Public_trade_bill();
+		//支出-账单流水
+		Spending_bill bill = new Spending_bill();
 		bill.setId(UUID.randomUUID().toString());
-		bill.setBillid(OrderNO.getOrderNo());
-		bill.setParentid(parentid);
-		Public_user p_user = userService.getById(parentid);
-		bill.setP_useranme(p_user.getUsername());
+		bill.setBillno(BillNO.getBillNo());
+		Public_user user = getSessionUser();
 		bill.setUserid(user.getId());
-		bill.setUsername(user.getUsername());
+		bill.setU_username(user.getUsername());
+		bill.setU_company(user.getCompanyname());
+		Public_user p_user = userService.getById(parentid);
+		bill.setParentid(parentid);
+		bill.setP_username(p_user.getUsername());
+		bill.setP_company(p_user.getCompanyname());
 		bill.setAmount(amount);
 		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
-//		bill.setPaytype(paytype); //支付类型
-		bill.setTrantype(trantype);//交易类型	trantype:交易类型, 0:普通购买,1:充值-货款充值,2:充值-现金充值,3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
-		bill.setTrantypetxt(Constants.TRANTYPE_TXT[trantype]);
-		bill.setStatus(0);	//状态：0失败，1成功
-		bill = billService.insert(bill);
+		bill.setTrantype(trantype); //1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
+		String[] TRANTYPE_TXT = {"","平台可提现账户提现","代理可提现账户提现","店平台售额提现","店奖励可提现账户提现"};
+		bill.setTrantypetxt(TRANTYPE_TXT[trantype]);
+		bill.setStatus(0);	//-1:失败，0：提交申请，1：成功
+		bill = spendingBillService.insert(bill);
 		if(bill != null){
 			int num = userBankService.withdrawal(bill, user.getIdentity());
 			if(num > 0){
@@ -170,7 +226,7 @@ public class OrderUserBankController extends BaseConstroller {
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/setQuota",method=RequestMethod.POST)
-	public void setQuota(String userid,float amount,HttpServletResponse response) throws IOException {
+	public void setQuota(String userid,int amount,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -236,14 +292,16 @@ public class OrderUserBankController extends BaseConstroller {
 	}
 	
 	/**
-	 * 获取资金帐户明细
+	 * 收入总计-账单流水
 	 * @param parentid
 	 * @param userid
+	 * @param trantype
+	 * @param identity
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value="/accountDetail",method=RequestMethod.POST)
-	public void accountDetail(String parentid,String userid,String trantype,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	@RequestMapping(value="/incomeBillDetail",method=RequestMethod.POST)
+	public void incomeBillDetail(String parentid,String userid,String trantype,String identity,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -258,7 +316,7 @@ public class OrderUserBankController extends BaseConstroller {
 			String[] arr = trantype.split(",");
 			Collections.addAll(trantypes, arr);
 		}
-		p = billService.list(userid, parentid, trantypes, p);
+		p = incomeBillService.list(userid, parentid, trantypes, identity, p);
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("total", p.getRowCount());
@@ -268,6 +326,99 @@ public class OrderUserBankController extends BaseConstroller {
 		out.print(json);
 	}
 	
+	/**
+	 * 支出总计-账单流水
+	 * @param parentid
+	 * @param userid
+	 * @param trantype
+	 * @param identity
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/spendingBillDetail",method=RequestMethod.POST)
+	public void spendingBillDetail(String parentid,String userid,String trantype,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		List<String> trantypes = new ArrayList<String>();
+		if(null != trantype && !"".equals(trantype)){
+			String[] arr = trantype.split(",");
+			Collections.addAll(trantypes, arr);
+		}
+		p = spendingBillService.list(userid, parentid, trantypes, p);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
 	
+	/**
+	 * 配额-账单流水
+	 * @param parentid
+	 * @param userid
+	 * @param trantype
+	 * @param identity
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/quotaBillDetail",method=RequestMethod.POST)
+	public void quotaBillDetail(String parentid,String userid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		p = quotaBillService.list(userid, parentid, p);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 返利、奖励-账单流水
+	 * @param parentid
+	 * @param userid
+	 * @param detailstype 1:返利,2:奖励
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/rebateRewardBill",method=RequestMethod.POST)
+	public void rebateRewardBill(String parentid,String userid,int detailstype,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+
+		p = disDetailsService.list(userid, parentid, detailstype, p);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
 	
 }

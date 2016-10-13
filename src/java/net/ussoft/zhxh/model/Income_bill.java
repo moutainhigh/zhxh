@@ -12,7 +12,11 @@ public class Income_bill {
 	private String billno;				//流水单号
 	private String orderid;				//订单id
 	private String parentid;			//上级id
+	private String p_username;			//姓名
+	private String p_company;			//机构名称
 	private String userid;				//用户id
+	private String u_username;
+	private String u_company;			//机构名称
 	private Float account_receivable;	//应收款
 	private Float account_real;			//实收款
 	private Float downpayment;			//首付款（分期）
@@ -144,6 +148,30 @@ public class Income_bill {
 	}
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+	public String getP_username() {
+		return p_username;
+	}
+	public void setP_username(String p_username) {
+		this.p_username = p_username;
+	}
+	public String getU_username() {
+		return u_username;
+	}
+	public void setU_username(String u_username) {
+		this.u_username = u_username;
+	}
+	public String getP_company() {
+		return p_company;
+	}
+	public void setP_company(String p_company) {
+		this.p_company = p_company;
+	}
+	public String getU_company() {
+		return u_company;
+	}
+	public void setU_company(String u_company) {
+		this.u_company = u_company;
 	}
 	
 }

@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import net.ussoft.zhxh.dao.IncomeBillDao;
 import net.ussoft.zhxh.dao.PublicDisDetailsDao;
 import net.ussoft.zhxh.dao.PublicLogDao;
 import net.ussoft.zhxh.dao.PublicMessageDao;
@@ -16,9 +17,11 @@ import net.ussoft.zhxh.dao.PublicPhoneCodeLogDao;
 import net.ussoft.zhxh.dao.PublicProductSizeRebateDao;
 import net.ussoft.zhxh.dao.PublicSetBonusesRatioDao;
 import net.ussoft.zhxh.dao.PublicSetUserStandardDao;
-import net.ussoft.zhxh.dao.PublicTradeBillDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.dao.PublicUserDao;
+import net.ussoft.zhxh.dao.QuotaBillDao;
+import net.ussoft.zhxh.dao.SpendingBillDao;
+import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.Public_dis_details;
 import net.ussoft.zhxh.model.Public_log;
 import net.ussoft.zhxh.model.Public_message;
@@ -28,11 +31,12 @@ import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_product_size_rebate;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_set_user_standard;
-import net.ussoft.zhxh.model.Public_trade_bill;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
+import net.ussoft.zhxh.model.Quota_bill;
+import net.ussoft.zhxh.model.Spending_bill;
 import net.ussoft.zhxh.service.IPublicUserBankService;
-import net.ussoft.zhxh.util.Constants;
+import net.ussoft.zhxh.util.BillNO;
 import net.ussoft.zhxh.util.DateUtil;
 
 import org.springframework.stereotype.Service;
@@ -44,7 +48,11 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Resource
 	private PublicUserBankDao userBankDao;
 	@Resource
-	private PublicTradeBillDao billDao;
+	private IncomeBillDao incomeBillDao;
+	@Resource
+	private SpendingBillDao spendingBillDao;
+	@Resource
+	private QuotaBillDao quotaBillDao;
 	@Resource
 	private PublicLogDao logDao;
 	@Resource
@@ -305,7 +313,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 //	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	@Transactional("txManager")
 	@Override
-	public synchronized int recharge(Public_trade_bill bill,String identity){
+	public synchronized int recharge(Income_bill bill,String identity){
 		//第三方支付返回成功后执行，此处是否需要添加线程锁-例如服务器返回了两次（应该不会）
 		try {
 			//当前账户
@@ -313,16 +321,16 @@ public class PublicUserBankService implements IPublicUserBankService{
 			//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
 			Public_user_bank bank_PT = getUserBank("1", "1");
 			//充值金额
-			float amount = bill.getAmount();
+			float amount = bill.getAccount_real(); //实收款
 			//平台账户变更
 			bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
 			bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
 			bank.setDepositbank(bank.getDepositbank() + amount);		//充值累计（当前操作账户）
 			if("A".equals(identity)){
-				if(bill.getTrantype() == 1)	{
+				if(bill.getTrantype() == 2)	{
 					//货款充值
 					bank.setHavebank(bank.getHavebank() + amount);	//增加代理商可支配账户
-				}else if(bill.getTrantype() == 2){
+				}else if(bill.getTrantype() == 1){
 					//现金充值
 					bank.setTakenbank(bank.getTakenbank() + amount);	//增加代理可提现账户
 					bank.setIncomebank(bank.getIncomebank() + amount);	//增加代理收入总和
@@ -346,14 +354,12 @@ public class PublicUserBankService implements IPublicUserBankService{
 			bank = userBankDao.update(bank);
 			//更新流水表状态
 			bill.setStatus(1); //成功
-			bill = updateBillStatus(bill);
-			//加日志 
-			String logtype = "deposit";	//充值
-			saveLog(bill, logtype, bill.getTrantypetxt());
+			bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+			bill = incomeBillDao.update(bill);
 			//添加充值消息
 			int messagetype = 1;	//业务消息
-			String messagetxt = bill.getUsername()+",进行了充值，充值金额为："+amount;
-			createMsg(bill.getUserid(), bill.getUsername(),bill.getParentid(),bill.getP_useranme(), messagetype, messagetxt,bill.getId());
+			String messagetxt = "【"+bill.getU_company()+"】进行了充值，充值金额为："+amount;
+			createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
 			
 			return 1;
 		} catch (Exception e) {
@@ -369,7 +375,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 	 * */
 	@Transactional("txManager")
 	@Override
-	public synchronized int withdrawal(Public_trade_bill bill,String identity) {
+	public synchronized int withdrawal(Spending_bill bill,String identity) {
 		//上级账户的金额判断，提现的第三方流程是什么样的方式
 		
 		try {
@@ -387,7 +393,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 				//可提现账户-提现
 				bank.setTakenbank(bank.getTakenbank() - amount);		//冲减可提现账户 - 当前操作账户
 			}else if("C".equals(identity)){
-				//trantype——3:提现-现金账户,4:提现-奖励账户,5:提现-平台售额
+				//trantype——1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
 				if(bill.getTrantype() == 4){
 					//奖励账户-提现
 					bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);		//冲减店奖励可提现账户
@@ -399,7 +405,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 						//代理账户变更
 						bank_A = userBankDao.update(bank_A);
 					}
-				}else if(bill.getTrantype() == 5){
+				}else if(bill.getTrantype() == 3){
 					//平台售额-提现
 					bank.setSelltakenbank(bank.getSelltakenbank() - amount);		//冲减店平台售额可提现账户
 				}
@@ -411,14 +417,13 @@ public class PublicUserBankService implements IPublicUserBankService{
 			bank = userBankDao.update(bank);
 			//更新流水表状态
 			bill.setStatus(1);	//成功
-			bill = updateBillStatus(bill);
-			//加日志 
-			String logtype = "withdrawal";	//提现
-			saveLog(bill, logtype, Constants.TRANTYPE_TXT[bill.getTrantype()]);
+			bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+			bill = spendingBillDao.update(bill);
+			
 			//添加提现消息
 			int messagetype = 1;	//业务消息
-			String messagetxt = bill.getUsername()+",进行了提现，提现金额为："+amount;
-			createMsg(bill.getUserid(), bill.getUsername(),bill.getParentid(),bill.getP_useranme(), messagetype, messagetxt,bill.getId());
+			String messagetxt = "【"+bill.getU_company()+"】进行了提现，提现金额为："+amount;
+			createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
 			
 			return 1;
 		} catch (Exception e) {
@@ -429,20 +434,38 @@ public class PublicUserBankService implements IPublicUserBankService{
 	
 	@Transactional("txManager")
 	@Override
-	public int setQuota(String userid,String parentid,float amount) {
-		Public_user uuser = userDao.get(userid);
+	public int setQuota(String userid,String parentid,int amount) {
+		Public_user uuser = userDao.get(userid);	//
 		Public_user puser = userDao.get(parentid);
+		
 		Public_user_bank bank = getUserBank(userid, parentid);
+		float before_amount = bank.getQuotabank();
+		float after_amount = bank.getQuotabank() + amount;
 		bank.setQuotabank(bank.getQuotabank() + amount);	//配额累计
 		bank.setHavebank(bank.getHavebank() + amount);		//增加可支配账户
 		bank = userBankDao.update(bank);
-		//日志
-		Public_log log = saveLog(userid, parentid, "quota","配额",amount,"");
+		
+		//添加配额-账单流水
+		Quota_bill bill = new Quota_bill();
+		bill.setId(UUID.randomUUID().toString());
+		bill.setBillno(BillNO.getBillNo());
+		bill.setParentid(parentid);
+		bill.setP_username(puser.getUsername());
+		bill.setP_company(puser.getCompanyname());
+		bill.setUserid(userid);
+		bill.setU_username(uuser.getUsername());
+		bill.setU_company(uuser.getCompanyname());
+		bill.setAmount(amount);
+		bill.setBefore_amount((int)before_amount);	//配额前
+		bill.setAfter_amount((int)after_amount);	//配额后
+		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		bill = quotaBillDao.save(bill);
+
 		//业务消息
 		int messagetype = 1;	//业务消息
-		String messagetxt = "尊敬的客户您好，"+puser.getUsername()+"给您设置了配额，金额："+amount;
+		String messagetxt = "尊敬的客户您好，【"+puser.getCompanyname()+"】给您设置了配额，金额："+amount;
 		createMsg(puser.getId(), puser.getUsername(), uuser.getId(), uuser.getUsername(), messagetype, messagetxt,"");
-		if(bank != null && log != null){
+		if(bank != null && bill != null){
 			return 1;
 		}
 		return 0;
@@ -503,37 +526,6 @@ public class PublicUserBankService implements IPublicUserBankService{
 	public int platformSale() {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-	
-	/**
-	 * 修改支付账单流水 状态
-	 * @param bill
-	 * @return 
-	 * */
-	private Public_trade_bill updateBillStatus(Public_trade_bill bill){
-		bill.setStatus(1);	//支付成功、提现成功
-		bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
-		return billDao.update(bill);
-	}
-	
-	/**
-	 * 添加日志
-	 * @param bill  账单流水表
-	 * @param logtype	操作类型
-	 * @return 
-	 * */
-	private Public_log saveLog(Public_trade_bill bill,String logtype,String logmemo){
-		Public_log log = new Public_log();
-		log.setId(UUID.randomUUID().toString());
-		log.setUserid(bill.getUserid());	//主操作人
-		log.setTouserid(bill.getParentid());			//被操作人
-		log.setLogtype(logtype);	//操作类型
-		log.setLogmemo(logmemo);
-		log.setLogtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
-		log.setLognum(bill.getId());		//流水表ID
-		log.setLogpay(bill.getAmount());	//金额
-		
-		return logDao.save(log);
 	}
 	
 	/**
@@ -651,19 +643,6 @@ public class PublicUserBankService implements IPublicUserBankService{
 		values.add(userid);
 		values.add(parentid);
 		List<Public_set_bonuses_ratio> list = ratioDao.search(sql, values);
-		return list.size() > 0 ? list.get(0) : null;
-	}
-	
-	/**
-	 * 充值/体现-账单流水
-	 * @param billid
-	 * @return
-	 * */
-	private Public_trade_bill getTradeBill(String billid){
-		String sql = "SELECT * FROM Public_trade_bill WHERE billid = ?";
-		List<Object> values = new ArrayList<Object>();
-		values.add(billid);
-		List<Public_trade_bill> list = billDao.search(sql, values);
 		return list.size() > 0 ? list.get(0) : null;
 	}
 	

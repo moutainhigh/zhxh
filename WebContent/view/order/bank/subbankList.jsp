@@ -34,7 +34,9 @@
     
     <script type="text/javascript">
     	var userid = '${sessionScope.pc_user_sessiion.id}';
+    	var current_uid; //当前操作的账户
 	    $(function(){
+	    	current_uid = "";
 	        getUserBank();
 	    })
 	    
@@ -49,7 +51,9 @@
                 dataType:"json",
                 success: function (json) {
                 	$("#banks").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/subbankList.tpl");
+                	$("#banks").setParam("path","${pageContext.request.contextPath}/js/pintuer/pintuer.js");
                 	$("#banks").setParam("identity",json.identity);
+                	$("#banks").setParam("current_uid",current_uid);
                 	$("#banks").processTemplate(json.data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -70,6 +74,7 @@
    	                dataType:"text",
    	                success: function (text) {
    	                	if(text == "success"){
+   	                		current_uid = userid;
    	                		getUserBank();
    	                		layer.msg("配额添加成功",{icon:6});
    	                	}else{
@@ -83,6 +88,36 @@
    			});
 	    }
  		
+	    //
+	    function setAccountStatus(uid,pid,state){
+	    	var state_txt = ['开启','冻结'];
+	    	var cf = "您确定要"+state_txt[state]+"该账户吗？";
+			layer.confirm(cf, {title:'系统提示',icon:3,
+				btn: ['确定','取消'] //按钮
+			}, function(index){
+				$.ajax({
+	    			async:false,
+	                url: "${pageContext.request.contextPath}/orderUserBank/setAccountState.htmls",
+	                data: {userid:uid,parentid:pid,state:state},
+	                type: "post",
+	                dataType:"text",
+	                success: function (text) {
+	                	if(text != "error"){
+	                		current_uid = uid;
+	                		getUserBank();
+	                		layer.msg("账户已"+text,{icon:6});
+	                	}else{
+	                		layer.msg("操作失败！",{icon:6});
+	                	}
+	                },
+	                error: function (jqXHR, textStatus, errorThrown) {
+	                    alert(jqXHR.responseText);
+	                }
+	           	});
+	   			layer.close(index);
+			}, function(){
+			});
+	    }
     </script>
 </head>
 <body>
@@ -106,8 +141,10 @@
 							<input type="hidden" id="_userid" />
 							<input type="hidden" id="_parentid" />
 							<input type="hidden" id="_trantype" />
+							<input type="hidden" id="_identity" />
+							<input type="hidden" id="_detailstype" />
 						</div>
-						<div id="accountdetail" class="panel-body">
+						<div id="billDetail" class="panel-body">
 							<p>暂无数据</p>
 						</div>
 					</div>
