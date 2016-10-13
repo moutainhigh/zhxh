@@ -28,7 +28,7 @@
 						<tr>
 							<td align="center">可提现帐户</td>
 							<td>￥{$T.row.takenbank}</td>
-							<td align="right"><a href="javascript:;">提现</a> | <a href="javascript:;">查看记录</a></td>
+							<td align="right"><a href="javascript:;" onclick="withdrawal('{$T.row.parentid}','{$T.row.takenbank}',1)">提现</a> | <a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','1','A')">提现记录</a></td>
 						</tr>
 						<tr>
 							<td align="center">平台售额总计</td>
@@ -49,7 +49,7 @@
 						<tr>
 							<td align="center">可提现帐户</td>
 							<td>￥{$T.row.takenbank}</td>
-							<td align="right"><a href="javascript:;" onclick="recharge('{$T.row.parentid}',1)">充值</a> | <a href="javascript:;" onclick="withdrawal('{$T.row.parentid}','{$T.row.takenbank}',2)">提现</a></td>
+							<td align="right"><a href="javascript:;" onclick="recharge('{$T.row.parentid}',1)">充值</a> | <a href="javascript:;" onclick="withdrawal('{$T.row.parentid}','{$T.row.takenbank}',2)">提现</a> | <a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','2','A')">提现记录</a></td>
 						</tr>
 						<tr>
 							<td align="center">可支配账户</td>

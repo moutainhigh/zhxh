@@ -19,22 +19,22 @@
 					<tr>
 						<td align="center">收入总计</td>
 						<td>￥{$T.row.incomebank}</td>
-						<td align="right"><a href="javascript:;" onclick="accountDetail('','{$T.row.userid}','1,2','A')">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="incomeBillDetail('','{$T.row.userid}','1,2','A')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">支出总计</td>
 						<td>￥{$T.row.costbank}</td>
-						<td align="right"><a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="spendingBillDetail('','{$T.row.userid}','1,2,3,4')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">可提现帐户</td>
 						<td>￥{$T.row.takenbank}</td>
-						<td align="right"><a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','2','A')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">可支配账户</td>
 						<td>￥{$T.row.havebank}</td>
-						<td align="right"><a href="javascript:;">充值</a></td>
+						<td align="right"></td>
 					</tr>
 					<tr>
 						<td align="center">平台售额总计</td>
@@ -49,7 +49,7 @@
 					<tr>
 						<td align="center">充值总计</td>
 						<td>￥{$T.row.depositbank}</td>
-						<td align="right"><a href="javascript:;">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="incomeBillDetail('{$T.row.userid}','{$T.row.parentid}','1,2','A')">查看记录</a></td>
 					</tr>
 				{#elseif $T.row.identity == "C"}
 					<tr>
@@ -75,7 +75,7 @@
 					<tr>
 						<td align="center">可支配账户</td>
 						<td>￥{$T.row.havebank}</td>
-						<td align="right"><a href="javascript:;">充值</a></td>
+						<td align="right"></td>
 					</tr>
 					<tr>
 						<td align="center">返利</td>

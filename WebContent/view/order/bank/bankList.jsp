@@ -179,6 +179,8 @@
 	   	                	if(text == "success"){
 	   	                		getUserBank();
 	   	                		layer.msg("提现成功！",{icon:6});
+	   	                	}else if(text == "0"){
+	   	                		layer.msg("您的账户已被冻结，不能进行提现！",{icon:6});
 	   	                	}else{
 	   	                		layer.msg("操作失败，请稍后再试！",{icon:6});
 	   	                	}

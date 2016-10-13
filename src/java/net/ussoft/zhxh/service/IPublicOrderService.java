@@ -31,6 +31,14 @@ public interface IPublicOrderService {
 	public Public_order getAuserOrder(String id,Public_user user);
 	
 	/**
+	 * 待处理订单数量
+	 * @param userid
+	 * @param status
+	 * @return
+	 * */
+	public int getCount(String userid,int status);
+	
+	/**
 	 * 查询所有
 	 * @return list
 	 * */

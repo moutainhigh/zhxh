@@ -282,7 +282,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 			if(rebate_total > 0){
 				//添加返利账户金额
 				Public_user_bank bank = getUserBank(order.getUserid(), order.getParentid());	//当前的操作账户
-				bank.setRebatesbank(bank.getRebatesbank() + rebate_total);
+				bank.setRebatesbank(bank.getRebatesbank() + rebate_total);	//返利累计账户
+				bank.setHavebank(bank.getHavebank() + rebate_total);		//返利金额直接进入到可支配账户中
 				userBankDao.update(bank);
 				//添加返利消息
 				messagetype = 1;	//业务消息
@@ -379,8 +380,6 @@ public class PublicUserBankService implements IPublicUserBankService{
 		//上级账户的金额判断，提现的第三方流程是什么样的方式
 		
 		try {
-			//当前账户
-			Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
 			//平台账户
 			Public_user_bank bank_PT = getUserBank("1", "1");
 			//提现金额
@@ -388,33 +387,36 @@ public class PublicUserBankService implements IPublicUserBankService{
 			//平台账户变更
 			bank_PT.setTakenbank(bank_PT.getTakenbank() - amount);		//冲减平台可提现账户
 			bank_PT.setCostbank(bank_PT.getCostbank() + amount);		//增加平台支出总和
-			
-			if("A".equals(identity)){
-				//可提现账户-提现
-				bank.setTakenbank(bank.getTakenbank() - amount);		//冲减可提现账户 - 当前操作账户
-			}else if("C".equals(identity)){
-				//trantype——1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
-				if(bill.getTrantype() == 4){
-					//奖励账户-提现
-					bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);		//冲减店奖励可提现账户
-					//非直营店
-					if(!"1".equals(bill.getParentid())){
-						Public_user_bank bank_A = getUserBank(bill.getParentid(), "");	//代理账户
-						bank_A.setTakenbank(bank_A.getTakenbank() - amount);	//冲减代理可提现账户
-						bank_A.setCostbank(bank_A.getCostbank() + amount);		//增加代理支出总和
-						//代理账户变更
-						bank_A = userBankDao.update(bank_A);
+			if(!bill.getUserid().equals("1")){	//非平台账户
+				//当前账户
+				Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
+				if("A".equals(identity)){
+					//可提现账户-提现
+					bank.setTakenbank(bank.getTakenbank() - amount);		//冲减可提现账户 - 当前操作账户
+				}else if("C".equals(identity)){
+					//trantype——1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
+					if(bill.getTrantype() == 4){
+						//奖励账户-提现
+						bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);		//冲减店奖励可提现账户
+						//非直营店
+						if(!"1".equals(bill.getParentid())){
+							Public_user_bank bank_A = getUserBank(bill.getParentid(), "");	//代理账户
+							bank_A.setTakenbank(bank_A.getTakenbank() - amount);	//冲减代理可提现账户
+							bank_A.setCostbank(bank_A.getCostbank() + amount);		//增加代理支出总和
+							//代理账户变更
+							bank_A = userBankDao.update(bank_A);
+						}
+					}else if(bill.getTrantype() == 3){
+						//平台售额-提现
+						bank.setSelltakenbank(bank.getSelltakenbank() - amount);		//冲减店平台售额可提现账户
 					}
-				}else if(bill.getTrantype() == 3){
-					//平台售额-提现
-					bank.setSelltakenbank(bank.getSelltakenbank() - amount);		//冲减店平台售额可提现账户
 				}
+				//当前账户
+				bank = userBankDao.update(bank);
 			}
 			
 			//平台账户变更
 			bank_PT = userBankDao.update(bank_PT);
-			//代理账户变更
-			bank = userBankDao.update(bank);
 			//更新流水表状态
 			bill.setStatus(1);	//成功
 			bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));

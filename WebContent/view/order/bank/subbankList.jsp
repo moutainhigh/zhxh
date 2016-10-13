@@ -66,6 +66,7 @@
    				title: '请输入配额金额，并确认',
    				formType: 0 //prompt风格，支持0-2
    			}, function(amount){
+   				
    				$.ajax({
    	    			async:false,
    	                url: "${pageContext.request.contextPath}/orderUserBank/setQuota.htmls",

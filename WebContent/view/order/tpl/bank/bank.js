@@ -185,7 +185,7 @@ function loadData_disBillDetail(){
  * */
 function initPage(){
 	pageIndex = 1;
-	pageSize = 1;
+	pageSize = 10;
 	totalPage = 0;
 }
 

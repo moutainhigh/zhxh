@@ -154,5 +154,21 @@ public class Constants{
 	 * 站内信
 	 */
 	public static final String ORDER_MESSAGE2_SESSION = "order_message2_session";
+	
+	/**
+	 * 代理处订单
+	 * */
+	public static final String ORDER_STATUS_MSG = "order_status_msg";
+	
+	/**
+	 * 代理处订单-确认发货
+	 * */
+	public static final String ORDER_STATUS_MSG1 = "order_status_msg1";
+	
+	/**
+	 * 代理处订单-确认签收
+	 * */
+	public static final String ORDER_STATUS_MSG2 = "order_status_msg2";
+	
 }
 

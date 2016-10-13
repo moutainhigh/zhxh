@@ -99,6 +99,19 @@ public class OrderController extends BaseConstroller {
 		CommonUtils.setSessionAttribute(request, Constants.ORDER_MESSAGE1_SESSION, m1);
 		CommonUtils.setSessionAttribute(request, Constants.ORDER_MESSAGE2_SESSION, m2);
 		
+		//未处理订单
+		int s = 0,s1 = 0;
+		if(userSession.getIdentity().equals("A")){
+			s1 = orderService.getCount(userSession.getId(), 1); //等待发货
+		}
+		int s2 = orderService.getCount(userSession.getId(), 2);	//确认收货
+		if(s1>0 || s2>0){
+			s =1;
+		}
+		CommonUtils.setSessionAttribute(request, Constants.ORDER_STATUS_MSG, s);
+		CommonUtils.setSessionAttribute(request, Constants.ORDER_STATUS_MSG1, s1);
+		CommonUtils.setSessionAttribute(request, Constants.ORDER_STATUS_MSG2, s2);
+		
 		return new ModelAndView("/view/order/main", modelMap);
 	}
 	

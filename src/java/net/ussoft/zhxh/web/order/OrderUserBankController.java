@@ -189,11 +189,16 @@ public class OrderUserBankController extends BaseConstroller {
 			out.print("error");
 			return;
 		}
+		Public_user user = getSessionUser();
+		Public_user_bank bank = userBankService.getUserBank(user.getId(),parentid);
+		if(bank.getBankstate() == 0){
+			out.print("0"); //账户已被冻结
+			return;
+		}
 		//支出-账单流水
 		Spending_bill bill = new Spending_bill();
 		bill.setId(UUID.randomUUID().toString());
 		bill.setBillno(BillNO.getBillNo());
-		Public_user user = getSessionUser();
 		bill.setUserid(user.getId());
 		bill.setU_username(user.getUsername());
 		bill.setU_company(user.getCompanyname());
