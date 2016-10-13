@@ -397,3 +397,18 @@ insert into `zhxh`.`public_user` ( `id`, `usercode`, `username`, `phonenumber`, 
 	
 	表结果见sql文件创建
 
+2、收入总计（交易流水）表——income_bill
+	（1）增加 u_username varchar(200)
+	（2）增加 u_company varchar(200)
+	（3）增加 p_username varchar(200)
+	（4）增加 p_company varchar(200)
+3、支出统计（交易流水）表——spending_bill
+	（1）增加 u_username varchar(200)
+	（2）增加 u_company varchar(200)
+	（3）增加 p_username varchar(200)
+	（4）增加 p_company varchar(200)
+4、配额流水表结构 表——quota_bill
+	（1）增加 u_username varchar(200)
+	（2）增加 u_company varchar(200)
+	（3）增加 p_username varchar(200)
+	（4）增加 p_company varchar(200)
