@@ -23,8 +23,10 @@ import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Public_dis_config;
 import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.service.IPublicDisService;
 import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUserLinkService;
 import net.ussoft.zhxh.service.IPublicUserService;
@@ -45,6 +47,8 @@ public class OrderUserController extends BaseConstroller {
 	private IPublicUserLinkService userlinkService;	//个人中心关联关系
 	@Resource
 	private IPublicPhoneCodeLogService codeLogService;
+	@Resource
+	private IPublicDisService disService;
 	
 	@RequestMapping(value="/list",method=RequestMethod.POST)
 	public void list(String parentid,String identity,String mapObj,int pageIndex,
@@ -72,6 +76,19 @@ public class OrderUserController extends BaseConstroller {
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
+	
+	@RequestMapping(value="/disConfig",method=RequestMethod.POST)
+	public void disConfig(HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		Public_dis_config dis = disService.getById("1");
+		String json = JSON.toJSONString(dis);
+		out.print(json);
+	}
+	
+	
 	
 	/**
 	 * 检查手机号是否存在。

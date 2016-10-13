@@ -166,7 +166,7 @@
 						</a>
 						<div class="float-menu" style="display: none; top: 0px; margin-top: 0px;">
 							<ul class="sec-nav clearfix sec-nav-flow" style="width: 249px;">
-								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
+								<li class="sec-nav-li sec-nav-li-flow" style="height: 160px;">
 									<a class="sec-nav-a li-a-color" href="javascript:;">客户管理</a>
 									<ul class="third-nav-ul">
 										<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">

@@ -147,6 +147,12 @@
 					<td colspan="3">设置后，全平台代理、店统一利益分配标准。</td>
 				</tr>
 				<tr>
+					<td class="labelname"><label for="rebates_down$text">折扣下限</label></td>
+					<td><input id="buyerdis_down" name="buyerdis_down" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
+					<td class="labelname">折扣上限</td>
+					<td><input name="buyerdis_up" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
+				</tr>
+				<tr>
 					<td class="labelname"><label for="rebates_down$text">返利下限</label></td>
 					<td><input id="rebates_down" name="rebates_down" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
 					<td class="labelname">返利上限</td>

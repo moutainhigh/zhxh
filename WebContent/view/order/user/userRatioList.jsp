@@ -33,6 +33,8 @@
     	
     	var searchmap = "";
     	
+    	var disConfig = "";
+    	
     	$(function(){
     		listUserRatio();
     		//调用全选插件
@@ -43,6 +45,21 @@
                 	searchUser();
                 }
             });
+    	    
+    	  //获取利益标准
+    	    $.ajax({
+    			async:false,
+                url: "${pageContext.request.contextPath}/orderUser/disConfig.htmls",
+                //data: par,
+                type: "post",
+                dataType:"json",
+                success: function (json) {
+                	disConfig = json;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+                }
+           });
     	    
     	});
     	
@@ -305,9 +322,9 @@
 				layer.msg("请先选择要批量操作的客户",{icon:6});
 				return;
 			}
-			
+			var updown = "上限["+disConfig.bonuses_ratio_up + "].下限["+disConfig.bonuses_ratio_down + "]";
 			layer.prompt({
-   				title: '请输入奖励转货款系数，并确认',
+   				title: '请输入奖励转货款系数.'+updown,
    				formType: 0
    			}, function(num){
    				if (num == "") {
@@ -323,6 +340,15 @@
    					layer.msg("请输入大于0的数字。",{icon:5});
    		   			return false;
    				}
+   				
+   				if (num > disConfig.bonuses_ratio_up) {
+					layer.msg("设置超过上限，请重新输入。",{icon:5});
+					return false;
+				}
+   				if (num < disConfig.bonuses_ratio_down) {
+					layer.msg("设置低于下限，请重新输入。",{icon:5});
+					return false;
+				}
    				
    				$.ajax({
 	    			async:false,

@@ -54,6 +54,8 @@
     	
     	var sel_brandid= "";
     	
+    	var disConfig = "";
+    	
     	$(function(){
     		$("input[name=radio_user]:eq(0)").attr("checked",'checked');
     		radio_click();
@@ -72,6 +74,21 @@
                 	searchUser();
                 }
             });
+    	    
+    	    //获取利益标准
+    	    $.ajax({
+    			async:false,
+                url: "${pageContext.request.contextPath}/orderUser/disConfig.htmls",
+                //data: par,
+                type: "post",
+                dataType:"json",
+                success: function (json) {
+                	disConfig = json;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+                }
+           });
     	    
     	});
     	
@@ -796,14 +813,18 @@
    			
      		var cf = "确定要批量设置选中商品的";
      		var txt = "";
+     		var updown = "";
     		if (key == "buyerdis") {
     			txt = "[折扣]";
+    			updown = "上限["+disConfig.buyerdis_up + "].下限["+disConfig.buyerdis_down + "]";
     		}
     		else if (key == "rebatesdis") {
     			txt = "[返利]";
+    			updown = "上限["+disConfig.rebates_up + "].下限["+disConfig.rebates_down + "]";
     		}
     		else if (key == "bonusesdis") {
     			txt = "[奖励]";
+    			updown = "上限["+disConfig.bonuses_up + "].下限["+disConfig.bonuses_up + "]";
     		}
     		else if (key == "state") {
     			if (v == '1') {
@@ -854,9 +875,9 @@
     		}
     		else {
     			layer.prompt({
-       				title: '请输入'+txt+'，并确认',
+       				title: '请输入'+txt+'.' + updown,
        				formType: 0
-       			}, function(num){
+       			}, function(num, index, elem){
        				if (num == "") {
        					layer.msg("请输入值。",{icon:5});
        		   			return false;
@@ -870,6 +891,46 @@
        					layer.msg("请输入大约0的数字。",{icon:5});
        		   			return false;
        				}
+       				
+       				//判断标准
+       				if (key == "buyerdis") {
+       					if (num > disConfig.buyerdis_up) {
+       						layer.msg("设置的折扣超过上限，请重新输入。",{icon:5});
+       						return false;
+       					}
+       					if (num < disConfig.buyerdis_down) {
+       						layer.msg("设置的折扣低于下限，请重新输入。",{icon:5});
+       						return false;
+       					}
+		    		}
+		    		else if (key == "rebatesdis") {
+		    			if (num > disConfig.rebates_up) {
+       						layer.msg("设置的返利超过上限，请重新输入。",{icon:5});
+       						return false;
+       					}
+       					if (num < disConfig.rebates_down) {
+       						layer.msg("设置的返利低于下限，请重新输入。",{icon:5});
+       						return false;
+       					}
+		    		}
+		    		else if (key == "bonusesdis") {
+		    			if (num > disConfig.bonuses_up) {
+       						layer.msg("设置的奖励超过上限，请重新输入。",{icon:5});
+       						return false;
+       					}
+       					if (num < disConfig.bonuses_down) {
+       						layer.msg("设置的奖励低于下限，请重新输入。",{icon:5});
+       						return false;
+       					}
+		    		}
+		    		else if (key == "state") {
+		    			if (v == '1') {
+		    				txt = "[状态]为[可采购]";
+		    			}
+		    			else {
+		    				txt = "[状态]为[禁止采购]";
+		    			}
+		    		}
        				
        				$.ajax({
        	    			async:false,
@@ -894,6 +955,8 @@
        	                    alert(jqXHR.responseText);
        	                }
        	           	});
+       				
+       				layer.close(index);
        			});
     		}
     	}

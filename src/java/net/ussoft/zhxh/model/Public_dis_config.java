@@ -22,6 +22,8 @@ public class Public_dis_config {
 	private Float bonuses_ratio_down;
 	private Float bonuses_ratio_up;
 	private Integer balance_date;
+	private Float buyerdis_down;
+	private Float buyerdis_up;
 	
 	
 	
@@ -200,7 +202,18 @@ public class Public_dis_config {
 	public void setBalance_date(Integer balance_date) {
 		this.balance_date = balance_date;
 	}
-	
+	public Float getBuyerdis_down() {
+		return buyerdis_down;
+	}
+	public void setBuyerdis_down(Float buyerdis_down) {
+		this.buyerdis_down = buyerdis_down;
+	}
+	public Float getBuyerdis_up() {
+		return buyerdis_up;
+	}
+	public void setBuyerdis_up(Float buyerdis_up) {
+		this.buyerdis_up = buyerdis_up;
+	}
 	public Public_dis_config() {
 		this.setRebates_down(0f);
 		this.setRebates_up(0f);
@@ -215,6 +228,8 @@ public class Public_dis_config {
 		this.setBonuses_ratio_down(0f);
 		this.setBonuses_ratio_up(0f);
 		this.setBalance_date(0);
+		this.setBuyerdis_down(0f);
+		this.setBonuses_up(0f);
 	}
 	
 	

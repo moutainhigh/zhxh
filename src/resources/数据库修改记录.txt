@@ -412,3 +412,8 @@ insert into `zhxh`.`public_user` ( `id`, `usercode`, `username`, `phonenumber`, 
 	（2）增加 u_company varchar(200)
 	（3）增加 p_username varchar(200)
 	（4）增加 p_company varchar(200)
+	
+2016-10-13 
+1、修改public_dis_config  利益标准表
+	（1）增加 buyerdis_down decimal（11，2）		折扣下限
+	（1）增加 buyerdis_up decimal（11，2）			折扣上限
