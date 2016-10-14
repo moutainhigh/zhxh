@@ -5,7 +5,7 @@
 <div class="panel border-sub {$P.current_uid == $T.row.userid ? 'active':''}">
 	<div class="panel-head">
 		<strong>客户资金帐户[<span style="color:red">{$T.row.companyname}</span>]</strong>
-		<span class="float-right"><strong>状态[<a href="javascript:;" onclick="setAccountStatus('{$T.row.userid}','{$T.row.parentid}','{$T.row.bankstate}')"><span id="_state" style="color:{#if $T.row.bankstate == 0}red{#else}blue{#/if}">{$T.row.bankstatetxt}</span></a>]</strong></span>
+		<span class="float-right"><strong>状态[<a id=status"{$T.row$index+1}" href="javascript:;" onclick="setAccountStatus('{$T.row.userid}','{$T.row.parentid}','{$T.row.bankstate}')"><span id="_state" style="color:{#if $T.row.bankstate == 0}red{#else}blue{#/if}">{$T.row.bankstatetxt}</span></a>]</strong></span>
 	</div>
 	<div class="panel-body" id="{$T.row.id}">
 		<table class="table">

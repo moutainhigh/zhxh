@@ -219,7 +219,15 @@
 							<input type="hidden" id="_detailstype" />
 						</div>
 						<div id="billDetail" class="panel-body">
-							<p>暂无数据</p>
+							<!-- <div class="float-right"><div class="form-group">
+								<div class="field">
+									<label><input name="identity" type="radio">全部 </label>&nbsp;
+									<label><input name="identity" type="radio">代理 </label>&nbsp;
+									<label><input name="identity" type="radio">直营店 </label>&nbsp;
+									<label><input name="identity" type="radio">门店 </label>&nbsp;
+								</div>
+							</div></div> -->
+							<p align="center">暂无数据...</p>							
 						</div>
 					</div>
 				</div>

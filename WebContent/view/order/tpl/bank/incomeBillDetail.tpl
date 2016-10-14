@@ -1,4 +1,3 @@
-
 <div class="table-responsive-y">
 	<table class="table table-hover">
 		<thead><tr>

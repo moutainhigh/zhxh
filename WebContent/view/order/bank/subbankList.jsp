@@ -55,6 +55,8 @@
                 	$("#banks").setParam("identity",json.identity);
                 	$("#banks").setParam("current_uid",current_uid);
                 	$("#banks").processTemplate(json.data);
+                	//提示信息
+            		layer.tips('点击可', '#status1', {tips: [2, '#FF9901'],time: 5000,});
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                 	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
