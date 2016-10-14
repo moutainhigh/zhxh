@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
@@ -19,6 +20,8 @@ import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Spending_bill;
+import net.ussoft.zhxh.pay.rmb.HttpClient;
+import net.ussoft.zhxh.pay.rmb.Send;
 import net.ussoft.zhxh.service.IIncomeBillService;
 import net.ussoft.zhxh.service.IPublicDisDetailsService;
 import net.ussoft.zhxh.service.IPublicUserBankService;
@@ -26,11 +29,15 @@ import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.service.IQuotaBillService;
 import net.ussoft.zhxh.service.ISpendingBillService;
 import net.ussoft.zhxh.util.BillNO;
+import net.ussoft.zhxh.util.CommonUtils;
+import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 
@@ -160,18 +167,68 @@ public class OrderUserBankController extends BaseConstroller {
 		bill.setTrantypetxt(TRANTYPE_TXT[trantype]);
 		bill.setStatus(0);	//状态：0失败，1成功
 		
-		
+		Map<String, Object> map = new HashMap<String, Object>();
 		bill = incomeBillService.insert(bill);
 		if(bill != null){
-			int num = userBankService.recharge(bill, user.getIdentity());
+			map.put("code", "1");
+			map.put("data", bill);
+			/*Send send = new Send();
+			HttpClient http = new HttpClient(response);
+			send.setSignMsg(bill, http);
+			String url = "https://sandbox.99bill.com/gateway/recvMerchantInfoAction.htm";
+			String str = http.sendByPost(url);
+			out.print(str);
+			return;*/
+			/*int num = userBankService.recharge(bill, user.getIdentity());
 			if(num > 0){
 				out.print("success");
 				return;
-			}
+			}*/
+		}else{
+			map.put("code", 0);
 		}
-		out.print("error");
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
 	}
 	
+	@RequestMapping(value="/recharge1")
+	public ModelAndView recharge1(String parentid,float amount,int trantype,HttpServletResponse response) throws Exception {
+		
+		//充值交易流水
+		Income_bill bill = new Income_bill();
+		bill.setId(UUID.randomUUID().toString());
+		bill.setBillno(BillNO.getBillNo());	//流水号
+//		bill.setOrderid(orderid);
+		Public_user p_user = userService.getById(parentid);
+		bill.setParentid(parentid);
+		bill.setP_username(p_user.getUsername());
+		bill.setP_company(p_user.getCompanyname());
+		Public_user user = getSessionUser();
+		bill.setUserid(user.getId());
+		bill.setU_username(user.getUsername());
+		bill.setU_company(user.getCompanyname());
+		bill.setAccount_receivable(amount);		//应收款
+		bill.setAccount_real(amount);			//实收款
+		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+//		bill.setPaytype(paytype);
+		bill.setTrantype(trantype);	//交易类型——1：现金充值，2：货款充值，3：售额（全），4：售额（分期）
+		String[] TRANTYPE_TXT = {"","现金充值","货款充值","售额（全款）","售额（分期）"};
+		bill.setTrantypetxt(TRANTYPE_TXT[trantype]);
+		bill.setStatus(0);	//状态：0失败，1成功
+		
+		
+		bill = incomeBillService.insert(bill);
+		if(bill != null){
+			Send send = new Send();
+			HttpClient http = new HttpClient(response);
+			send.setSignMsg(bill, http);
+			String url = "https://sandbox.99bill.com/gateway/recvMerchantInfoAction.htm";
+			http.sendByPost(url);
+		}
+		
+		return null;
+	}
 	/**
 	 * 提现
 	 * @param parentid

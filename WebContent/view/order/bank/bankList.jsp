@@ -64,19 +64,38 @@
    				title: '请输入充值金额，并确认',
    				formType: 0 //prompt风格，支持0-2
    			}, function(amount){
+   				if(!isInteger(amount)){
+   					parent.layer.msg('请输入大于0的正整数', {icon:5});
+					return;
+   				}
+   				var config = getDisConfig();
+   				if(config.deposit_up > 0){
+   					if(amount > config.deposit_up){
+   						parent.layer.msg("您输入的金额超过上限，请重新输入",{icon:6});
+   						return;
+   					}
+   				}
+   				if(config.deposit_down > 0){
+   					if(amount < config.deposit_down){
+   						parent.layer.msg("您输入的金额低于下限，请重新输入",{icon:6});
+   						return;
+   					}
+   				}
+   				
    				$.ajax({
    	    			async:false,
    	                url: "${pageContext.request.contextPath}/orderUserBank/recharge.htmls",
    	                data: {parentid:pid,amount:amount,trantype:trantype},
    	                type: "post",
-   	                dataType:"text",
-   	                success: function (text) {
-   	                	if(text == "success"){
-   	                		getUserBank();
-   	                		layer.msg("充值成功",{icon:6});
+   	                dataType:"json",
+   	                success: function (json) {
+   	                	if(json.code != "0"){
+   	                		alert(json.data.billno);
    	                	}else{
    	                		layer.msg("操作失败，请稍后再试！",{icon:6});
    	                	}
+   	                	/* getUserBank();
+	                		layer.msg("充值成功",{icon:6}); */
    	                },
    	                error: function (jqXHR, textStatus, errorThrown) {
    	                    alert(jqXHR.responseText);

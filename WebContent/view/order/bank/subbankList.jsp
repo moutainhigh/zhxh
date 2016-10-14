@@ -56,7 +56,7 @@
                 	$("#banks").setParam("current_uid",current_uid);
                 	$("#banks").processTemplate(json.data);
                 	//提示信息
-            		layer.tips('点击可', '#status1', {tips: [2, '#FF9901'],time: 5000,});
+            		layer.tips('点击可更改资金账户的状态', '#status1', {tips: [1, '#FF9901'],time: 5000,});
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                 	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
@@ -68,7 +68,19 @@
    				title: '请输入配额金额，并确认',
    				formType: 0 //prompt风格，支持0-2
    			}, function(amount){
-   				
+   				var config = getDisConfig();
+   				if(config.quota_up > 0){
+   					if(amount > config.quota_up){
+   						parent.layer.msg("您设置的配额超过上限，请重新输入",{icon:6});
+   						return;
+   					}
+   				}
+   				if(config.quota_down > 0){
+   					if(amount < config.quota_down){
+   						parent.layer.msg("您设置的配额低于下限，请重新输入",{icon:6});
+   						return;
+   					}
+   				}
    				$.ajax({
    	    			async:false,
    	                url: "${pageContext.request.contextPath}/orderUserBank/setQuota.htmls",
@@ -121,6 +133,7 @@
 			}, function(){
 			});
 	    }
+	    
     </script>
 </head>
 <body>

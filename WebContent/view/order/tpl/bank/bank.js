@@ -246,3 +246,22 @@ function page_loadData(type){
 		loadData_disBillDetail();		//返利、奖励-账单列表
 	}
 }
+
+//获取利益标准
+function getDisConfig(){
+		var disConfig;
+    $.ajax({
+		async:false,
+        url: getRootPath_web() + "/orderUser/disConfig.htmls",
+        //data: par,
+        type: "post",
+        dataType:"json",
+        success: function (json) {
+        	disConfig = json;
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+        }
+   	});
+	return disConfig;
+}
