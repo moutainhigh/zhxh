@@ -901,6 +901,23 @@ public class PublicUser2Service implements IPublicUser2Service{
 		
 		return pageBean;
 	}
+	
+	@Override
+	public Public_set_bonuses_ratio listUserRatio(String parentid, String userid) {
+		
+		String sql = "select * from public_set_bonuses_ratio where parentid=? and userid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(parentid);
+		values.add(userid);
+		List<Public_set_bonuses_ratio> ratioList = ratioDao.search(sql, values);
+		
+		if (null == ratioList || ratioList.size() == 0) {
+			return new Public_set_bonuses_ratio();
+		}
+		
+		
+		return ratioList.get(0);
+	}
 
 	/*
 	 * (non-Javadoc)

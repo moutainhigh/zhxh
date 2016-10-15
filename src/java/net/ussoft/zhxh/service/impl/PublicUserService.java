@@ -157,6 +157,57 @@ public class PublicUserService implements IPublicUserService{
 		return pageBean;
 	}
 	
+	@Override
+	public PageBean<Public_user> getParentlist(String userid, Map<String, Object> map, PageBean<Public_user> pageBean) {
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		
+		sb.append("select * from public_user_link where userid=?");
+		values.add(userid);
+		List<Public_user_link> uList = linkDao.search(sb.toString(), values);
+		
+		if (null == uList || uList.size() == 0) {
+			return pageBean;
+		}
+		
+		sb.setLength(0);
+		sb.append("select * from public_user where id in (");
+		values.clear();
+		List<String> idsList = new ArrayList<String>();
+		for (Public_user_link link : uList) {
+			idsList.add(link.getParentid());
+		}
+		
+		Serializable[] ss=new Serializable[idsList.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(idsList);
+		
+		if (null != map && map.size() > 0) {
+			Set<Entry<String, Object>> set=map.entrySet();
+	        Iterator iterator=set.iterator();
+	        sb.append(" and (");
+	        for (int i = 0; i < set.size(); i++) {
+	            Map.Entry mapEntry=(Entry) iterator.next();
+	            if (null != mapEntry.getValue() && !"".equals(mapEntry.getValue().toString())) {
+	            	sb.append(mapEntry.getKey()+" like '%"+mapEntry.getValue()+"%' or ");
+	            }
+	        }
+	        sb.delete(sb.length()-3, sb.length());
+	        sb.append(")");
+		}
+		
+		//添加状态为-1。状态值说明：0：禁用（禁止登录），1：正常  -1：删除的。所有机构不真实删除，仅做删除标记。
+		sb.append(" and isopen <> -1 order by sort");
+
+		
+		pageBean = userDao.search(sb.toString(), values, pageBean);
+		
+		return pageBean;
+	}
+	
+	
 	
 	@Transactional("txManager")
 	@Override
@@ -640,8 +691,6 @@ public class PublicUserService implements IPublicUserService{
 		
 		return userDao.search(sql, values, pageBean);
 	}
-	
-	
-	
+
 
 }

@@ -44,6 +44,15 @@ public interface IPublicUserService {
 	public PageBean<Public_user> list(String parentid,String identity,Map<String, Object> map,int showtype,PageBean<Public_user> pageBean);
 	
 	/**
+	 * 获取机构的上级列表
+	 * @param userid
+	 * @param map
+	 * @param pageBean
+	 * @return
+	 */
+	public PageBean<Public_user> getParentlist(String userid,Map<String, Object> map,PageBean<Public_user> pageBean);
+	
+	/**
 	 * 获取机构的父机构列表
 	 * @param userid
 	 * @return

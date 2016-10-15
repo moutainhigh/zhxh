@@ -21,6 +21,7 @@ import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_product_size;
+import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUser2Service;
@@ -312,6 +313,30 @@ public class OrderUserDisController extends BaseConstroller {
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
+	
+	/**
+	 * 获取机构，查看上级设置的奖励转货款系数
+	 * @param parentid
+	 * @param userid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/listParentRatio",method=RequestMethod.POST)
+	public void listParentRatio(String parentid,String userid,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		Public_set_bonuses_ratio ratio = userService.listUserRatio(parentid,userid);
+		String json = "";
+		if (null != ratio && !"".equals(ratio.getId())) {
+			json = JSON.toJSONString(ratio);
+		}
+		
+		out.print(json);
+	}
+	
+	
 	
 	/**
 	 * 获取parentid对应的没有加入到奖励转货款系数表的机构列表

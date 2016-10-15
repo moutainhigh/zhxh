@@ -7,7 +7,7 @@ import java.util.Map;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_product_size;
-import net.ussoft.zhxh.model.Public_set_user_standard;
+import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_user;
 
 /**
@@ -195,6 +195,14 @@ public interface IPublicUser2Service {
 	 * @return
 	 */
 	public PageBean<Map<String,Object>> listUserRatio(String parentid,Map<String, Object> searchMap,PageBean<Map<String,Object>> pageBean);
+	
+	/**
+	 * 获取上级为下级设置的奖励转货款系数
+	 * @param parentid
+	 * @param userid
+	 * @return
+	 */
+	public Public_set_bonuses_ratio listUserRatio(String parentid,String userid);
 	
 	/**
 	 * 获取要添加机构到奖励转货款的机构列表

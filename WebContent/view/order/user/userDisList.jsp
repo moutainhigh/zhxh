@@ -824,7 +824,7 @@
     		}
     		else if (key == "bonusesdis") {
     			txt = "[奖励]";
-    			updown = "上限["+disConfig.bonuses_up + "].下限["+disConfig.bonuses_up + "]";
+    			updown = "上限["+disConfig.bonuses_up + "].下限["+disConfig.bonuses_down + "]";
     		}
     		else if (key == "state") {
     			if (v == '1') {
