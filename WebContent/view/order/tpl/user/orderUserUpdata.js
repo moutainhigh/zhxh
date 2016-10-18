@@ -47,7 +47,7 @@ function insertUser() {
             dataType:"text",
             success: function (text) {
              	if (text == 'success') {
-             		layer.msg("保存成功1。",{icon:6});
+             		layer.msg("保存成功。",{icon:6});
              		radio_click();
              		return false;
              	}

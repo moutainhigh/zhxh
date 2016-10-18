@@ -417,3 +417,7 @@ insert into `zhxh`.`public_user` ( `id`, `usercode`, `username`, `phonenumber`, 
 1、修改public_dis_config  利益标准表
 	（1）增加 buyerdis_down decimal（11，2）		折扣下限
 	（1）增加 buyerdis_up decimal（11，2）			折扣上限
+	
+2016-10-17
+1、修改public_order 订单表
+	(1)增加submitid  varchar（40）		店或代理替普通会员提交分期购时，以普通会员身份购买，submitid存机构id。

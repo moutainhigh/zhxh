@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="renderer" content="webkit">
-    <title>众恒信和采购分销管理平台</title>
+    <title>集丽科技采购分销管理平台</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/view/order/css/c.css">
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.8.2.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/view/order/js/jquery.layout/jquery-ui-latest.js"></script>
@@ -133,7 +133,7 @@
 	<div class="ui-layout-west">
 		<div class="side-wrap">
 			<h1 class="logo">
-				<a title="众恒信和, 让美丽更简单！" target="mainFrame" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index"><img src="${pageContext.request.contextPath}/view/order/images/logo.png" alt="众恒信和"></a>
+				<a title="集丽科技, 让美丽更简单！" target="mainFrame" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index"><img src="${pageContext.request.contextPath}/view/order/images/logo.png" alt="集丽科技"></a>
 			</h1>
 			<div class="side-menu">
 				<ul>

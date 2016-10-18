@@ -78,7 +78,7 @@
 	<div class="ui-layout-west">
 		<div class="side-wrap">
 			<h1 class="logo">
-				<a title="众恒信和, 让美丽更简单！" href="#"><img src="${pageContext.request.contextPath}/view/order/images/logo.png" alt="众恒信和"></a>
+				<a title="集丽科技, 让美丽更简单！" href="#"><img src="${pageContext.request.contextPath}/view/order/images/logo.png" alt="集丽科技"></a>
 			</h1>
 			<div class="side-menu">
 				<ul>

@@ -23,6 +23,7 @@ public class Public_order {
 	private String deliverynum;
 	
 	private String ordertype;
+	private String submitid;
 	
 	private String u_username;	//临时字段-userid对应的username
 	private String p_username;	//临时字段-parentid对应的username
@@ -135,6 +136,13 @@ public class Public_order {
 	public void setOrdertype(String ordertype) {
 		this.ordertype = ordertype;
 	}
+	public String getSubmitid() {
+		return submitid;
+	}
+	public void setSubmitid(String submitid) {
+		this.submitid = submitid;
+	}
+	
 	@Transient
 	public String getU_username() {
 		return u_username;

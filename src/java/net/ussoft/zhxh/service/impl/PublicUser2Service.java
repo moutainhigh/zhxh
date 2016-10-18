@@ -617,6 +617,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 					map.put("productname", size.getProductname());
 					map.put("productsize", size.getProductsize());
 					map.put("price", size.getPrice());
+					map.put("saleprice", size.getSaleprice());
 					break;
 				}
 			}
