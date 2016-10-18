@@ -1,4 +1,4 @@
-﻿<%@page import="net.ussoft.zhxh.pay.rmb.Pkipair"%>
+﻿<%@page import="net.ussoft.zhxh.pay.kq.Pkipair"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
 <%
@@ -148,7 +148,7 @@
 			</table>
 		</div>
 		<div align="center" style="font-weight: bold;">
-			<form name="kqPay" action="https://sandbox.99bill.com/gateway/recvMerchantInfoAction.htm" method="post">
+			<form target="_blank" name="kqPay" action="https://sandbox.99bill.com/gateway/recvMerchantInfoAction.htm" method="post">
 				<input type="hidden" name="inputCharset" value="<%=inputCharset%>" />
 				<input type="hidden" name="pageUrl" value="<%=pageUrl%>" />
 				<input type="hidden" name="bgUrl" value="<%=bgUrl%>" />

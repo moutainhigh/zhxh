@@ -1,4 +1,4 @@
-package net.ussoft.zhxh.pay.rmb;
+package net.ussoft.zhxh.pay.kq;
 
 import java.io.PrintWriter;
 

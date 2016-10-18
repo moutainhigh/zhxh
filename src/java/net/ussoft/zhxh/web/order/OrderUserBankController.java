@@ -20,8 +20,8 @@ import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Spending_bill;
-import net.ussoft.zhxh.pay.rmb.HttpClient;
-import net.ussoft.zhxh.pay.rmb.Send;
+import net.ussoft.zhxh.pay.kq.HttpClient;
+import net.ussoft.zhxh.pay.kq.Send;
 import net.ussoft.zhxh.service.IIncomeBillService;
 import net.ussoft.zhxh.service.IPublicDisDetailsService;
 import net.ussoft.zhxh.service.IPublicUserBankService;
@@ -192,43 +192,17 @@ public class OrderUserBankController extends BaseConstroller {
 		out.print(json);
 	}
 	
-	@RequestMapping(value="/recharge1")
-	public ModelAndView recharge1(String parentid,float amount,int trantype,HttpServletResponse response) throws Exception {
-		
-		//充值交易流水
-		Income_bill bill = new Income_bill();
-		bill.setId(UUID.randomUUID().toString());
-		bill.setBillno(BillNO.getBillNo());	//流水号
-//		bill.setOrderid(orderid);
-		Public_user p_user = userService.getById(parentid);
-		bill.setParentid(parentid);
-		bill.setP_username(p_user.getUsername());
-		bill.setP_company(p_user.getCompanyname());
-		Public_user user = getSessionUser();
-		bill.setUserid(user.getId());
-		bill.setU_username(user.getUsername());
-		bill.setU_company(user.getCompanyname());
-		bill.setAccount_receivable(amount);		//应收款
-		bill.setAccount_real(amount);			//实收款
-		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
-//		bill.setPaytype(paytype);
-		bill.setTrantype(trantype);	//交易类型——1：现金充值，2：货款充值，3：售额（全），4：售额（分期）
-		String[] TRANTYPE_TXT = {"","现金充值","货款充值","售额（全款）","售额（分期）"};
-		bill.setTrantypetxt(TRANTYPE_TXT[trantype]);
-		bill.setStatus(0);	//状态：0失败，1成功
-		
-		
-		bill = incomeBillService.insert(bill);
-		if(bill != null){
-			Send send = new Send();
-			HttpClient http = new HttpClient(response);
-			send.setSignMsg(bill, http);
-			String url = "https://sandbox.99bill.com/gateway/recvMerchantInfoAction.htm";
-			http.sendByPost(url);
-		}
-		
-		return null;
+	/**
+	 * 支付
+	 * */
+	@RequestMapping(value="/payment")
+	public ModelAndView payment (String id, ModelMap modelMap) throws Exception {
+		Income_bill bill = incomeBillService.getById(id);
+		modelMap.put("bill", bill);
+		//C:\Users\Administrator\AppData\Local\Temp\alipaydirect\MD5签名版本\create_direct_pay_by_user-JAVA-UTF-8\src\com\alipay\config
+		return new ModelAndView("/view/order/bank/payment", modelMap);
 	}
+
 	/**
 	 * 提现
 	 * @param parentid

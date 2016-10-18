@@ -90,7 +90,10 @@
    	                dataType:"json",
    	                success: function (json) {
    	                	if(json.code != "0"){
-   	                		alert(json.data.billno);
+   	                		$("#payBill").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/payBillDetail.tpl");
+   	                 		$("#payBill").processTemplate(json.data);
+   	                 		layer.msg("账单已生成，请确认并支付",{icon:6});
+   	                 		//layer.tips('点击去支付', '#pay_btn', {tips: [1, '#FF9901'],time: 5000,});
    	                	}else{
    	                		layer.msg("操作失败，请稍后再试！",{icon:6});
    	                	}
@@ -104,6 +107,11 @@
    			});
 	    }
  		
+	    function payment(){
+	    	pay_form.action="${pageContext.request.contextPath}/orderUserBank/payment.htmls";
+	    	pay_form.submit();
+	    }
+	    
 	    //转货款
 	    function transfBuyBank(pid,amount){
 	    	layer.prompt({
@@ -227,7 +235,7 @@
 				<div id="banks" class="x5">
 					<!-- 账户列表 -->
 				</div>
-				<div class="x7">
+				<div id="payBill" class="x7">
 					<div class="panel border-sub">
 						<div class="panel-head">
 							<strong>资金明细</strong>
