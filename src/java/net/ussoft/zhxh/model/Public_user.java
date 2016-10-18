@@ -34,6 +34,7 @@ public class Public_user {
 	private String rank; 			//代理商或店的级别,存文本，仅仅显示，没有实际意义。
 	
 	private int sort;
+	private int repaystate;			//是否允许分期
 	
 	//临时字段
 	private String parentid; 		//存储机构（代理或店）的直属上级id
@@ -74,6 +75,7 @@ public class Public_user {
 		this.sort = 1;
 		this.parentid = "";
 		this.createtime = "";
+		this.repaystate = 0;
 	}
 //	public Public_user {
 //		this.setUsercode("");
@@ -257,6 +259,14 @@ public class Public_user {
 	}
 	public void setTuijianid(String tuijianid) {
 		this.tuijianid = tuijianid;
+	}
+
+	public int getRepaystate() {
+		return repaystate;
+	}
+
+	public void setRepaystate(int repaystate) {
+		this.repaystate = repaystate;
 	}
 	
 }

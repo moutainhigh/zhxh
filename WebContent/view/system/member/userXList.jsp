@@ -12,7 +12,7 @@
     </style>
     
     <script type="text/javascript">
-    
+    	//待关联页面
 	    var grid_user_c;		//店
 	    var grid_user_z;	//普通会员
 	    
@@ -38,6 +38,7 @@
 	      	                { field: "rank",name:"rank",width: 150, headerAlign: "center", align:"center",allowSort: false, header: "机构级别",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25}},
 	      	                { field: "setreturn",name:"setreturn",type:"comboboxcolumn",autoEscape:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "接受分成",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁用"},{"id":"1","text":"正常"}] } },
 	      	                { field: "isopen",name:"isopen",type:"comboboxcolumn",autoEscape:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁用"},{"id":"1","text":"正常"}] } },
+	      	              	{ field: "repaystate",name:"repaystate",type:"comboboxcolumn",autoEscape:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "分期状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁用"},{"id":"1","text":"允许"}] } },
 	      	                { field: "sort",name:"sort",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25 } }
 	      	            ],
 	            showFilterRow:false,
@@ -114,6 +115,11 @@
                 	}
                 }
                 if (field == "isopen") {
+                	if (value == 0) {
+                		e.cellStyle = "color:red;text-align:center";
+                	}
+                }
+                if (field == "repaystate") {
                 	if (value == 0) {
                 		e.cellStyle = "color:red;text-align:center";
                 	}

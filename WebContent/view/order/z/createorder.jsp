@@ -29,7 +29,7 @@
 		var objArr = new Array();
 		var total = 0,total_sum = 0;
 		var address;
-		var userid = '${userid}';
+		var buyuserid = '${userid}';
 		var parentid = "";
     	$(function(){
     		brand();
@@ -37,7 +37,7 @@
     		$("#submit_btn").click(function(){
     			if(objArr.length > 0){
     				var _data =  JSON.stringify(objArr);
-    				var _parentid = $("#f_comp").val();
+    				var _parentid = "1";
     				var _address_id = $("#address_id").val();
     				if(typeof(_address_id) == "undefined" || _address_id == ""){
     					layer.msg("请添加收货地址",{icon:6});
@@ -45,13 +45,13 @@
     				}
     				$.ajax({
     	    			async:false,
-    	                url: "${pageContext.request.contextPath}/order/createorder.htmls",
-    	                data: {objs:_data,parentid:_parentid,addressid:_address_id},
+    	                url: "${pageContext.request.contextPath}/orderZ/createorder.htmls",
+    	                data: {objs:_data,parentid:_parentid,addressid:_address_id,buyuserid:buyuserid},
     	                type: "post",
     	                dataType:"text",
     	                success: function (text) {
     	                	if(text == "success")
-    	                		location.href = "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist";
+    	                		location.href = "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/z/zOrderlist&param={'buyuserid':'"+buyuserid+"','orderType':'buyuser'}";
     	                	else
     	                		layer.msg("操作失败",{icon:6});
     	                },
@@ -219,7 +219,7 @@
 			    area: ['720px', '520px'],
 			    fix: false, //不固定
 			    maxmin: true,
-			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myaddress",
+			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/z/myaddress",
 			    btn: ['确 定', '取 消'],
 			  	yes: function(index,layero){
 			  		var win = parent.window['layui-layer-iframe' + index].window;
@@ -271,24 +271,11 @@
 	<!--内容-->
 	<div class="layout" style="margin-bottom: 50px">
 		<ul class="bread bg">
-			<li><a href="#" class="icon-home">首页</a> </li>
-			<li><a href="#" >普通会员订单</a></li>
+			<li><a href="javascript:;" class="icon-home">首页</a> </li>
+			<li><a href="javascript:;" >普通会员订单</a></li>
 		</ul>
 		<div class="admin" style="padding: 30px 60px;">
 			<div class="x3">
-				<%-- <form onsubmit="return false;" class="form-x"><div class="form-group" id="f_parent">
-	                 <div class="label" style="width: 16%">
-	                     <label for="f_class">采购商家：</label>
-	                 </div>
-	                 <div class="field" style="width: 84%">
-	                     <select class="input" id="f_comp" name="f_class">
-	                     	 <option value="0">请选择</option>
-	                     	 <c:forEach var="item" items="${u_list }">
-	                         	<option value="${item.id }">${item.username }</option>
-	                         </c:forEach>
-	                     </select>
-	                 </div>
-	             </div></form> --%>
 			</div>
 			<div class="padding float-right">
 				<div class="button-group border-blue">

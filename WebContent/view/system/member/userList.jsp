@@ -40,6 +40,7 @@
 	      	                { field: "wechar",name:"wechar",width: 80, headerAlign: "center", align:"center",allowSort: false, header: "微信号码" ,editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25}},
 	      	                { field: "rank",name:"rank",width: 150, headerAlign: "center", align:"center",allowSort: false, header: "机构级别",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25}},
 	      	                { field: "isopen",name:"isopen",type:"comboboxcolumn",autoEscape:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁用"},{"id":"1","text":"正常"}] } },
+	      	                { field: "repaystate",name:"repaystate",type:"comboboxcolumn",autoEscape:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "分期状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁用"},{"id":"1","text":"允许"}] } },
 	      	                { field: "sort",name:"sort",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25 } }
 	      	            ],
 		            showFilterRow:false,
@@ -80,6 +81,7 @@
 	      	                { field: "rank",name:"rank",width: 150, headerAlign: "center", align:"center",allowSort: false, header: "机构级别",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25}},
 	      	                { field: "setreturn",name:"setreturn",type:"comboboxcolumn",autoEscape:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "接受分成",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁用"},{"id":"1","text":"正常"}] } },
 	      	                { field: "isopen",name:"isopen",type:"comboboxcolumn",autoEscape:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁用"},{"id":"1","text":"正常"}] } },
+	      	              	{ field: "repaystate",name:"repaystate",type:"comboboxcolumn",autoEscape:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "分期状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁用"},{"id":"1","text":"允许"}] } },
 	      	                { field: "sort",name:"sort",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25 } }
 	      	            ],
 	            showFilterRow:false,
@@ -158,6 +160,11 @@
                 		e.cellStyle = "color:red;text-align:center";
                 	}
                 }
+                if (field == "repaystate") {
+                	if (value == 0) {
+                		e.cellStyle = "color:red;text-align:center";
+                	}
+                }
                 
             });
        		grid_user_c.on("drawcell", function (e) {
@@ -184,6 +191,12 @@
                 	}
                 }
                 
+                if (field == "repaystate") {
+                	if (value == 0) {
+                		e.cellStyle = "color:red;text-align:center";
+                	}
+                }
+                
             });
        		grid_user_z.on("drawcell", function (e) {
                 var record = e.record,
@@ -199,6 +212,12 @@
     	        }
                 
                 if (field == "isopen") {
+                	if (value == 0) {
+                		e.cellStyle = "color:red;text-align:center";
+                	}
+                }
+                
+                if (field == "repaystate") {
                 	if (value == 0) {
                 		e.cellStyle = "color:red;text-align:center";
                 	}
@@ -262,6 +281,7 @@
 			newRow.wechar = "";
 			newRow.rank = "";
 			newRow.sort = 1;
+			newRow.repaystate = 0;
 			
 			if (grid_type == "grid_user_a") {
 				tmpGrid = grid_user_a;

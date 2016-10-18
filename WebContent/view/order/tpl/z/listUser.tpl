@@ -31,7 +31,7 @@
 					<td>
 						<a href="javascript:;" class="button button-small border-sub" onclick="return showUpdateUser('{$T.row.id}')">修改</a>
 						<a id="newOrder" href="javascript:;" class="button button-small border-sub" onclick="addOrder('{$T.row.id}')">分期购</a>
-						<a id="orderList" href="javascript:;" class="button button-small border-sub">历史订单</a>
+						<a id="orderList" href="javascript:;" class="button button-small border-sub" onclick="oldOrder('{$T.row.id}')">历史订单</a>
 					</td>
 				</tr>
 			{#/for}

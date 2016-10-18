@@ -118,6 +118,9 @@
     	function addOrder(userid) {
     		location.href = "${pageContext.request.contextPath}/orderZ/newOrder.htmls?userid="+userid;
     	}
+    	function oldOrder(userid) {
+    		location.href = "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/z/zOrderlist&param={'buyuserid':'"+userid+"','orderType':'buyuser'}";
+    	}
     	
     	function bindTrClick() {
     		//除了表头（第一行）以外所有的行添加click事件.

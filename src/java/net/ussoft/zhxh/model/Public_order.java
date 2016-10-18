@@ -27,6 +27,7 @@ public class Public_order {
 	
 	private String u_username;	//临时字段-userid对应的username
 	private String p_username;	//临时字段-parentid对应的username
+	private String s_username;	//临时字段 submit对应的username。如果是普通会员购买，哪个机构提交的。
 	private String u_companyname;	//机构名称
 	private String p_companyanme;	//
 	private String tid;				//推荐人ID
@@ -191,6 +192,13 @@ public class Public_order {
 	}
 	public void setTid(String tid) {
 		this.tid = tid;
+	}
+	@Transient
+	public String getS_username() {
+		return s_username;
+	}
+	public void setS_username(String s_username) {
+		this.s_username = s_username;
 	}
 	
 }

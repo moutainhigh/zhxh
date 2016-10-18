@@ -236,17 +236,15 @@ public class OrderZController extends BaseConstroller {
 		out.print("error");
 	}
 	
-	//==========以下不确定要
-	
 	/**
 	 * 创建订货单
 	 * */
 	@RequestMapping(value="/createorder",method=RequestMethod.POST)
-	public void createorder(String objs,String parentid,String addressid,HttpServletResponse response) throws Exception {
+	public void createorder(String objs,String parentid,String addressid,String buyuserid,HttpServletResponse response) throws Exception {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		if ("".equals(objs) || objs == null || "".equals(parentid) || null == parentid || "".equals(addressid) || null == addressid) {
+		if ("".equals(objs) || objs == null || "".equals(parentid) || null == parentid || "".equals(addressid) || null == addressid || "".equals(buyuserid) || null == buyuserid) {
 			out.print("error");
 			return;
 		}
@@ -263,23 +261,12 @@ public class OrderZController extends BaseConstroller {
 		Public_user user = getSessionUser();
 		user.setParentid(parentid); //商家
 		user.setAddressid(addressid);
-		Public_order order = orderService.createorder(psizeList, user);
+		Public_order order = orderService.createorder(psizeList, user,buyuserid,parentid);
 		if(order != null){
 			out.print("success");
 			return;
 		}
 		out.print("error");
-	}
-	
-	/**
-	 * 订货单
-	 * */
-	@RequestMapping(value="/myorder")
-	public ModelAndView myorder (ModelMap modelMap) throws Exception {
-		Public_user user = getSessionUser();
-		List<Public_user> u_list = userService.listParent(user.getId());
-		modelMap.put("u_list", u_list);
-		return new ModelAndView("/view/order/order/myorderlist", modelMap);
 	}
 	
 	/**
@@ -290,7 +277,7 @@ public class OrderZController extends BaseConstroller {
 	 * @param ordertime
 	 * */
 	@RequestMapping(value="/orderlist",method=RequestMethod.POST)
-	public void orderlist(String orderType,String ordernum,String parentid,String ordertime,String orderstatus, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void orderlist(String orderType,String ordernum,String parentid,String buyuserid,String ordertime,String orderstatus, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -302,16 +289,22 @@ public class OrderZController extends BaseConstroller {
 		p.setOrderType("desc");
 		
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
-		params.put("ordertype= ", "o");	//订单类型-订货平台
+		params.put("ordertype= ", "p");	//订单类型-订货平台
 		params.put("ordernumber= ", ordernum);
 		params.put("parentid= ", parentid);
 		params.put("ordertime= ", ordertime);
 		params.put("orderstatus= ", orderstatus);
 		Public_user user = getSessionUser();
-		if("my".equals(orderType)){
-			params.put("userid= ", user.getId());
+		if ("my".equals(orderType)){
+			params.put("submitid=", user.getId());
 			p = orderService.list(params, p);
-		}else if("sub".equals(orderType)){
+		}
+		else if ("buyuser".equals(orderType)) {
+			params.put("userid=",buyuserid);
+			params.put("submitid=", user.getId());
+			p = orderService.list(params, p);
+		}
+		else if ("sub".equals(orderType)){
 			params.put("orderstatus > ", 0);
 			params.put("parentid= ", user.getId());
 			p = orderService.list(params, p);
@@ -325,12 +318,15 @@ public class OrderZController extends BaseConstroller {
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
+	
 	/**
 	 * 给订单中的userid，parentid 赋username
 	 * */
 	private List<Public_order> setOrderUsername(List<Public_order> list,String orderType){
 		List<Public_order> resultlist = new ArrayList<Public_order>();
 		Public_user user_obj = null;
+		Public_user parent_obj = null;
+		Public_user submit_obj = null;
 		if("sub".equals(orderType)){
 			String userid = "";
 			for(Public_order order : list){
@@ -356,8 +352,34 @@ public class OrderZController extends BaseConstroller {
 				resultlist.add(order);
 			}
 		}
-//		else if("all".equals(orderType)) userid,parentid 都获取
+		else if ("buyuser".equals(orderType)) {
+			for(Public_order order : list){
+				parent_obj = userService.getById(order.getParentid());
+				order.setP_username(parent_obj.getCompanyname());
+				
+				user_obj = userService.getById(order.getUserid());
+				order.setU_username(user_obj.getUsername());
+				
+				submit_obj = userService.getById(order.getSubmitid());
+				order.setS_username(submit_obj.getCompanyname());
+				
+				resultlist.add(order);
+			}
+		}
 		return resultlist;
+	}
+	
+	//==========以下不确定要
+	
+	/**
+	 * 订货单
+	 * */
+	@RequestMapping(value="/myorder")
+	public ModelAndView myorder (ModelMap modelMap) throws Exception {
+		Public_user user = getSessionUser();
+		List<Public_user> u_list = userService.listParent(user.getId());
+		modelMap.put("u_list", u_list);
+		return new ModelAndView("/view/order/order/myorderlist", modelMap);
 	}
 	
 	/**

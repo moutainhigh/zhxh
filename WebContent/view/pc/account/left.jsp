@@ -10,7 +10,9 @@
         <a id="myaddress" href="${pageContext.request.contextPath}/porder/address.htmls"><b></b>收货地址</a>
         <c:if test='${sessionScope.pc_user_sessiion.identity != "Z" }'>
         	<a id="orderSystem" target="_blank" href="${pageContext.request.contextPath}/order/ordermain.htmls"><b></b>采购系统</a>
+        	<c:if test='${sessionScope.pc_user_sessiion.repaystate != 0 }'>
          	<a id="orderSystem" target="_blank" href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/z/main_z"><b></b>分期购</a>
+         	 </c:if>
         </c:if>
         
         <!-- <a id="myquiz" href="我的提问.html"><b></b>我的提问</a> -->

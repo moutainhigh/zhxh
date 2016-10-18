@@ -269,6 +269,78 @@ public class PublicOrderService implements IPublicOrderService{
 		return order;
 	}
 	
+	/*-------------------------------------普通会员采购单----------------------------*/
+	
+	@Transactional("txManager")
+	@Override
+	public Public_order createorder(List<Public_product_size> psizeList,Public_user user,String buyuserid,String parentid) {
+		//生成主订单
+		float subtotal = 0;		//合计价格
+		for(Public_product_size obj:psizeList){
+			//计算价格。按特价购买
+			subtotal += obj.getSaleprice() * obj.getQuantity();	//计算折扣后的价格
+//			Public_set_user_standard standard = getProStandard(user.getId(), user.getParentid(), obj.getId());
+//			Float buydrdis = standard.getBuyerdis();
+//			if(buydrdis != null && buydrdis > 0){
+//				subtotal += obj.getPrice() * buydrdis * obj.getQuantity();	//计算折扣后的价格
+//			}else{
+//				subtotal += obj.getPrice() * obj.getQuantity();
+//			}
+		}
+		Public_user buyUser = userDao.get(buyuserid);
+		Public_order order = new Public_order();
+		order.setId(UUID.randomUUID().toString());
+		order.setUserid(buyuserid);
+		order.setSubmitid(user.getId());
+		
+		order.setParentid(parentid);			//上级ID
+		order.setIdentity(buyUser.getIdentity());			//身份
+		String ordernumber = "ZO"+OrderNO.getOrderNo();		//订单号
+		order.setOrdernumber(ordernumber);
+		order.setOrdertotal(subtotal);			//总金额
+		order.setOrderstatus(0);				//待支付
+		order.setOrderstatusmemo("待支付");
+		order.setOrdertype("p"); //来源订货平台
+		order.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		order = orderDao.save(order);
+		//订单商品
+		productOrderSizeZ(order,psizeList);
+		//商品返利 - 新增表
+		
+		//收货地址
+		addAddress(user.getAddressid(), order.getId());
+		
+		return order;
+	}
+	
+	/**
+	 * 普通会员采购-订单商品
+	 * @param order 订单
+	 * @param quantity	数量
+	 * @param psizeList 购买的商品
+	 * */
+	private void productOrderSizeZ(Public_order order,List<Public_product_size> psizeList){
+		for(Public_product_size psize:psizeList){
+			//订单商品 
+			Public_order_product orderPro = new Public_order_product();
+			orderPro.setId(UUID.randomUUID().toString());
+			orderPro.setOrderid(order.getId());
+			orderPro.setProductid(psize.getId());
+			orderPro.setBrandname(psize.getBrandname());
+			orderPro.setProductname(psize.getProductname());
+			orderPro.setProductpic(psize.getProductpic());
+			orderPro.setProductsize(psize.getProductsize());
+			orderPro.setProductnum(psize.getQuantity());		//购买数量
+			orderPro.setIsoknum(psize.getQuantity());			//可结算数量（退货时冲减）
+			orderPro.setPrice(psize.getSaleprice());
+			orderPro.setProductmemo(psize.getProductmemo());
+			orderPro.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+			orderPro.setStatus(0);	//已购买
+			
+			orderProDao.save(orderPro);
+		}
+	}
+	
 	/**
 	 * 采购-订单商品
 	 * @param order 订单

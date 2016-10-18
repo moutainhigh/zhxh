@@ -90,6 +90,15 @@ public interface IPublicOrderService {
 	public Public_order createorder(List<Public_product_size> psizeList,Public_user user);
 	
 	/**
+	 * 创建普通会员采购单.
+	 * @param psizeList
+	 * @param user
+	 * @param buyuserid
+	 * @return
+	 */
+	public Public_order createorder(List<Public_product_size> psizeList,Public_user user,String buyuserid,String parentid);
+	
+	/**
 	 * 支付-采购单货款
 	 * @param order
 	 * */

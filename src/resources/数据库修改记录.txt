@@ -421,3 +421,8 @@ insert into `zhxh`.`public_user` ( `id`, `usercode`, `username`, `phonenumber`, 
 2016-10-17
 1、修改public_order 订单表
 	(1)增加submitid  varchar（40）		店或代理替普通会员提交分期购时，以普通会员身份购买，submitid存机构id。
+	
+	
+2016-10-18
+1、修改public_user 机构表
+	（1）增加repaystate int（11）			是否允许机构分期 0：禁止  1：允许

@@ -63,7 +63,7 @@
 				var _objs = JSON.stringify(obj);
 				$.ajax({
 	    			async:false,
-	                url: "${pageContext.request.contextPath}/order/editaddress.htmls",
+	                url: "${pageContext.request.contextPath}/orderZ/editaddress.htmls",
 	                data: {objs:_objs},
 	                type: "post",
 	                dataType:"text",
@@ -82,8 +82,7 @@
     	function addresslist(){
     		$.ajax({
     			async:false,
-                url: "${pageContext.request.contextPath}/order/address.htmls",
-                //data: {parentid:'${parentid}',brandid:'${brandid}',keyword:keyword},
+                url: "${pageContext.request.contextPath}/orderZ/address.htmls",
                 type: "post",
                 dataType:"json",
                 success: function (json) {
@@ -126,7 +125,7 @@
 			}, function(index){
 				$.ajax({
 	    			async:false,
-	                url: "${pageContext.request.contextPath}/order/deladdress.htmls",
+	                url: "${pageContext.request.contextPath}/orderZ/deladdress.htmls",
 	                data: {id:id},
 	                type: "post",
 	                dataType:"text",
