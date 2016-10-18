@@ -45,10 +45,6 @@
     	$(function(){
     		//加载数据-订单列表
     		loadData_orderlist();
-    		//新增订货单
-    		$("#newOrder").click(function(){
-    			location.href = "${pageContext.request.contextPath}/order/newOrder.htmls";
-    		});
     		//订单号-查询
     		$(".icon-search").click(function(){
     			loadData_orderlist();
@@ -64,12 +60,14 @@
     	function loadData_orderlist(){
     		var _data = {};
     		_data.orderType = orderType;
+    		_data.buyuserid = buyuserid;
     		_data.ordernum = $("#ordernum").val();
     		_data.parentid = $("#parentid").val();
     		_data.ordertime = $("#ordertime").val();
     		_data.orderstatus = $("#orderstatus").val();
     		_data.pageIndex = pageIndex;
     		_data.pageSize = pageSize;
+    		
     		$.ajax({
     			async:false,
                 url: "${pageContext.request.contextPath}/orderZ/orderlist.htmls",
@@ -338,7 +336,7 @@
 			<li><a href="javascript:;" class="icon-home">首页</a> </li>
 			<li><a href="javascript:;" >普通会员订单</a></li>
 		</ul>
-		<div id="admin_order" class="admin" style="padding: 10px 60px;">
+		<div id="admin_order" class="admin" style="padding: 10px 60px;margin-bottom: 30px;">
 			<div class="padding float-left" style="padding-left: 0px;">
 				<form onsubmit="return false;" class="form-inline" method="post">
 					<input type="hidden" id="orderstatus" name=""/>
@@ -357,23 +355,10 @@
 							</li>
 						</ul>
 					</div>
-					<!-- <div class="form-group">
-						<div class="field">
-							<input type="text" placeholder="请输入订单号" size="30" name="ordernum" id="ordernum" class="input">
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="field">
-							<input type="text" placeholder="请输入下单日期" size="30" id="ordertime" class="input">
-						</div>
-					</div>
-					<div class="form-button">
-						<button type="submit" class="button icon-search"> 搜 索</button>
-					</div> -->
 				</form>
 			</div>
 			<div class="padding float-right">
-				<button class="button bg-blue" id="newOrder"><span class="icon-plus"></span> 新 增</button>
+				<!-- <button class="button bg-blue" id="newOrder"><span class="icon-plus"></span> 新 增</button> -->
 			</div>
 			<div id="orderList" class="admin-panel">
 				

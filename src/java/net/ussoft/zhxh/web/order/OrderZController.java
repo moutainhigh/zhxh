@@ -38,7 +38,6 @@ import net.ussoft.zhxh.service.IPublicOrderProductService;
 import net.ussoft.zhxh.service.IPublicOrderService;
 import net.ussoft.zhxh.service.IPublicUser2Service;
 import net.ussoft.zhxh.service.IPublicUserBankService;
-import net.ussoft.zhxh.service.IPublicUserLinkService;
 import net.ussoft.zhxh.service.IPublicUserPathService;
 import net.ussoft.zhxh.service.IPublicUserService;
 
@@ -340,15 +339,15 @@ public class OrderZController extends BaseConstroller {
 				resultlist.add(order);
 			}
 		}else if("my".equals(orderType)){
-			String parentid = "";
 			for(Public_order order : list){
-				if(order.getParentid().equals(parentid)){
-					order.setP_username(user_obj.getUsername());
-				}else{
-					user_obj = userService.getById(order.getParentid());
-					order.setP_username(user_obj.getUsername());
-					parentid = order.getParentid();
-				}
+				parent_obj = userService.getById(order.getParentid());
+				order.setP_username(parent_obj.getCompanyname());
+				
+				user_obj = userService.getById(order.getUserid());
+				order.setU_username(user_obj.getUsername());
+				
+				submit_obj = userService.getById(order.getSubmitid());
+				order.setS_username(submit_obj.getCompanyname());
 				resultlist.add(order);
 			}
 		}

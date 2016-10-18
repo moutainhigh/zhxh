@@ -138,7 +138,7 @@
 			<div class="side-menu">
 				<ul>
 					<li class="pr side-menu-li li-crop menu1" id="order" code="WBM_ORDER">
-						<a class="order side-menu-a new-con-p" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist">
+						<a class="order side-menu-a new-con-p" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/z/zOrderlist&param={'orderType':'my'}">
 							<i class="icon"></i>订单<span class="${sessionScope.order_status_msg > 0 ? 'ui-new-func':''}"></span>
 						</a>
 						<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
