@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
@@ -20,8 +19,6 @@ import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Spending_bill;
-import net.ussoft.zhxh.pay.kq.HttpClient;
-import net.ussoft.zhxh.pay.kq.Send;
 import net.ussoft.zhxh.service.IIncomeBillService;
 import net.ussoft.zhxh.service.IPublicDisDetailsService;
 import net.ussoft.zhxh.service.IPublicUserBankService;
@@ -29,8 +26,6 @@ import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.service.IQuotaBillService;
 import net.ussoft.zhxh.service.ISpendingBillService;
 import net.ussoft.zhxh.util.BillNO;
-import net.ussoft.zhxh.util.CommonUtils;
-import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 
 import org.springframework.stereotype.Controller;
@@ -172,22 +167,9 @@ public class OrderUserBankController extends BaseConstroller {
 		if(bill != null){
 			map.put("code", "1");
 			map.put("data", bill);
-			/*Send send = new Send();
-			HttpClient http = new HttpClient(response);
-			send.setSignMsg(bill, http);
-			String url = "https://sandbox.99bill.com/gateway/recvMerchantInfoAction.htm";
-			String str = http.sendByPost(url);
-			out.print(str);
-			return;*/
-			/*int num = userBankService.recharge(bill, user.getIdentity());
-			if(num > 0){
-				out.print("success");
-				return;
-			}*/
 		}else{
 			map.put("code", 0);
 		}
-		
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
@@ -199,7 +181,6 @@ public class OrderUserBankController extends BaseConstroller {
 	public ModelAndView payment (String id, ModelMap modelMap) throws Exception {
 		Income_bill bill = incomeBillService.getById(id);
 		modelMap.put("bill", bill);
-		//C:\Users\Administrator\AppData\Local\Temp\alipaydirect\MD5签名版本\create_direct_pay_by_user-JAVA-UTF-8\src\com\alipay\config
 		return new ModelAndView("/view/order/bank/payment", modelMap);
 	}
 
