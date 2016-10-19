@@ -331,6 +331,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Override
 	public synchronized int recharge(Income_bill bill,String identity){
 		try {
+			if(bill.getStatus() == 1){
+				return -1;	//已支付
+			}
 			//当前账户
 			Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
 			//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
