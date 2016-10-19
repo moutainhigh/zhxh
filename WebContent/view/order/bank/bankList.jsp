@@ -110,7 +110,7 @@
 	    	pay_form.action="${pageContext.request.contextPath}/orderUserBank/payment.htmls";
 	    	pay_form.submit();
 	    	
-	    	var cf = "是否支付成功？【是】【否】<br><p style='font-size:12px; color:red'>注意：点击【是】，表示支付成功请查看账户金额是否已变更，点击【否】，表示支付失败可再次进行支付。</p>";
+	    	var cf = "是否支付成功？【是】【否】<br><p style='font-size:12px; color:#FF6600'>点击【是】，表示支付成功请查看账户金额是否已变更，点击【否】，表示支付失败可再次进行支付</p><p style='font-size:12px; color:red'>注意：请勿重复提交</p>";
 			layer.confirm(cf, {title:'系统提示',icon:3,
 					btn: ['是','否'] //按钮
 				}, function(index){
