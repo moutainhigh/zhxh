@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * 快钱支付-服务接收
@@ -16,29 +15,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * */
 
 @Controller
-@RequestMapping("/pay")
 public class ReceiveAction {
-
-	/**
-	 * 快钱支付-提交表单
-	 * */
-	@RequestMapping(value="/send",method=RequestMethod.POST)
-	public void send(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		
-		
-		
-	}
 	
 	/**
 	 * 快钱支付-服务接收
 	 * */
-	@RequestMapping(value="/receive",method=RequestMethod.POST)
+	@RequestMapping(value="/kq/receive")
 	public void receive(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
@@ -84,6 +67,11 @@ public class ReceiveAction {
 		String errCode = request.getParameter("errCode");
 		//签名字符串 
 		String signMsg = request.getParameter("signMsg");
+		if(null == signMsg || "".equals(signMsg)){
+			out.print("<result>0</result> <redirecturl>http://139.224.0.109/</redirecturl>");
+			return;
+		}
+		
 		String merchantSignMsgVal = "";
 		merchantSignMsgVal = appendParam(merchantSignMsgVal,"merchantAcctId", merchantAcctId);
 		merchantSignMsgVal = appendParam(merchantSignMsgVal, "version",version);
@@ -118,22 +106,22 @@ public class ReceiveAction {
 	  					*/
 	  					rtnOK=1;
 	  					//以下是我们快钱设置的show页面，商户需要自己定义该页面。
-	  					rtnUrl="http://101.227.69.165:8801/RMBPORT/show.jsp?msg=success";
+	  					rtnUrl="http://139.224.0.109/view/order/bank/show.jsp?msg=success";
 	  					break;
 	  			default:
 	  					rtnOK=0;
 	  					//以下是我们快钱设置的show页面，商户需要自己定义该页面。
-	  					rtnUrl="http://101.227.69.165:8801/RMBPORT/show.jsp?msg=false";
+	  					rtnUrl="http://139.224.0.109/view/order/bank/show.jsp?msg=false";
 	  					break;
 	  		}
 	  	}else{
 	  		rtnOK=0;
 	  		//以下是我们快钱设置的show页面，商户需要自己定义该页面。
-	  		rtnUrl="http://101.227.69.165:8801/RMBPORT/show.jsp?msg=error";
+	  		rtnUrl="http://139.224.0.109/view/order/bank/show.jsp?msg=error";
 	  	}	
 	
 	
-		out.print("error");
+		out.print("<result>"+rtnOK+"</result> <redirecturl>"+rtnUrl+"</redirecturl>");
 	}
 	
 	/**
@@ -141,11 +129,11 @@ public class ReceiveAction {
 	 * */
 	private String appendParam(String returns, String paramId, String paramValue) {
 		if (!returns.equals("")) {
-			if (!paramValue.equals("")) {
+			if (null != paramValue && !paramValue.equals("")) {
 				returns += "&" + paramId + "=" + paramValue;
 			}
 		}else {
-			if (!paramValue.equals("")) {
+			if (null != paramValue && !paramValue.equals("")) {
 				returns = paramId + "=" + paramValue;
 			}
 		}

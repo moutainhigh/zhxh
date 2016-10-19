@@ -26,7 +26,7 @@ public class Pkipair {
 			
 			// 读取密钥仓库（相对路径）
 			String file = Pkipair.class.getResource("tester-rsa.pfx").getPath().replaceAll("%20", " ");
-			System.out.println(file);
+//			System.out.println(file);
 			
 			FileInputStream ksfis = new FileInputStream(file);
 			
@@ -48,7 +48,7 @@ public class Pkipair {
 		}catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("test = "+base64);
+//		System.out.println("test = "+base64);
 		return base64;
 	}
 	public boolean enCodeByCer( String val, String msg) {
@@ -59,7 +59,7 @@ public class Pkipair {
 			
 			//获得文件(相对路径)
 			String file = Pkipair.class.getResource("99bill[1].cert.rsa.20140803.cer").toURI().getPath();
-			System.out.println(file);
+//			System.out.println(file);
 			FileInputStream inStream = new FileInputStream(file);
 			
 			CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -72,12 +72,12 @@ public class Pkipair {
 			signature.update(val.getBytes());
 			//解码
 			sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
-			System.out.println(new String(decoder.decodeBuffer(msg)));
+//			System.out.println(new String(decoder.decodeBuffer(msg)));
 			flag = signature.verify(decoder.decodeBuffer(msg));
-			System.out.println(flag);
+//			System.out.println(flag);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("no");
+//			System.out.println("no");
 		} 
 		return flag;
 	}

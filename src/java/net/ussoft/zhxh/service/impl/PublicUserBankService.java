@@ -214,13 +214,16 @@ public class PublicUserBankService implements IPublicUserBankService{
 		order.setOrderstatusmemo("已签收");
 		order = orderDao.update(order);
 		//订单操作日志
-		Public_log log = saveLog(order.getUserid(), order.getParentid(), "sendorder", order.getOrdernumber()+"-已签收", order.getOrdertotal(), order.getId());
+		saveLog(order.getUserid(), order.getParentid(), "sendorder", order.getOrdernumber()+"-已签收", order.getOrdertotal(), order.getId());
 		//订单已签收-消息
 		int messagetype = 1;	//业务消息
 		String messagetxt = order.getU_username()+"，的订单已签收！订单号："+order.getOrdernumber();
 		createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
 		
-		/*目前没有考虑关闭返利、奖励的情况*/
+		/*是否接收分成：返利、奖励，查看机构的当前状态*/
+		Public_user user = userDao.get(order.getUserid());
+		Public_user tj_user = userDao.get(order.getTid());
+		
 		if("C".equals(order.getIdentity())){
 			float rebate_total = 0;	//本次返利总额
 			float award_total = 0;	//本次奖励总额
@@ -240,32 +243,29 @@ public class PublicUserBankService implements IPublicUserBankService{
 						rebate_num = obj.getProductnum();			//本次返利数量
 						next_rebate_num = rebate.getQuantity();		//下次返利数量
 					}
-					//计算本次返利额 = 商品折扣价后 X 返利比例 X 数量
-					float rebate_money = obj.getPrice() * obj.getBuyerdis() * obj.getRebatesdis() * rebate_num;
-					rebate_total += rebate_money;					//返利金额合计
-					//返利奖励明细表
-					Public_dis_details rebate_details = new Public_dis_details();
-					rebate_details.setDetailsnum(rebate_num); 			//本次返利数量
-					rebate_details.setNextrebatesnum(next_rebate_num);	//下次返利数量
-					rebate_details.setDetailspay(rebate_money);		//本次返利金额
-					rebate_details.setDetailstype(1);	//返利
-					//添加返利记录
-					savePublicDisDetails(rebate_details,order,obj);
-					
+					//接收分成
+					if(user.getSetreturn() == 1){
+						//计算本次返利额 = 商品折扣价后 X 返利比例 X 数量
+						float rebate_money = obj.getPrice() * obj.getBuyerdis() * obj.getRebatesdis() * rebate_num;
+						rebate_total += rebate_money;					//返利金额合计
+						//返利奖励明细表
+						Public_dis_details rebate_details = setDisDetails(rebate_num, next_rebate_num, rebate_money, 1);
+						//添加返利记录
+						savePublicDisDetails(rebate_details,order,obj);
+					}
 					//判断是否有推荐人
 					if(order.getTid() != null && !"".equals(order.getTid())){
-						//采购各种标准 - 查找推荐人的奖励标准
-						Public_set_user_standard standard = getProStandard(order.getTid(), order.getParentid(), obj.getProductid());
-						//计算奖励 —— 奖励标准 X 数量(同返利的数量)
-						float award_money = standard.getBonusesdis() * rebate_num;
-						award_total += award_money;
-						Public_dis_details award_details = new Public_dis_details();
-						award_details.setDetailsnum(rebate_num); 			//本次奖励数量
-						award_details.setNextrebatesnum(next_rebate_num);	//下次返利数量
-						award_details.setDetailspay(rebate_money);			//本次奖励金额
-						award_details.setDetailstype(2);					//奖励
-						//添加奖励记录
-						savePublicDisDetails(award_details,order,obj);
+						//接收分成
+						if(tj_user.getSetreturn() == 1){
+							//采购各种标准 - 查找推荐人的奖励标准
+							Public_set_user_standard standard = getProStandard(order.getTid(), order.getParentid(), obj.getProductid());
+							//计算奖励 —— 奖励标准 X 数量(同返利的数量)
+							float award_money = standard.getBonusesdis() * rebate_num;
+							award_total += award_money;
+							Public_dis_details award_details = setDisDetails(rebate_num, next_rebate_num, award_money, 2);
+							//添加奖励记录
+							savePublicDisDetails(award_details,order,obj);
+						}
 					}
 					
 				}else{
@@ -279,8 +279,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 					rebateDao.save(sizerebate);
 				}
 			}
+			
+			//添加返利账户金额
 			if(rebate_total > 0){
-				//添加返利账户金额
 				Public_user_bank bank = getUserBank(order.getUserid(), order.getParentid());	//当前的操作账户
 				bank.setRebatesbank(bank.getRebatesbank() + rebate_total);	//返利累计账户
 				bank.setHavebank(bank.getHavebank() + rebate_total);		//返利金额直接进入到可支配账户中
@@ -289,23 +290,37 @@ public class PublicUserBankService implements IPublicUserBankService{
 				messagetype = 1;	//业务消息
 				messagetxt = order.getU_username()+"的订单已返利！订单号："+order.getOrdernumber();
 				createMsg(order.getParentid(), order.getP_username(),order.getUserid(), order.getU_username(),  messagetype, messagetxt,order.getId());
-				//奖励
-				if(award_total > 0){
-					//奖励(奖励累计、奖励可提现)
-					Public_user_bank tbank = getUserBank(order.getTid(),order.getParentid());
-					if(tbank != null && !"".equals(tbank.getId())){
-						tbank.setBonusesbank(tbank.getBonusesbank() + award_total);				//奖励累计
-						tbank.setBonusestakenbank(tbank.getBonusestakenbank() + award_total);	//奖励可提现账户
-						userBankDao.update(tbank);
-						//添加奖励消息
-						messagetype = 1;	//业务消息
-						messagetxt = "尊敬的客户您好，您推荐的"+order.getU_username()+"，已产生了订单给予您"+award_total+"元奖励！";
-						createMsg(order.getParentid(), order.getP_username(),order.getTid(),order.getT_username(), messagetype, messagetxt,order.getId());
-					}
+			}
+			
+			//奖励
+			if(award_total > 0){
+				//奖励(奖励累计、奖励可提现)
+				Public_user_bank tbank = getUserBank(order.getTid(),order.getParentid());
+				if(tbank != null && !"".equals(tbank.getId())){
+					tbank.setBonusesbank(tbank.getBonusesbank() + award_total);				//奖励累计
+					tbank.setBonusestakenbank(tbank.getBonusestakenbank() + award_total);	//奖励可提现账户
+					userBankDao.update(tbank);
+					//添加奖励消息
+					messagetype = 1;	//业务消息
+					messagetxt = "尊敬的客户您好，您推荐的"+order.getU_username()+"，已产生了订单给予您"+award_total+"元奖励！";
+					createMsg(order.getParentid(), order.getP_username(),order.getTid(),order.getT_username(), messagetype, messagetxt,order.getId());
 				}
 			}
+			
 		}
 		return 1;
+	}
+	
+	/**
+	 * 返利、奖励，计数
+	 * */
+	public Public_dis_details setDisDetails(int rebate_num, int next_rebate_num, float money,int type){
+		Public_dis_details rebate_details = new Public_dis_details();
+		rebate_details.setDetailsnum(rebate_num); 			//本次返利、奖励数量
+		rebate_details.setNextrebatesnum(next_rebate_num);	//下次返利、奖励数量
+		rebate_details.setDetailspay(money);		//本次返利、奖励金额
+		rebate_details.setDetailstype(type);	//1返利;2奖励
+		return rebate_details;
 	}
 	
 	/**

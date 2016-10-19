@@ -71,7 +71,7 @@ public class SystemFilter implements Filter {
             return;
         }
         
-        String[] strs = {"kaptcha","init","page","login","css","js","image","pcMain","mMain","file"};
+        String[] strs = {"kaptcha","init","page","login","css","js","image","pcMain","mMain","file","receive"};
         if (strs != null && strs.length > 0) {  
             for (String str : strs) {
                 if (url.indexOf(str) >= 0) {

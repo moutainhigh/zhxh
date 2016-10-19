@@ -18,7 +18,7 @@ public class KqConfig {
 	public static String pageUrl = "";
 	
 	//服务器接收支付结果的后台地址，该参数务必填写，不能为空。
-	public static String bgUrl = "http://101.227.69.165:8801/RMBPORT/receive.jsp";
+	public static String bgUrl = "http://139.224.0.109/kq/receive.htmls";
 	
 	//网关版本，固定值：v2.0,该参数必填。
 	public static String version =  "v2.0";

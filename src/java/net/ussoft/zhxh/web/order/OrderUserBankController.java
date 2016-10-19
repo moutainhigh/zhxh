@@ -175,7 +175,7 @@ public class OrderUserBankController extends BaseConstroller {
 	}
 	
 	/**
-	 * 支付
+	 * 支付-跳转到第三方支付平台
 	 * */
 	@RequestMapping(value="/payment")
 	public ModelAndView payment (String id, ModelMap modelMap) throws Exception {

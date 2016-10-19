@@ -17,7 +17,7 @@ String msg=(String)request.getParameter("msg").trim();
 <BODY>
 	<div align="center">
 		<h2 align="center">快钱支付结果页面</h2>
-		<font color="#ff0000">（该页面仅做参考）</font>
+		<font color="#ff0000">（该页面仅做参考）1111111</font>
     	<table width="500" border="1" style="border-collapse: collapse" bordercolor="green" align="center">
 			<tr>
 				<td align="center">

@@ -369,7 +369,13 @@ public class PublicOrderService implements IPublicOrderService{
 			
 			orderPro.setBuyerdis(standard.getBuyerdis());
 			orderPro.setRebatesdis(standard.getRebatesdis());
-			orderPro.setBonusesdis(standard.getBonusesdis());
+			
+			//查找推荐人ID,获取推荐人的奖励标准
+			String tuijianid = getUserLink_ID(order.getUserid(), order.getParentid());
+			if(tuijianid != null){
+				Public_set_user_standard tj_standard = getProStandard(tuijianid, order.getParentid(), psize.getId());
+				orderPro.setBonusesdis(tj_standard.getBonusesdis()); 	//奖励标准
+			}
 			
 			orderProDao.save(orderPro);
 		}
