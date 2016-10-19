@@ -2,8 +2,15 @@ package net.ussoft.zhxh.pay.kq;
 
 import java.io.PrintWriter;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.ussoft.zhxh.model.Income_bill;
+import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.service.IIncomeBillService;
+import net.ussoft.zhxh.service.IPublicUserBankService;
+import net.ussoft.zhxh.service.IPublicUserService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class ReceiveAction {
+	
+	@Resource
+	private IIncomeBillService incomeBillService;
+	@Resource
+	private IPublicUserBankService userBankService;
+	@Resource
+	private IPublicUserService userService;
 	
 	/**
 	 * 快钱支付-服务接收
@@ -101,16 +115,22 @@ public class ReceiveAction {
 	  		switch(Integer.parseInt(payResult))
 	  		{
 	  			case 10:
-	  					/*
-	  					此处商户可以做业务逻辑处理
-	  					*/
+  					/*
+  					此处商户可以做业务逻辑处理
+  					*/
+	  				Income_bill bill = incomeBillService.getByBillno(orderId);
+	  				Public_user user = userService.getById(bill.getUserid());
+	  				int num = userBankService.recharge(bill, user.getIdentity());
+	  				if(num > 0){
 	  					rtnOK=1;
-	  					//以下是我们快钱设置的show页面，商户需要自己定义该页面。
 	  					rtnUrl="http://139.224.0.109/view/order/bank/show.jsp?msg=success";
-	  					break;
+	  				}else{
+	  					rtnOK=0;
+	  					rtnUrl="http://139.224.0.109/view/order/bank/show.jsp?msg=false";
+	  				}
+  					break;
 	  			default:
 	  					rtnOK=0;
-	  					//以下是我们快钱设置的show页面，商户需要自己定义该页面。
 	  					rtnUrl="http://139.224.0.109/view/order/bank/show.jsp?msg=false";
 	  					break;
 	  		}

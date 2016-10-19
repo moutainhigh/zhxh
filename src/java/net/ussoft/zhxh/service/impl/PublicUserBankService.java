@@ -330,7 +330,6 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Transactional("txManager")
 	@Override
 	public synchronized int recharge(Income_bill bill,String identity){
-		//第三方支付返回成功后执行，此处是否需要添加线程锁-例如服务器返回了两次（应该不会）
 		try {
 			//当前账户
 			Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
