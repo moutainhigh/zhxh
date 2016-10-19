@@ -69,13 +69,13 @@
 						<tr>
 							<td align="center">充值总计</td>
 							<td>￥{$T.row.depositbank}</td>
-							<td align="right"><a href="javascript:;" onclick="incomeBillDetail('{$T.row.userid}','{$T.row.parentid}','1,2','A')">查看记录</a></td>
+							<td align="right"><a id="income_click" href="javascript:;" onclick="incomeBillDetail('{$T.row.userid}','{$T.row.parentid}','1,2','A')">查看记录</a></td>
 						</tr>
 					{#elseif $P.identity == "C"}
 						<tr>
 							<td align="center">充值总计</td>
 							<td>￥{$T.row.depositbank}</td>
-							<td align="right"><a href="javascript:;" onclick="incomeBillDetail('{$T.row.userid}','{$T.row.parentid}','2','C')">查看记录</a></td>
+							<td align="right"><a id="income_click" href="javascript:;" onclick="incomeBillDetail('{$T.row.userid}','{$T.row.parentid}','2','C')">查看记录</a></td>
 						</tr>
 						<tr>
 							<td align="center">配额总计</td>

@@ -24,7 +24,6 @@
 			</table>
 		</div>
 		<div class="text-right" style="padding: 30px 50px 5px 50px;border-top: solid 0">
-			<br>
 			<div>总额：￥<span style="color: red !important" id="total_sum">{$T.account_real}</span></div>
 			<br>
 			<form name="pay_form" actioin="" method="post" target="_blank">

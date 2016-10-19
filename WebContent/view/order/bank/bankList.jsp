@@ -93,7 +93,6 @@
    	                		$("#payBill").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/payBillDetail.tpl");
    	                 		$("#payBill").processTemplate(json.data);
    	                 		layer.msg("账单已生成，请确认并支付",{icon:6});
-   	                 		//layer.tips('点击去支付', '#pay_btn', {tips: [1, '#FF9901'],time: 5000,});
    	                	}else{
    	                		layer.msg("操作失败，请稍后再试！",{icon:6});
    	                	}
@@ -110,6 +109,17 @@
 	    function payment(){
 	    	pay_form.action="${pageContext.request.contextPath}/orderUserBank/payment.htmls";
 	    	pay_form.submit();
+	    	
+	    	var cf = "是否支付成功？【是】【否】<br><p style='font-size:12px; color:red'>注意：点击【是】，表示支付成功请查看账户金额是否已变更，点击【否】，表示支付失败可再次进行支付。</p>";
+			layer.confirm(cf, {title:'系统提示',icon:3,
+					btn: ['是','否'] //按钮
+				}, function(index){
+					getUserBank();
+					$("#income_click").click();
+    				layer.close(index);
+				}, function(){
+					//layer.msg("请",{icon:6});
+				});
 	    }
 	    
 	    //转货款
@@ -228,7 +238,7 @@
 	<div class="layout" style="margin-bottom: 50px">
 		<ul class="bread bg">
 			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
-			<li><a href="javascript:;" >资金帐户</a></li>
+			<li><a href="javascript:;">资金帐户</a></li>
 		</ul>
 		<div class="admin">
 			<div class="line-big">
