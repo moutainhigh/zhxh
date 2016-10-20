@@ -28,6 +28,7 @@
 	hm.put("orderTime", KqConfig.orderTime);
 	hm.put("productName", bill.getTrantypetxt());
 	hm.put("payType", KqConfig.payType);
+	//hm.put("bankId", KqConfig.bankId);
 	//hm.put("signMsg", KqConfig.getSignMsg());
 	
 	//建立请求

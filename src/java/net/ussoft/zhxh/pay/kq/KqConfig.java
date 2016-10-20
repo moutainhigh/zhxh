@@ -45,7 +45,7 @@ public class KqConfig {
 	public static String payType = "00";
 	
 	//银行代码，如果payType为00，该值可以为空；如果payType为10，该值必须填写，具体请参考银行列表。
-//	String bankId = "";
+//	public static String bankId = "";
 	
 	/*public static String getSignMsg(){
 		String signMsgVal = "";

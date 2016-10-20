@@ -82,7 +82,7 @@ public class ReceiveAction {
 		//签名字符串 
 		String signMsg = request.getParameter("signMsg");
 		if(null == signMsg || "".equals(signMsg)){
-			out.print("<result>0</result> <redirecturl>http://139.224.0.109/</redirecturl>");
+			out.print("<result>0</result> <redirecturl>ERROR</redirecturl>");
 			return;
 		}
 		
@@ -141,7 +141,8 @@ public class ReceiveAction {
 	  	}	
 	
 	
-		out.print("<result>"+rtnOK+"</result> <redirecturl>"+rtnUrl+"</redirecturl>");
+//		out.print("<result>"+rtnOK+"</result> <redirecturl>"+rtnUrl+"</redirecturl>");
+		out.print("<result>"+rtnOK+"</result> <redirecturl></redirecturl>");
 	}
 	
 	/**

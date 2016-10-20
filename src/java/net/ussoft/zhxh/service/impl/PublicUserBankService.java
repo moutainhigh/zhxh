@@ -738,7 +738,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		List<Object> values = new ArrayList<Object>();
 		
 		if(null != userid && !"".equals(userid)){
-			sb.append(" and userid = ?");
+			sb.append(" and k.userid = ?");
 			values.add(userid);
 			sb.append(" and k.parentid = u.id");
 		}
@@ -746,11 +746,16 @@ public class PublicUserBankService implements IPublicUserBankService{
 			sb.append(" and k.parentid = ?");
 			values.add(parentid);
 			sb.append(" and k.userid = u.id");
+			//排除普通会员
+			sb.append(" and u.identity != ?");
+			values.add("Z");
+			//排除平台
+			sb.append(" and u.id != ?");
+			values.add("1");
 		}
 		
 		List<Map<String, Object>> list = userBankDao.searchForMap(sb.toString(),values);
 		return list;
 	}
-	
 	
 }
