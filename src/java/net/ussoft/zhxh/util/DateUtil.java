@@ -20,6 +20,7 @@ public class DateUtil {
 	public static void main(String[] args) {
 		DateUtil tt = new DateUtil();
 		System.out.println("获取当天年月:"+tt.getNowTime("yyyy-MM-dd"));
+		System.out.println("获取前天年月:"+tt.getAfterDate("2016-01-01",-1));
 		System.out.println("得到12个月后的日期:" + tt.getAfterMonth("2015-05-24",12));
 		System.out.println("得到2年后的日期:" + tt.getAfterYear("2015-05-24",2));
 		System.out.println("得到15天后的日期:" + tt.getAfterDate("2015-05-24",15));

@@ -39,6 +39,17 @@ public interface IPublicOrderService {
 	public int getCount(String userid,int status);
 	
 	/**
+	 * 订单数量
+	 * @param parentid
+	 * @param userid
+	 * @param status			订单状态
+	 * @param beginDate			开始时间
+	 * @param endDate			结束时间
+	 * @return
+	 */
+	public int getCount(String parentid,String userid,int status,String beginDate,String endDate);
+	
+	/**
 	 * 查询所有
 	 * @return list
 	 * */

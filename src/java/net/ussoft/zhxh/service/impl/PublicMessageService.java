@@ -28,7 +28,6 @@ public class PublicMessageService implements IPublicMessageService{
 
 	@Override
 	public Public_message getById(String id) {
-		// TODO Auto-generated method stub
 		return mDao.get(id);
 	}
 
@@ -70,6 +69,22 @@ public class PublicMessageService implements IPublicMessageService{
 		pageBean = mDao.search(sb.toString(), values, pageBean);
 		
 		return pageBean;
+	}
+	
+	@Override
+	public List<Public_message> list(String receiveid, String messagetype) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from public_message where receiveid=? and messagetype=? and messagestate=0");
+		
+		List<Object> values = new ArrayList<Object>();
+		values.add(receiveid);
+		values.add(messagetype);
+		
+		sb.append(" order by messagetime desc limit 0,10");
+		
+		List<Public_message> list = mDao.search(sb.toString(), values);
+		
+		return list;
 	}
 	
 	@Transactional("txManager")

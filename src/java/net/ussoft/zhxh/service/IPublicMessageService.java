@@ -36,6 +36,14 @@ public interface IPublicMessageService {
 	public PageBean<Public_message> list(String receiveid,String messagetype,Map<String, Object> map,PageBean<Public_message> pageBean);
 	
 	/**
+	 * 为首页获取未读的消息
+	 * @param receiveid			接收者id
+	 * @param messagetype		消息类型
+	 * @return
+	 */
+	public List<Public_message> list(String receiveid,String messagetype);
+	
+	/**
 	 * 获取消息数量。供session
 	 * @param receiveid
 	 * @param messagetype

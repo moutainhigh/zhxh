@@ -3,22 +3,22 @@
 		<tr class="panel-head item">
 			<th width="45" align="center"><input type="checkbox" value="1" name="checkall"></th>
 			<th width="45">序号</th>
-			<th id="tip_username" width="*">姓名</th>
-			<th width="100">手机号码</th>
+			<th id="tip_username" width="80">姓名</th>
+			<th width="80">手机号码</th>
 			<th width="80">生日</th>
 			<th width="50">性别</th>
 			<th width="60">身份</th>
 			{#if $P.radio_value == 'A' || $P.radio_value == 'C'}
 			<th width="150">客户名称</th>
-			<th width="*">客户地址</th>
+			<th width="200">客户地址</th>
 			<th width="100">客户代码</th>
 			<th width="120">客户级别</th>
 			<th width="80">接收分成</th>
 			{#elseif $P.radio_value == 'Z'}
-			<th width="100">所属机构代码</th>
+			<th width="80">所属机构代码</th>
 			{#/if}
 			{#if $P.radio_value == "C"}
-			<th width="150">推荐人</th>
+			<th width="100">推荐人</th>
 			{#/if}
 			<th width="80">微信号码</th>
 			<th width="50">状态</th>

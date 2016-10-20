@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_order;
@@ -32,6 +34,7 @@ import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Public_user_path;
+import net.ussoft.zhxh.service.IIncomeBillService;
 import net.ussoft.zhxh.service.IPublicMessageService;
 import net.ussoft.zhxh.service.IPublicOrderPathService;
 import net.ussoft.zhxh.service.IPublicOrderProductService;
@@ -40,6 +43,8 @@ import net.ussoft.zhxh.service.IPublicUser2Service;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserPathService;
 import net.ussoft.zhxh.service.IPublicUserService;
+import net.ussoft.zhxh.util.BillNO;
+import net.ussoft.zhxh.util.DateUtil;
 
 
 @Controller
@@ -62,6 +67,8 @@ public class OrderZController extends BaseConstroller {
 	private IPublicOrderPathService orderPathService;
 	@Resource
 	private IPublicMessageService messageService;
+	@Resource
+	private IIncomeBillService incomeBillService;
 	
 	/**
 	 * 新增订货单
@@ -261,6 +268,42 @@ public class OrderZController extends BaseConstroller {
 		user.setParentid(parentid); //商家
 		user.setAddressid(addressid);
 		Public_order order = orderService.createorder(psizeList, user,buyuserid,parentid);
+		
+		//插入收入记录表
+		Income_bill bill = new Income_bill();
+		bill.setId(UUID.randomUUID().toString());
+		bill.setBillno(BillNO.getBillNo());	//流水号
+		bill.setOrderid(order.getId());
+		Public_user p_user = userService.getById(parentid);
+		bill.setParentid(parentid);
+		bill.setP_username(p_user.getUsername());
+		bill.setP_company(p_user.getCompanyname());
+//		Public_user user2 = getSessionUser();
+		Public_user user2 = userService.getById(buyuserid);
+		bill.setUserid(user2.getId());
+		bill.setU_username(user2.getUsername());
+		bill.setU_company(user2.getCompanyname());
+		//金额
+		bill.setAccount_receivable(order.getOrdertotal());//应收款
+		bill.setAccount_real(0f);//实收款
+		bill.setDownpayment(0f);//首付款
+		bill.setDownpayment_ratio(0f);//首付比例
+		bill.setLoan_amount(0f);//贷款额
+		bill.setLoan_amount_real(0f);//贷款实收额
+		
+		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		bill.setBanktime("");//支付回执时间
+		bill.setStagesbanktime("");//分期回执时间
+		
+//		bill.setPaytype(paytype);
+		bill.setTrantype(0);	//交易类型——1：现金充值，2：货款充值，3：售额（全），4：售额（分期）0:未知
+		
+		String[] TRANTYPE_TXT = {"未知","现金充值","货款充值","售额（全款）","售额（分期）"};
+		bill.setTrantypetxt(TRANTYPE_TXT[0]);
+		bill.setStatus(0);	//（-1：支付失败，0：未支付，1：支付回执成功，2：分期回执成功）
+		bill.setRemarks("普通会员["+user2.getUsername()+"]在线购买。");
+		incomeBillService.insert(bill);
+		
 		if(order != null){
 			out.print("success");
 			return;

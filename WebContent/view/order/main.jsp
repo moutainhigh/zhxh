@@ -138,19 +138,28 @@
 			<div class="side-menu">
 				<ul>
 					<li class="pr side-menu-li li-crop menu1" id="order" code="WBM_ORDER">
+						<c:if test="${sessionScope.pc_user_sessiion.id != '1'}">
 						<a class="order side-menu-a new-con-p" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist">
 							<i class="icon"></i>订单<span class="${sessionScope.order_status_msg > 0 ? 'ui-new-func':''}"></span>
 						</a>
-						<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
+						</c:if>
+						<c:if test="${sessionScope.pc_user_sessiion.id == '1'}">
+						<a class="order side-menu-a new-con-p" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/suborderlist">
+							<i class="icon"></i>订单<span class="${sessionScope.order_status_msg > 0 ? 'ui-new-func':''}"></span>
+						</a>
+						</c:if>
+						<c:if test="${sessionScope.pc_user_sessiion.identity != 'C' && sessionScope.pc_user_sessiion.id != '1' }">
 						<div class="float-menu" style="display: none; top: 0px; margin-top: 0px;">
 							<ul class="sec-nav clearfix sec-nav-flow" style="width: 249px;">
 								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
 									<a class="sec-nav-a li-a-color" href="javascript:;">订单管理</a>
 									<ul class="third-nav-ul">
+										<c:if test="${sessionScope.pc_user_sessiion.id != '1'}">
 										<li class="sec-nav-li menu2" code="WBM_ORDER_RETURNED">
 											<a class="sec-nav-a new-con" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/myorderlist">我的订单
 											<span class="${sessionScope.order_status_msg2 > 0 ? 'ui-new-func':''}"></span></a>
 										</li>
+										</c:if>
 										<li class="sec-nav-li menu2" code="WBM_ORDER_OUTSTOCK">
 											<a class="sec-nav-a new-con" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/suborderlist">客户订单
 											<span class="${sessionScope.order_status_msg1 > 0 ? 'ui-new-func':''}"></span></a>

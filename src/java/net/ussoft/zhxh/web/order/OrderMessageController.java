@@ -159,6 +159,23 @@ public class OrderMessageController extends BaseConstroller {
 		out.print("success");
 	}
 	
+	@RequestMapping(value="/showMessage",method=RequestMethod.POST)
+	public void showMessage(String id,HttpServletResponse response,HttpServletRequest request) throws IOException {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		Public_message m = mService.getById(id);
+		
+		mService.updateBatch(id, "messagestate", "1");
+		
+		String json = JSON.toJSONString(m);
+		
+		out.print(json);
+		
+	}
+	
 	
 	
 }

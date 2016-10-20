@@ -338,7 +338,7 @@
 	<!--内容-->
 	<div class="layout" style="margin-bottom: 50px">
 		<ul class="bread bg">
-			<li><a href="#" class="icon-home">首页</a> </li>
+			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
 			<li><a href="#" >我的订单</a></li>
 		</ul>
 		<div id="admin_order" class="admin" style="padding: 10px 60px;">

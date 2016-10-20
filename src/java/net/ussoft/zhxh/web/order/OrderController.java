@@ -26,6 +26,7 @@ import com.alibaba.fastjson.JSON;
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
+import net.ussoft.zhxh.model.Public_message;
 import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_order_path;
 import net.ussoft.zhxh.model.Public_order_product;
@@ -43,6 +44,7 @@ import net.ussoft.zhxh.service.IPublicUserPathService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
+import net.ussoft.zhxh.util.DateUtil;
 
 
 @Controller
@@ -114,6 +116,193 @@ public class OrderController extends BaseConstroller {
 		
 		return new ModelAndView("/view/order/main", modelMap);
 	}
+	
+	private HashMap<String,Object> getTotalData(String parentid,String userid,String beginDate,String endDate,boolean isIdentity) {
+		HashMap<String,Object> map = new HashMap<>();
+		
+		Map<String, Object> mapParm = new HashMap<String,Object>();
+		if (null != parentid && !"".equals(parentid)) {
+			mapParm.put("parentid=", parentid);
+		}
+		if (null != userid && !"".equals(userid)) {
+			mapParm.put("userid=", userid);
+		}
+		if (null != beginDate && !"".equals(beginDate)) {
+			mapParm.put("ordertime>", beginDate);
+		}
+		if (null != endDate && !"".equals(endDate)) {
+			mapParm.put("ordertime<", endDate);
+		}
+		
+		mapParm.put("orderstatus>", 0);
+		
+		if (null != parentid && parentid.equals("1") && isIdentity) {
+			//如果
+			mapParm.put("identity!=", "Z");
+			List<Public_order> myDateOrderList = orderService.list(mapParm);
+			if (myDateOrderList.size() > 0) {
+				Float total = 0f;
+				for (Public_order order : myDateOrderList) {
+					total += order.getOrdertotal();
+				}
+				map.put("num", myDateOrderList.size());
+				map.put("total", total);
+			}
+			else {
+				map.put("num", 0);
+				map.put("total", 0);
+			}
+			mapParm.remove("identity!=");
+			mapParm.put("identity=", "Z");
+			List<Public_order> pList = orderService.list(mapParm);
+			if (pList.size() > 0) {
+				Float total = 0f;
+				for (Public_order order : pList) {
+					total += order.getOrdertotal();
+				}
+				map.put("p_num", pList.size());
+				map.put("p_total", total);
+			}
+			else {
+				map.put("p_num", 0);
+				map.put("p_total", 0);
+			}
+		}
+		else {
+			List<Public_order> myDateOrderList = orderService.list(mapParm);
+			if (myDateOrderList.size() > 0) {
+				Float total = 0f;
+				for (Public_order order : myDateOrderList) {
+					total += order.getOrdertotal();
+				}
+				map.put("num", myDateOrderList.size());
+				map.put("total", total);
+			}
+			else {
+				map.put("num", 0);
+				map.put("total", 0);
+			}
+		}
+		
+		return map;
+	}
+	
+	/**
+	 * 获取采购分销平台首页信息
+	 * */
+	@RequestMapping(value="/getIndexInfo",method=RequestMethod.POST)
+	public void getIndexInfo(HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		Public_user user = getSessionUser();
+		
+		map.put("identity", user.getIdentity());
+		map.put("userid", user.getId());
+		
+		String beginDate = "";
+		String endDate = "";
+		//判断session用户身份，获取不同的数据
+		if (!user.getId().equals("1")) {
+			//如果id不等于1 。应该有我的订单统计
+			
+			HashMap<String,HashMap<String,Object>> myList = new HashMap<String,HashMap<String,Object>>();
+			
+			HashMap<String,Object> myDay = new HashMap<>();
+			HashMap<String,Object> myMonth = new HashMap<>();
+			HashMap<String,Object> myYear = new HashMap<>();
+			DateUtil du = new DateUtil();
+			//1、计算当天
+			beginDate = du.getNowTime("yyyy-MM-dd");
+			endDate = du.getAfterDate(DateUtil.getNowTime("yyyy-MM-dd"), 1);
+			
+			myDay = getTotalData(null,user.getId(),beginDate,endDate,true);
+			myList.put("day", myDay);
+			
+			//2、计算当月
+			beginDate = du.getFirstDayOfMonth();
+			endDate = du.getNowTime("yyyy-MM-dd");
+			myMonth = getTotalData(null,user.getId(),beginDate,endDate,true);
+			myList.put("month", myMonth);
+			
+			//3、计算当年
+			beginDate = du.getCurrentYearFirst();
+			endDate = du.getNowTime("yyyy-MM-dd");
+			myYear = getTotalData(null,user.getId(),beginDate,endDate,true);
+			myList.put("year", myYear);
+			map.put("my", myList);
+		}
+		//如果不是店。应该有客户的订单统计
+		if (!user.getIdentity().equals("C")){
+			HashMap<String,HashMap<String,Object>> userList = new HashMap<String,HashMap<String,Object>>();
+			HashMap<String,Object> userDay = new HashMap<>();
+			HashMap<String,Object> userMonth = new HashMap<>();
+			HashMap<String,Object> userYear = new HashMap<>();
+			DateUtil du = new DateUtil();
+			//1、计算当天
+			beginDate = du.getNowTime("yyyy-MM-dd");
+			endDate = du.getAfterDate(DateUtil.getNowTime("yyyy-MM-dd"), 1);
+			
+			userDay = getTotalData(user.getId(),null,beginDate,endDate,true);
+			userList.put("day", userDay);
+			
+			//2、计算当月
+			beginDate = du.getFirstDayOfMonth();
+			endDate = du.getNowTime("yyyy-MM-dd");
+			userMonth = getTotalData(user.getId(),null,beginDate,endDate,true);
+			userList.put("month", userMonth);
+			
+			//3、计算当年
+			beginDate = du.getCurrentYearFirst();
+			endDate = du.getNowTime("yyyy-MM-dd");
+			userYear = getTotalData(user.getId(),null,beginDate,endDate,true);
+			userList.put("year", userYear);
+			
+			map.put("user", userList);
+			
+			//图标的数据获取
+			//1-12 月订单数及销售额
+			HashMap<String,HashMap<String,Object>> mList = new HashMap<String,HashMap<String,Object>>();
+			String y = du.getNowTime("yyyy");
+			map.put("year", y);
+			for (int i=1;i<=12;i++) {
+				beginDate = y+"-0"+i+"-01"+"";
+				if (i>=10) {
+					beginDate = y+"-"+i+"-01";
+				}
+				beginDate = du.getAfterDate(beginDate,-1);
+				
+				endDate = y +"-0"+i+"-31"+"";
+				if (i>=10) {
+					endDate = y+"-"+i+"-31";
+				}
+				HashMap<String,Object> tmpMap = new HashMap<>();
+				tmpMap = getTotalData(user.getId(),null,beginDate,endDate,false);
+				if (!tmpMap.get("total").toString().equals("0")) {
+					tmpMap.put("total", (Float)tmpMap.get("total")*0.0001f);
+				}
+				
+				mList.put(i+"m", tmpMap);
+			}
+			
+			map.put("m", mList);
+			
+		}
+		
+		
+		List<Public_message> sysM = messageService.list(user.getId(), "0");
+		map.put("sysM", sysM);
+		List<Public_message> infoM = messageService.list(user.getId(), "1");
+		map.put("infoM", infoM);
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+		
+	}
+	
+	
 	
 	/**
 	 * 新增订货单

@@ -101,6 +101,39 @@ public class PublicOrderService implements IPublicOrderService{
 	}
 	
 	@Override
+	public int getCount(String parentid, String userid, int status,String beginDate,String endDate) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT COUNT(0) FROM public_order WHERE 1=1 ");
+		List<Object> values = new ArrayList<Object>();
+		
+		if (null != parentid && !"".equals(parentid)) {
+			sb.append(" and parentid=?");
+			values.add(parentid);
+		}
+		
+		if (null != userid && !"".equals(userid)) {
+			sb.append(" and userid=?");
+			values.add(userid);
+		}
+		
+		if (status > 0) {
+			sb.append(" and orderstatus=?");
+			values.add(status);
+		}
+		
+		if (null != beginDate && !"".equals(beginDate)) {
+			sb.append(" and ordertime > ?");
+			values.add(beginDate);
+		}
+		if (null != endDate && !"".equals(endDate)) {
+			sb.append(" and ordertime < ?");
+			values.add(endDate);
+		}
+		
+		return orderDao.getCount(sb.toString(), values);
+	}
+	
+	@Override
 	public List<Public_order> list() {
 		return orderDao.getAll();
 	}
@@ -470,5 +503,5 @@ public class PublicOrderService implements IPublicOrderService{
 		}
 		return null;
 	}
-	
+
 }
