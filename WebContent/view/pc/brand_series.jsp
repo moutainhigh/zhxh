@@ -14,9 +14,16 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/pc/koala.min.1.5.js"></script>
 <script type="text/javascript">
 	$(function(){
+		//alert($("#D1pic1").html());
+		setTimeout("setH()",1000);//延时3秒
+		
+		
+	})
+	
+	function setH() {
 		var height = $("#D1pic1").height();
 		$("#fsD1").height(height);
-	})
+	}
 </script>
 </head>
 <body>
