@@ -43,6 +43,8 @@ public interface IPublicMessageService {
 	 */
 	public List<Public_message> list(String receiveid,String messagetype);
 	
+	public void insert(Public_message message);
+	
 	/**
 	 * 获取消息数量。供session
 	 * @param receiveid

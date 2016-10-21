@@ -153,4 +153,11 @@ public class PublicMessageService implements IPublicMessageService{
 		return num;
 	}
 
+	@Transactional("txManager")
+	@Override
+	public void insert(Public_message message) {
+		mDao.save(message);
+		
+	}
+
 }

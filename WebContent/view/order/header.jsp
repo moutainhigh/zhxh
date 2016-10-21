@@ -1,5 +1,36 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
+<script type="text/javascript">
+	function sendMessage() {
+		layer.prompt({
+			formType: 2,
+			value: '',
+			title: '请输入反馈意见'
+		}, function(value, index, elem){
+			var parm = {};
+			parm.receiveid = "1";
+			parm.messagetype = 0;
+			parm.messagetxt = value;
+			$.ajax({
+    			async:false,
+                url: "${pageContext.request.contextPath}/orderMessage/sendMessage.htmls",
+                data: parm,
+                type: "post",
+                dataType:"text",
+                success: function (json) {
+                	layer.msg("提交成功。",{icon:6});
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+                }
+           });
+		   layer.close(index);
+		});
+	}	
+</script>
+    
+<script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
 <div class="layout doc-header fixed box-shadow-small" style="z-index: 9;">
 	<div class="container-layout doc-naver">
 		<div class="line">
@@ -70,8 +101,8 @@
 					<li>
 						<a href="javascript:;"><span class="icon-comment-o"></span>&nbsp;客服<span class="downward"></span></a>
 						<ul class="drop-menu">
-							<li><a href="/react.html">在线客服</a></li>
-							<li><a href="/weixin/index.html">意见反馈</a></li>
+							<li><a href="javascript:;">在线客服</a></li>
+							<li><a href="javascript:;" onclick="sendMessage()">意见反馈</a></li>
 							<li><a href="javascript:;" style="background-color: #00a7e4;color: #fff;">400-400-4000</a></li>
 							<li><a href="javascript:;" style="background-color: #00a7e4;color: #fff;">7*24小时服务</a></li>
 						</ul>

@@ -53,7 +53,7 @@
 		
 		.showMessage {
 		    float: left;
-		    height: 150px;
+		    height: 100%;
 		    width: 650px;
 		    overflow: hidden;
 		    background: #5FB878;
@@ -193,12 +193,13 @@
                 type: "post",
                 dataType:"json",
                 success: function (json) {
+                	$("#mSendname").html("["+json.sendname+"]");
                 	$("#mTime").html(json.messagetime);
                 	$("#mCon").html(json.messagetxt);
                 	layer.open({
           	    	  type: 1,
           	    	  shade: false,
-          	    	  area: '500px',
+          	    	  area: ['500px','600px'],
           	    	  title: false, //不显示标题
           	    	  content: $('.showMessage'), //捕获的元素
           	    	  cancel: function(index){
@@ -294,11 +295,14 @@
 	</div>
 	<div class="showMessage" >
 		<br>
+		<span id="mSendname" style="color:#fff">
+	        2016-10-13 10:15:23
+	    </span> 
 		<span id="mTime" style="color:#fff">
 	        2016-10-13 10:15:23
 	    </span>
 	    <br>
-		<span id="mCon" style="color:#fff">
+		<span id="mCon" style="color:#fff;width:460px;">
 	        [代理A]:代理A提交了订单，请及时处理！订单号：PO16101018480001
 	    </span>
 	</div>

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +24,10 @@ import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_message;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.service.IPublicMessageService;
+import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
+import net.ussoft.zhxh.util.DateUtil;
 
 /**
  * 机构利益处理active
@@ -38,6 +41,8 @@ public class OrderMessageController extends BaseConstroller {
 	
 	@Resource
 	private IPublicMessageService mService;
+	@Resource
+	private IPublicUserService userService;
 	
 	/**
 	 * 获取消息
@@ -175,6 +180,36 @@ public class OrderMessageController extends BaseConstroller {
 		out.print(json);
 		
 	}
+	
+	@RequestMapping(value="/sendMessage",method=RequestMethod.POST)
+	public void sendMessage(String receiveid,Integer messagetype,String messagetxt,HttpServletResponse response,HttpServletRequest request) throws IOException {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		Public_user user = getSessionUser();
+		
+		Public_message m = new Public_message();
+		m.setId(UUID.randomUUID().toString());
+		m.setMessagestate(0);
+		m.setActiveid("");
+		m.setMessagetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		m.setMessagetxt(messagetxt);
+		m.setMessagetype(messagetype);
+		m.setReceiveid(receiveid);
+		Public_user receiveUser = userService.getById(receiveid);
+		m.setReceivename(receiveUser.getCompanyname());
+		m.setSendid(user.getId());
+		m.setSendname(user.getCompanyname());
+		
+		mService.insert(m);
+		
+		out.print("success");
+		
+	}
+	
+	
 	
 	
 	
