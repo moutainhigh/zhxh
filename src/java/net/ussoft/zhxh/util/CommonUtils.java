@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -485,6 +486,49 @@ public class CommonUtils {
 		
 		return resultMap;
 	}
-    
-    
+	
+	/**
+	 * 产生随机的六位数
+	 * @return
+	 */
+	public static String getSix(){
+		Random rad=new Random();
+		String result  = rad.nextInt(1000000) +"";
+		
+		if(result.length()!=6){
+			return getSix();
+		}
+		return result;
+	}
+	
+	/***
+	 * 获取IP地址
+	 * @param request
+	 * */
+	public static String getRemoteIp(HttpServletRequest request){
+		
+		String remoteIp = request.getHeader("x-forwarded-for");
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("X-Real-IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("Proxy-Client-IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getRemoteAddr();
+        }
+        if (remoteIp == null || remoteIp.isEmpty() || "unknown".equalsIgnoreCase(remoteIp)) {
+            remoteIp= request.getRemoteHost();
+        }
+        return remoteIp;
+    }
 }
