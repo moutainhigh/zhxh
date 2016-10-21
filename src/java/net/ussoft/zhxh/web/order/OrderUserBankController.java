@@ -225,14 +225,24 @@ public class OrderUserBankController extends BaseConstroller {
 		bill.setTrantypetxt(TRANTYPE_TXT[trantype]);
 		bill.setStatus(0);	//-1:失败，0：提交申请，1：成功
 		bill = spendingBillService.insert(bill);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(bill != null){
+			map.put("code", "1");
+			map.put("data", bill);
+		}else{
+			map.put("code", 0);
+		}
+		String json = JSON.toJSONString(map);
+		out.print(json);
+		/*
 		if(bill != null){
 			int num = userBankService.withdrawal(bill, user.getIdentity());
 			if(num > 0){
 				out.print("success");
 				return;
 			}
-		}
-		out.print("error");
+		}*/
 	}
 	
 	/**

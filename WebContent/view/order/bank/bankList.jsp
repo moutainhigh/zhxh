@@ -214,8 +214,7 @@
 	   	                dataType:"text",
 	   	                success: function (text) {
 	   	                	if(text == "success"){
-	   	                		getUserBank();
-	   	                		layer.msg("提现成功！",{icon:6});
+	   	                		
 	   	                	}else if(text == "0"){
 	   	                		layer.msg("您的账户已被冻结，不能进行提现！",{icon:6});
 	   	                	}else{
@@ -230,6 +229,11 @@
    			});
 	    }
 	    
+	    function apply_withdrawal(){
+	    	alert(1);
+	    	$("#payBill").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/pay2bank.tpl");
+        	$("#payBill").processTemplate();
+	    }
     </script>
 </head>
 <body>
