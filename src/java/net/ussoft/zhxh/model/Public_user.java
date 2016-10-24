@@ -23,7 +23,7 @@ public class Public_user {
 	private Integer isopen;			//	开关
 	private String password;		//	密码
 	private String uid;				//	微信唯一标识id
-	private int sex;
+	private Integer sex;
 	private String birthday;
 	private String companyname;		//存储机构（代理或店）的名称
 	private String companypath; 	//存储机构（代理或店）的地址
@@ -33,8 +33,8 @@ public class Public_user {
 	private String wechar; 			//微信号码
 	private String rank; 			//代理商或店的级别,存文本，仅仅显示，没有实际意义。
 	
-	private int sort;
-	private int repaystate;			//是否允许分期
+	private Integer sort;
+	private Integer repaystate;			//是否允许分期
 	
 	//临时字段
 	private String parentid; 		//存储机构（代理或店）的直属上级id
@@ -160,12 +160,30 @@ public class Public_user {
 	public void setUid(String uid) {
 		this.uid = uid;
 	}
-	public int getSex() {
+	public Integer getSex() {
 		return sex;
 	}
-	public void setSex(int sex) {
+
+	public void setSex(Integer sex) {
 		this.sex = sex;
 	}
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
+	public Integer getRepaystate() {
+		return repaystate;
+	}
+
+	public void setRepaystate(Integer repaystate) {
+		this.repaystate = repaystate;
+	}
+
 	public String getBirthday() {
 		return birthday;
 	}
@@ -220,12 +238,6 @@ public class Public_user {
 	public void setRank(String rank) {
 		this.rank = rank;
 	}
-	public int getSort() {
-		return sort;
-	}
-	public void setSort(int sort) {
-		this.sort = sort;
-	}
 	public String getCreatetime() {
 		return createtime;
 	}
@@ -261,12 +273,5 @@ public class Public_user {
 		this.tuijianid = tuijianid;
 	}
 
-	public int getRepaystate() {
-		return repaystate;
-	}
-
-	public void setRepaystate(int repaystate) {
-		this.repaystate = repaystate;
-	}
 	
 }

@@ -199,7 +199,7 @@
                 	layer.open({
           	    	  type: 1,
           	    	  shade: false,
-          	    	  area: ['500px','600px'],
+          	    	  area: ['500px'],
           	    	  title: false, //不显示标题
           	    	  content: $('.showMessage'), //捕获的元素
           	    	  cancel: function(index){

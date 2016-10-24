@@ -34,7 +34,6 @@ import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.MD5;
-import net.ussoft.zhxh.util.SendSMS;
 
 
 @Controller
@@ -172,7 +171,7 @@ public class OrderUserController extends BaseConstroller {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/getCode",method=RequestMethod.POST)
-	public void getCode(String phonenumber,String sendType,HttpServletRequest request,HttpServletResponse response) throws Exception {
+	public void getCode(String userid,String phonenumber,String sendType,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
@@ -184,11 +183,29 @@ public class OrderUserController extends BaseConstroller {
 		}
 		
 		//判断手机号码是否重复
-		boolean isok = userService.checkPhoneNum(phonenumber);
-		
-		if (isok) {
-			out.print("exist");
-			return;
+//		int num = userService.checkPhoneNum(phonenumber);
+		boolean flag = true;
+		if (null != sendType) {
+			if ("insert".equals(sendType)) {
+				flag = userService.checkPhoneNum(phonenumber);
+				if (flag) {
+					out.print("exist");
+					return;
+				}
+			}
+			else if ("update".equals(sendType)) {
+				Public_user user = userService.getById(userid);
+				if (user.getPhonenumber().equals(phonenumber)) {
+//					flag = false;
+				}
+				else {
+					flag = userService.checkPhoneNum(phonenumber);
+					if (flag) {
+						out.print("exist");
+						return;
+					}
+				}
+			}
 		}
 		
 		String sendCode = getSix();
@@ -202,7 +219,7 @@ public class OrderUserController extends BaseConstroller {
 				logType = "ORDERUPDATE";
 			}
 		}
-		SendSMS.sendMessage(phonenumber, send_content);
+//		SendSMS.sendMessage(phonenumber, send_content);
 		savePhoneCodeLog(phonenumber, sendCode, logType, request);
 		
 		out.print("success");
@@ -493,6 +510,28 @@ public class OrderUserController extends BaseConstroller {
 		}
 		
 		out.print(flag);
+	}
+	
+	@RequestMapping(value="/getUser",method=RequestMethod.POST)
+	public void getUser(String id,HttpServletResponse response,HttpServletRequest request) throws IOException {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		Public_user user = null;
+		
+		if (null == id || "".equals(id)) {
+			user = getSessionUser();
+			id = user.getId();
+		}
+		
+		user = userService.getById(id);
+		
+		String json = JSON.toJSONString(user);
+		
+		out.print(json);
+		
 	}
 	
 }

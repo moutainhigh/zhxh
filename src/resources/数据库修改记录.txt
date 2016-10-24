@@ -426,3 +426,26 @@ insert into `zhxh`.`public_user` ( `id`, `usercode`, `username`, `phonenumber`, 
 2016-10-18
 1、修改public_user 机构表
 	（1）增加repaystate int（11）			是否允许机构分期 0：禁止  1：允许
+	
+2016-10-21
+1、修改spending_bill	支出统计（交易流水）
+	（1）增加 kaihuhang 银行卡开户行的名称 varchar 100
+	（2）增加 creditName 收款人姓名 varchar 100
+	（3）增加 bankCardNumber 银行卡号  varchar 100
+	（4）增加 dealId 快钱交易号 varchar 60
+	（5）增加 dealCharge 块钱手续费 decimal 11,2
+	（6）增加 debitCharge 付款方费用 decimal 11,2
+	（7）增加 creditCharge 收款方费用 decimal 11,2
+	（8）增加 resultFlag 命令执行结果 boolean
+	（9）增加 FailureCause 失败原因代码 varchar 40
+	（10）增加 province_city 城市 varchar 40
+	（11）增加 bankName 银行名称 varchar 100
+
+2、修改income_bill	收入总计（交易流水）表
+	(1)增加 bindCard varchar(30) 已绑短卡号,信用卡快捷支付绑定卡信息后返回前六后四位信用卡号
+	(2)增加 bindMobile varchar(30)  已绑短手机尾号,信用卡快捷支付绑定卡信息后返回前三位后四位手机号码
+	(3)增加 payAmount Decimal (11,2) 该金额代表商户快钱账户最终收到的金额
+	(4)增加 fee Decimal (11,2)  快钱收取商户的手续费，单位为分
+	(5)增加 dealId varchar(60)  快钱交易号
+	(6)增加 bankDealId varchar(60)  银行交易号
+	(7)增加 dealTime varchar(40) 快钱交易时间
