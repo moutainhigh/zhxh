@@ -98,6 +98,65 @@
 		    }
 		});
 	}
+	function updatePass() {
+		var pHeight = $(window.parent).height();
+   		var pWidth = $(window.parent).width();
+		layer.open({
+		    type: 2,
+		    title:'修改密码',
+		    area: ['820px', '300px'],
+		    fix: false, //不固定
+		    maxmin: false,
+		    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/updateUserPassword",
+		    btn: ['确 定', '取 消'],
+		    success:function(layero,index){
+		    	//var win = parent.window['layui-layer-iframe' + index].window;
+		    	//win.setData(comp,brandid);
+		    },
+		  	yes: function(index,layero){
+		  		var win = window['layui-layer-iframe' + index].window;
+		  		var row = win.getData();
+		  		
+		  		if (row == false) {
+		  			layer.msg("数据填写不规范，请检查。",{icon:6});
+				}
+				else {
+					//询问框
+			  		layer.confirm('确定要修改密码吗？', {
+			  			btn: ['确认', '取消']
+			  		},
+			  		function()	{
+			  			
+			  			$.ajax({
+			    			async:false,
+			                url: "${pageContext.request.contextPath}/orderUser/updatepass.htmls",
+			                data: {'password':row},
+			                type: "post",
+			                dataType:"text",
+			                success: function (text) {
+			                 	if (text == 'success') {
+			                 		layer.msg("保存成功。",{icon:6});
+			                 		layer.close(index);
+			                 	}
+			                 	else {
+			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+			                 	}
+			                },
+			                error: function (jqXHR, textStatus, errorThrown) {
+			                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+			                }
+			           });
+			  		}, 
+			  		function(){
+			  			
+			  		});
+				}
+		  	},
+		    end: function(){
+		    	//alert(123);
+		    }
+		});
+	}
 </script>
     
 <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
@@ -122,7 +181,7 @@
 						</a>
 						<ul class="drop-menu">
 							<li><a class="icon-user" target="_blank" href="javascript:;" onclick="updateSelf()"> 修改资料</a></li>
-							<li><a class="icon-key" target="_blank" href="javascript:;"> 修改密码</a></li>
+							<li><a class="icon-key" target="_blank" href="javascript:;" onclick="updatePass()"> 修改密码</a></li>
 						</ul>
 					</li>
 					<%-- <li class="active">

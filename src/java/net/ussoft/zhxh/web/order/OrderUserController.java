@@ -460,6 +460,70 @@ public class OrderUserController extends BaseConstroller {
 		}
 	}
 	
+	/**
+	 * 检查帐户密码是否正确。用于修改密码。
+	 * @param password			密码
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/checkPassword",method=RequestMethod.GET)
+	public void checkPassword(String password,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		boolean flag = true;
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
+		Public_user user = super.getSessionUser();
+		
+		if (null == user) {
+			map.put("getdata", "false");
+			String json = JSON.toJSONString(map);
+			out.print(json);
+			return;
+		}
+		
+		if (!user.getPassword().equals(MD5.encode(password).toString())) {
+			flag = false;
+		}
+		
+		if (flag) {
+			map.put("getdata", "true");
+		}
+		else {
+			map.put("getdata", "false");
+		}
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	
+	@RequestMapping(value="/updatepass",method=RequestMethod.POST)
+	public void updatepass(String password,HttpServletResponse response) throws IOException {
+		
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		String result = "failure";
+		
+		Public_user user = super.getSessionUser();
+		
+		if (user == null || password.equals("")) {
+			out.print(result);
+			return;
+		}
+		
+		user.setPassword(MD5.encode(password).toString());
+		
+		int num = userService.update(user);
+		if (num > 0 ) {
+			result = "success";
+		}
+		out.print(result);
+	}
+	
 	private void delete(String id) {
 		userService.delete(id);
 	}
