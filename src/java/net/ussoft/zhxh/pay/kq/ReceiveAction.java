@@ -119,6 +119,14 @@ public class ReceiveAction {
   					此处商户可以做业务逻辑处理
   					*/
 	  				Income_bill bill = incomeBillService.getByBillno(orderId);
+	  				bill.setBindCard(bindCard); 		//已绑短卡号,信用卡快捷支付绑定卡信息后返回前六后四位信用卡号
+	  				bill.setBindMobile(bindMobile); 	//已绑短手机尾号,信用卡快捷支付绑定卡信息后返回前三位后四位手机号码
+	  				bill.setPayAmount(Float.parseFloat(payAmount)); 		//该金额代表商户快钱账户最终收到的金额
+	  				bill.setFee(Float.parseFloat(fee)); 					//快钱收取商户的手续费，单位为分
+	  				bill.setDealId(bankDealId); 		//快钱交易号
+	  				bill.setBankDealId(bankDealId); 	//银行交易号
+	  				bill.setDealTime(dealTime); 		//快钱交易时间
+	  				
 	  				Public_user user = userService.getById(bill.getUserid());
 	  				int num = userBankService.recharge(bill, user.getIdentity());
 	  				if(num > 0){

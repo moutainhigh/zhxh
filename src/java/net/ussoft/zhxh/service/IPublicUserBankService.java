@@ -6,6 +6,7 @@ import java.util.Map;
 import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
+import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Spending_bill;
 
@@ -98,7 +99,7 @@ public interface IPublicUserBankService {
 	 * @param bill	交易流水
 	 * @param identity 身份
 	 * */
-	public int withdrawal(Spending_bill bill,String identity);
+	public int withdrawal(Spending_bill bill,Public_user user);
 	
 	/**
 	 * 设置配额

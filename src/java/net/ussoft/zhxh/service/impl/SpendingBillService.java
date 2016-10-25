@@ -56,7 +56,7 @@ public class SpendingBillService implements ISpendingBillService{
 	public PageBean<Map<String,Object>> list(String userid,String parentid,List<String> trantype,PageBean<Map<String,Object>> pageBean) {
 		StringBuffer sb = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
-		sb.append("SELECT * FROM spending_bill WHERE STATUS=1 ");
+		sb.append("SELECT * FROM spending_bill WHERE 1=1 ");
 		if(null != trantype && trantype.size() > 0){
 			sb.append(" AND trantype in(");
 			Serializable[] ss=new Serializable[trantype.size()];

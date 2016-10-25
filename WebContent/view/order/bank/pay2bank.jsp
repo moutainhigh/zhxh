@@ -26,7 +26,7 @@ FailureCause 失败原因代码 varchar 40
 //客户编号所对应的密钥。。在账户邮箱中获取
 String key = "J8A4CKE7H3HE8NUZ";
 //城市,中文字符 主要只需要城市名，不需要省份名。也不要带"市""自治区（县）"等
-String province_city = "南京";
+String province_city = "nj";
 //银行名称 请填写银行的标准名,详见接口文档
 String bankName ="招商银行";
 //银行卡开户行的名称
@@ -59,7 +59,7 @@ BankRequestBean[] queryArray = new BankRequestBean[1];
 queryArray[0] = requestBean;
 
 String merchant_id = "10012138842";
-String merchant_ip = "106.39.193.126";
+String merchant_ip = "121.42.209.154";
 BatchPayServiceLocator locator = new BatchPayServiceLocator();
 BankResponseBean[] responseBean = new BankResponseBean[1];
 responseBean = locator.getBatchPayWS().bankPay(queryArray,merchant_id,merchant_ip);

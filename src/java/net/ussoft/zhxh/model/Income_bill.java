@@ -32,6 +32,13 @@ public class Income_bill {
 	private Integer status;				//状态
 	private String remarks;				//交易描述
 	
+	private String bindCard;	// 已绑短卡号,信用卡快捷支付绑定卡信息后返回前六后四位信用卡号
+	private String bindMobile;	// 已绑短手机尾号,信用卡快捷支付绑定卡信息后返回前三位后四位手机号码
+	private Float payAmount;	// 该金额代表商户快钱账户最终收到的金额
+	private Float fee;			// 快钱收取商户的手续费，单位为分
+	private String dealId;		// 快钱交易号
+	private String bankDealId;	// 银行交易号
+	private String dealTime;	// 快钱交易时间
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -172,6 +179,48 @@ public class Income_bill {
 	}
 	public void setU_company(String u_company) {
 		this.u_company = u_company;
+	}
+	public String getBindCard() {
+		return bindCard;
+	}
+	public void setBindCard(String bindCard) {
+		this.bindCard = bindCard;
+	}
+	public String getBindMobile() {
+		return bindMobile;
+	}
+	public void setBindMobile(String bindMobile) {
+		this.bindMobile = bindMobile;
+	}
+	public Float getPayAmount() {
+		return payAmount;
+	}
+	public void setPayAmount(Float payAmount) {
+		this.payAmount = payAmount;
+	}
+	public Float getFee() {
+		return fee;
+	}
+	public void setFee(Float fee) {
+		this.fee = fee;
+	}
+	public String getDealId() {
+		return dealId;
+	}
+	public void setDealId(String dealId) {
+		this.dealId = dealId;
+	}
+	public String getBankDealId() {
+		return bankDealId;
+	}
+	public void setBankDealId(String bankDealId) {
+		this.bankDealId = bankDealId;
+	}
+	public String getDealTime() {
+		return dealTime;
+	}
+	public void setDealTime(String dealTime) {
+		this.dealTime = dealTime;
 	}
 	
 }

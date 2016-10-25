@@ -393,10 +393,16 @@ public class PublicUserBankService implements IPublicUserBankService{
 	 * */
 	@Transactional("txManager")
 	@Override
-	public synchronized int withdrawal(Spending_bill bill,String identity) {
+	public synchronized int withdrawal(Spending_bill bill,Public_user user) {
 		//上级账户的金额判断，提现的第三方流程是什么样的方式
-		
 		try {
+			//判断上级机构的可提现账户金额是否充足
+			Public_user_bank p_bank = getUserBank(bill.getParentid(),"");	//目前结构，代理的账户是唯一的
+			if(bill.getAmount() > p_bank.getTakenbank()){
+				return 0;
+			}
+			//交易流水账单
+			bill = inserSpending_bill(bill, user);
 			//平台账户
 			Public_user_bank bank_PT = getUserBank("1", "1");
 			//提现金额
@@ -407,10 +413,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 			if(!bill.getUserid().equals("1")){	//非平台账户
 				//当前账户
 				Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
-				if("A".equals(identity)){
+				if("A".equals(user.getIdentity())){
 					//可提现账户-提现
 					bank.setTakenbank(bank.getTakenbank() - amount);		//冲减可提现账户 - 当前操作账户
-				}else if("C".equals(identity)){
+				}else if("C".equals(user.getIdentity())){
 					//trantype——1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
 					if(bill.getTrantype() == 4){
 						//奖励账户-提现
@@ -434,11 +440,11 @@ public class PublicUserBankService implements IPublicUserBankService{
 			
 			//平台账户变更
 			bank_PT = userBankDao.update(bank_PT);
-			//更新流水表状态
+/*			//更新流水表状态
 			bill.setStatus(1);	//成功
 			bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 			bill = spendingBillDao.update(bill);
-			
+*/			
 			//添加提现消息
 			int messagetype = 1;	//业务消息
 			String messagetxt = "【"+bill.getU_company()+"】进行了提现，提现金额为："+amount;
@@ -447,8 +453,34 @@ public class PublicUserBankService implements IPublicUserBankService{
 			return 1;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return -1;
 		}
-		return 0;
+	}
+	
+	/**
+	 * 支出账单流水
+	 * @param bill
+	 * @param user
+	 * @return
+	 * */
+	private Spending_bill inserSpending_bill(Spending_bill bill,Public_user user){
+		bill.setId(UUID.randomUUID().toString());
+		bill.setBillno(BillNO.getBillNo());
+		bill.setUserid(user.getId());
+		bill.setU_username(user.getUsername());
+		bill.setU_company(user.getCompanyname());
+		Public_user p_user = userDao.get(bill.getParentid());
+		bill.setParentid(bill.getParentid());
+		bill.setP_username(p_user.getUsername());
+		bill.setP_company(p_user.getCompanyname());
+		bill.setAmount(bill.getAmount());
+		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		bill.setTrantype(bill.getTrantype()); //1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
+		String[] TRANTYPE_TXT = {"","平台可提现账户提现","代理可提现账户提现","店平台售额提现","店奖励可提现账户提现"};
+		bill.setTrantypetxt(TRANTYPE_TXT[bill.getTrantype()]);
+		bill.setStatus(0);	//-1:失败，0：提交申请，1：成功
+		bill = spendingBillDao.save(bill);
+		return bill;
 	}
 	
 	@Transactional("txManager")
