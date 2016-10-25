@@ -1,7 +1,7 @@
 <script src="{$P.path}"></script>
 <div class="collapse">
 	{#foreach $T as row}
-	<div class="panel {$T.row$index == 0 ?'active':''} border-sub">
+	<div class="panel border-sub {$P.current_uid == $T.row.parentid ? 'active':''}">
 		<div class="panel-head">
 			<strong>我的帐户[<span style="color:red">{$T.row.companyname}</span>]</strong>
 			<span class="float-right"><strong>状态[<span style="color:{#if $T.row.bankstate == 0}red{#else}blue{#/if}">{$T.row.bankstatetxt}</span>]</strong></span>
@@ -49,7 +49,7 @@
 						<tr>
 							<td align="center">可提现帐户</td>
 							<td>￥{$T.row.takenbank}</td>
-							<td align="right"><a href="javascript:;" onclick="recharge('{$T.row.parentid}',1)">充值</a> | <a href="javascript:;" onclick="apply_withdrawal('{$T.row.parentid}','{$T.row.takenbank}',2)">提现</a> | <a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','2','A')">提现记录</a></td>
+							<td align="right"><a href="javascript:;" onclick="recharge('{$T.row.parentid}',1)">充值</a> | <a href="javascript:;" onclick="apply_withdrawal('{$T.row.parentid}','{$T.row.takenbank}',2)">提现</a> | <a href="javascript:;" id="spending_click2{$T.row.parentid}" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','2','A')">提现记录</a></td>
 						</tr>
 						<tr>
 							<td align="center">可支配账户</td>
@@ -90,7 +90,7 @@
 						<tr>
 							<td align="center">平台售额可提现帐户</td>
 							<td>￥{$T.row.selltakenbank}</td>
-							<td align="right"><a href="javascript:;" onclick="withdrawal('{$T.row.parentid}','{$T.row.selltakenbank}',3)">提现</a> | <a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','3','C')">查看记录</a></td>
+							<td align="right"><a href="javascript:;" onclick="apply_withdrawal('{$T.row.parentid}','{$T.row.selltakenbank}',3)">提现</a> | <a href="javascript:;" id="spending_click3{$T.row.parentid}" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','3','C')">查看记录</a></td>
 						</tr>
 						<tr>
 							<td align="center">可支配账户</td>
@@ -110,7 +110,7 @@
 						<tr>
 							<td align="center">奖励可提现账户</td>
 							<td>￥{$T.row.bonusestakenbank}</td>
-							<td align="right"><a href="javascript:;" onclick="transfBuyBank('{$T.row.parentid}','{$T.row.bonusestakenbank}')">转货款</a> | <a href="javascript:;" onclick="withdrawal('{$T.row.parentid}','{$T.row.bonusestakenbank}',4)">提现</a> | <a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','4','C')">查看记录</a></td>
+							<td align="right"><a href="javascript:;" onclick="transfBuyBank('{$T.row.parentid}','{$T.row.bonusestakenbank}')">转货款</a> | <a href="javascript:;" onclick="apply_withdrawal('{$T.row.parentid}','{$T.row.bonusestakenbank}',4)">提现</a> | <a href="javascript:;" id="spending_click4{$T.row.parentid}" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','4','C')">查看记录</a></td>
 						</tr>
 					{#/if}
 				</tbody>

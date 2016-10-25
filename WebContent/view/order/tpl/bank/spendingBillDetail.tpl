@@ -7,6 +7,7 @@
 			<th>客户名称</th>
 			<th>摘要</th>
 			<th>金额</th>
+			<th>状态</th>
 		</tr> </thead>
 		<tbody>
 		{#if $P.rowCount > 0}
@@ -17,6 +18,7 @@
 					<td>{$T.row.u_username} </td>
 					<td>{$T.row.trantypetxt} </td>
 					<td>￥{$T.row.amount}</td>
+					<td>{#if $T.row.status == -1}失败{#elseif $T.row.status == 0}未接收{#elseif $T.row.status == 1}成功{#/if}</td>
 				</tr>
 			{#/for}	
 		{#else}

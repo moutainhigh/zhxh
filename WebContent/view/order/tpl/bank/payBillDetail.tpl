@@ -1,8 +1,4 @@
-<div class="panel border-sub">
-	<div class="panel-head">
-		<strong>充值账单确认</strong>
-	</div>
-	<div id="billDetail" class="panel-body">
+
 		<div class="table-responsive-y">
 			<table class="table table-hover">
 				<thead><tr>
@@ -31,5 +27,3 @@
 				<button id="pay_btn" type="button" class="button bg-dot" onclick="payment()">立即支付</button>			
 			</form>
 		</div>
-	</div>
-</div>

@@ -10,24 +10,34 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Spending_bill;
+import net.ussoft.zhxh.pay.kq.payment._99bill.www.apipay.services.BatchPayWS.BatchPayServiceLocator;
+import net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.BankRequestBean;
+import net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.BankResponseBean;
+import net.ussoft.zhxh.pay.kq.payment.md5.MD5Util;
 import net.ussoft.zhxh.service.IIncomeBillService;
 import net.ussoft.zhxh.service.IPublicDisDetailsService;
+import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.service.IQuotaBillService;
 import net.ussoft.zhxh.service.ISpendingBillService;
 import net.ussoft.zhxh.util.BillNO;
+import net.ussoft.zhxh.util.CommonUtils;
+import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +68,8 @@ public class OrderUserBankController extends BaseConstroller {
 	private IPublicDisDetailsService disDetailsService;
 	@Resource
 	private IPublicUserService userService;
+	@Resource
+	private IPublicPhoneCodeLogService codeLogService;
 	
 	/**
 	 * 获取机构的资金帐户
@@ -189,60 +201,215 @@ public class OrderUserBankController extends BaseConstroller {
 	 * @param parentid
 	 * @param amount
 	 * @param trantype 交易类型
+	 * @param sendcode 验证码
 	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/withdrawal",method=RequestMethod.POST)
-	public void withdrawal(String parentid,float amount,int trantype,HttpServletResponse response) throws IOException {
+	public void withdrawal(String objs,String sendcode,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		if(parentid == null || "".equals(parentid) || amount <=0){
+		
+		//获取验证码session
+		HashMap<String,Object> map_session = (HashMap<String,Object>) CommonUtils.getSessionAttribute(request, Constants.CODE_SESSION);
+		if (!sendcode.equals(map_session.get("sendCode").toString())) {
+			out.print("codeerror");
+			return;
+		}
+		if ("".equals(objs) || objs == null) {
 			out.print("error");
 			return;
 		}
-		Public_user user = getSessionUser();
-		Public_user_bank bank = userBankService.getUserBank(user.getId(),parentid);
-		if(bank.getBankstate() == 0){
-			out.print("0"); //账户已被冻结
+		Map<String,String> row = (Map<String,String>)JSON.parse(objs);
+		Spending_bill bill = new Spending_bill();
+		BeanUtils.populate(bill, row);
+		
+		if(bill.getParentid() == null || "".equals(bill.getParentid()) || bill.getAmount() <=0){
+			out.print("error");
 			return;
 		}
-		//支出-账单流水
-		Spending_bill bill = new Spending_bill();
+		
+		Public_user user = getSessionUser();
+		Public_user_bank bank = userBankService.getUserBank(user.getId(),bill.getParentid());
+		if(bank.getBankstate() == 0){
+			out.print("2"); //账户已被冻结
+			return;
+		}
+		
+		//-1:失败，0:上级机构余额不足，1：成功
+		int num = userBankService.withdrawal(bill, user);
+		if(num == 1){
+			pay2bank(bill); //向快钱发起请求
+		}
+		out.print(num);
+	}
+	
+	/**
+	 * 提现 - 快钱提现
+	 * @param bill
+	 * @throws Exception
+	 */
+	public void pay2bank(Spending_bill bill) throws Exception{
+		//客户编号所对应的密钥。。在账户邮箱中获取
+		String key = "J8A4CKE7H3HE8NUZ";
+		//城市,中文字符 主要只需要城市名，不需要省份名。也不要带"市""自治区（县）"等
+		String province_city = bill.getProvince_city();
+		//银行名称 请填写银行的标准名,详见接口文档
+		String bankName = bill.getBankName();
+		//银行卡开户行的名称
+		String  kaihuhang = bill.getKaihuhang();
+		//收款人姓名,收款人的姓名，必须与银行卡账户名相同
+		String creditName = bill.getCreditName();
+		//银行卡号  
+		String bankCardNumber = bill.getBankCardNumber();
+		//交易金额  整数或小数  小数为两位以内  但小数点的最后一位不能为0 如：0.10不行。单位为人民币元  
+		String amount = CommonUtils.subZeroAndDot(String.valueOf(bill.getAmount())); 
+		//交易备注
+		String description = bill.getRemarks();    
+		//订单号
+		String orderId = bill.getBillno();	//"p" + new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date());
+		//组合字符串。。必须按照此顺序组串
+		String macVal= bankCardNumber + amount + orderId + key;
+		String mac = MD5Util.md5Hex(macVal.getBytes("gb2312")).toUpperCase();
+
+		BankRequestBean requestBean = new BankRequestBean();
+		requestBean.setProvince_city(province_city);
+		requestBean.setBankName(bankName);
+		requestBean.setKaihuhang(kaihuhang);
+		requestBean.setCreditName(creditName);
+		requestBean.setBankCardNumber(bankCardNumber);
+		requestBean.setAmount(Double.parseDouble(amount));
+		requestBean.setDescription(description);
+		requestBean.setOrderId(orderId);
+		requestBean.setMac(mac);
+		BankRequestBean[] queryArray = new BankRequestBean[1];
+		queryArray[0] = requestBean;
+
+		String merchant_id = "10012138842";
+		String merchant_ip = "121.42.209.154";
+		BatchPayServiceLocator locator = new BatchPayServiceLocator();
+		BankResponseBean[] responseBean = new BankResponseBean[1];
+		responseBean = locator.getBatchPayWS().bankPay(queryArray,merchant_id,merchant_ip);
+		
+		bill.setDealId(responseBean[0].getDealId()); 				//块钱交易号
+		bill.setDealCharge(responseBean[0].getDealCharge());		//块钱手续费
+		bill.setDebitCharge(responseBean[0].getDebitCharge());		//付款方费用
+		bill.setCreditCharge(responseBean[0].getCreditCharge());	//收款方费用
+		boolean resultFlag = responseBean[0].isResultFlag();		//执行结果；true 代表成功，false 代表失败
+		int result=0,status=0;
+		if(resultFlag){
+			result = 1;
+			status = 1;
+		}else{
+			result = 0;
+			status = -1;
+		}
+		bill.setResultFlag(result);
+		bill.setFailureCause(responseBean[0].getFailureCause());	//失败原因代码
+		
+		bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		bill.setStatus(status);	//（-1，失败，0：提交申请，1：成功）
+		
+		spendingBillService.update(bill);
+	}
+	
+	/**
+	 * 提现
+	 * @param billno
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/pay2bank",method=RequestMethod.POST)
+	public void pay2bank(String billno,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if(null == billno || "".equals(billno)){
+			out.print("error");
+			return;
+		}
+		//Spending_bill bill = spendingBillService.getByBillno(billno);
+		//pay2bank(bill);
+	}
+	
+	/**
+	 * 支出-账单流水 - 作废，放到userBankService——withdrawal()中
+	 * @param bill
+	 * @param user
+	 * @return
+	 * */
+	private Spending_bill inserSpending_bill(Spending_bill bill,Public_user user){
 		bill.setId(UUID.randomUUID().toString());
 		bill.setBillno(BillNO.getBillNo());
 		bill.setUserid(user.getId());
 		bill.setU_username(user.getUsername());
 		bill.setU_company(user.getCompanyname());
-		Public_user p_user = userService.getById(parentid);
-		bill.setParentid(parentid);
+		Public_user p_user = userService.getById(bill.getParentid());
+		bill.setParentid(bill.getParentid());
 		bill.setP_username(p_user.getUsername());
 		bill.setP_company(p_user.getCompanyname());
-		bill.setAmount(amount);
+		bill.setAmount(bill.getAmount());
 		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
-		bill.setTrantype(trantype); //1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
+		bill.setTrantype(bill.getTrantype()); //1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
 		String[] TRANTYPE_TXT = {"","平台可提现账户提现","代理可提现账户提现","店平台售额提现","店奖励可提现账户提现"};
-		bill.setTrantypetxt(TRANTYPE_TXT[trantype]);
+		bill.setTrantypetxt(TRANTYPE_TXT[bill.getTrantype()]);
 		bill.setStatus(0);	//-1:失败，0：提交申请，1：成功
 		bill = spendingBillService.insert(bill);
+		return bill;
+	}
+	
+	/**
+	 * 获取手机验证码
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/getCode",method=RequestMethod.POST)
+	public void getCode(HttpServletRequest request,HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		Public_user user = getSessionUser();
+		String sendCode = CommonUtils.getSix();
+		String send_content = "验证码" + sendCode + "用于资金账户提现，请勿提供给任何人，以免造成账户资金损失。";
+		String logType = "PAY2BANK";
+//		SendSMS.sendMessage(user.getPhonenumber(), send_content);
+		savePhoneCodeLog(user.getPhonenumber(), sendCode, logType, request);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		if(bill != null){
-			map.put("code", "1");
-			map.put("data", bill);
-		}else{
-			map.put("code", 0);
-		}
-		String json = JSON.toJSONString(map);
-		out.print(json);
-		/*
-		if(bill != null){
-			int num = userBankService.withdrawal(bill, user.getIdentity());
-			if(num > 0){
-				out.print("success");
-				return;
-			}
-		}*/
+		out.print(sendCode);
+	}
+	
+	/**
+	 * 验证码发送日志
+	 * @param phonenumber
+	 * @param sendCode
+	 * @param sendType
+	 * @param request
+	 * */
+	private void savePhoneCodeLog(String phonenumber,String sendCode,String sendType,HttpServletRequest request){
+		//当前时间戳
+		Long oldTime = System.currentTimeMillis();
+		//s为原时间戳和当前时间戳中间相隔的分钟数
+//		Long s = (System.currentTimeMillis() - oldTime) / (1000 * 60);
+		CommonUtils.removeSessionAttribute(request, Constants.CODE_SESSION);
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("sendCode", sendCode);
+		map.put("phonenumber", phonenumber);
+		map.put("codetime", oldTime);
+		CommonUtils.setSessionAttribute(request, Constants.CODE_SESSION, map);
+		
+		//将发送情况写入日志
+		Public_phone_code_log codeLog = new Public_phone_code_log();
+		codeLog.setId(UUID.randomUUID().toString());
+		codeLog.setPhonenumber(phonenumber);
+		codeLog.setSendcode(sendCode);
+		codeLog.setSendtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		codeLog.setSendtimestr(oldTime.toString());
+		codeLog.setSendtype(sendType);	//类型
+		codeLog.setIp(CommonUtils.getRemoteIp(request));
+		codeLogService.insert(codeLog);
 	}
 	
 	/**
