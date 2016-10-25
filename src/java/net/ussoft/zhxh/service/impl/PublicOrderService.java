@@ -85,11 +85,14 @@ public class PublicOrderService implements IPublicOrderService{
 	}
 	
 	@Override
-	public int getCount(String userid,int status){
+	public int getCount(String userid,int status,String orderType){
 		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT COUNT(0) FROM public_order WHERE orderstatus=?");
+		sb.append("SELECT COUNT(0) FROM public_order WHERE orderstatus=? and ordertype=?");
 		List<Object> values = new ArrayList<Object>();
 		values.add(status);
+		
+		values.add(orderType);
+		
 		if(status == 1){	//代发货 - 等待发货
 			sb.append(" AND parentid=?");
 			values.add(userid);

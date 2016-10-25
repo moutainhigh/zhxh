@@ -19,6 +19,12 @@ public interface IIncomeBillService {
 	 * @return Income_bill
 	 * */
 	public Income_bill getById(String id);
+	/**
+	 * 根据订单id获取对象
+	 * @param id
+	 * @return Income_bill
+	 * */
+	public Income_bill getByOrderid(String id);
 	
 	/**
 	 * 根据流水单号获取对象

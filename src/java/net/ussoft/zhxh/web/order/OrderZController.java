@@ -411,19 +411,6 @@ public class OrderZController extends BaseConstroller {
 		return resultlist;
 	}
 	
-	//==========以下不确定要
-	
-	/**
-	 * 订货单
-	 * */
-	@RequestMapping(value="/myorder")
-	public ModelAndView myorder (ModelMap modelMap) throws Exception {
-		Public_user user = getSessionUser();
-		List<Public_user> u_list = userService.listParent(user.getId());
-		modelMap.put("u_list", u_list);
-		return new ModelAndView("/view/order/order/myorderlist", modelMap);
-	}
-	
 	/**
 	 * 订单详情
 	 * */
@@ -447,16 +434,85 @@ public class OrderZController extends BaseConstroller {
 		//收货地址
 		Public_order_path orderPath = orderPathService.getByOrderId(orderid);
 		
+		//支付情况
+		Income_bill bill = incomeBillService.getByOrderid(order.getId());
+		
 		
 		map.put("order",order);
 		map.put("products", proList);
 		map.put("address", orderPath);
+		map.put("income", bill);
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
 	
+	/**
+	 * 确认发货
+	 * @param orderid
+	 * @param deliverynum 快递单号
+	 * */
+	@RequestMapping(value="/sendout",method=RequestMethod.POST)
+	public void sendout(String orderid,String deliverynum, HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		Public_user user = getSessionUser();
+		Public_order order = orderService.getAuserOrder(orderid,user);
+		order.setDeliverynum(deliverynum);
+		int num = bankService.sendoutorder(order);
+		if(num >0){
+			out.print("1");	//成功
+		}else{
+			out.print("0");	//失败
+		}
+		return;
+	}
 	
+	/**
+	 * 确认签收
+	 * @param orderid
+	 * */
+	@RequestMapping(value="/signorder",method=RequestMethod.POST)
+	public void signorder(String orderid,HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		//TODO 这里要修改。
+		Public_user user = getSessionUser();
+		Public_order order = orderService.getAuserOrder(orderid,user);
+		//TODO 这里要重写了。
+		int num = bankService.signorder(order);
+		if(num >0){
+//				Public_user pu = userService.getById(order.getParentid());
+//				SendSMS.sendMessage(pu.getPhonenumber(), "");
+			out.print("1");	//成功
+		}else{
+			out.print("0");	//失败
+		}
+		return;
+	}
+	
+	//==========以下不确定要
+	
+	/**
+	 * 订货单
+	 * */
+	@RequestMapping(value="/myorder")
+	public ModelAndView myorder (ModelMap modelMap) throws Exception {
+		Public_user user = getSessionUser();
+		List<Public_user> u_list = userService.listParent(user.getId());
+		modelMap.put("u_list", u_list);
+		return new ModelAndView("/view/order/order/myorderlist", modelMap);
+	}
 	
 	/**
 	 * 我的账户余额（可支配账户）
@@ -551,58 +607,5 @@ public class OrderZController extends BaseConstroller {
 		return;
 	}
 	
-	/**
-	 * 确认发货
-	 * @param orderid
-	 * @param deliverynum 快递单号
-	 * */
-	@RequestMapping(value="/sendout",method=RequestMethod.POST)
-	public void sendout(String orderid,String deliverynum, HttpServletResponse response) throws Exception {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		if ("".equals(orderid) || orderid == null) {
-			out.print("error");
-			return;
-		}
-		Public_user user = getSessionUser();
-		Public_order order = orderService.getAuserOrder(orderid,user);
-		order.setDeliverynum(deliverynum);
-		int num = bankService.sendoutorder(order);
-		if(num >0){
-//				Public_user pu = userService.getById(order.getParentid());
-//				SendSMS.sendMessage(pu.getPhonenumber(), "");
-			out.print("1");	//成功
-		}else{
-			out.print("0");	//失败
-		}
-		return;
-	}
 	
-	/**
-	 * 确认签收
-	 * @param orderid
-	 * */
-	@RequestMapping(value="/signorder",method=RequestMethod.POST)
-	public void signorder(String orderid,HttpServletResponse response) throws Exception {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		if ("".equals(orderid) || orderid == null) {
-			out.print("error");
-			return;
-		}
-		Public_user user = getSessionUser();
-		Public_order order = orderService.getAuserOrder(orderid,user);
-		
-		int num = bankService.signorder(order);
-		if(num >0){
-//				Public_user pu = userService.getById(order.getParentid());
-//				SendSMS.sendMessage(pu.getPhonenumber(), "");
-			out.print("1");	//成功
-		}else{
-			out.print("0");	//失败
-		}
-		return;
-	}
 }

@@ -39,9 +39,6 @@
     	var pageIndex = 1;
 		var pageSize = 10;
 		var totalPage = 0;
-		
-		var buyuserid = '${buyuserid}';
-		var orderType = '${orderType}';
     	$(function(){
     		//加载数据-订单列表
     		loadData_orderlist();
@@ -54,20 +51,24 @@
     			$("#orderstatus").val($(this).attr("status"));
     			loadData_orderlist();
     		});
+    		
+    		//日期控件
+    		/* laydate({
+ 				elem: '#ordertime', //'
+   				event: 'focus' //响应事件。如果没有传入event，则按照默认的click
+   			}); */
     	});
     	
     	//加载数据-订单列表
     	function loadData_orderlist(){
     		var _data = {};
-    		_data.orderType = orderType;
-    		_data.buyuserid = buyuserid;
+    		_data.orderType = "sub";
     		_data.ordernum = $("#ordernum").val();
-    		_data.parentid = $("#parentid").val();
+    		_data.parentid = $("#parentid").val();;
     		_data.ordertime = $("#ordertime").val();
     		_data.orderstatus = $("#orderstatus").val();
     		_data.pageIndex = pageIndex;
     		_data.pageSize = pageSize;
-    		
     		$.ajax({
     			async:false,
                 url: "${pageContext.request.contextPath}/orderZ/orderlist.htmls",
@@ -76,7 +77,7 @@
                 dataType:"json",
                 success: function (json) {
                 	totalPage = Math.ceil(json.total/pageSize);
-                	$("#orderList").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/z/orderlist.tpl");
+                	$("#orderList").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/z/suborderlist.tpl");
                 	$("#orderList").setParam('rowCount', json.total);
 	         		$("#orderList").setParam('pageSize', pageSize);
 	         		$("#orderList").setParam('pageIndex', pageIndex);
@@ -125,124 +126,6 @@
     			loadData_orderlist();	//加载数据-订单列表
     		}) 
     	}
-    	//付款
-    	function topayment(id){
-    		parent.parent.layer.open({
-			    type: 2,
-			    title:'支付货款',
-			    area: ['390px', '290px'],
-			    fix: false, //不固定
-			    maxmin: false,
-			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/payment",
-			    success: function(layero,index){
-			    	var win = parent.window['layui-layer-iframe' + index].window;
-			    	win.setData(id);
-			    },
-			    btn: ['确 定', '取 消'],
-			  	yes: function(index,layero){
-			  		var win = parent.window['layui-layer-iframe' + index].window;
-			  		var data = win.getData();
-			  		if(data.ispay == 1){
-			  			parent.parent.layer.close(index);	//关闭窗体
-			  			payment(data.orderid);	//付款
-			  		}else if(data.ispay == 0){
-			  			parent.parent.layer.msg("您的账户已被冻结",{icon:6});
-			  		}else if(data.ispay == -1){
-			  			parent.parent.layer.msg("您的余额不足，请充值",{icon:6});
-			  		}
-			  	},
-			    end: function(){
-			    	//alert(123);
-			    }
-			});
-    	}
-    	//
-    	function payment(id){
-    		$.ajax({
-    			async:false,
-                url: "${pageContext.request.contextPath}/order/paymentorder.htmls",
-                data: {orderid:id},
-                type: "post",
-                dataType:"text",
-                success: function (text) {
-                	if(text == "2"){
-                		layer.msg("您的订单已付款。",{icon:6});
-                		return;
-                	}
-                	if(text == "1"){
-                		layer.msg("付款成功！",{icon:6});
-                		loadData_orderlist();//加载数据
-                	}else if(text == "0"){
-                		layer.msg("付款失败，您的账户已冻结。",{icon:6});
-                	}else if(text == "-1"){
-                		layer.msg("付款失败，您的账户余额不足。",{icon:6});
-                	}
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert(jqXHR.responseText);
-                }
-           	});
-    	}
-    	
-    	//取消订单
-    	function cancleorder(id){
-    		var cf = "您确定要取消订单吗";
-			layer.confirm(cf, {title:'系统提示',icon:3,
-				btn: ['确定','取消'] //按钮
-			}, function(index){
-				$.ajax({
-	    			async:false,
-	                url: "${pageContext.request.contextPath}/order/cancelorder.htmls",
-	                data: {orderid:id},
-	                type: "post",
-	                dataType:"text",
-	                success: function (text) {
-	                	if(text == "2"){
-	                		layer.msg("您的订单已发货，不能取消订单。",{icon:6});
-	                	}else if(text == "1"){
-	                		layer.msg("您的订单已取消。",{icon:6});
-	                		loadData_orderlist();//加载数据
-	                	}else{
-	                		layer.msg("操作失败！",{icon:6});
-	                	}
-	                },
-	                error: function (jqXHR, textStatus, errorThrown) {
-	                    alert(jqXHR.responseText);
-	                }
-	           	});
-	   			layer.close(index);
-			}, function(){
-			});
-    	}
-    	
-    	//确认收货
-    	function signorder(id){
-    		var cf = "您确定要确认收货吗？";
-			layer.confirm(cf, {title:'系统提示',icon:3,
-				btn: ['确定','取消'] //按钮
-			}, function(index){
-				$.ajax({
-	    			async:false,
-	                url: "${pageContext.request.contextPath}/orderZ/signorder.htmls",
-	                data: {orderid:id},
-	                type: "post",
-	                dataType:"text",
-	                success: function (text) {
-	                	if(text == "1"){
-	                		loadData_orderlist();//加载数据
-	                	}else{
-	                		layer.msg("操作失败！",{icon:6});
-	                	}
-	                },
-	                error: function (jqXHR, textStatus, errorThrown) {
-	                    alert(jqXHR.responseText);
-	                }
-	           	});
-	   			layer.close(index);
-			}, function(){
-			});
-    	}
-    	
     	//订单详情
     	function orderdetails(id){
     		$("#admin_order").slideToggle(800,function(){
@@ -254,6 +137,34 @@
     			loadData_orderdetails(id);
     		});
     	}
+    	
+    	//发货
+    	function sendOut(id){
+    		layer.prompt({
+   				title: '请输入运单号，并确认',
+   				formType: 0 //prompt风格，支持0-2
+   			}, function(deliverynum){
+   				$.ajax({
+   	    			async:false,
+   	                url: "${pageContext.request.contextPath}/orderZ/sendout.htmls",
+   	                data: {orderid:id,deliverynum:deliverynum},
+   	                type: "post",
+   	                dataType:"text",
+   	                success: function (text) {
+   	                	if(text == "1"){
+   	                		loadData_orderlist();
+   	                		layer.msg("操作成功",{icon:6});
+   	                	}else{
+   	                		layer.msg("操作失败，请稍后再试！",{icon:6});
+   	                	}
+   	                },
+   	                error: function (jqXHR, textStatus, errorThrown) {
+   	                    alert(jqXHR.responseText);
+   	                }
+   	           	});
+   			});
+    	}
+    	
     	/*---------订单详情---------*/
     	
     	var total = 0,total_sum = 0;
@@ -261,7 +172,7 @@
     	function loadData_orderdetails(orderid){
     		$.ajax({
     			async:false,
-                url: "${pageContext.request.contextPath}/order/orderdetails.htmls",
+                url: "${pageContext.request.contextPath}/orderZ/orderdetails.htmls",
                 data: {orderid:orderid},
                 type: "post",
                 dataType:"json",
@@ -274,6 +185,11 @@
                 	var address = json.address;	//收货地址
                 	var address_str = "收货人："+address.username+"，联系电话："+address.userphone+"，收货地址："+address.userpath;
                 	$("#address").html(address_str);
+                	
+                	//加载支付
+            		$(".income").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/z/orderincome.tpl");
+                    $(".income").processTemplate(json.income);
+                	
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert(jqXHR.responseText);
@@ -290,7 +206,7 @@
     			objArr.push(initializeObj(data[i]));
     		}
     		//加载模板数据
-    		$("#proList").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/order/orderdetails.tpl");
+    		$("#proList").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/z/orderdetails.tpl");
             $("#proList").processTemplate(objArr);
             //
             $("#total").html(formatFloat(total,2));
@@ -305,7 +221,7 @@
 			obj.productname = data.productname;
 			obj.productsize = data.productsize;
 			obj.price = data.price;		//售价
-			obj.price_txt = formatFloat(data.price,2);
+			obj.price_txt = formatFloat(data.price,2);		//售价
 			obj.buyerdis = data.buyerdis;	//折扣
 			obj.quantity = data.productnum; 	//数量
 			var _subtotal = 0;
@@ -331,12 +247,12 @@
 <body>
 	<%@ include file="/view/order/header.jsp" %>
 	<!--内容-->
-	<div class="layout" style="margin-bottom: 50px">
+	<div class="layout" style="margin-bottom: 80px">
 		<ul class="bread bg">
-			<li><a href="javascript:;" class="icon-home">首页</a> </li>
-			<li><a href="javascript:;" >普通会员订单</a></li>
+			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
+			<li><a href="#" >客户订单</a></li>
 		</ul>
-		<div id="admin_order" class="admin" style="padding: 10px 60px;margin-bottom: 30px;">
+		<div id="admin_order" class="admin" style="padding: 10px 60px;">
 			<div class="padding float-left" style="padding-left: 0px;">
 				<form onsubmit="return false;" class="form-inline" method="post">
 					<input type="hidden" id="orderstatus" name=""/>
@@ -357,15 +273,12 @@
 					</div>
 				</form>
 			</div>
-			<div class="padding float-right">
-				<!-- <button class="button bg-blue" id="newOrder"><span class="icon-plus"></span> 新 增</button> -->
-			</div>
 			<div id="orderList" class="admin-panel">
 				
 			</div>
 		</div>
 		<!-- 订单详情 START -->
-		<div id="admin_details" class="admin" style="padding: 0px 60px;display: none;">
+		<div id="admin_details" class="admin" style="padding: 0px 60px;display: none;margin-bottom: 40px;">
 			<div class="media-body">
 				<div class="padding float-left"><h4>订单详情</h4></div>
 				<div class="padding float-right"><button onclick="goback()" class="button button bg-blue icon-reply"> 返回</button></div>
@@ -386,6 +299,10 @@
 					<br/>
 					<div>应付总额：￥<span style="color: red !important" id="total_sum">0.00</span></div>
 				</div>
+			</div>
+			<h4>支付信息</h4>
+			<hr class="">
+			<div class="table-responsive income" style="margin-bottom: 20px">
 			</div>
 			<h4>物流信息</h4>
 			<hr class="">

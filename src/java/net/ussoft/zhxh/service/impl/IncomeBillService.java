@@ -28,6 +28,22 @@ public class IncomeBillService implements IIncomeBillService{
 	public Income_bill getById(String id) {
 		return incomeBillDao.get(id);
 	}
+	
+	@Override
+	public Income_bill getByOrderid(String id) {
+		String sql = "select * from income_bill where orderid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(id);
+		
+		List<Income_bill> billList = incomeBillDao.search(sql, values);
+		
+		if (null == billList || billList.size() == 0) {
+			return null;
+		}
+		
+		return billList.get(0);
+	}
+
 
 	@Override
 	public Income_bill getByBillno(String billno) {

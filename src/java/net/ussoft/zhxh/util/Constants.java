@@ -169,6 +169,10 @@ public class Constants{
 	 * 代理处订单-确认签收
 	 * */
 	public static final String ORDER_STATUS_MSG2 = "order_status_msg2";
+	/**
+	 * 平台处理普通会员订单-确认发货
+	 * */
+	public static final String ORDER_STATUS_MSG3 = "order_status_msg3";
 	
 }
 

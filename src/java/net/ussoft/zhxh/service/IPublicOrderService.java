@@ -34,9 +34,10 @@ public interface IPublicOrderService {
 	 * 待处理订单数量
 	 * @param userid
 	 * @param status
+	 * @param orderType		订单类型 p 普通会员订单  o 采购订单 
 	 * @return
 	 * */
-	public int getCount(String userid,int status);
+	public int getCount(String userid,int status,String orderType);
 	
 	/**
 	 * 订单数量
