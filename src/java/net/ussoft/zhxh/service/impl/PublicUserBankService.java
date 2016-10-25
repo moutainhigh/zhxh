@@ -330,60 +330,55 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Transactional("txManager")
 	@Override
 	public synchronized int recharge(Income_bill bill,String identity){
-		try {
-			if(bill.getStatus() == 1){
-				return -1;	//已支付
-			}
-			//当前账户
-			Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
-			//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
-			Public_user_bank bank_PT = getUserBank("1", "1");
-			//充值金额
-			float amount = bill.getAccount_real(); //实收款
-			//平台账户变更
-			bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
-			bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
-			bank.setDepositbank(bank.getDepositbank() + amount);		//充值累计（当前操作账户）
-			if("A".equals(identity)){
-				if(bill.getTrantype() == 2)	{
-					//货款充值
-					bank.setHavebank(bank.getHavebank() + amount);	//增加代理商可支配账户
-				}else if(bill.getTrantype() == 1){
-					//现金充值
-					bank.setTakenbank(bank.getTakenbank() + amount);	//增加代理可提现账户
-					bank.setIncomebank(bank.getIncomebank() + amount);	//增加代理收入总和
-				}
-			}else if("C".equals(identity)){
-				bank.setHavebank(bank.getHavebank() + amount);	//增加店可支配账户
-				//非直营店,parentid 不等于1就代表非直营店
-				if(!"1".equals(bill.getParentid())){
-					//代理
-					Public_user_bank bank_A = getUserBank(bill.getParentid(), ""); //目前结构，代理的账户是唯一的
-					bank_A.setTakenbank(bank_A.getTakenbank() + amount);		//增加代理可提现账户
-					bank_A.setIncomebank(bank_A.getIncomebank() + amount);	//增加代理收入总和
-					//代理账户变更
-					bank_A = userBankDao.update(bank_A);
-				}
-			}
-			
-			//平台账户变更
-			bank_PT = userBankDao.update(bank_PT);
-			//当前账户
-			bank = userBankDao.update(bank);
-			//更新流水表状态
-			bill.setStatus(1); //成功
-			bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
-			bill = incomeBillDao.update(bill);
-			//添加充值消息
-			int messagetype = 1;	//业务消息
-			String messagetxt = "【"+bill.getU_company()+"】进行了充值，充值金额为："+amount;
-			createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
-			
-			return 1;
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(bill.getStatus() == 1){
+			return -1;	//已支付
 		}
-		return 0;
+		//当前账户
+		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
+		//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
+		Public_user_bank bank_PT = getUserBank("1", "1");
+		//充值金额
+		float amount = bill.getAccount_real(); //实收款
+		//平台账户变更
+		bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
+		bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
+		bank.setDepositbank(bank.getDepositbank() + amount);		//充值累计（当前操作账户）
+		if("A".equals(identity)){
+			if(bill.getTrantype() == 2)	{
+				//货款充值
+				bank.setHavebank(bank.getHavebank() + amount);	//增加代理商可支配账户
+			}else if(bill.getTrantype() == 1){
+				//现金充值
+				bank.setTakenbank(bank.getTakenbank() + amount);	//增加代理可提现账户
+				bank.setIncomebank(bank.getIncomebank() + amount);	//增加代理收入总和
+			}
+		}else if("C".equals(identity)){
+			bank.setHavebank(bank.getHavebank() + amount);	//增加店可支配账户
+			//非直营店,parentid 不等于1就代表非直营店
+			if(!"1".equals(bill.getParentid())){
+				//代理
+				Public_user_bank bank_A = getUserBank(bill.getParentid(), ""); //目前结构，代理的账户是唯一的
+				bank_A.setTakenbank(bank_A.getTakenbank() + amount);		//增加代理可提现账户
+				bank_A.setIncomebank(bank_A.getIncomebank() + amount);	//增加代理收入总和
+				//代理账户变更
+				bank_A = userBankDao.update(bank_A);
+			}
+		}
+		
+		//平台账户变更
+		bank_PT = userBankDao.update(bank_PT);
+		//当前账户
+		bank = userBankDao.update(bank);
+		//更新流水表状态
+		bill.setStatus(1); //成功
+		bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		bill = incomeBillDao.update(bill);
+		//添加充值消息
+		int messagetype = 1;	//业务消息
+		String messagetxt = "【"+bill.getU_company()+"】进行了充值，充值金额为："+amount;
+		createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
+		
+		return 1;
 	}
 
 	/**
@@ -394,67 +389,61 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Transactional("txManager")
 	@Override
 	public synchronized int withdrawal(Spending_bill bill,Public_user user) {
-		//上级账户的金额判断，提现的第三方流程是什么样的方式
-		try {
-			//判断上级机构的可提现账户金额是否充足
-			Public_user_bank p_bank = getUserBank(bill.getParentid(),"");	//目前结构，代理的账户是唯一的
-			if(bill.getAmount() > p_bank.getTakenbank()){
-				return 0;
-			}
-			//交易流水账单
-			bill = inserSpending_bill(bill, user);
-			//平台账户
-			Public_user_bank bank_PT = getUserBank("1", "1");
-			//提现金额
-			float amount = bill.getAmount();
-			//平台账户变更
-			bank_PT.setTakenbank(bank_PT.getTakenbank() - amount);		//冲减平台可提现账户
-			bank_PT.setCostbank(bank_PT.getCostbank() + amount);		//增加平台支出总和
-			if(!bill.getUserid().equals("1")){	//非平台账户
-				//当前账户
-				Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
-				if("A".equals(user.getIdentity())){
-					//可提现账户-提现
-					bank.setTakenbank(bank.getTakenbank() - amount);		//冲减可提现账户 - 当前操作账户
-				}else if("C".equals(user.getIdentity())){
-					//trantype——1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
-					if(bill.getTrantype() == 4){
-						//奖励账户-提现
-						bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);		//冲减店奖励可提现账户
-						//非直营店
-						if(!"1".equals(bill.getParentid())){
-							Public_user_bank bank_A = getUserBank(bill.getParentid(), "");	//代理账户
-							bank_A.setTakenbank(bank_A.getTakenbank() - amount);	//冲减代理可提现账户
-							bank_A.setCostbank(bank_A.getCostbank() + amount);		//增加代理支出总和
-							//代理账户变更
-							bank_A = userBankDao.update(bank_A);
-						}
-					}else if(bill.getTrantype() == 3){
-						//平台售额-提现
-						bank.setSelltakenbank(bank.getSelltakenbank() - amount);		//冲减店平台售额可提现账户
+		//判断上级机构的可提现账户金额是否充足
+		Public_user_bank p_bank = getUserBank(bill.getParentid(),"");	//目前结构，代理的账户是唯一的
+		if(bill.getAmount() > p_bank.getTakenbank()){
+			return 0;
+		}
+		//交易流水账单
+		bill = inserSpending_bill(bill, user);
+		//平台账户
+		Public_user_bank bank_PT = getUserBank("1", "1");
+		//提现金额
+		float amount = bill.getAmount();
+		//平台账户变更
+		bank_PT.setTakenbank(bank_PT.getTakenbank() - amount);		//冲减平台可提现账户
+		bank_PT.setCostbank(bank_PT.getCostbank() + amount);		//增加平台支出总和
+		if(!bill.getUserid().equals("1")){	//非平台账户
+			//当前账户
+			Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
+			if("A".equals(user.getIdentity())){
+				//可提现账户-提现
+				bank.setTakenbank(bank.getTakenbank() - amount);		//冲减可提现账户 - 当前操作账户
+			}else if("C".equals(user.getIdentity())){
+				//trantype——1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
+				if(bill.getTrantype() == 4){
+					//奖励账户-提现
+					bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);		//冲减店奖励可提现账户
+					//非直营店
+					if(!"1".equals(bill.getParentid())){
+						Public_user_bank bank_A = getUserBank(bill.getParentid(), "");	//代理账户
+						bank_A.setTakenbank(bank_A.getTakenbank() - amount);	//冲减代理可提现账户
+						bank_A.setCostbank(bank_A.getCostbank() + amount);		//增加代理支出总和
+						//代理账户变更
+						bank_A = userBankDao.update(bank_A);
 					}
+				}else if(bill.getTrantype() == 3){
+					//平台售额-提现
+					bank.setSelltakenbank(bank.getSelltakenbank() - amount);		//冲减店平台售额可提现账户
 				}
-				//当前账户
-				bank = userBankDao.update(bank);
 			}
-			
-			//平台账户变更
-			bank_PT = userBankDao.update(bank_PT);
+			//当前账户
+			bank = userBankDao.update(bank);
+		}
+		
+		//平台账户变更
+		bank_PT = userBankDao.update(bank_PT);
 /*			//更新流水表状态
 			bill.setStatus(1);	//成功
 			bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 			bill = spendingBillDao.update(bill);
 */			
-			//添加提现消息
-			int messagetype = 1;	//业务消息
-			String messagetxt = "【"+bill.getU_company()+"】进行了提现，提现金额为："+amount;
-			createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
-			
-			return 1;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return -1;
-		}
+		//添加提现消息
+		int messagetype = 1;	//业务消息
+		String messagetxt = "【"+bill.getU_company()+"】进行了提现，提现金额为："+amount;
+		createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
+		
+		return 1;
 	}
 	
 	/**
