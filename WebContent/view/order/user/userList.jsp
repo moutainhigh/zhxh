@@ -430,7 +430,8 @@
 	         		$(".admin-panel").setParam('radio_value', radio_value);
 	         		$(".admin-panel").setParam('totalPage', totalPage);
 	         		$(".admin-panel").setParam('parentid', parentid);
-	         		//$("#admin-panel").setParam('docAuthArr', docAuthArr);
+	         		var repaystate = ${sessionScope.pc_user_sessiion.repaystate};
+	         		$(".admin-panel").setParam('repaystate',repaystate);
 	                $(".admin-panel").processTemplate(json.data);
 	                
 	                //bindTdClick();
@@ -741,7 +742,13 @@
 	  		function(){
 	  			
 	  		});
-    		
+    	}
+    	
+    	function addOrder(userid) {
+    		location.href = "${pageContext.request.contextPath}/orderZ/newOrder.htmls?userid="+userid;
+    	}
+    	function oldOrder(userid) {
+    		location.href = "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/z/zOrderlist&param={'buyuserid':'"+userid+"','orderType':'buyuser'}";
     	}
     	
     	

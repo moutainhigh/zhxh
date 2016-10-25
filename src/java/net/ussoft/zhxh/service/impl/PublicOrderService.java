@@ -8,6 +8,8 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import net.ussoft.zhxh.dao.PublicCatDao;
+import net.ussoft.zhxh.dao.PublicLogDao;
+import net.ussoft.zhxh.dao.PublicMessageDao;
 import net.ussoft.zhxh.dao.PublicOrderDao;
 import net.ussoft.zhxh.dao.PublicOrderPathDao;
 import net.ussoft.zhxh.dao.PublicOrderProductDao;
@@ -19,6 +21,8 @@ import net.ussoft.zhxh.dao.PublicUserLinkDao;
 import net.ussoft.zhxh.dao.PublicUserPathDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_cat;
+import net.ussoft.zhxh.model.Public_log;
+import net.ussoft.zhxh.model.Public_message;
 import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_order_path;
 import net.ussoft.zhxh.model.Public_order_product;
@@ -59,6 +63,10 @@ public class PublicOrderService implements IPublicOrderService{
 	private PublicUserDao userDao;
 	@Resource
 	private PublicUserLinkDao userlinkDao;
+	@Resource
+	private PublicLogDao logDao;
+	@Resource
+	private PublicMessageDao msgDao;
 	
 	@Override
 	public Public_order getById(String id) {
@@ -97,7 +105,13 @@ public class PublicOrderService implements IPublicOrderService{
 			sb.append(" AND parentid=?");
 			values.add(userid);
 		}else if(status == 2){ //已发货-等待确认签收
-			sb.append(" AND userid=?");
+			if ("p".equals(orderType)) {
+				sb.append(" AND submitid=?");
+			}
+			else {
+				sb.append(" AND userid=?");
+			}
+			
 			values.add(userid);
 		}
 		return orderDao.getCount(sb.toString(), values);
@@ -505,6 +519,72 @@ public class PublicOrderService implements IPublicOrderService{
 			}
 		}
 		return null;
+	}
+
+	@Transactional("txManager")
+	@Override
+	public int signorder(Public_order order) {
+		//改变订单状态
+		order.setOrderstatus(3);	//已签收
+		order.setOrderstatusmemo("已签收");
+		order = orderDao.update(order);
+		//订单操作日志
+		saveLog(order.getUserid(), order.getParentid(), "sendorder", order.getOrdernumber()+"-已签收", order.getOrdertotal(), order.getId());
+		//订单已签收-消息
+		int messagetype = 1;	//业务消息
+		String messagetxt = order.getU_username()+"，的订单已签收！订单号："+order.getOrdernumber();
+		createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		return 1;
+	}
+	
+	/**
+	 * 添加日志
+	 * @param userid
+	 * @param parentid
+	 * @param logtype 操作类型
+	 * @param logmemo 日志内容描述
+	 * @param amount 金额
+	 * @param lognum 
+	 * @return
+	 * */
+	private Public_log saveLog(String userid,String parentid,String logtype,String logmemo,float amount,String lognum){
+		Public_log log = new Public_log();
+		log.setId(UUID.randomUUID().toString());
+		log.setUserid(userid);	//主操作人
+		log.setTouserid(parentid);			//被操作人
+		log.setLogtype(logtype);	//操作类型
+		log.setLogmemo(logmemo);
+		log.setLogtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		log.setLognum(lognum);
+		log.setLogpay(amount);	//金额
+		
+		return logDao.save(log);
+	}
+	
+	/**
+	 * 业务消息
+	 * @param sendid 发送者
+	 * @param sendname
+	 * @param receiveid 接收者
+	 * @param receivename
+	 * @param messagetype 消息类型
+	 * @param messagetxt 消息内容
+	 * @param activeid 关联ID
+	 * @return
+	 * */
+	private Public_message createMsg(String sendid,String sendname,String receiveid,String receivename,int messagetype,String messagetxt,String activeid){
+		Public_message msg = new Public_message();
+		msg.setId(UUID.randomUUID().toString());
+		msg.setSendid(sendid);			//发送者
+		msg.setSendname(sendname);
+		msg.setReceiveid(receiveid);	//接收者
+		msg.setReceivename(receivename);
+		msg.setMessagetype(messagetype);
+		msg.setMessagetxt(messagetxt);
+		msg.setMessagetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		msg.setMessagestate(0);		//状态
+		msg.setActiveid(activeid);
+		return msgDao.save(msg);
 	}
 
 }

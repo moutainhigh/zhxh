@@ -102,7 +102,7 @@ public class OrderController extends BaseConstroller {
 		CommonUtils.setSessionAttribute(request, Constants.ORDER_MESSAGE2_SESSION, m2);
 		
 		//未处理订单
-		int s = 0,s1 = 0,s3 = 0;
+		int s = 0,s1 = 0,s3 = 0,s4 = 0;
 		if(userSession.getIdentity().equals("A")){
 			s1 = orderService.getCount(userSession.getId(), 1,"o"); //等待发货
 		}
@@ -110,7 +110,10 @@ public class OrderController extends BaseConstroller {
 			s3 = orderService.getCount(userSession.getId(), 1,"p"); //等待发货
 		}
 		int s2 = orderService.getCount(userSession.getId(), 2,"o");	//确认收货
-		if(s1>0 || s2>0){
+		if(!userSession.getId().equals("1")){
+			s4 = orderService.getCount(userSession.getId(), 2,"p"); //确认收货(普通会员)
+		}
+		if(s1>0 || s2>0 || s4 >0){
 			s =1;
 		}
 		
@@ -122,6 +125,7 @@ public class OrderController extends BaseConstroller {
 		CommonUtils.setSessionAttribute(request, Constants.ORDER_STATUS_MSG1, s1);
 		CommonUtils.setSessionAttribute(request, Constants.ORDER_STATUS_MSG2, s2);
 		CommonUtils.setSessionAttribute(request, Constants.ORDER_STATUS_MSG3, s3);
+		CommonUtils.setSessionAttribute(request, Constants.ORDER_STATUS_MSG4, s4);
 		
 		return new ModelAndView("/view/order/main", modelMap);
 	}

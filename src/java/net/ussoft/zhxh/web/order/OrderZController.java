@@ -489,14 +489,44 @@ public class OrderZController extends BaseConstroller {
 		//TODO 这里要修改。
 		Public_user user = getSessionUser();
 		Public_order order = orderService.getAuserOrder(orderid,user);
-		//TODO 这里要重写了。
-		int num = bankService.signorder(order);
+		int num = orderService.signorder(order);
 		if(num >0){
 //				Public_user pu = userService.getById(order.getParentid());
 //				SendSMS.sendMessage(pu.getPhonenumber(), "");
 			out.print("1");	//成功
 		}else{
 			out.print("0");	//失败
+		}
+		return;
+	}
+	
+	/**
+	 * 取消订单
+	 * @param orderid
+	 * */
+	@RequestMapping(value="/cancelorder",method=RequestMethod.POST)
+	public void cancelorder(String orderid, HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		Public_user user = getSessionUser();
+		Public_order order = orderService.getAuserOrder(orderid,user);
+		if(order.getOrderstatus() == 1){	//待发货状态
+			Public_user_bank bank = bankService.getUserBank(user.getId(), order.getParentid());
+			int num = bankService.cancelorder(bank,order);
+			if(num >0){
+//				Public_user pu = userService.getById(order.getParentid());
+//				SendSMS.sendMessage(pu.getPhonenumber(), "");
+				out.print("1");	//成功
+			}else{
+				out.print("0");	//失败
+			}
+		}else{
+			out.print("2");	//订单已发货-不能取消订单
 		}
 		return;
 	}
@@ -573,37 +603,6 @@ public class OrderZController extends BaseConstroller {
 			out.print("2");	//订单不是未支付状态，可能已经支付过又进行了请求-防止重复扣款
 		}
 		
-		return;
-	}
-	
-	/**
-	 * 取消订单
-	 * @param orderid
-	 * */
-	@RequestMapping(value="/cancelorder",method=RequestMethod.POST)
-	public void cancelorder(String orderid, HttpServletResponse response) throws Exception {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		if ("".equals(orderid) || orderid == null) {
-			out.print("error");
-			return;
-		}
-		Public_user user = getSessionUser();
-		Public_order order = orderService.getAuserOrder(orderid,user);
-		if(order.getOrderstatus() == 1){	//待发货状态
-			Public_user_bank bank = bankService.getUserBank(user.getId(), order.getParentid());
-			int num = bankService.cancelorder(bank,order);
-			if(num >0){
-//				Public_user pu = userService.getById(order.getParentid());
-//				SendSMS.sendMessage(pu.getPhonenumber(), "");
-				out.print("1");	//成功
-			}else{
-				out.print("0");	//失败
-			}
-		}else{
-			out.print("2");	//订单已发货-不能取消订单
-		}
 		return;
 	}
 	

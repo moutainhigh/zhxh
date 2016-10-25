@@ -148,7 +148,7 @@
 							<i class="icon"></i>订单<span class="${sessionScope.order_status_msg > 0 ? 'ui-new-func':''}"></span>
 						</a>
 						</c:if>
-						<c:if test="${sessionScope.pc_user_sessiion.identity == 'A' }">
+						
 						<div class="float-menu" style="display: none; top: 0px; margin-top: 0px;">
 							<ul class="sec-nav clearfix sec-nav-flow" style="width: 249px;">
 								<li class="sec-nav-li sec-nav-li-flow" style="height: 126px;">
@@ -160,21 +160,28 @@
 											<span class="${sessionScope.order_status_msg2 > 0 ? 'ui-new-func':''}"></span></a>
 										</li>
 										</c:if>
+										<c:if test="${sessionScope.pc_user_sessiion.identity == 'A' }">
 										<li class="sec-nav-li menu2" code="WBM_ORDER_OUTSTOCK">
 											<a class="sec-nav-a new-con" target="mainFrame" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/order/suborderlist">客户订单
 											<span class="${sessionScope.order_status_msg1 > 0 ? 'ui-new-func':''}"></span></a>
 										</li>
+										</c:if>
 										<c:if test="${sessionScope.pc_user_sessiion.id == '1'}">
 										<li class="sec-nav-li menu2" code="WBM_ORDER_RETURNED">
 											<a class="sec-nav-a new-con" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/z/suborderlist">普通会员订单
 											<span class="${sessionScope.order_status_msg3 > 0 ? 'ui-new-func':''}"></span></a>
 										</li>
 										</c:if>
+										<c:if test="${sessionScope.pc_user_sessiion.id != '1'}">
+										<li class="sec-nav-li menu2" code="WBM_ORDER_RETURNED">
+											<a class="sec-nav-a new-con" href="javascript:;" curInd="0" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/z/zOrderlist&param={'orderType':'my'}">普通会员订单
+											<span class="${sessionScope.order_status_msg4 > 0 ? 'ui-new-func':''}"></span></a>
+										</li>
+										</c:if>
 									</ul>
 								</li>
 							</ul>
 						</div>
-						</c:if>
 					</li>
 					
 					<li class="pr side-menu-li li-crop menu1" id="customer" code="WBM_CUSTOMER">

@@ -192,7 +192,7 @@
 			}, function(index){
 				$.ajax({
 	    			async:false,
-	                url: "${pageContext.request.contextPath}/order/cancelorder.htmls",
+	                url: "${pageContext.request.contextPath}/orderZ/cancelorder.htmls",
 	                data: {orderid:id},
 	                type: "post",
 	                dataType:"text",
@@ -261,7 +261,7 @@
     	function loadData_orderdetails(orderid){
     		$.ajax({
     			async:false,
-                url: "${pageContext.request.contextPath}/order/orderdetails.htmls",
+                url: "${pageContext.request.contextPath}/orderZ/orderdetails.htmls",
                 data: {orderid:orderid},
                 type: "post",
                 dataType:"json",
@@ -274,6 +274,10 @@
                 	var address = json.address;	//收货地址
                 	var address_str = "收货人："+address.username+"，联系电话："+address.userphone+"，收货地址："+address.userpath;
                 	$("#address").html(address_str);
+                	
+                	//加载支付
+            		$(".income").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/z/orderincome.tpl");
+                    $(".income").processTemplate(json.income);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert(jqXHR.responseText);
@@ -365,7 +369,7 @@
 			</div>
 		</div>
 		<!-- 订单详情 START -->
-		<div id="admin_details" class="admin" style="padding: 0px 60px;display: none;">
+		<div id="admin_details" class="admin" style="padding: 0px 60px;display: none;margin-bottom: 60px;">
 			<div class="media-body">
 				<div class="padding float-left"><h4>订单详情</h4></div>
 				<div class="padding float-right"><button onclick="goback()" class="button button bg-blue icon-reply"> 返回</button></div>
@@ -387,6 +391,10 @@
 					<div>应付总额：￥<span style="color: red !important" id="total_sum">0.00</span></div>
 				</div>
 			</div>
+			<h4>支付信息</h4>
+			<hr class="">
+			<div class="table-responsive income" style="margin-bottom: 20px">
+			</div>
 			<h4>物流信息</h4>
 			<hr class="">
 			<div class="table-responsive">
@@ -400,6 +408,26 @@
 						<td style="text-align: left;">2016-07-20 12:36:13</td>
 						<td style="text-align: left;">您的订单已经拣货完毕，待出库交付申通快递，运单号为229111673599</td>
 						<td>商家</td>
+					</tr>
+					<tr>
+						<td style="text-align: left;">2016-07-20 19:30:13</td>
+						<td style="text-align: left;">由广东东莞南城西平分部 发往 广东东莞中转部</td>
+						<td>申通快递</td>
+					</tr>
+					<tr>
+						<td style="text-align: left;">2016-07-20 19:30:13</td>
+						<td style="text-align: left;">由广东东莞南城西平分部 发往 广东东莞中转部</td>
+						<td>申通快递</td>
+					</tr>
+					<tr>
+						<td style="text-align: left;">2016-07-20 19:30:13</td>
+						<td style="text-align: left;">由广东东莞南城西平分部 发往 广东东莞中转部</td>
+						<td>申通快递</td>
+					</tr>
+					<tr>
+						<td style="text-align: left;">2016-07-20 19:30:13</td>
+						<td style="text-align: left;">由广东东莞南城西平分部 发往 广东东莞中转部</td>
+						<td>申通快递</td>
 					</tr>
 					<tr>
 						<td style="text-align: left;">2016-07-20 19:30:13</td>

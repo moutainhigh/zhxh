@@ -116,5 +116,12 @@ public interface IPublicOrderService {
 	 * */
 	public int payment(Public_order order);
 	
+	/**
+	 * 确定收货。仅确认并发消息。针对普通会员
+	 * @param order
+	 * @return
+	 */
+	public int signorder(Public_order order);
+	
 	
 }

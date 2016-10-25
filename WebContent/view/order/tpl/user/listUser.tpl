@@ -55,6 +55,10 @@
 						{#if $P.radio_value == "C"}
 						<a href="javascript:;" class="button button-small border-sub" onclick="return updateUserTuijian('{$T.row.id}')">推荐人</a>
 						{#/if}
+						{#if $P.radio_value == "Z" && $P.repaystate != 0}
+						<a id="newOrder" href="javascript:;" class="button button-small border-sub" onclick="addOrder('{$T.row.id}')">分期购</a>
+						<a id="orderList" href="javascript:;" class="button button-small border-sub" onclick="oldOrder('{$T.row.id}')">历史订单</a>
+						{#/if}
 					</td>
 				</tr>
 			{#/for}
