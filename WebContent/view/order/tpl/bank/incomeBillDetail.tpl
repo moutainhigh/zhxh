@@ -15,7 +15,7 @@
 					<td>{$T.row.createtime}</td>
 					<td>{$T.row.u_username} </td>
 					<td>{$T.row.trantypetxt} </td>
-					<td>￥{$T.row.account_real}</td>
+					<td>￥{$T.row.account_receivable}</td>
 				</tr>
 			{#/for}	
 		{#else}

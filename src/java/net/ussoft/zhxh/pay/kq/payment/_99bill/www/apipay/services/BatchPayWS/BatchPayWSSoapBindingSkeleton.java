@@ -7,6 +7,8 @@
 
 package net.ussoft.zhxh.pay.kq.payment._99bill.www.apipay.services.BatchPayWS;
 
+import net.ussoft.zhxh.pay.kq.KqConfig;
+
 public class BatchPayWSSoapBindingSkeleton implements net.ussoft.zhxh.pay.kq.payment._99bill.www.apipay.services.BatchPayWS.BatchPay, org.apache.axis.wsdl.Skeleton {
     private net.ussoft.zhxh.pay.kq.payment._99bill.www.apipay.services.BatchPayWS.BatchPay impl;
     private static java.util.Map _myOperations = new java.util.Hashtable();
@@ -36,7 +38,7 @@ public class BatchPayWSSoapBindingSkeleton implements net.ussoft.zhxh.pay.kq.pay
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "ip"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
         };
         _oper = new org.apache.axis.description.OperationDesc("queryDeal", _params, new javax.xml.namespace.QName("", "queryDealReturn"));
-        _oper.setReturnType(new javax.xml.namespace.QName("http://sandbox.99bill.com/apipay/services/BatchPayWS", "ArrayOf_tns1_QueryResponseBean"));
+        _oper.setReturnType(new javax.xml.namespace.QName(KqConfig.BatchPayWS_URL, "ArrayOf_tns1_QueryResponseBean"));
         _oper.setElementQName(new javax.xml.namespace.QName("http://compatible.api.seashell.bill99.com", "queryDeal"));
         _oper.setSoapAction("");
         _myOperationsList.add(_oper);
@@ -45,12 +47,12 @@ public class BatchPayWSSoapBindingSkeleton implements net.ussoft.zhxh.pay.kq.pay
         }
         ((java.util.List)_myOperations.get("queryDeal")).add(_oper);
         _params = new org.apache.axis.description.ParameterDesc [] {
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "input"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://sandbox.99bill.com/apipay/services/BatchPayWS", "ArrayOf_tns1_BankRequestBean"), net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.BankRequestBean[].class, false, false), 
+            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "input"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName(KqConfig.BatchPayWS_URL, "ArrayOf_tns1_BankRequestBean"), net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.BankRequestBean[].class, false, false), 
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "username"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "ip"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
         };
         _oper = new org.apache.axis.description.OperationDesc("bankPay", _params, new javax.xml.namespace.QName("", "bankPayReturn"));
-        _oper.setReturnType(new javax.xml.namespace.QName("http://sandbox.99bill.com/apipay/services/BatchPayWS", "ArrayOf_tns1_BankResponseBean"));
+        _oper.setReturnType(new javax.xml.namespace.QName(KqConfig.BatchPayWS_URL, "ArrayOf_tns1_BankResponseBean"));
         _oper.setElementQName(new javax.xml.namespace.QName("http://compatible.api.seashell.bill99.com", "bankPay"));
         _oper.setSoapAction("");
         _myOperationsList.add(_oper);
@@ -59,12 +61,12 @@ public class BatchPayWSSoapBindingSkeleton implements net.ussoft.zhxh.pay.kq.pay
         }
         ((java.util.List)_myOperations.get("bankPay")).add(_oper);
         _params = new org.apache.axis.description.ParameterDesc [] {
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "input"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://sandbox.99bill.com/apipay/services/BatchPayWS", "ArrayOf_tns1_SimpleRequestBean"), net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.SimpleRequestBean[].class, false, false), 
+            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "input"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName(KqConfig.BatchPayWS_URL, "ArrayOf_tns1_SimpleRequestBean"), net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.SimpleRequestBean[].class, false, false), 
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "username"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "ip"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
         };
         _oper = new org.apache.axis.description.OperationDesc("simplePay", _params, new javax.xml.namespace.QName("", "simplePayReturn"));
-        _oper.setReturnType(new javax.xml.namespace.QName("http://sandbox.99bill.com/apipay/services/BatchPayWS", "ArrayOf_tns1_SimpleResponseBean"));
+        _oper.setReturnType(new javax.xml.namespace.QName(KqConfig.BatchPayWS_URL, "ArrayOf_tns1_SimpleResponseBean"));
         _oper.setElementQName(new javax.xml.namespace.QName("http://compatible.api.seashell.bill99.com", "simplePay"));
         _oper.setSoapAction("");
         _myOperationsList.add(_oper);
@@ -73,12 +75,12 @@ public class BatchPayWSSoapBindingSkeleton implements net.ussoft.zhxh.pay.kq.pay
         }
         ((java.util.List)_myOperations.get("simplePay")).add(_oper);
         _params = new org.apache.axis.description.ParameterDesc [] {
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "input"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://sandbox.99bill.com/apipay/services/BatchPayWS", "ArrayOf_tns1_PostRequestBean"), net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.PostRequestBean[].class, false, false), 
+            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "input"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName(KqConfig.BatchPayWS_URL, "ArrayOf_tns1_PostRequestBean"), net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.PostRequestBean[].class, false, false), 
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "username"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "ip"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
         };
         _oper = new org.apache.axis.description.OperationDesc("postPay", _params, new javax.xml.namespace.QName("", "postPayReturn"));
-        _oper.setReturnType(new javax.xml.namespace.QName("http://sandbox.99bill.com/apipay/services/BatchPayWS", "ArrayOf_tns1_PostResponseBean"));
+        _oper.setReturnType(new javax.xml.namespace.QName(KqConfig.BatchPayWS_URL, "ArrayOf_tns1_PostResponseBean"));
         _oper.setElementQName(new javax.xml.namespace.QName("http://compatible.api.seashell.bill99.com", "postPay"));
         _oper.setSoapAction("");
         _myOperationsList.add(_oper);

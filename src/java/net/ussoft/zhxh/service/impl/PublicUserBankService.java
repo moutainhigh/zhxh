@@ -387,6 +387,31 @@ public class PublicUserBankService implements IPublicUserBankService{
 		if(bill.getStatus() == 1){
 			return -1;	//已支付
 		}
+		bill.getParentid(); //需要明确下是谁的ID
+		
+		Public_order order = orderDao.get(bill.getOrderid());
+		Public_user user = userDao.get(order.getSubmitid());
+		//此处刨除，平台代顾客下单，只有代理和店
+		if(user.getIdentity().equals("A")){
+			//平台收入+实收额
+			//平台售额（实收额X代理折扣价）
+			
+			//代理的平台售额（实收额-平台X代理折扣）
+			
+		}else if(user.getIdentity().equals("C")){
+			
+			/*1.店的平台售额（实收额X店的折扣）
+			2.平台售额（实收额X代理或店的折扣价），直营和非直营
+
+			3.代理的平台售额（实收总额-平台售额-店平台售额）*/
+			/*if(){
+				
+			}*/
+		}
+		
+		
+		
+		
 		//当前账户
 		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
 		//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
@@ -397,27 +422,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
 		bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
 		bank.setDepositbank(bank.getDepositbank() + amount);		//充值累计（当前操作账户）
-		if("A".equals(identity)){
-			if(bill.getTrantype() == 2)	{
-				//货款充值
-				bank.setHavebank(bank.getHavebank() + amount);	//增加代理商可支配账户
-			}else if(bill.getTrantype() == 1){
-				//现金充值
-				bank.setTakenbank(bank.getTakenbank() + amount);	//增加代理可提现账户
-				bank.setIncomebank(bank.getIncomebank() + amount);	//增加代理收入总和
-			}
-		}else if("C".equals(identity)){
-			bank.setHavebank(bank.getHavebank() + amount);	//增加店可支配账户
-			//非直营店,parentid 不等于1就代表非直营店
-			if(!"1".equals(bill.getParentid())){
-				//代理
-				Public_user_bank bank_A = getUserBank(bill.getParentid(), ""); //目前结构，代理的账户是唯一的
-				bank_A.setTakenbank(bank_A.getTakenbank() + amount);		//增加代理可提现账户
-				bank_A.setIncomebank(bank_A.getIncomebank() + amount);	//增加代理收入总和
-				//代理账户变更
-				bank_A = userBankDao.update(bank_A);
-			}
-		}
+		
 		
 		//平台账户变更
 		bank_PT = userBankDao.update(bank_PT);

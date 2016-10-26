@@ -7,9 +7,20 @@ package net.ussoft.zhxh.pay.kq;
  * @version kq - v3.0.6
  * */
 public class KqConfig {
+	
+	/**
+	 * 提现-请求地址 https
+	 * */
+	public static String BatchPayWS_URL_S = "https://www.99bill.com/apipay/services/BatchPayWS";	//sandbox
+	
+	/**
+	 * 提现-请求地址 http
+	 * */
+	public static String BatchPayWS_URL = "http://www.99bill.com/apipay/services/BatchPayWS";
+	
 
 	//人民币网关账号，该账号为11位人民币网关商户编号+01,该参数必填。
-	public static String merchantAcctId = "1001213884201";
+	public static String merchantAcctId = "1013760609901";	//1001213884201
 	
 	//编码方式，1代表 UTF-8; 2 代表 GBK; 3代表 GB2312 默认为1,该参数必填。
 	public static String inputCharset = "1";
@@ -32,13 +43,13 @@ public class KqConfig {
 	public static String signType =  "4";
 	
 	//商户订单号，以下采用时间来定义订单号，商户可以根据自己订单号的定义规则来定义该值，不能为空。
-	public static String orderId = "2016101816220001";//new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date());
+	public static String orderId = new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date());
 	
 	//订单金额，金额以“分”为单位，商户测试以1分测试即可，切勿以大金额测试。该参数必填。
 	public static String orderAmount = "1";
 	
 	//订单提交时间，格式：yyyyMMddHHmmss，如：20071117020101，不能为空。
-	public static String orderTime = "2016101816220001";//new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date());
+	public static String orderTime = new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date());
 	
 	//商品名称，可以为空。
 	public static String productName= ""; 

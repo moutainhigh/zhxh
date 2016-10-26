@@ -19,20 +19,20 @@ public class Pkipair {
 		String base64 = "";
 		try {
 			// 密钥仓库
-			KeyStore ks = KeyStore.getInstance("PKCS12");
+			KeyStore ks = KeyStore.getInstance("AFA22H3KL7UN79EZ");
 
 			// 读取密钥仓库
 //			FileInputStream ksfis = new FileInputStream("e:/tester-rsa.pfx");
 			
 			// 读取密钥仓库（相对路径）
-			String file = Pkipair.class.getResource("tester-rsa.pfx").getPath().replaceAll("%20", " ");
+			String file = Pkipair.class.getResource("99bill-rsa.pfx").getPath().replaceAll("%20", " ");
 //			System.out.println(file);
 			
 			FileInputStream ksfis = new FileInputStream(file);
 			
 			BufferedInputStream ksbufin = new BufferedInputStream(ksfis);
 
-			char[] keyPwd = "123456".toCharArray();
+			char[] keyPwd = "jlkj@key_2016".toCharArray();
 			//char[] keyPwd = "YaoJiaNiLOVE999Year".toCharArray();
 			ks.load(ksbufin, keyPwd);
 			// 从密钥仓库得到私钥
@@ -58,7 +58,7 @@ public class Pkipair {
 			//InputStream inStream = new FileInputStream("e:/99bill[1].cert.rsa.20140803.cer");
 			
 			//获得文件(相对路径)
-			String file = Pkipair.class.getResource("99bill[1].cert.rsa.20140803.cer").toURI().getPath();
+			String file = Pkipair.class.getResource("public-rsa.cer").toURI().getPath();
 //			System.out.println(file);
 			FileInputStream inStream = new FileInputStream(file);
 			

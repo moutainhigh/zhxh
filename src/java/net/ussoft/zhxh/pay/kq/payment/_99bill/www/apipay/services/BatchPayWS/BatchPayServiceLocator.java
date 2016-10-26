@@ -7,6 +7,8 @@
 
 package net.ussoft.zhxh.pay.kq.payment._99bill.www.apipay.services.BatchPayWS;
 
+import net.ussoft.zhxh.pay.kq.KqConfig;
+
 public class BatchPayServiceLocator extends org.apache.axis.client.Service implements net.ussoft.zhxh.pay.kq.payment._99bill.www.apipay.services.BatchPayWS.BatchPayService {
 
     public BatchPayServiceLocator() {
@@ -22,7 +24,7 @@ public class BatchPayServiceLocator extends org.apache.axis.client.Service imple
     }
 
     // Use to get a proxy class for BatchPayWS
-    private java.lang.String BatchPayWS_address = "https://sandbox.99bill.com/apipay/services/BatchPayWS";
+    private java.lang.String BatchPayWS_address = KqConfig.BatchPayWS_URL_S;
 
     public java.lang.String getBatchPayWSAddress() {
         return BatchPayWS_address;
@@ -105,7 +107,7 @@ public class BatchPayServiceLocator extends org.apache.axis.client.Service imple
     }
 
     public javax.xml.namespace.QName getServiceName() {
-        return new javax.xml.namespace.QName("http://sandbox.99bill.com/apipay/services/BatchPayWS", "BatchPayService");
+        return new javax.xml.namespace.QName(KqConfig.BatchPayWS_URL, "BatchPayService");
     }
 
     private java.util.HashSet ports = null;
@@ -113,7 +115,7 @@ public class BatchPayServiceLocator extends org.apache.axis.client.Service imple
     public java.util.Iterator getPorts() {
         if (ports == null) {
             ports = new java.util.HashSet();
-            ports.add(new javax.xml.namespace.QName("http://sandbox.99bill.com/apipay/services/BatchPayWS", "BatchPayWS"));
+            ports.add(new javax.xml.namespace.QName(KqConfig.BatchPayWS_URL, "BatchPayWS"));
         }
         return ports.iterator();
     }

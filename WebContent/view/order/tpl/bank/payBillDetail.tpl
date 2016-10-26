@@ -14,13 +14,13 @@
 						<td>{$T.createtime}</td>
 						<td>{$T.u_username} </td>
 						<td>{$T.trantypetxt} </td>
-						<td>￥{$T.account_real}</td>
+						<td>￥{$T.account_receivable}</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 		<div class="text-right" style="padding: 30px 50px 5px 50px;border-top: solid 0">
-			<div>总额：￥<span style="color: red !important" id="total_sum">{$T.account_real}</span></div>
+			<div>总额：￥<span style="color: red !important" id="total_sum">{$T.account_receivable}</span></div>
 			<br>
 			<form name="pay_form" actioin="" method="post" target="_blank">
 				<input type="hidden" name="id" value="{$T.id}" />

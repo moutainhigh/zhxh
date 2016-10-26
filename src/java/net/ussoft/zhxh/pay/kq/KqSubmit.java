@@ -12,7 +12,8 @@ public class KqSubmit {
     /**
      * 快钱支付网关地址
      */
-    private static final String KQ_GATEWAY_URL = "https://sandbox.99bill.com/gateway/recvMerchantInfoAction.htm";	//"https://sandbox.99bill.com/gateway/recvMerchantInfoAction.htm";
+//	private static final String KQ_GATEWAY_URL = "https://sandbox.99bill.com/gateway/recvMerchantInfoAction.htm";
+    private static final String KQ_GATEWAY_URL = "https://www.99bill.com/gateway/recvMerchantInfoAction.htm";
     
     /**
      * 加入签名

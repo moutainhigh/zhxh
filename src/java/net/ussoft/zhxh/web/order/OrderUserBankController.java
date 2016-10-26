@@ -166,7 +166,7 @@ public class OrderUserBankController extends BaseConstroller {
 		bill.setU_username(user.getUsername());
 		bill.setU_company(user.getCompanyname());
 		bill.setAccount_receivable(amount);		//应收款
-		bill.setAccount_real(amount);			//实收款
+//		bill.setAccount_real(amount);			//实收款
 		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 //		bill.setPaytype(paytype);
 		bill.setTrantype(trantype);	//交易类型——1：现金充值，2：货款充值，3：售额（全），4：售额（分期）
