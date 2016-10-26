@@ -538,6 +538,30 @@ public class PublicOrderService implements IPublicOrderService{
 	}
 	
 	/**
+	 * 订货单-取消订单
+	 * @param bank
+	 * @param order
+	 * */
+	@Transactional("txManager")
+	@Override
+	public int cancelorder(Public_order order){
+		//改变订单状态
+		order.setOrderstatus(-1);	//取消订单
+		order.setOrderstatusmemo("已取消");
+		order = orderDao.update(order);
+		//日志
+		Public_log log = saveLog(order.getSubmitid(), order.getParentid(), "cancelorder", order.getOrdernumber()+"-已取消", order.getOrdertotal(), order.getId());
+//		//订单已取消-消息
+//		int messagetype = 1;	//业务消息
+//		String messagetxt = order.getU_username()+"取消了订单！订单号："+order.getOrdernumber();
+//		createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		if(order !=null && log != null){
+			return 1;
+		}
+		return 0;
+	}
+	
+	/**
 	 * 添加日志
 	 * @param userid
 	 * @param parentid

@@ -28,7 +28,6 @@
 					<td><button class="button button-small border-blue" onclick="orderdetails('{$T.row.id}')">订单详情</button>
 						{#if $T.row.orderstatus == 0}
 							<button class="button button-small border-green" onclick="topayment('{$T.row.id}')">立即支付</button>
-						{#elseif $T.row.orderstatus == 1}
 							<button class="button button-small border-red" onclick="cancleorder('{$T.row.id}')">取消订单</button>
 						{#elseif $T.row.orderstatus == 2}
 							<button class="button button-small border-blue" onclick="signorder('{$T.row.id}')">确认收货</button>

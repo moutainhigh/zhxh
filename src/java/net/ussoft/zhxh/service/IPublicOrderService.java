@@ -7,6 +7,7 @@ import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.model.Public_user_bank;
 
 /**
  * 订单管理
@@ -122,6 +123,12 @@ public interface IPublicOrderService {
 	 * @return
 	 */
 	public int signorder(Public_order order);
+	
+	/**
+	 * 订货单-取消订单 仅取消并发消息。针对普通会员
+	 * @param order
+	 * */
+	public int cancelorder(Public_order order);
 	
 	
 }

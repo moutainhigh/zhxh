@@ -515,9 +515,8 @@ public class OrderZController extends BaseConstroller {
 		}
 		Public_user user = getSessionUser();
 		Public_order order = orderService.getAuserOrder(orderid,user);
-		if(order.getOrderstatus() == 1){	//待发货状态
-			Public_user_bank bank = bankService.getUserBank(user.getId(), order.getParentid());
-			int num = bankService.cancelorder(bank,order);
+		if(order.getOrderstatus() == 0){	//待支付状态
+			int num = orderService.cancelorder(order);
 			if(num >0){
 //				Public_user pu = userService.getById(order.getParentid());
 //				SendSMS.sendMessage(pu.getPhonenumber(), "");
