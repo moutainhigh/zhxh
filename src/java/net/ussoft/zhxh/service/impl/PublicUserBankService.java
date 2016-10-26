@@ -380,6 +380,60 @@ public class PublicUserBankService implements IPublicUserBankService{
 		
 		return 1;
 	}
+	
+	@Transactional("txManager")
+	@Override
+	public int rechargeZ(Income_bill bill, String identity) {
+		if(bill.getStatus() == 1){
+			return -1;	//已支付
+		}
+		//当前账户
+		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
+		//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
+		Public_user_bank bank_PT = getUserBank("1", "1");
+		//充值金额
+		float amount = bill.getAccount_real(); //实收款
+		//平台账户变更
+		bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
+		bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
+		bank.setDepositbank(bank.getDepositbank() + amount);		//充值累计（当前操作账户）
+		if("A".equals(identity)){
+			if(bill.getTrantype() == 2)	{
+				//货款充值
+				bank.setHavebank(bank.getHavebank() + amount);	//增加代理商可支配账户
+			}else if(bill.getTrantype() == 1){
+				//现金充值
+				bank.setTakenbank(bank.getTakenbank() + amount);	//增加代理可提现账户
+				bank.setIncomebank(bank.getIncomebank() + amount);	//增加代理收入总和
+			}
+		}else if("C".equals(identity)){
+			bank.setHavebank(bank.getHavebank() + amount);	//增加店可支配账户
+			//非直营店,parentid 不等于1就代表非直营店
+			if(!"1".equals(bill.getParentid())){
+				//代理
+				Public_user_bank bank_A = getUserBank(bill.getParentid(), ""); //目前结构，代理的账户是唯一的
+				bank_A.setTakenbank(bank_A.getTakenbank() + amount);		//增加代理可提现账户
+				bank_A.setIncomebank(bank_A.getIncomebank() + amount);	//增加代理收入总和
+				//代理账户变更
+				bank_A = userBankDao.update(bank_A);
+			}
+		}
+		
+		//平台账户变更
+		bank_PT = userBankDao.update(bank_PT);
+		//当前账户
+		bank = userBankDao.update(bank);
+		//更新流水表状态
+		bill.setStatus(1); //成功
+		bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		bill = incomeBillDao.update(bill);
+		//添加充值消息
+		int messagetype = 1;	//业务消息
+		String messagetxt = "【"+bill.getU_company()+"】进行了充值，充值金额为："+amount;
+		createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
+		
+		return 1;
+	}
 
 	/**
 	 * 提现
@@ -778,5 +832,6 @@ public class PublicUserBankService implements IPublicUserBankService{
 		List<Map<String, Object>> list = userBankDao.searchForMap(sb.toString(),values);
 		return list;
 	}
+
 	
 }

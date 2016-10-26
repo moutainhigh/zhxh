@@ -95,6 +95,14 @@ public interface IPublicUserBankService {
 	public int recharge(Income_bill bill,String identity);
 	
 	/**
+	 * 处理普通会员购买，支付返回的结果
+	 * @param bill
+	 * @param identity
+	 * @return
+	 */
+	public int rechargeZ(Income_bill bill,String identity);
+	
+	/**
 	 * 提现
 	 * @param bill	交易流水
 	 * @param identity 身份

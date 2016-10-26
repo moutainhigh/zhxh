@@ -125,6 +125,60 @@
     			loadData_orderlist();	//加载数据-订单列表
     		}) 
     	}
+    	
+    	function payment(orderid) {
+    		var billid = "";
+    		$.ajax({
+    			async:false,
+                url: "${pageContext.request.contextPath}/orderZ/getOrderIncomeid.htmls",
+                data: {orderid:orderid},
+                type: "post",
+                dataType:"text",
+                success: function (text) {
+                	billid = text;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                }
+           	});
+    		if (billid == "") {
+    			layer.msg("获取订单出错，请与管理员联系。",{icon:6});
+    			return;
+    		}
+    		
+    		layer.confirm("是否要立即支付？<br><span style='color:red'>注意：点击是按钮，将转到支付平台进行支付，请注意不要重复提交支付信息。</span>", {title:'系统提示',icon:3,
+				btn: ['是','否'] //按钮
+			}, function(index){
+				var form = $("<form></form>");
+	            form.attr('action',"${pageContext.request.contextPath}/orderZ/payment.htmls");
+	            form.attr('method','post');
+	            form.attr('target','_blank');
+	            input1 = $("<input type='hidden' name='id' />");
+	            input1.attr('value',billid);
+	            form.append(input1);
+	            form.appendTo("body");
+	            form.css('display','none');
+	            form.submit();
+	    		
+	    		var cf = "是否支付成功？【是】【否】<br><p style='font-size:12px; color:#FF6600'>点击【是】，表示支付成功请查看账户金额是否已变更，点击【否】，表示支付失败可再次进行支付</p><p style='font-size:12px; color:red'>注意：请勿重复提交</p>";
+	    		layer.confirm(cf, {title:'系统提示',icon:3,
+    				btn: ['是','否'] //按钮
+    			}, function(index){
+    				//getUserBank();
+    				$("#income_click").click();
+    				layer.close(index);
+    			}, function(){
+    				//layer.msg("请",{icon:6});
+    			});
+				layer.close(index);
+			}, function(){
+				//layer.msg("请",{icon:6});
+			});
+    		
+    		
+    	}
+
+    	/* 
     	//付款
     	function topayment(id){
     		parent.parent.layer.open({
@@ -182,7 +236,7 @@
                     alert(jqXHR.responseText);
                 }
            	});
-    	}
+    	} */
     	
     	//取消订单
     	function cancleorder(id){

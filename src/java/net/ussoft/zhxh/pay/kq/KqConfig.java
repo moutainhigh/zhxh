@@ -19,6 +19,8 @@ public class KqConfig {
 	
 	//服务器接收支付结果的后台地址，该参数务必填写，不能为空。
 	public static String bgUrl = "http://139.224.0.109/kq/receive.htmls";
+	//接收支付结果地址。仅普通会员购买
+	public static String bgUrl_z = "http://139.224.0.109/kq/receive_z.htmls";
 	
 	//网关版本，固定值：v2.0,该参数必填。
 	public static String version =  "v2.0";

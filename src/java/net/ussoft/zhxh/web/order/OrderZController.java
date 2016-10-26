@@ -530,6 +530,33 @@ public class OrderZController extends BaseConstroller {
 		return;
 	}
 	
+	/**
+	 * 支付-跳转到第三方支付平台
+	 * */
+	@RequestMapping(value="/payment")
+	public ModelAndView payment (String id, ModelMap modelMap) throws Exception {
+		Income_bill bill = incomeBillService.getById(id);
+		modelMap.put("bill", bill);
+		return new ModelAndView("/view/order/z/payment", modelMap);
+	}
+	
+	@RequestMapping(value="/getOrderIncomeid",method=RequestMethod.POST)
+	public void getOrderIncomeid(String orderid, HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		//支付情况
+		Income_bill bill = incomeBillService.getByOrderid(orderid);
+		
+		out.print(bill.getId());
+	}
+	
+	
+	
 	//==========以下不确定要
 	
 	/**
