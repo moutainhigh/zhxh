@@ -8,6 +8,7 @@
 			<th>摘要</th>
 			<th>金额</th>
 			<th>状态</th>
+			<th>操作</th>
 		</tr> </thead>
 		<tbody>
 		{#if $P.rowCount > 0}
@@ -19,6 +20,45 @@
 					<td>{$T.row.trantypetxt} </td>
 					<td>￥{$T.row.amount}</td>
 					<td>{#if $T.row.status == -1}失败{#elseif $T.row.status == 0}未接收{#elseif $T.row.status == 1}成功{#/if}</td>
+					<td><a href="javascript:;" onclick="spendingDetails('{$T.row.billno}')">详情</a>
+						<div id="{$T.row.billno}"style="display:none;">
+							<div class="panel-head">
+								<strong>提现-账单明细</strong>
+							</div>
+							<div class="panel-body">
+								流水号:{$T.row.billno}&nbsp;&nbsp;日期：{$T.row.createtime}
+							</div>
+							<div class="table-responsive" style="padding:10px;">
+								<table class="table">
+									<tbody><tr>
+										<th>城市</th>
+										<th>银行名称</th>
+										<th>开户行</th>
+										<th>收款人</th>
+										<th>银行卡号</th>
+										<th>金额</th>
+										<th>备注</th>
+									</tr>
+									<tr>
+										<td>{$T.row.province_city}</td>
+										<td>{$T.row.bankName}</td>
+										<td>{$T.row.kaihuhang}</td>
+										<td>{$T.row.creditName}</td>
+										<td>{$T.row.bankCardNumber}</td>
+										<td>{$T.row.amount}</td>
+										<td>{$T.row.remarks}</td>
+									</tr>
+								</tbody></table>
+							</div>
+							<div class="doc-democode doc-codead0" style="margin:10px;">
+								<blockquote class="border-yellow doc-quoteyellow">
+									<strong>提现须知：</strong>
+									1.提交申请后，系统资金账户会直接冲减。<br>
+									2.提交申请后，资金到账时间为T+2。<br>
+								</blockquote>
+							</div>
+						</div>
+					</td>
 				</tr>
 			{#/for}	
 		{#else}

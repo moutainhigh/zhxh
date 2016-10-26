@@ -38,6 +38,20 @@
 	        getUserBank();
 	    })
 	    
+	   	function spendingDetails(id){
+	    	layer.open({
+    		  type: 1,
+    		  area: ['680px', '300px;'],
+    		  shade: false,
+    		  title: false, //不显示标题
+    		  content: $('#'+id), //捕获的元素
+    		  cancel: function(index){
+    		    layer.close(index);
+    		    //this.content.show();
+    		    //layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', {time: 5000, icon:6});
+    		  }
+    		});
+	    }
     </script>
 </head>
 <body>
@@ -73,6 +87,9 @@
 								</div>
 							</div></div> -->
 							<p align="center">暂无数据...</p>							
+						</div>
+						<div id="details" class="panel-body" style="padding: 0px 60px;display: none;">
+						
 						</div>
 					</div>
 				</div>
