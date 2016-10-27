@@ -249,8 +249,11 @@ function save_ithdrawal_bill() {
             type: "post",
             dataType:"text",
             success: function (text) {
+            	alert(text);
             	if(text == "codeerror"){
             		layer.msg("验证码错误",{icon:6});
+            	}else if(text == "3"){
+            		layer.msg("您的账户余额不足，请重新输入提现金额。",{icon:6});
             	}else if(text == "2"){
             		layer.msg("您的账户已被冻结，请联系上级机构。",{icon:6});
             	}else if(text == "1"){

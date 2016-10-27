@@ -21,6 +21,8 @@ import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Spending_bill;
+import net.ussoft.zhxh.pay.kq.ErrorCode;
+import net.ussoft.zhxh.pay.kq.KqConfig;
 import net.ussoft.zhxh.pay.kq.payment._99bill.www.apipay.services.BatchPayWS.BatchPayServiceLocator;
 import net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.BankRequestBean;
 import net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.BankResponseBean;
@@ -232,6 +234,12 @@ public class OrderUserBankController extends BaseConstroller {
 		
 		Public_user user = getSessionUser();
 		Public_user_bank bank = userBankService.getUserBank(user.getId(),bill.getParentid());
+		int isCheckAmount = checkAmount(bill, bank);
+		if(isCheckAmount == 0){
+			out.print("3"); //可提现账户余额不足
+			return;
+		}
+			
 		if(bank.getBankstate() == 0){
 			out.print("2"); //账户已被冻结
 			return;
@@ -246,13 +254,39 @@ public class OrderUserBankController extends BaseConstroller {
 	}
 	
 	/**
+	 * 判断账户余额 是否充足
+	 * @return 1:充足，0:余额不足
+	 * */
+	public int checkAmount(Spending_bill bill,Public_user_bank bank){
+		//1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
+		if(bill.getTrantype() == 1){
+			if(bill.getAmount() > bank.getTakenbank()){
+				return 0;
+			}
+		}else if(bill.getTrantype() == 2){
+			if(bill.getAmount() > bank.getTakenbank()){
+				return 0;
+			}
+		}else if(bill.getTrantype() == 3){
+			if(bill.getAmount() > bank.getSelltakenbank()){
+				return 0;
+			}
+		}else if(bill.getTrantype() == 4){
+			if(bill.getAmount() > bank.getBonusestakenbank()){
+				return 0;
+			}
+		}
+		return 1;
+	}
+	
+	/**
 	 * 提现 - 快钱提现
 	 * @param bill
 	 * @throws Exception
 	 */
 	public void pay2bank(Spending_bill bill) throws Exception{
 		//客户编号所对应的密钥。。在账户邮箱中获取
-		String key = "J8A4CKE7H3HE8NUZ";
+		String key = KqConfig.pay2bank_key;	//"J8A4CKE7H3HE8NUZ";
 		//城市,中文字符 主要只需要城市名，不需要省份名。也不要带"市""自治区（县）"等
 		String province_city = bill.getProvince_city();
 		//银行名称 请填写银行的标准名,详见接口文档
@@ -286,8 +320,8 @@ public class OrderUserBankController extends BaseConstroller {
 		BankRequestBean[] queryArray = new BankRequestBean[1];
 		queryArray[0] = requestBean;
 
-		String merchant_id = "10012138842";
-		String merchant_ip = "121.42.209.154";
+		String merchant_id = KqConfig.merchant_id;	//10012138842
+		String merchant_ip = KqConfig.merchant_ip;	//121.42.209.154
 		BatchPayServiceLocator locator = new BatchPayServiceLocator();
 		BankResponseBean[] responseBean = new BankResponseBean[1];
 		responseBean = locator.getBatchPayWS().bankPay(queryArray,merchant_id,merchant_ip);
@@ -306,7 +340,8 @@ public class OrderUserBankController extends BaseConstroller {
 			status = -1;
 		}
 		bill.setResultFlag(result);
-		bill.setFailureCause(responseBean[0].getFailureCause());	//失败原因代码
+		String failureCause =responseBean[0].getFailureCause(); 
+		bill.setFailureCause(failureCause+ "," +ErrorCode.getErrorCodeTxt(failureCause));	//失败原因代码
 		
 		bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 		bill.setStatus(status);	//（-1，失败，0：提交申请，1：成功）

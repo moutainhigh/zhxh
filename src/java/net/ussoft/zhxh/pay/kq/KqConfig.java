@@ -18,6 +18,22 @@ public class KqConfig {
 	 * */
 	public static String BatchPayWS_URL = "http://www.99bill.com/apipay/services/BatchPayWS";
 	
+	/**
+	 * 快钱的商户号
+	 * */
+	public static String merchant_id = "1013760609901";	//10012138842
+	
+	/**
+	 * 快钱-提现指定服务器IP
+	 * */
+	public static String merchant_ip = "139.224.0.109";	//121.42.209.154
+	
+	/**
+	 * 快钱的商户号
+	 * */
+	public static String pay2bank_key = "AFA22H3KL7UN79EZ";	//J8A4CKE7H3HE8NUZ
+	
+	
 
 	//人民币网关账号，该账号为11位人民币网关商户编号+01,该参数必填。
 	public static String merchantAcctId = "1013760609901";	//1001213884201

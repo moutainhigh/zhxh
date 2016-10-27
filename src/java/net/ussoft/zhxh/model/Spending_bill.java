@@ -19,7 +19,7 @@ public class Spending_bill {
 	private Float amount;			//金额
 	private String createtime;		//创建时间
 	private String banktime;		//支出回执时间
-	private Integer trantype;		//交易类型
+	private Integer trantype;		//交易类型	1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
 	private String trantypetxt;		//用户id
 	private Integer status;			//状态
 	private String remarks;			//交易描述
