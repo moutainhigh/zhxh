@@ -6,6 +6,7 @@
 			<th>客户名称</th>
 			<th>摘要</th>
 			<th>金额</th>
+			<th>操作</th>
 		</tr> </thead>
 		<tbody>
 		{#if $P.rowCount > 0}
@@ -16,6 +17,34 @@
 					<td>{$T.row.u_username} </td>
 					<td>{$T.row.trantypetxt} </td>
 					<td>￥{$T.row.account_receivable}</td>
+					<td><a href="javascript:;" onclick="details('{$T.row.billno}')">详情</a>
+						<div id="{$T.row.billno}"style="display:none;">
+							<div class="panel-head">
+								<strong>充值-账单明细</strong>
+							</div>
+							<div class="panel-body">
+								流水号:{$T.row.billno}&nbsp;&nbsp;日期：{$T.row.createtime}&nbsp;&nbsp;金额：{$T.row.account_receivable}
+							</div>
+							<div class="table-responsive" style="padding:10px;">
+								<table class="table">
+									<tbody><tr>
+										<th>快钱交易号</th>
+										<th>银行交易号</th>
+										<th>快钱交易时间</th>
+										<th>实付金额</th>
+										<th>快钱手续费</th>
+									</tr>
+									<tr>
+										<td>{$T.row.dealId}</td>
+										<td>{$T.row.bankDealId}</td>
+										<td>{$T.row.dealTime}</td>
+										<td>{$T.row.payAmount}</td>
+										<td>{$T.row.fee}</td>
+									</tr>
+								</tbody></table>
+							</div>
+						</div>
+					</td>
 				</tr>
 			{#/for}	
 		{#else}

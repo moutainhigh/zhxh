@@ -20,7 +20,7 @@
 					<td>{$T.row.trantypetxt} </td>
 					<td>￥{$T.row.amount}</td>
 					<td>{#if $T.row.status == -1}失败{#elseif $T.row.status == 0}未接收{#elseif $T.row.status == 1}成功{#/if}</td>
-					<td><a href="javascript:;" onclick="spendingDetails('{$T.row.billno}')">详情</a>
+					<td><a href="javascript:;" onclick="details('{$T.row.billno}')">详情</a>
 						<div id="{$T.row.billno}"style="display:none;">
 							<div class="panel-head">
 								<strong>提现-账单明细</strong>
@@ -37,6 +37,7 @@
 										<th>收款人</th>
 										<th>银行卡号</th>
 										<th>金额</th>
+										<th>快钱手续费</th>
 										<th>备注</th>
 									</tr>
 									<tr>
@@ -46,6 +47,7 @@
 										<td>{$T.row.creditName}</td>
 										<td>{$T.row.bankCardNumber}</td>
 										<td>{$T.row.amount}</td>
+										<td>{$T.row.dealCharge}</td>
 										<td>{$T.row.remarks}</td>
 									</tr>
 								</tbody></table>
