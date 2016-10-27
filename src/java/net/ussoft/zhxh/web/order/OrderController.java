@@ -2,6 +2,7 @@ package net.ussoft.zhxh.web.order;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -294,9 +295,10 @@ public class OrderController extends BaseConstroller {
 				HashMap<String,Object> tmpMap = new HashMap<>();
 				tmpMap = getTotalData(user.getId(),null,beginDate,endDate,false);
 				if (!tmpMap.get("total").toString().equals("0")) {
-					tmpMap.put("total", (Float)tmpMap.get("total")*0.0001f);
+					Float total = (Float)tmpMap.get("total")*0.0001f;
+					total = (float)(Math.round(total*100))/100;//输出小数点2位
+					tmpMap.put("total", total);
 				}
-				
 				mList.put(i+"m", tmpMap);
 			}
 			

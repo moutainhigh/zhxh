@@ -41,7 +41,7 @@
 			upload_file_name: 'file',//required
 	        menubar: false,
 	        toolbar_items_size: 'small',
-	 		font_formats : '宋体=宋体;微软雅黑=微软雅黑;新宋体=新宋体;黑体=黑体;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
+	 		font_formats : '宋体=宋体;微软雅黑=微软雅黑;新宋体=新宋体;黑体=黑体;Arial="Arial";Arial Regular="arial regular";Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
 	        style_formats: [
 	            {title: 'Bold text', inline: 'b'},
 	            {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},

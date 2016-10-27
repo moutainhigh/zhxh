@@ -214,7 +214,7 @@
 							</ul>
 						</div>
 					</li>
-					<li class="product pr side-menu-li li-crop menu1" id="product" code="WBM_PRODUCT">
+					<!-- <li class="product pr side-menu-li li-crop menu1" id="product" code="WBM_PRODUCT">
 						<a class="product side-menu-a new-con-p"  href="javascript:;">
 							<i class="icon"></i>商品<span class="ui-new-func"></span>
 						</a>
@@ -250,9 +250,9 @@
 								</li>
 							</ul>
 						</div>
-					</li>
+					</li> -->
 					<li class="pay pr side-menu-li li-crop menu1" id="pay" code="WBM_FUND">
-						<a class="pay side-menu-a new-con-p" href="javascript:;"  curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/bankList">
+						<a class="pay side-menu-a new-con-p" href="javascript:;"  curInd="2" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/bankList">
 							<i class="icon"></i>资金
 						</a>
 						<div class="float-menu" style="display: none; top: 0px;">
@@ -261,15 +261,15 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">资金管理</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_FUND_RECEIPT_CONFIRM">
-											<a class="sec-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/bankList">我的资金账户</a>
+											<a class="sec-nav-a new-con" href="javascript:;" curInd="2" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/bankList">我的资金账户</a>
 										</li>
 										<c:if test="${sessionScope.pc_user_sessiion.identity != 'C'}">
 										<li class="third-nav-li menu2" code="WBM_FUND_ONLINE_PAYMENT">
-											<a class="third-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/subbankList">我的客户资金帐户</a>
+											<a class="third-nav-a new-con" href="javascript:;" curInd="2" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/bank/subbankList">我的客户资金帐户</a>
 										</li>
 										</c:if>
 										<li class="third-nav-li menu2" code="WBM_FUND_BANK_ACCOUNT">
-											<a class="third-nav-a new-con" href="javascript:;">银行账号</a>
+											<a class="third-nav-a new-con" href="javascript:;">银行账号**</a>
 										</li>
 									</ul>
 								</li>
@@ -277,13 +277,13 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">资金报表</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_FUND_INCOME_RECORD">
-											<a class="third-nav-a new-con" href="">资金账户</a>
+											<a class="third-nav-a new-con" href="javascript:;">资金收支报表**</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_FUND_INCOME_STATISTICS">
-											<a class="third-nav-a new-con" href="javascript:;">订单收款统计</a>
+											<a class="third-nav-a new-con" href="javascript:;">返利奖励统计***</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_FUND_SEND_STATISTICS">
-											<a class="third-nav-a new-con" href="javascript:;">发货统计</a>
+											<a class="third-nav-a new-con" href="javascript:;">发货统计**</a>
 										</li>
 									</ul>
 								</li>
@@ -291,7 +291,7 @@
 						</div>
 					</li>
 					<li class="message pr side-menu-li li-crop menu1" id="message" code="WBM_NOTIFY">
-						<a class="message side-menu-a new-con-p" href="javascript:;" curInd="4" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'1'}">
+						<a class="message side-menu-a new-con-p" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'1'}">
 							<i class="icon"></i>消息
 							<span id="messageTopFunc">
 							<c:choose>
@@ -315,7 +315,7 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">消息管理</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_NOTIFY_CLASSIFY">
-											<a class="third-nav-a new-con" href="javascript:;" curInd="4" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'1'}">业务消息
+											<a class="third-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'1'}">业务消息
 												<span id="message1Func">
 												<c:if test="${sessionScope.order_message1_session > 0}">
 													<span class="ui-new-func"></span>
@@ -324,7 +324,7 @@
 											</a>
 										</li>
 										<%-- <li class="third-nav-li menu2" code="WBM_NOTIFY_NOTICE">
-											<a class="third-nav-a new-con" href="javascript:;" curInd="4" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'2'}">站内信
+											<a class="third-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'2'}">站内信
 											<span id="message2Func">
 											<c:if test="${sessionScope.order_message2_session > 0}">
 												<span class="ui-new-func"></span>
@@ -333,7 +333,7 @@
 											</a>
 										</li> --%>
 										<li class="third-nav-li menu2" code="WBM_NOTIFY_AD">
-											<a class="third-nav-a new-con" href="javascript:;" curInd="4" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'0'}">系统消息
+											<a class="third-nav-a new-con" href="javascript:;" curInd="3" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/message/messageList&param={'radio_value':'0'}">系统消息
 											<span id="message0Func">
 											<c:if test="${sessionScope.order_message0_session > 0}">
 												<span class="ui-new-func"></span>
@@ -364,17 +364,18 @@
 						<div class="float-menu" style="top: 0px; margin-top: 0px;">
 							<ul class="sec-nav">
 								<li class="sec-nav-li menu2" code="WBM_REPORT_ORDER">
-									<a class="sec-nav-a new-con" href="javascript:;">订单统计报表</a>
-								</li>
-								<li class="sec-nav-li menu2" code="WBM_REPORT_AREA">
-									<a class="sec-nav-a new-con" href="javascript:;">代理统计报表</a>
-								</li>
-								<li class="sec-nav-li menu2" code="WBM_REPORT_SALE">
-									<a class="sec-nav-a new-con" href="javascript:;">商品销售报表</a>
+									<a class="sec-nav-a new-con" href="javascript:;">采购统计报表**</a>
 								</li>
 								<li class="sec-nav-li menu2" code="WBM_REPORT_INDENT">
-									<a class="sec-nav-a new-con" href="javascript:;">客户订货报表</a>
+									<a class="sec-nav-a new-con" href="javascript:;">客户订货报表**</a>
 								</li>
+								<!-- <li class="sec-nav-li menu2" code="WBM_REPORT_AREA">
+									<a class="sec-nav-a new-con" href="javascript:;">代理统计报表</a>
+								</li> -->
+								<li class="sec-nav-li menu2" code="WBM_REPORT_SALE">
+									<a class="sec-nav-a new-con" href="javascript:;">商品销售报表**</a>
+								</li>
+								
 							</ul>
 						</div>
 					</li>
