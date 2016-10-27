@@ -23,7 +23,7 @@
 	hm.put("signType", KqConfig.signType);
 	hm.put("merchantAcctId",KqConfig.merchantAcctId);
 	hm.put("orderId", bill.getBillno());
-	Float amount = bill.getAccount_real() * 100;	//转换为分
+	Float amount = bill.getAccount_receivable() * 100;	//转换为分
 	hm.put("orderAmount", String.valueOf(amount.intValue()));
 	hm.put("orderTime", KqConfig.orderTime);
 	hm.put("productName", bill.getTrantypetxt());

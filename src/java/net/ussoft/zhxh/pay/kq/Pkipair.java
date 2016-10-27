@@ -19,7 +19,7 @@ public class Pkipair {
 		String base64 = "";
 		try {
 			// 密钥仓库
-			KeyStore ks = KeyStore.getInstance("AFA22H3KL7UN79EZ");
+			KeyStore ks = KeyStore.getInstance("PKCS12");//AFA22H3KL7UN79EZ
 
 			// 读取密钥仓库
 //			FileInputStream ksfis = new FileInputStream("e:/tester-rsa.pfx");
