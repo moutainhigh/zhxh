@@ -40,7 +40,7 @@ String amount ="10.1" ;
 //交易备注
 String description ="fkdyh";    
 //订单号
-String orderId = "p" + new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date());
+String orderId = "p"+ new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date());
 //组合字符串。。必须按照此顺序组串
 String macVal= bankCardNumber + amount + orderId + key;
 String mac = MD5Util.md5Hex(macVal.getBytes("gb2312")).toUpperCase();

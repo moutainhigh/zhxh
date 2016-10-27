@@ -58,7 +58,7 @@ public class Pkipair {
 			//InputStream inStream = new FileInputStream("e:/99bill[1].cert.rsa.20140803.cer");
 			
 			//获得文件(相对路径)
-			String file = Pkipair.class.getResource("public-rsa.cer").toURI().getPath();
+			String file = Pkipair.class.getResource("99bill.cert.rsa.20340630.cer").toURI().getPath();
 //			System.out.println(file);
 			FileInputStream inStream = new FileInputStream(file);
 			
