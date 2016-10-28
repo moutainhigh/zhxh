@@ -277,13 +277,13 @@
 									<a class="sec-nav-a li-a-color" href="javascript:;">资金报表</a>
 									<ul class="third-nav-ul">
 										<li class="third-nav-li menu2" code="WBM_FUND_INCOME_RECORD">
-											<a class="third-nav-a new-con" href="javascript:;">资金收支报表**</a>
+											<a class="third-nav-a new-con" href="javascript:;">资金收支报表</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_FUND_INCOME_STATISTICS">
-											<a class="third-nav-a new-con" href="javascript:;">返利奖励统计***</a>
+											<a class="third-nav-a new-con" href="javascript:;">返利奖励统计</a>
 										</li>
 										<li class="third-nav-li menu2" code="WBM_FUND_SEND_STATISTICS">
-											<a class="third-nav-a new-con" href="javascript:;">发货统计**</a>
+											<a class="third-nav-a new-con" href="javascript:;">发货统计</a>
 										</li>
 									</ul>
 								</li>
