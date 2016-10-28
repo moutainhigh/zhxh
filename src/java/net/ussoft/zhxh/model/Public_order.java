@@ -24,6 +24,8 @@ public class Public_order {
 	
 	private String ordertype;
 	private String submitid;
+	private Integer isshare;		//是否可以分润
+	private Integer isshareover;	//是否分润完成
 	
 	private String u_username;	//临时字段-userid对应的username
 	private String p_username;	//临时字段-parentid对应的username
@@ -143,6 +145,19 @@ public class Public_order {
 	public void setSubmitid(String submitid) {
 		this.submitid = submitid;
 	}
+	public Integer getIsshare() {
+		return isshare;
+	}
+	public void setIsshare(Integer isshare) {
+		this.isshare = isshare;
+	}
+	public Integer getIsshareover() {
+		return isshareover;
+	}
+	public void setIsshareover(Integer isshareover) {
+		this.isshareover = isshareover;
+	}
+	
 	
 	@Transient
 	public String getU_username() {

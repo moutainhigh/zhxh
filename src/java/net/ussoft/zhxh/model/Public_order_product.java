@@ -26,6 +26,8 @@ public class Public_order_product {
 	private Float buyerdis;					//商品采购折扣
 	private Float rebatesdis;				//返利标准
 	private Float bonusesdis;				//奖励标准
+	private String sharekey;				//普通会员分润json内容。
+	private String sharevalue;				//分润文本内容
 	
 	public Public_order_product() {
 		this.setProductnum(0);
@@ -37,6 +39,8 @@ public class Public_order_product {
 		this.setBuyerdis(0f);
 		this.setRebatesdis(0f);
 		this.setBonusesdis(0f);
+		this.setSharekey("");
+		this.setSharevalue("");
 	}
 	
 	
@@ -144,15 +148,23 @@ public class Public_order_product {
 	public void setBonusesdis(Float bonusesdis) {
 		this.bonusesdis = bonusesdis;
 	}
-
-
 	public String getBrandname() {
 		return brandname;
 	}
-
-
 	public void setBrandname(String brandname) {
 		this.brandname = brandname;
+	}
+	public String getSharekey() {
+		return sharekey;
+	}
+	public void setSharekey(String sharekey) {
+		this.sharekey = sharekey;
+	}
+	public String getSharevalue() {
+		return sharevalue;
+	}
+	public void setSharevalue(String sharevalue) {
+		this.sharevalue = sharevalue;
 	}
 
 	

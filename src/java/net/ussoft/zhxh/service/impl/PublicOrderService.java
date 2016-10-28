@@ -307,7 +307,9 @@ public class PublicOrderService implements IPublicOrderService{
 		order.setOrderstatus(0);				//待支付
 		order.setOrderstatusmemo("待支付");
 		order.setOrdertype("o"); //来源订货平台
-		order.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));;
+		order.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		order.setIsshare(0);
+		order.setIsshareover(0);
 		order = orderDao.save(order);
 		//订单商品
 		productOrderSize(order,psizeList);
@@ -352,6 +354,8 @@ public class PublicOrderService implements IPublicOrderService{
 		order.setOrderstatusmemo("待支付");
 		order.setOrdertype("p"); //来源订货平台
 		order.setOrdertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		order.setIsshare(0);
+		order.setIsshareover(0);
 		order = orderDao.save(order);
 		//订单商品
 		productOrderSizeZ(order,psizeList);

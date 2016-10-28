@@ -1,6 +1,7 @@
 package net.ussoft.zhxh.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -72,7 +73,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Resource
 	private PublicUserDao userDao;
 	@Resource
-	PublicSetUserStandardDao standardDao;	//
+	private PublicSetUserStandardDao standardDao;	//
 	
 	@Override
 	public Public_user_bank getById(String id) {
@@ -387,27 +388,50 @@ public class PublicUserBankService implements IPublicUserBankService{
 		if(bill.getStatus() == 1){
 			return -1;	//已支付
 		}
-		bill.getParentid(); //需要明确下是谁的ID
 		
+		//存储分润的机构及分润各项标准、额。
+		List<HashMap<String,HashMap<String,Object>>> shareList = new ArrayList<HashMap<String,HashMap<String,Object>>>();
+		//分润订单
 		Public_order order = orderDao.get(bill.getOrderid());
-		Public_user user = userDao.get(order.getSubmitid());
-		//此处刨除，平台代顾客下单，只有代理和店
-		if(user.getIdentity().equals("A")){
-			//平台收入+实收额
-			//平台售额（实收额X代理折扣价）
-			
-			//代理的平台售额（实收额-平台X代理折扣）
-			
-		}else if(user.getIdentity().equals("C")){
-			
-			/*1.店的平台售额（实收额X店的折扣）
-			2.平台售额（实收额X代理或店的折扣价），直营和非直营
-
-			3.代理的平台售额（实收总额-平台售额-店平台售额）*/
-			/*if(){
-				
-			}*/
+		//提交订单机构
+		Public_user submitUser = userDao.get(order.getSubmitid());
+		
+		//订单商品
+		String sql = "select * from public_order_product where orderid =?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(order.getId());
+		List<Public_order_product> proList = getOrderProducts(order.getId());
+		
+		if (null == proList || proList.size() == 0) {
+			return 0;
 		}
+		
+		//循环订单商品。每个商品都去获取各种标准
+		for (Public_order_product product : proList) {
+			//此处刨除，平台代顾客下单，只有代理和店   如果是代理作为提交人。只计算该代理和平台
+			if(submitUser.getIdentity().equals("A")){
+				//获取平台为代理设置的该商品的折扣
+				Public_set_user_standard userStandard = getProStandard(submitUser.getId(),"1",product.getId());
+				
+				//平台收入+实收额
+				//平台售额（实收额X代理折扣价）
+				
+				//代理的平台售额（实收额-平台X代理折扣）
+				
+			}else if(submitUser.getIdentity().equals("C")){
+				
+				/*1.店的平台售额（实收额X店的折扣）
+				2.平台售额（实收额X代理或店的折扣价），直营和非直营
+
+				3.代理的平台售额（实收总额-平台售额-店平台售额）*/
+				/*if(){
+					
+				}*/
+			}
+		}
+		
+		
+		
 		
 		
 		

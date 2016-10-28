@@ -449,3 +449,34 @@ insert into `zhxh`.`public_user` ( `id`, `usercode`, `username`, `phonenumber`, 
 	(5)增加 dealId varchar(60)  快钱交易号
 	(6)增加 bankDealId varchar(60)  银行交易号
 	(7)增加 dealTime varchar(40) 快钱交易时间
+	
+	
+2016-10-27
+1、修改public_order (订单表)
+	(1)增加 isshare	int（11）		是否可以分润。针对普通会员订单，15日后判断是否可以分润，将该标识为1.默认插入0
+	(2)增加 isshareover	int（11）	分润是否结束。
+2、修改public_order_product (订单商品表)
+	(1)增加	sharekey varchar (500)	分润内容map对象json
+	(2)增加 sharevalue varchar (500) 分润内容文本
+3、增加分润流水表
+
+执行：
+CREATE TABLE `share_bill` (
+  `id` varchar(40) NOT NULL,
+  `orderid` varchar(40) DEFAULT NULL,
+  `bankid` varchar(40) DEFAULT NULL,
+  `userid` varchar(40) DEFAULT NULL,
+  `sharepay` decimal(11,2) DEFAULT NULL,
+  `sharenumber` int(11) DEFAULT NULL,
+  `sharetime` varchar(50) DEFAULT NULL,
+  `shareovertime` varchar(50) DEFAULT NULL,
+  `sharestate` int(11) DEFAULT NULL,
+  `remarks` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+
+	
