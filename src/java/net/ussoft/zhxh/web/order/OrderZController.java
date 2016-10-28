@@ -486,7 +486,6 @@ public class OrderZController extends BaseConstroller {
 			out.print("error");
 			return;
 		}
-		//TODO 这里要修改。
 		Public_user user = getSessionUser();
 		Public_order order = orderService.getAuserOrder(orderid,user);
 		int num = orderService.signorder(order);

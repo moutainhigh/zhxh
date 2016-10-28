@@ -26,7 +26,7 @@
 	Float amount = bill.getAccount_receivable() * 100;	//转换为分
 	hm.put("orderAmount", String.valueOf(amount.intValue()));
 	hm.put("orderTime", KqConfig.orderTime);
-	hm.put("productName", bill.getTrantypetxt());
+	hm.put("productName","支付货款");
 	hm.put("payType", KqConfig.payType);
 	//hm.put("bankId", KqConfig.bankId);
 	//hm.put("signMsg", KqConfig.getSignMsg());

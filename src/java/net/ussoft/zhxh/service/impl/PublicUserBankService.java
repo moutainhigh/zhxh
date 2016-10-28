@@ -35,6 +35,7 @@ import net.ussoft.zhxh.model.Public_set_user_standard;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Quota_bill;
+import net.ussoft.zhxh.model.Share_bill;
 import net.ussoft.zhxh.model.Spending_bill;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.util.BillNO;
@@ -384,6 +385,54 @@ public class PublicUserBankService implements IPublicUserBankService{
 		return 1;
 	}
 	
+	@SuppressWarnings("unused")
+	private HashMap<String,HashMap<String,Object>> setTmpMap(HashMap<String,HashMap<String,Object>> resultMap,String userid,float pay,int num) {
+		HashMap<String,Object> m = resultMap.get(userid);
+		if (null != m) {
+			Float t = (float)m.get("total");
+			if (null != t) {
+				t = t+pay*num;
+			}
+			else {
+				t = pay*num;
+			}
+			m.put("total", t);
+			
+			Integer n = (int)m.get("number");
+			if (null != n) {
+				n = n+num;
+			}
+			else {
+				n = num;
+			}
+			m.put("number", n);
+		}
+		else {
+			HashMap<String,Object> m1 = new HashMap<String,Object>();
+			m1.put("total",pay*num);
+			m1.put("number", num);
+			resultMap.put(userid, m1);
+		}
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 获取商品的商品折扣
+	 * @param userid
+	 * @param parentid
+	 * @param sizeid
+	 * @return
+	 * */
+	private Public_set_user_standard getStandard(String userid,String sizeid){
+		String sql = "SELECT * FROM public_set_user_standard WHERE userid=? AND sizeid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(userid);
+		values.add(sizeid);
+		List<Public_set_user_standard> list = standardDao.search(sql,values);
+		return list.size() > 0 ? list.get(0): new Public_set_user_standard();
+	}
+	
 	@Transactional("txManager")
 	@Override
 	public int rechargeZ(Income_bill bill, String identity) {
@@ -397,48 +446,229 @@ public class PublicUserBankService implements IPublicUserBankService{
 		Public_order order = orderDao.get(bill.getOrderid());
 		//提交订单机构
 		Public_user submitUser = userDao.get(order.getSubmitid());
+		Public_user jUser = userDao.get("1");
 		
 		//订单商品
-		String sql = "select * from public_order_product where orderid =?";
-		List<Object> values = new ArrayList<Object>();
-		values.add(order.getId());
 		List<Public_order_product> proList = getOrderProducts(order.getId());
 		
 		if (null == proList || proList.size() == 0) {
 			return 0;
 		}
 		
+//		Public_user_bank jBank = getUserBank("1","1");
+//		Public_user_bank submitBank = null;
+//		Public_user_bank otherBank = null;
+//		
+//		Share_bill jBill = new Share_bill(UUID.randomUUID().toString(),order.getId(),jBank.getId(),jUser.getId(),"",0f,0,DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"),"",0,"",submitUser.getCompanyname());
+//		Share_bill submitBill = null;
+//		Share_bill otherBill = null;
+		
+		
+//		if(submitUser.getIdentity().equals("A")){
+//			
+//			//当前账户
+//			jbank = getUserBank(bill.getUserid(), bill.getParentid());
+//			abank = getUserBank(bill.getUserid(), bill.getParentid());
+//			
+//			aBill = new Share_bill(UUID.randomUUID().toString(),order.getId(),"",jUser.getId(),"",0f,0,DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"),"",0,"",submitUser.getCompanyname());
+//		}else if(submitUser.getIdentity().equals("C")){
+//			jBill = new Share_bill();
+//			aBill = new Share_bill();
+//			cBill = new Share_bill();
+//		}
+		
+		HashMap<String,HashMap<String,Object>> resultMap = new HashMap<String,HashMap<String,Object>>();
 		//循环订单商品。每个商品都去获取各种标准
 		for (Public_order_product product : proList) {
-			//此处刨除，平台代顾客下单，只有代理和店   如果是代理作为提交人。只计算该代理和平台
-			if(submitUser.getIdentity().equals("A")){
-				//获取平台为代理设置的该商品的折扣
-				Public_set_user_standard userStandard = getProStandard(submitUser.getId(),"1",product.getId());
+			//平台
+			HashMap<String,HashMap<String,Object>> jMap = new HashMap<String,HashMap<String,Object>>();
+			//1、判断提交机构是否为平台.如果是提交机构是平台，那就啥也不用计算tm的了。
+			if ("1".equals(submitUser.getId())) {
+				HashMap<String,Object> j_shareMap = new HashMap<String,Object>();
+				j_shareMap.put("identity", jUser.getIdentity());
+				j_shareMap.put("identitymemo", jUser.getIdentitymemo());
+				j_shareMap.put("companyname", jUser.getCompanyname());
+				j_shareMap.put("userStandard", 1);
+				j_shareMap.put("sharepay", product.getPrice()*product.getProductnum());
+				j_shareMap.put("productnum", product.getProductnum());
+				jMap.put("1", j_shareMap);
 				
-				//平台收入+实收额
-				//平台售额（实收额X代理折扣价）
+				shareList.add(jMap);
 				
-				//代理的平台售额（实收额-平台X代理折扣）
+				resultMap = setTmpMap(resultMap,"1",product.getPrice()*product.getProductnum(),product.getProductnum());
+				continue;
+			}
+			
+			//2、如果提交机构不是平台。计算该商品的各种机构折扣
+			//获取当前商品，提交机构的上级采购利益。
+			Public_set_user_standard userStandard = getStandard(submitUser.getId(),product.getProductid());
+			//判断是否设置了采购标准。如果没有设置。也全部给平台
+			if (null == userStandard || "".equals(userStandard.getId())) {
+				HashMap<String,Object> j_shareMap = new HashMap<String,Object>();
+				j_shareMap.put("identity", jUser.getIdentity());
+				j_shareMap.put("identitymemo", jUser.getIdentitymemo());
+				j_shareMap.put("companyname", jUser.getCompanyname());
+				j_shareMap.put("userStandard", 1);
+				j_shareMap.put("sharepay", product.getPrice()*product.getProductnum());
+				j_shareMap.put("productnum", product.getProductnum());
+				jMap.put("1", j_shareMap);
 				
-			}else if(submitUser.getIdentity().equals("C")){
+				shareList.add(jMap);
 				
-				/*1.店的平台售额（实收额X店的折扣）
-				2.平台售额（实收额X代理或店的折扣价），直营和非直营
-
-				3.代理的平台售额（实收总额-平台售额-店平台售额）*/
-				/*if(){
+				resultMap = setTmpMap(resultMap,"1",product.getPrice()*product.getProductnum(),product.getProductnum());
+				
+				continue;
+			}
+			
+			//3、如果有采购标准，判断谁给他设置的。
+			//如果是平台设置的
+			if ("1".equals(userStandard.getParentid())) {
+				//有设置。利润按折扣给平台。
+				Float buyerdis = userStandard.getBuyerdis();
+				Float totalpay = product.getPrice()*product.getProductnum();
+				Float j_sharepay = totalpay*buyerdis;
+				Float s_sharepay = totalpay - j_sharepay;
+				j_sharepay = (float)(Math.round(j_sharepay*100))/100;//输出小数点2位
+				s_sharepay = (float)(Math.round(s_sharepay*100))/100;//输出小数点2位
+//				int j_sharepay_int = Math.round(j_sharepay);
+//				int a_sharepay_int = Math.round(totalpay) - j_sharepay_int;
+				HashMap<String,Object> j_shareMap = new HashMap<String,Object>();
+				j_shareMap.put("identity", jUser.getIdentity());
+				j_shareMap.put("identitymemo", jUser.getIdentitymemo());
+				j_shareMap.put("companyname", jUser.getCompanyname());
+				j_shareMap.put("userStandard", buyerdis);
+				j_shareMap.put("sharepay", j_sharepay);
+				j_shareMap.put("productnum", product.getProductnum());
+				jMap.put("1", j_shareMap);
+				
+				shareList.add(jMap);
+				
+				resultMap = setTmpMap(resultMap,"1",j_sharepay,product.getProductnum());
+				
+				//处理提交机构的
+				HashMap<String,HashMap<String,Object>> sMap = new HashMap<String,HashMap<String,Object>>();
+				HashMap<String,Object> s_shareMap = new HashMap<String,Object>();
+				s_shareMap.put("identity", submitUser.getIdentity());
+				s_shareMap.put("identitymemo", submitUser.getIdentitymemo());
+				s_shareMap.put("companyname", submitUser.getCompanyname());
+				s_shareMap.put("userStandard", 1 - buyerdis);
+				s_shareMap.put("sharepay", s_sharepay);
+				s_shareMap.put("productnum", product.getProductnum());
+				sMap.put(submitUser.getId(), s_shareMap);
+				
+				shareList.add(sMap);
+				resultMap = setTmpMap(resultMap,submitUser.getId(),s_sharepay,product.getProductnum());
+			}
+			else {
+				//如果不是平台设置的。就需要取中间的那个机构的
+				Public_set_user_standard aStandard = getProStandard(userStandard.getParentid(),"1",product.getProductid());
+				
+				//中间的肯定是代理。那么如果平台没有给代理设置。代理那部分，都归平台
+				if (null == aStandard || "".equals(aStandard.getId())) {
+					//有设置。利润按折扣给平台。
+					Float buyerdis = userStandard.getBuyerdis();
+					Float totalpay = product.getPrice()*product.getProductnum();
+					Float j_sharepay = totalpay*buyerdis;
+					Float s_sharepay = totalpay - j_sharepay;
+					j_sharepay = (float)(Math.round(j_sharepay*100))/100;//输出小数点2位
+					s_sharepay = (float)(Math.round(s_sharepay*100))/100;//输出小数点2位
+//					int j_sharepay_int = Math.round(j_sharepay);
+//					int a_sharepay_int = Math.round(totalpay) - j_sharepay_int;
+					HashMap<String,Object> j_shareMap = new HashMap<String,Object>();
+					j_shareMap.put("identity", jUser.getIdentity());
+					j_shareMap.put("identitymemo", jUser.getIdentitymemo());
+					j_shareMap.put("companyname", jUser.getCompanyname());
+					j_shareMap.put("userStandard", buyerdis);
+					j_shareMap.put("sharepay", j_sharepay);
+					j_shareMap.put("productnum", product.getProductnum());
+					jMap.put("1", j_shareMap);
 					
-				}*/
+					shareList.add(jMap);
+					
+					resultMap = setTmpMap(resultMap,"1",j_sharepay,product.getProductnum());
+					//处理提交机构的
+					HashMap<String,HashMap<String,Object>> sMap = new HashMap<String,HashMap<String,Object>>();
+					HashMap<String,Object> s_shareMap = new HashMap<String,Object>();
+					s_shareMap.put("identity", submitUser.getIdentity());
+					s_shareMap.put("identitymemo", submitUser.getIdentitymemo());
+					s_shareMap.put("companyname", submitUser.getCompanyname());
+					s_shareMap.put("userStandard", 1 - buyerdis);
+					s_shareMap.put("sharepay", s_sharepay);
+					s_shareMap.put("productnum", product.getProductnum());
+					sMap.put(submitUser.getId(), s_shareMap);
+					
+					shareList.add(sMap);
+					resultMap = setTmpMap(resultMap,submitUser.getId(),s_sharepay,product.getProductnum());
+				}
+				else {
+					//如果有设置。就计算三方的分润
+					//1、首先计算平台的。
+					Float jBuyerdis = aStandard.getBuyerdis();
+					Float totalpay = product.getPrice()*product.getProductnum();
+					Float j_sharepay = totalpay*jBuyerdis;
+					
+					//2、计算店的。
+					Float sBuyerdis = userStandard.getBuyerdis();
+					Float s_sharepay = totalpay*sBuyerdis;
+					
+					//3、剩余就是代理的
+					Float a_sharepay = totalpay - j_sharepay - s_sharepay;
+					
+					j_sharepay = (float)(Math.round(j_sharepay*100))/100;//输出小数点2位
+					s_sharepay = (float)(Math.round(s_sharepay*100))/100;//输出小数点2位
+					a_sharepay = (float)(Math.round(a_sharepay*100))/100;//输出小数点2位
+					
+					//写入平台
+					HashMap<String,Object> j_shareMap = new HashMap<String,Object>();
+					j_shareMap.put("identity", jUser.getIdentity());
+					j_shareMap.put("identitymemo", jUser.getIdentitymemo());
+					j_shareMap.put("companyname", jUser.getCompanyname());
+					j_shareMap.put("userStandard", jBuyerdis);
+					j_shareMap.put("sharepay", j_sharepay);
+					j_shareMap.put("productnum", product.getProductnum());
+					jMap.put("1", j_shareMap);
+					
+					shareList.add(jMap);
+					resultMap = setTmpMap(resultMap,"1",s_sharepay,product.getProductnum());
+					
+					//处理提交机构的
+					HashMap<String,HashMap<String,Object>> sMap = new HashMap<String,HashMap<String,Object>>();
+					HashMap<String,Object> s_shareMap = new HashMap<String,Object>();
+					s_shareMap.put("identity", submitUser.getIdentity());
+					s_shareMap.put("identitymemo", submitUser.getIdentitymemo());
+					s_shareMap.put("companyname", submitUser.getCompanyname());
+					s_shareMap.put("userStandard", sBuyerdis);
+					s_shareMap.put("sharepay", s_sharepay);
+					s_shareMap.put("productnum", product.getProductnum());
+					sMap.put(submitUser.getId(), s_shareMap);
+					
+					shareList.add(sMap);
+					
+					resultMap = setTmpMap(resultMap,submitUser.getId(),s_sharepay,product.getProductnum());
+					
+					//处理代理
+					Public_user aUser = userDao.get(aStandard.getParentid());
+					HashMap<String,HashMap<String,Object>> aMap = new HashMap<String,HashMap<String,Object>>();
+					HashMap<String,Object> a_shareMap = new HashMap<String,Object>();
+					a_shareMap.put("identity", aUser.getIdentity());
+					a_shareMap.put("identitymemo", aUser.getIdentitymemo());
+					a_shareMap.put("companyname", aUser.getCompanyname());
+					a_shareMap.put("userStandard", aStandard.getBuyerdis());
+					a_shareMap.put("sharepay", a_sharepay);
+					a_shareMap.put("productnum", product.getProductnum());
+					aMap.put(submitUser.getId(), a_shareMap);
+					
+					shareList.add(aMap);
+					
+					resultMap = setTmpMap(resultMap,aUser.getId(),a_sharepay,product.getProductnum());
+				}
 			}
 		}
 		
-		
-		
-		
-		
-		
-		
-		//当前账户
+		//接下来该写入sharebill表和bank表
+		//TODO 做到这里了
+		sdddd 放个错误，从这里开始写
+			
 		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
 		//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
 		Public_user_bank bank_PT = getUserBank("1", "1");
