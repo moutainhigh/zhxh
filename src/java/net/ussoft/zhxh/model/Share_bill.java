@@ -12,11 +12,12 @@ public class Share_bill {
 	private String orderid;			//订单id
 	private String bankid;			//资金账户id
 	private String userid;			//账户id
+	private String orderproductids;	//订单商品id集合。用逗号分隔。表示当前机构在当前订单，参与分润的订单商品。
 	private Double sharepay;		//分润金额
-	private Integer sharenumber;		//分润数量
+	private Integer sharenumber;	//分润数量
 	private String sharetime;		//记账时间
 	private String shareovertime;	//到帐时间
-	private Integer sharestate;		//状态
+	private Integer sharestate;		//状态		0：等待分润  1：分润完成
 	private String remarks;			//备注
 	
 	
@@ -81,6 +82,12 @@ public class Share_bill {
 	}
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+	public String getOrderproductids() {
+		return orderproductids;
+	}
+	public void setOrderproductids(String orderproductids) {
+		this.orderproductids = orderproductids;
 	}
 	
 	

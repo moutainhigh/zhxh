@@ -19,6 +19,7 @@ public class Public_order {
 	private Float ordertotal;
 	private Integer orderstatus;
 	private String orderstatusmemo;
+	private String signtime;				//签收时间。
 	private String identity;
 	private String deliverynum;
 	
@@ -82,6 +83,12 @@ public class Public_order {
 	}
 	public void setOrderstatusmemo(String orderstatusmemo) {
 		this.orderstatusmemo = orderstatusmemo;
+	}
+	public String getSigntime() {
+		return signtime;
+	}
+	public void setSigntime(String signtime) {
+		this.signtime = signtime;
 	}
 	/**
 	 * 订单发起机构上级id，用来获取订单

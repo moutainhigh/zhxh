@@ -531,6 +531,8 @@ public class PublicOrderService implements IPublicOrderService{
 		//改变订单状态
 		order.setOrderstatus(3);	//已签收
 		order.setOrderstatusmemo("已签收");
+		//增加签收时间
+		order.setSigntime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 		order = orderDao.update(order);
 		//订单操作日志
 		saveLog(order.getUserid(), order.getParentid(), "sendorder", order.getOrdernumber()+"-已签收", order.getOrdertotal(), order.getId());

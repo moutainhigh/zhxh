@@ -478,5 +478,22 @@ CREATE TABLE `share_bill` (
 SET FOREIGN_KEY_CHECKS = 1;
 
 
+2016-10-28
+1、修改public_order (订单表)
+	(1)增加 signtime	varchar（50）		签收时间。当点击确认收货时的时间
+
+2、修改share_bill (分润流水表)
+	(1)增加	orderproductids varchar (500)	订单商品id集合。用逗号分隔。表示当前机构在当前订单，参与分润的订单商品
+	
+3、修改sys_data_dic （数据字典）
+	(1)增加以下内容
+		insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '67', 'public_order', 'isshare', '0', '等待分润');
+		insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '68', 'public_order', 'isshare', '1', '可分润');
+		insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '69', 'public_order', 'isshareover', '0', '未分润');
+		insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '70', 'public_order', 'isshareover', '1', '分润完成');
+		insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '71', 'share_bill', 'sharestate', '0', '等待分润');
+		insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '72', 'share_bill', 'sharestate', '1', '分润完成');
+
+
 
 	
