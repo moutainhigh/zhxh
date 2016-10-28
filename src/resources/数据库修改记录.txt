@@ -494,6 +494,22 @@ SET FOREIGN_KEY_CHECKS = 1;
 		insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '71', 'share_bill', 'sharestate', '0', '等待分润');
 		insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '72', 'share_bill', 'sharestate', '1', '分润完成');
 
-
+	(2)
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '73', 'income_bill', 'trantype', '1', '现金充值');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '74', 'income_bill', 'trantype', '2', '货款充值');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '75', 'income_bill', 'trantype', '3', '售额（全）');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '76', 'income_bill', 'trantype', '4', '售额（分期）');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '77', 'income_bill', 'status', '-1', '支付失败');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '78', 'income_bill', 'status', '0', '未支付');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '79', 'income_bill', 'status', '1', '支付回执成功');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '80', 'income_bill', 'status', '2', '分期回执成功');
+		
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '81', 'spending_bill', 'trantype', '1', '平台可提现账户提现');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '82', 'spending_bill', 'trantype', '2', '代理可提现账户提现');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '83', 'spending_bill', 'trantype', '3', '店平台售额提现');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '84', 'spending_bill', 'trantype', '4', '店奖励可提现账户提现');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '85', 'spending_bill', 'status', '-1', '失败');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '86', 'spending_bill', 'status', '0', '提交申请');
+		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '87', 'spending_bill', 'status', '1', '成功');
 
 	
