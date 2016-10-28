@@ -511,5 +511,9 @@ SET FOREIGN_KEY_CHECKS = 1;
 		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '85', 'spending_bill', 'status', '-1', '失败');
 		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '86', 'spending_bill', 'status', '0', '提交申请');
 		INSERT INTO sys_data_dic ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) VALUES ( '87', 'spending_bill', 'status', '1', '成功');
+		
+4、修改share_bill (分润刘水表)
+
+	（1）增加submitname varchar（200）	下单机构名称
 
 	

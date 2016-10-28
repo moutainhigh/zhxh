@@ -13,14 +13,36 @@ public class Share_bill {
 	private String bankid;			//资金账户id
 	private String userid;			//账户id
 	private String orderproductids;	//订单商品id集合。用逗号分隔。表示当前机构在当前订单，参与分润的订单商品。
-	private Double sharepay;		//分润金额
+	private Float sharepay;		//分润金额
 	private Integer sharenumber;	//分润数量
 	private String sharetime;		//记账时间
 	private String shareovertime;	//到帐时间
 	private Integer sharestate;		//状态		0：等待分润  1：分润完成
 	private String remarks;			//备注
+	private String submitname;			//下单机构名称
 	
 	
+	
+	public Share_bill() {
+		super();
+	}
+	
+	public Share_bill(String id, String orderid, String bankid, String userid, String orderproductids, Float sharepay,
+			Integer sharenumber, String sharetime, String shareovertime, Integer sharestate, String remarks,String submitname) {
+		super();
+		this.id = id;
+		this.orderid = orderid;
+		this.bankid = bankid;
+		this.userid = userid;
+		this.orderproductids = orderproductids;
+		this.sharepay = sharepay;
+		this.sharenumber = sharenumber;
+		this.sharetime = sharetime;
+		this.shareovertime = shareovertime;
+		this.sharestate = sharestate;
+		this.remarks = remarks;
+		this.submitname = submitname;
+	}
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public String getId() {
@@ -47,12 +69,15 @@ public class Share_bill {
 	public void setUserid(String userid) {
 		this.userid = userid;
 	}
-	public Double getSharepay() {
+	
+	public Float getSharepay() {
 		return sharepay;
 	}
-	public void setSharepay(Double sharepay) {
+
+	public void setSharepay(Float sharepay) {
 		this.sharepay = sharepay;
 	}
+
 	public Integer getSharenumber() {
 		return sharenumber;
 	}
