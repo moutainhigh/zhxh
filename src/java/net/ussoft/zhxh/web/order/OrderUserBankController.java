@@ -699,13 +699,16 @@ public class OrderUserBankController extends BaseConstroller {
 		PrintWriter out = response.getWriter();
 
 		List<Public_order_product> list = shareBillService.orderProlist(orderproductids);
+	/*	for(Public_order_product obj : list){
+			String sharekey = obj.getSharekey();
+		}*/
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("userid", userid);
 		map.put("data", list);
 		
 		String json = JSON.toJSONString(map);
-		//[{"1":{"companyname":"吉丽科技","identity":"A","identitymome":"平台","productnum":"2","sharepay":"10","userStandard":1},"2":{"companyname":"代理A","identity":"A","identitymome":"代理","productnum":"2","sharepay":"20","userStandard":1}}]
-		
+		System.out.println(json);
 		out.print(json);
 	}
 }

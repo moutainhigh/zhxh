@@ -13,12 +13,12 @@
 		{#if $P.rowCount > 0}
 			{#foreach $T as row}
 				<tr>
-					<td>{$T.row.orderid}</td>
+					<td>{$T.row.ordernumber}</td>
 					<td>{$T.row.submitname}</td>
 					<td>￥{$T.row.sharepay} </td>
 					<td>{$T.row.sharenumber} </td>
 					<td>{$T.row.sharetime}</td>
-					<td>{$T.row.sharestate}</td>
+					<td>{#if $T.row.sharestate == 0}等待分润{#else}分润完成{#/if}</td>
 					<td><a href="javascript:;" onclick="shareDetails('{$P.userid}','{$T.row.orderproductids}')">详情</a>
 					</td>
 				</tr>
@@ -69,29 +69,4 @@
 		</tr>
 		</tfoot>
 	</table>
-</div>
-<div id="details"style="display:none;">
-	<div class="panel-head">
-		<strong>充值-账单明细</strong>
-	</div>
-	<div class="panel-body">
-	</div>
-	<div class="table-responsive" style="padding:10px;">
-		<table class="table">
-			<tbody><tr>
-				<th>快钱交易号</th>
-				<th>银行交易号</th>
-				<th>快钱交易时间</th>
-				<th>实付金额</th>
-				<th>快钱手续费</th>
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-		</tbody></table>
-	</div>
 </div>

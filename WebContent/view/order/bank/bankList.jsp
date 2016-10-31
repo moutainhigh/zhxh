@@ -89,7 +89,7 @@
 							</div></div> -->
 							<p align="center">暂无数据...</p>							
 						</div>
-						<div id="details" class="panel-body" style="padding: 0px 60px;display: none;">
+						<div id="share_details" class="panel-body" style="padding: 0px 60px;display: black;">
 						
 						</div>
 					</div>

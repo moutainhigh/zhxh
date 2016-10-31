@@ -36,7 +36,7 @@
 			{#/for}
 		{#else}
 			<tr class="tr" style="height:150px;">
-				<td align="center" colspan="8">还没有数据...</td>
+				<td align="center" colspan="9">还没有数据...</td>
 			</tr>
 		{#/if}
 		
