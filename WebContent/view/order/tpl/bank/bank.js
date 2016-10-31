@@ -228,8 +228,23 @@ function shareDetails(uid,ids){
         type: "post",
         dataType:"json",
         success: function (json) {
-        	alert(json.data[0].sharekey);
+        	var data = json.data;
+        	/*for(i=0;i<data.length;i++){
+        		var m1 = data[i].sharekey;
+        		var ms = JSON.parse(m1);
+        		for(var key	 in ms){
+        			for(var k in ms[key]){
+        				if(uid == ms[key][k].userid){
+        					alert(ms[key][k].companyname);
+        				}
+            		}
+        		}
+        	}*/
+        
         	
+        	$("#share_details").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/shareBillDetails.tpl");
+        	$("#share_details").processTemplate(json.data);
+        	//alert(json.data[0].sharekey);
         	layer.open({
       		  type: 1,
       		  area: ['680px', ''],
