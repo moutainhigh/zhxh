@@ -520,5 +520,9 @@ SET FOREIGN_KEY_CHECKS = 1;
 1、修改share_bill (分润刘水表)
 
 	（1）增加username varchar（100）	分润机构名称
+2016-10-31
+1、修改share_bill (分润刘水表)
+
+	（1）增加ordernumber varchar（200）	订单编号
 
 	

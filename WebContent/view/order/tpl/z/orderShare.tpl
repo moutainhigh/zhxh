@@ -73,24 +73,24 @@
 			<tbody>
 				<tr>
 					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">序号</td>
-					<td style="border-top: 0px solid #ddd;" widtd="100" align="left">提交订单机构</td>
-					<td style="border-top: 0px solid #ddd;" widtd="100" align="left">分润机构名称</td>
-					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">分润金额(元)</td>
-					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">分润数量</td>
-					<td style="border-top: 0px solid #ddd;" widtd="100">记账时间</td>
-					<td style="border-top: 0px solid #ddd;" widtd="80">状态</td>
-					<td style="border-top: 0px solid #ddd;" widtd="200" align="left">备注</td>
+					<td style="border-top: 0px solid #ddd;" widtd="100" align="left">品牌</td>
+					<td style="border-top: 0px solid #ddd;" widtd="*" align="left">商品名称</td>
+					<td style="border-top: 0px solid #ddd;" widtd="80">规格</td>
+					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">数量</td>
+					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">单价</td>
+					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">折扣</td>
+					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">小计</td>
 				</tr>
-				{#foreach $T.sbList as row}
+				{#foreach $T.products as row}
 					<tr class="tr">
 						<td align="center">{$T.row$index+1}</td>
-						<td>{$T.row.submitname}</td>
-						<td>{$T.row.username}</td>
-						<td align="center">￥{$T.row.sharepay}</td>
-						<td align="center">{$T.row.sharenumber}</td>
-						<td>{$T.row.sharetime}</td>
-						<td>{#if $T.row.sharestate == 0}等待分润{#else}分润完成{#/if}</span></td>
-						<td>{$T.row.remarks}</td>
+						<td>{$T.row.brandname}</td>
+						<td style="text-align: left;">{$T.row.productname}</td>
+						<td>{$T.row.productsize}</td>
+						<td align="center">{$T.row.productnum}</td>
+						<td align="center">￥{$T.row.price}</td>
+						<td>{$T.row.buyerdis}</td>
+						<td style="text-align: right;">￥{$T.row.subtotal_txt}</td>
 					</tr>
 				{#/for}
 			</tbody>

@@ -10,6 +10,7 @@ public class Share_bill {
 	
 	private String id;
 	private String orderid;			//订单id
+	private String ordernumber;			//订单编号
 	private String bankid;			//资金账户id
 	private String userid;			//账户id
 	private String username;		//分润机构名称
@@ -28,11 +29,12 @@ public class Share_bill {
 		super();
 	}
 	
-	public Share_bill(String id, String orderid, String bankid, String userid, String username,String orderproductids, Float sharepay,
+	public Share_bill(String id, String orderid, String ordernumber,String bankid, String userid, String username,String orderproductids, Float sharepay,
 			Integer sharenumber, String sharetime, String shareovertime, Integer sharestate, String remarks,String submitname) {
 		super();
 		this.id = id;
 		this.orderid = orderid;
+		this.ordernumber = ordernumber;
 		this.bankid = bankid;
 		this.userid = userid;
 		this.username = username;
@@ -56,6 +58,13 @@ public class Share_bill {
 	public String getOrderid() {
 		return orderid;
 	}
+	public String getOrdernumber() {
+		return ordernumber;
+	}
+	public void setOrdernumber(String ordernumber) {
+		this.ordernumber = ordernumber;
+	}
+
 	public void setOrderid(String orderid) {
 		this.orderid = orderid;
 	}

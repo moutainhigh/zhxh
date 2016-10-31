@@ -690,6 +690,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		    Share_bill sBill = new Share_bill();
 		    sBill.setId(UUID.randomUUID().toString());
 		    sBill.setOrderid(order.getId());
+		    sBill.setOrdernumber(order.getOrdernumber());
 		    sBill.setBankid(bank.getId());
 		    sBill.setUserid(userid);
 		    sBill.setUsername(username);
