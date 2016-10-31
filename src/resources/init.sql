@@ -44,14 +44,15 @@ DELETE FROM public_message;
 DELETE FROM income_bill;
 DELETE FROM spending_bill;
 DELETE FROM quota_bill;
+DELETE FROM rebate_reward_bill;
 DELETE FROM share_bill;
 
 
 
 
 -- 插入平台帐户 id为1
-insert into `zhxh`.`public_user` ( `id`, `usercode`, `username`, `phonenumber`, `identity`, `identitymemo`, `dianid`, `shidaiid`, `shengdaiid`, `tuijianid`, `tuijianman`, `tuijiansort`, `setreturn`, `isopen`, `password`, `uid`, `sex`, `birthday`, `companyname`, `companypath`, `parentid`, `belongcode`, `companycode`, `wechar`, `rank`, `createtime`, `sort`) values ( '1', '', '集丽科技', '13701000001', 'A', '平台', '', '', '', '', '', '', '1', '1', 'e10adc3949ba59abbe56e057f20f883e', '', '1', '1977-01-23', '集丽科技公司', '北京市朝阳区', null, '', '13701000001', '', '中国总代理', '2016-09-09', '1');
-insert into `zhxh`.`public_user_link` ( `id`, `parentid`, `userid`) values ( '1', '1', '1');
-insert into `zhxh`.`public_user_bank` ( `id`, `parentid`, `userid`, `incomebank`, `costbank`, `takenbank`, `sellbank`, `havebank`, `quotabank`, `depositbank`, `selltakenbank`, `rebatesbank`, `bonusesbank`, `bonusestakenbank`, `bankstate`, `bankstatetxt`) values ( '1', '1', '1', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '1', '正常');
+INSERT INTO `public_user` ( `id`, `usercode`, `username`, `phonenumber`, `identity`, `identitymemo`, `dianid`, `shidaiid`, `shengdaiid`, `tuijianid`, `tuijianman`, `tuijiansort`, `setreturn`, `isopen`, `password`, `uid`, `sex`, `birthday`, `companyname`, `companypath`, `parentid`, `belongcode`, `companycode`, `wechar`, `rank`, `createtime`, `sort`) VALUES ( '1', '', '集丽科技', '13701000001', 'A', '平台', '', '', '', '', '', '', '1', '1', 'e10adc3949ba59abbe56e057f20f883e', '', '1', '1977-01-23', '集丽科技公司', '北京市朝阳区', NULL, '', '13701000001', '', '中国总代理', '2016-09-09', '1');
+INSERT INTO `public_user_link` ( `id`, `parentid`, `userid`) VALUES ( '1', '1', '1');
+INSERT INTO `public_user_bank` ( `id`, `parentid`, `userid`, `incomebank`, `costbank`, `takenbank`, `sellbank`, `havebank`, `quotabank`, `depositbank`, `selltakenbank`, `rebatesbank`, `bonusesbank`, `bonusestakenbank`, `bankstate`, `bankstatetxt`) VALUES ( '1', '1', '1', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '1', '正常');
 
 
