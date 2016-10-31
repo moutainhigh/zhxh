@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -16,10 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
+import net.ussoft.zhxh.model.Share_bill;
 import net.ussoft.zhxh.model.Spending_bill;
 import net.ussoft.zhxh.pay.kq.ErrorCode;
 import net.ussoft.zhxh.pay.kq.KqConfig;
@@ -33,6 +36,7 @@ import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.service.IQuotaBillService;
+import net.ussoft.zhxh.service.IShareBillService;
 import net.ussoft.zhxh.service.ISpendingBillService;
 import net.ussoft.zhxh.util.BillNO;
 import net.ussoft.zhxh.util.CommonUtils;
@@ -72,6 +76,8 @@ public class OrderUserBankController extends BaseConstroller {
 	private IPublicUserService userService;
 	@Resource
 	private IPublicPhoneCodeLogService codeLogService;
+	@Resource
+	private IShareBillService shareBillService;
 	
 	/**
 	 * 获取机构的资金帐户
@@ -650,4 +656,56 @@ public class OrderUserBankController extends BaseConstroller {
 		out.print(json);
 	}
 	
+	/**
+	 * 平台售额分润-账单流水
+	 * @param userid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/shareBill",method=RequestMethod.POST)
+	public void shareBill(String userid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Share_bill> p = new PageBean<Share_bill>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("sharetime");
+		p.setOrderType("desc");
+
+		Map<String, Object> values = new LinkedHashMap<String, Object>();
+		values.put("userid= ", userid);
+		p = shareBillService.list(values, p);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 平台售额分润-账单流水-明细
+	 * @param userid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/shareBillDetails",method=RequestMethod.POST)
+	public void shareBillDetails(String userid,String orderproductids,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+
+		List<Public_order_product> list = shareBillService.orderProlist(orderproductids);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("userid", userid);
+		map.put("data", list);
+		
+		String json = JSON.toJSONString(map);
+		//[{"1":{"companyname":"吉丽科技","identity":"A","identitymome":"平台","productnum":"2","sharepay":"10","userStandard":1},"2":{"companyname":"代理A","identity":"A","identitymome":"代理","productnum":"2","sharepay":"20","userStandard":1}}]
+		
+		out.print(json);
+	}
 }
