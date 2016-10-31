@@ -90,7 +90,7 @@
 						<td align="center">{$T.row.productnum}</td>
 						<td align="center">￥{$T.row.price}</td>
 						<td align="center">￥{$T.row.price*$T.row.productnum}</td>
-						<td align="center">{$T.row.sharevalue}</td>
+						<td align="left">{$T.row.sharevalue}</td>
 					</tr>
 				{#/for}
 			</tbody>

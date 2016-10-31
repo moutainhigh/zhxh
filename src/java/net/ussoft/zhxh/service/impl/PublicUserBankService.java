@@ -461,8 +461,6 @@ public class PublicUserBankService implements IPublicUserBankService{
 			return -1;	//已支付
 		}
 		
-		//存储分润的机构及分润各项标准、额。
-		List<HashMap<String,HashMap<String,Object>>> shareList = new ArrayList<HashMap<String,HashMap<String,Object>>>();
 		//分润订单
 		Public_order order = orderDao.get(bill.getOrderid());
 		//提交订单机构
@@ -480,6 +478,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 		
 		//循环订单商品。每个商品都去获取各种标准
 		for (Public_order_product product : proList) {
+			//存储分润的机构及分润各项标准、额。
+			List<HashMap<String,HashMap<String,Object>>> shareList = new ArrayList<HashMap<String,HashMap<String,Object>>>();
 			//平台
 			HashMap<String,HashMap<String,Object>> jMap = new HashMap<String,HashMap<String,Object>>();
 			//1、判断提交机构是否为平台.如果是提交机构是平台，那就啥也不用计算tm的了。
@@ -661,8 +661,11 @@ public class PublicUserBankService implements IPublicUserBankService{
 			product.setSharekey(json);
 			
 			String shareValue = "";
-			for (HashMap<String, HashMap<String, Object>> map : shareList) {
-				shareValue += "[" + map.get("companyname") + "] 折扣 [" + map.get("userStandard") + "] 数量 [" + map.get("productnum") + "] 分润 [" + map.get("sharepay") + "].";
+			for (HashMap<String, HashMap<String, Object>> tmpMap : shareList) {
+				for (Map.Entry<String, HashMap<String,Object>> entry : tmpMap.entrySet()) {
+					HashMap<String,Object> map =  entry.getValue();
+					shareValue += "[" + map.get("companyname") + "] 折扣 [" + map.get("userStandard") + "] 数量 [" + map.get("productnum") + "] 分润 [" + map.get("sharepay") + "].";
+				}
 			}
 			product.setSharevalue(shareValue);
 			orderProductDao.update(product);

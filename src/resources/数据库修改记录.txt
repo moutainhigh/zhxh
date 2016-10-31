@@ -524,5 +524,8 @@ SET FOREIGN_KEY_CHECKS = 1;
 1、修改share_bill (分润刘水表)
 
 	（1）增加ordernumber varchar（200）	订单编号
+2、修改public_order_product
+	(1)修改sharekey、sharevalue 为text类型	
+
 
 	
