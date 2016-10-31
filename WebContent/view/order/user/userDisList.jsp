@@ -940,16 +940,21 @@
        	                dataType:"text",
        	                success: function (text) {
        	                	if(text == "success"){
-       	                		getUserDis();
        	                		layer.msg("操作成功",{icon:6});
-       	                		var strs= new Array(); //定义一数组 
-	       	             		strs = sel_ids.split(","); //字符分割 
-	       	             		for (i=0;i<strs.length ;i++ ) {
-	       	             			$('.userDis input:checkbox[value='+strs[i]+']').attr("checked","checked");
-	       	             		}
-       	                	}else{
+       	                		
+       	                	}
+       	                	else if (text == "error_num") {
+       	                		layer.msg("操作成功。<br><span style='color:red'>注意：部分没有更改，不能低于进货折扣。请检查后，重新设置。</span>",{icon:6});
+       	                	}
+       	                	else{
        	                		layer.msg("操作失败，请稍后再试！",{icon:6});
        	                	}
+       	                	getUserDis();
+       	                	var strs= new Array(); //定义一数组 
+       	             		strs = sel_ids.split(","); //字符分割 
+       	             		for (i=0;i<strs.length ;i++ ) {
+       	             			$('.userDis input:checkbox[value='+strs[i]+']').attr("checked","checked");
+       	             		}
        	                },
        	                error: function (jqXHR, textStatus, errorThrown) {
        	                    alert(jqXHR.responseText);

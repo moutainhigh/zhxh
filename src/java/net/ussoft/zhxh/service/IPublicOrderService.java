@@ -8,6 +8,7 @@ import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
+import net.ussoft.zhxh.model.Share_bill;
 
 /**
  * 订单管理
@@ -129,6 +130,20 @@ public interface IPublicOrderService {
 	 * @param order
 	 * */
 	public int cancelorder(Public_order order);
+	
+	/*--------------------处理普通会员订单---------------*/
+	
+	/**
+	 * 平台登录，处理普通会员订单超过15日的。
+	 */
+	public void setIsshare();
+	
+	/**
+	 * 获取订单的分润流水
+	 * @param orderid
+	 * @return
+	 */
+	public List<Share_bill> getOrderSharebill(String orderid);
 	
 	
 }

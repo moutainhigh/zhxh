@@ -21,6 +21,7 @@ import net.ussoft.zhxh.dao.PublicSetUserStandardDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.dao.QuotaBillDao;
+import net.ussoft.zhxh.dao.ShareBillDao;
 import net.ussoft.zhxh.dao.SpendingBillDao;
 import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.Public_dis_details;
@@ -43,6 +44,8 @@ import net.ussoft.zhxh.util.DateUtil;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.fastjson.JSON;
 
 @Service
 public class PublicUserBankService implements IPublicUserBankService{
@@ -75,6 +78,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 	private PublicUserDao userDao;
 	@Resource
 	private PublicSetUserStandardDao standardDao;	//
+	@Resource
+	private ShareBillDao shareBillDao;	//
 	
 	@Override
 	public Public_user_bank getById(String id) {
@@ -192,12 +197,25 @@ public class PublicUserBankService implements IPublicUserBankService{
 		order.setOrderstatus(2);	//已发货
 		order.setOrderstatusmemo("已发货");
 		order = orderDao.update(order);
+		
+		String userid = order.getUserid();
+		String username = order.getU_companyname();
+		String parentid = order.getParentid();
+		String parentname = order.getP_companyanme();
+		
+		if ("p".equals(order.getOrdertype())) {
+			String submitid = order.getSubmitid();
+			Public_user submitUser = userDao.get(submitid);
+			userid = submitid;
+			username = submitUser.getCompanyname();
+		}
+		
 		//日志
-		Public_log log = saveLog(order.getParentid(), order.getUserid(), "sendorder", order.getOrdernumber()+"-已发货", order.getOrdertotal(), order.getId());
+		Public_log log = saveLog(parentid, userid, "sendorder", order.getOrdernumber()+"-已发货", order.getOrdertotal(), order.getId());
 		//消息
 		int messagetype = 1;	//业务消息
 		String messagetxt = "尊敬的客户您好，您的订单已发货，订单号："+order.getOrdernumber();
-		Public_message msg = createMsg(order.getParentid(), order.getP_username(), order.getUserid(), order.getU_username(), messagetype, messagetxt,order.getId());
+		Public_message msg = createMsg(parentid, parentname, userid, username, messagetype, messagetxt,order.getId());
 		if(order !=null && log != null && msg != null){
 			return 1;
 		}
@@ -386,7 +404,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 	}
 	
 	@SuppressWarnings("unused")
-	private HashMap<String,HashMap<String,Object>> setTmpMap(HashMap<String,HashMap<String,Object>> resultMap,String userid,float pay,int num) {
+	private HashMap<String,HashMap<String,Object>> setTmpMap(HashMap<String,HashMap<String,Object>> resultMap,String userid,String parentid,float pay,int num) {
 		HashMap<String,Object> m = resultMap.get(userid);
 		if (null != m) {
 			Float t = (float)m.get("total");
@@ -409,8 +427,11 @@ public class PublicUserBankService implements IPublicUserBankService{
 		}
 		else {
 			HashMap<String,Object> m1 = new HashMap<String,Object>();
+			Public_user user = userDao.get(userid);
+			m1.put("username", user.getCompanyname());
 			m1.put("total",pay*num);
 			m1.put("number", num);
+			m1.put("parentid", parentid);
 			resultMap.put(userid, m1);
 		}
 		
@@ -455,29 +476,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 			return 0;
 		}
 		
-//		Public_user_bank jBank = getUserBank("1","1");
-//		Public_user_bank submitBank = null;
-//		Public_user_bank otherBank = null;
-//		
-//		Share_bill jBill = new Share_bill(UUID.randomUUID().toString(),order.getId(),jBank.getId(),jUser.getId(),"",0f,0,DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"),"",0,"",submitUser.getCompanyname());
-//		Share_bill submitBill = null;
-//		Share_bill otherBill = null;
-		
-		
-//		if(submitUser.getIdentity().equals("A")){
-//			
-//			//当前账户
-//			jbank = getUserBank(bill.getUserid(), bill.getParentid());
-//			abank = getUserBank(bill.getUserid(), bill.getParentid());
-//			
-//			aBill = new Share_bill(UUID.randomUUID().toString(),order.getId(),"",jUser.getId(),"",0f,0,DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"),"",0,"",submitUser.getCompanyname());
-//		}else if(submitUser.getIdentity().equals("C")){
-//			jBill = new Share_bill();
-//			aBill = new Share_bill();
-//			cBill = new Share_bill();
-//		}
-		
 		HashMap<String,HashMap<String,Object>> resultMap = new HashMap<String,HashMap<String,Object>>();
+		
 		//循环订单商品。每个商品都去获取各种标准
 		for (Public_order_product product : proList) {
 			//平台
@@ -495,30 +495,13 @@ public class PublicUserBankService implements IPublicUserBankService{
 				
 				shareList.add(jMap);
 				
-				resultMap = setTmpMap(resultMap,"1",product.getPrice()*product.getProductnum(),product.getProductnum());
+				resultMap = setTmpMap(resultMap,"1","1",product.getPrice()*product.getProductnum(),product.getProductnum());
 				continue;
 			}
 			
 			//2、如果提交机构不是平台。计算该商品的各种机构折扣
 			//获取当前商品，提交机构的上级采购利益。
 			Public_set_user_standard userStandard = getStandard(submitUser.getId(),product.getProductid());
-			//判断是否设置了采购标准。如果没有设置。也全部给平台
-			if (null == userStandard || "".equals(userStandard.getId())) {
-				HashMap<String,Object> j_shareMap = new HashMap<String,Object>();
-				j_shareMap.put("identity", jUser.getIdentity());
-				j_shareMap.put("identitymemo", jUser.getIdentitymemo());
-				j_shareMap.put("companyname", jUser.getCompanyname());
-				j_shareMap.put("userStandard", 1);
-				j_shareMap.put("sharepay", product.getPrice()*product.getProductnum());
-				j_shareMap.put("productnum", product.getProductnum());
-				jMap.put("1", j_shareMap);
-				
-				shareList.add(jMap);
-				
-				resultMap = setTmpMap(resultMap,"1",product.getPrice()*product.getProductnum(),product.getProductnum());
-				
-				continue;
-			}
 			
 			//3、如果有采购标准，判断谁给他设置的。
 			//如果是平台设置的
@@ -543,7 +526,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 				
 				shareList.add(jMap);
 				
-				resultMap = setTmpMap(resultMap,"1",j_sharepay,product.getProductnum());
+				resultMap = setTmpMap(resultMap,"1","1",j_sharepay,product.getProductnum());
 				
 				//处理提交机构的
 				HashMap<String,HashMap<String,Object>> sMap = new HashMap<String,HashMap<String,Object>>();
@@ -557,7 +540,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 				sMap.put(submitUser.getId(), s_shareMap);
 				
 				shareList.add(sMap);
-				resultMap = setTmpMap(resultMap,submitUser.getId(),s_sharepay,product.getProductnum());
+				resultMap = setTmpMap(resultMap,submitUser.getId(),"1",s_sharepay,product.getProductnum());
 			}
 			else {
 				//如果不是平台设置的。就需要取中间的那个机构的
@@ -585,7 +568,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					
 					shareList.add(jMap);
 					
-					resultMap = setTmpMap(resultMap,"1",j_sharepay,product.getProductnum());
+					resultMap = setTmpMap(resultMap,"1","1",j_sharepay,product.getProductnum());
 					//处理提交机构的
 					HashMap<String,HashMap<String,Object>> sMap = new HashMap<String,HashMap<String,Object>>();
 					HashMap<String,Object> s_shareMap = new HashMap<String,Object>();
@@ -598,7 +581,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					sMap.put(submitUser.getId(), s_shareMap);
 					
 					shareList.add(sMap);
-					resultMap = setTmpMap(resultMap,submitUser.getId(),s_sharepay,product.getProductnum());
+					resultMap = setTmpMap(resultMap,submitUser.getId(),"1",s_sharepay,product.getProductnum());
 				}
 				else {
 					//如果有设置。就计算三方的分润
@@ -608,7 +591,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					Float j_sharepay = totalpay*jBuyerdis;
 					
 					//2、计算店的。
-					Float sBuyerdis = userStandard.getBuyerdis();
+					Float sBuyerdis = 1-userStandard.getBuyerdis();
 					Float s_sharepay = totalpay*sBuyerdis;
 					
 					//3、剩余就是代理的
@@ -629,7 +612,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					jMap.put("1", j_shareMap);
 					
 					shareList.add(jMap);
-					resultMap = setTmpMap(resultMap,"1",s_sharepay,product.getProductnum());
+					resultMap = setTmpMap(resultMap,"1","1",j_sharepay,product.getProductnum());
 					
 					//处理提交机构的
 					HashMap<String,HashMap<String,Object>> sMap = new HashMap<String,HashMap<String,Object>>();
@@ -644,10 +627,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 					
 					shareList.add(sMap);
 					
-					resultMap = setTmpMap(resultMap,submitUser.getId(),s_sharepay,product.getProductnum());
+					resultMap = setTmpMap(resultMap,submitUser.getId(),aStandard.getUserid(),s_sharepay,product.getProductnum());
 					
 					//处理代理
-					Public_user aUser = userDao.get(aStandard.getParentid());
+					Public_user aUser = userDao.get(aStandard.getUserid());
 					HashMap<String,HashMap<String,Object>> aMap = new HashMap<String,HashMap<String,Object>>();
 					HashMap<String,Object> a_shareMap = new HashMap<String,Object>();
 					a_shareMap.put("identity", aUser.getIdentity());
@@ -660,38 +643,86 @@ public class PublicUserBankService implements IPublicUserBankService{
 					
 					shareList.add(aMap);
 					
-					resultMap = setTmpMap(resultMap,aUser.getId(),a_sharepay,product.getProductnum());
+					resultMap = setTmpMap(resultMap,aUser.getId(),"1",a_sharepay,product.getProductnum());
 				}
 			}
+			
+			//将单个利润分配json，存入订单商品
+			String json = JSON.toJSONString(shareList);
+			product.setSharekey(json);
+			orderProductDao.update(product);
+			
 		}
 		
+		//获取订单商品的id集合
+		StringBuilder sb = new StringBuilder();  
+	    if (proList != null && proList.size() > 0) {  
+	        for (int i = 0; i < proList.size(); i++) {  
+	            if (i < proList.size() - 1) {  
+	                sb.append(proList.get(i) + ",");  
+	            } else {  
+	                sb.append(proList.get(i));  
+	            }  
+	        }  
+	    }  
+		
 		//接下来该写入sharebill表和bank表
-		//TODO 做到这里了
-		sdddd 放个错误，从这里开始写
+		//处理bank
+		for (Map.Entry<String, HashMap<String,Object>> entry : resultMap.entrySet()) {
+		    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+		    String userid = entry.getKey();
+		    HashMap<String,Object> tmpMap = entry.getValue();
+		    String parentid = tmpMap.get("parentid").toString();
+		    String total = tmpMap.get("total").toString();
+		    String number = tmpMap.get("number").toString();
+		    String username = tmpMap.get("username").toString();
+		    
+		    //获取bank
+		    Public_user_bank bank = getUserBank(userid,parentid);
+		    Float sellbank = bank.getSellbank() + Float.valueOf(total);
+		    sellbank = (float)(Math.round(sellbank*100))/100;//输出小数点2位
+		    //平台售额累计
+		    bank.setSellbank(sellbank);
+		    
+		    userBankDao.update(bank);
+		    
+		    //处理sharebill
+		    Share_bill sBill = new Share_bill();
+		    sBill.setId(UUID.randomUUID().toString());
+		    sBill.setOrderid(order.getId());
+		    sBill.setBankid(bank.getId());
+		    sBill.setUserid(userid);
+		    sBill.setUsername(username);
+			sBill.setOrderproductids(sb.toString());
+			sBill.setSharepay(Float.valueOf(total));
+			sBill.setSharenumber(Integer.valueOf(number));
+			sBill.setSharetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+			sBill.setShareovertime("");
+			sBill.setSharestate(0);
+			sBill.setRemarks("");
+			sBill.setSubmitname(submitUser.getCompanyname());
 			
-		Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
-		//平台账户,目前不考虑三级的问题  后期可添加上级直属账户ID字段
-		Public_user_bank bank_PT = getUserBank("1", "1");
-		//充值金额
-		float amount = bill.getAccount_real(); //实收款
-		//平台账户变更
-		bank_PT.setTakenbank(bank_PT.getTakenbank() + amount);		//增加平台可提现账户
-		bank_PT.setIncomebank(bank_PT.getIncomebank() + amount);	//增加平台收入总和
-		bank.setDepositbank(bank.getDepositbank() + amount);		//充值累计（当前操作账户）
+			shareBillDao.save(sBill);
+		}
 		
+		//更改订单状态
+		order.setOrderstatus(1);
+		order.setOrderstatusmemo("待发货");
+		order.setIsshare(0);
+		order.setIsshareover(0);
+		orderDao.update(order);
 		
-		//平台账户变更
-		bank_PT = userBankDao.update(bank_PT);
-		//当前账户
-		bank = userBankDao.update(bank);
-		//更新流水表状态
+		//更改第三方支付交易流水
 		bill.setStatus(1); //成功
+		bill.setTrantype(3);
+		bill.setTrantypetxt("售额(全款)");
 		bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 		bill = incomeBillDao.update(bill);
-		//添加充值消息
+		
+		//添加消息
 		int messagetype = 1;	//业务消息
-		String messagetxt = "【"+bill.getU_company()+"】进行了充值，充值金额为："+amount;
-		createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
+		String messagetxt = "由机构["+bill.getU_company()+"]提交的普通会员["+bill.getU_username()+"]订单["+order.getOrdernumber()+"]已完成支付，并经过第三方支付机构返回成功结果，金额为："+order.getOrdertotal();
+		createMsg(submitUser.getId(), submitUser.getCompanyname(),"1",bill.getP_company(), messagetype, messagetxt,order.getId());
 		
 		return 1;
 	}

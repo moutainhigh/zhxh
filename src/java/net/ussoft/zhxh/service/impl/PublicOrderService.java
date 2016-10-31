@@ -19,6 +19,7 @@ import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.dao.PublicUserLinkDao;
 import net.ussoft.zhxh.dao.PublicUserPathDao;
+import net.ussoft.zhxh.dao.ShareBillDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_cat;
 import net.ussoft.zhxh.model.Public_log;
@@ -32,6 +33,7 @@ import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Public_user_link;
 import net.ussoft.zhxh.model.Public_user_path;
+import net.ussoft.zhxh.model.Share_bill;
 import net.ussoft.zhxh.service.IPublicOrderService;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.MakeQuerySql;
@@ -67,6 +69,8 @@ public class PublicOrderService implements IPublicOrderService{
 	private PublicLogDao logDao;
 	@Resource
 	private PublicMessageDao msgDao;
+	@Resource
+	private ShareBillDao shareBillDao;	//
 	
 	@Override
 	public Public_order getById(String id) {
@@ -531,15 +535,32 @@ public class PublicOrderService implements IPublicOrderService{
 		//改变订单状态
 		order.setOrderstatus(3);	//已签收
 		order.setOrderstatusmemo("已签收");
+		//判断是否是普通会员订单
+//		if ("p".equals(order.getOrdertype())) {
+//			order.setIsshare(1);
+//		}
 		//增加签收时间
 		order.setSigntime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 		order = orderDao.update(order);
-		//订单操作日志
-		saveLog(order.getUserid(), order.getParentid(), "sendorder", order.getOrdernumber()+"-已签收", order.getOrdertotal(), order.getId());
-		//订单已签收-消息
-		int messagetype = 1;	//业务消息
-		String messagetxt = order.getU_username()+"，的订单已签收！订单号："+order.getOrdernumber();
-		createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		if ("p".equals(order.getOrdertype())) {
+			Public_user submitUser = userDao.get(order.getSubmitid());
+			Public_user pUser = userDao.get(order.getUserid());
+			//订单操作日志
+			saveLog(order.getSubmitid(), order.getParentid(), "sendorder", order.getOrdernumber()+"-已签收", order.getOrdertotal(), order.getId());
+			//订单已签收-消息
+			int messagetype = 1;	//业务消息
+			String messagetxt = "由机构["+submitUser.getCompanyname()+"]提交的普通会员["+pUser.getUsername()+"]订单["+order.getOrdernumber()+"]已完成签收,订单号："+order.getOrdernumber();
+			createMsg(submitUser.getId(), submitUser.getCompanyname(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		}
+		else {
+			//订单操作日志
+			saveLog(order.getUserid(), order.getParentid(), "sendorder", order.getOrdernumber()+"-已签收", order.getOrdertotal(), order.getId());
+			//订单已签收-消息
+			int messagetype = 1;	//业务消息
+			String messagetxt = order.getU_username()+"，的订单已签收！订单号："+order.getOrdernumber();
+			createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		}
+		
 		return 1;
 	}
 	
@@ -616,5 +637,48 @@ public class PublicOrderService implements IPublicOrderService{
 		msg.setActiveid(activeid);
 		return msgDao.save(msg);
 	}
+
+	/*------------------普通会员订单处理---------------*/
+	@Transactional("txManager")
+	@Override
+	public void setIsshare() {
+		//获取超过15日的
+		String sql = "select * from public_order where orderstatus=? and parentid =? and signtime < ? and isshare=? and isshareover != ?";
+		List<Object> values = new ArrayList<Object>();
+		
+		values.add(3);
+		values.add("1");
+		String today = DateUtil.getNowTime("yyyy-MM-dd");
+		String t = DateUtil.getAfterDate(today,-15);
+		values.add(t);
+		values.add(0);
+		values.add(1);
+		
+		List<Public_order> orderList = orderDao.search(sql, values);
+		
+		if (orderList.size() > 0) {
+			for (Public_order order : orderList) {
+				order.setIsshare(1);
+				orderDao.update(order);
+			}
+			
+			Public_user user = userDao.get("1");
+			
+			String messagetxt = "共有["+orderList.size()+"]个普通会员订单超过15日，可以进行分润，请及时处理。";
+			createMsg(user.getId(),user.getCompanyname(),user.getId(),user.getCompanyname(),1,messagetxt,"");
+		}
+		
+	}
+
+	@Override
+	public List<Share_bill> getOrderSharebill(String orderid) {
+		String sql = "select * from share_bill where orderid = ?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(orderid);
+		return shareBillDao.search(sql, values);
+		
+	}
+	
+	
 
 }

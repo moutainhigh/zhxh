@@ -2,7 +2,6 @@ package net.ussoft.zhxh.web.order;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -92,7 +91,7 @@ public class OrderController extends BaseConstroller {
 		CommonUtils.removeSessionAttribute(request, Constants.ORDER_MESSAGE1_SESSION);
 		CommonUtils.removeSessionAttribute(request, Constants.ORDER_MESSAGE2_SESSION);
 		
-		Public_user userSession = (Public_user) CommonUtils.getSessionAttribute(request, Constants.PC_USER_SESSION);
+		Public_user userSession = getSessionUser();
 		//获取系统消息数量
 		int m0 = messageService.getMessageNum(userSession.getId(), 0);
 		int m1 = messageService.getMessageNum(userSession.getId(), 1);
@@ -127,6 +126,12 @@ public class OrderController extends BaseConstroller {
 		CommonUtils.setSessionAttribute(request, Constants.ORDER_STATUS_MSG2, s2);
 		CommonUtils.setSessionAttribute(request, Constants.ORDER_STATUS_MSG3, s3);
 		CommonUtils.setSessionAttribute(request, Constants.ORDER_STATUS_MSG4, s4);
+		
+		
+		//判断登录帐户是否为平台，如果是，去处理订单表可以结算的分润订单
+		if (userSession.getId().equals("1")) {
+			orderService.setIsshare();
+		}
 		
 		return new ModelAndView("/view/order/main", modelMap);
 	}

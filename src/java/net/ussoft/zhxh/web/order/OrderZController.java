@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +33,7 @@ import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Public_user_path;
+import net.ussoft.zhxh.model.Share_bill;
 import net.ussoft.zhxh.service.IIncomeBillService;
 import net.ussoft.zhxh.service.IPublicMessageService;
 import net.ussoft.zhxh.service.IPublicOrderPathService;
@@ -77,7 +77,7 @@ public class OrderZController extends BaseConstroller {
 	public ModelAndView newOrder (String userid,ModelMap modelMap) throws Exception {
 		Public_user user = getSessionUser();
 		//收货地址,后期添加设置默认，目前随机取一条
-		List<Public_user_path> userPathList = userPathService.list(userid);
+		List<Public_user_path> userPathList = userPathService.list(user.getId());
 		String address_id = "",address = "";
 		if(userPathList.size() > 0){
 			Public_user_path userpath = userPathList.get(0);
@@ -94,7 +94,6 @@ public class OrderZController extends BaseConstroller {
 	
 	/**
 	 * 机构经销的品牌
-	 * @param parentid
 	 * 
 	 * */
 	@RequestMapping(value="/brandlist",method=RequestMethod.POST)
@@ -282,7 +281,7 @@ public class OrderZController extends BaseConstroller {
 		Public_user user2 = userService.getById(buyuserid);
 		bill.setUserid(user2.getId());
 		bill.setU_username(user2.getUsername());
-		bill.setU_company(user2.getCompanyname());
+		bill.setU_company(user.getCompanyname());
 		//金额
 		bill.setAccount_receivable(order.getOrdertotal());//应收款
 		bill.setAccount_real(0f);//实收款
@@ -630,6 +629,76 @@ public class OrderZController extends BaseConstroller {
 		
 		return;
 	}
+	
+	/**
+	 * 订单商品.供分润按钮，打开分润明细
+	 * */
+	@RequestMapping(value="/orderShareProduct",method=RequestMethod.POST)
+	public void orderShareProduct(String orderid, HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if(orderid == null || "".equals(orderid)){
+			out.print("error");
+			return;
+		}
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		//订单
+		Public_order order = orderService.getById(orderid);
+		//订单商品
+		Map<String, Object> op_map = new LinkedHashMap<String, Object>();
+		op_map.put("orderid = ", orderid);
+		List<Public_order_product> proList = orderProServivce.list(op_map);
+		
+		//分润流水
+		List<Share_bill> sbList = orderService.getOrderSharebill(orderid);
+		
+		//支付情况
+		Income_bill bill = incomeBillService.getByOrderid(order.getId());
+		
+		List<Public_order> orderlist = new ArrayList<Public_order>();
+		orderlist.add(order);
+		orderlist = setOrderUsername(orderlist, "buyuser");
+		map.put("order",orderlist.get(0));
+		map.put("products", proList);
+		map.put("sbList", sbList);
+		map.put("income", bill);
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	//假的。用来演示普通会员订单支付
+	@RequestMapping(value="/orderpay",method=RequestMethod.POST)
+	public void orderpay(String orderid, HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if(orderid == null || "".equals(orderid)){
+			out.print("error");
+			return;
+		}
+		
+		Public_order order = orderService.getById(orderid);
+		
+		Income_bill bill = incomeBillService.getByOrderid(orderid);
+		bill.setBindCard("12444443"); 		//已绑短卡号,信用卡快捷支付绑定卡信息后返回前六后四位信用卡号
+		bill.setBindMobile("13899887777"); 	//已绑短手机尾号,信用卡快捷支付绑定卡信息后返回前三位后四位手机号码
+		bill.setPayAmount(order.getOrdertotal()); 		//该金额代表商户快钱账户最终收到的金额
+		bill.setAccount_real(order.getOrdertotal());
+		bill.setFee(0f); 					//快钱收取商户的手续费，单位为分
+		bill.setDealId("2222"); 		//快钱交易号
+		bill.setBankDealId("3333"); 	//银行交易号
+		bill.setDealTime("2016-10-11"); 		//快钱交易时间
+		
+		Public_user user = userService.getById(bill.getUserid());
+		int num = bankService.rechargeZ(bill, user.getIdentity());
+		
+		out.print("success");
+	}
+	
+	
 	
 	
 }

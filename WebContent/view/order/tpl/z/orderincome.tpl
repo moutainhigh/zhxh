@@ -20,7 +20,7 @@
 			<td style="text-align: left;">{$T.downpayment}</td>
 			<td style="text-align: left;">{$T.loan_amount}</td>
 			<td style="text-align: left;">{$T.createtime}</td>
-			<td style="text-align: left;">{$T.stagesbanktime}</td>
+			<td style="text-align: left;">{$T.banktime}</td>
 			<td style="text-align: left;">
 				{#if $T.status == -1}
 					支付失败

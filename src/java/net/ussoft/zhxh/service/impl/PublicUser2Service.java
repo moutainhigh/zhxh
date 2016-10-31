@@ -15,10 +15,12 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.queryparser.xml.builders.UserInputQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.ussoft.zhxh.dao.PublicBrandDao;
+import net.ussoft.zhxh.dao.PublicDisConfigDao;
 import net.ussoft.zhxh.dao.PublicProductSizeDao;
 import net.ussoft.zhxh.dao.PublicSetBonusesRatioDao;
 import net.ussoft.zhxh.dao.PublicSetUserStandardDao;
@@ -28,6 +30,7 @@ import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.dao.PublicUserLinkDao;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
+import net.ussoft.zhxh.model.Public_dis_config;
 import net.ussoft.zhxh.model.Public_product_size;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_set_user_standard;
@@ -55,6 +58,8 @@ public class PublicUser2Service implements IPublicUser2Service{
 	private PublicBrandDao brandDao;
 	@Resource
 	private PublicUserBankDao bankDao;
+	@Resource
+	private PublicDisConfigDao disConfigDao;
 
 	/*
 	 * (non-Javadoc)
@@ -451,6 +456,14 @@ public class PublicUser2Service implements IPublicUser2Service{
 			tmp.setProductid(productid);
 		}
 		
+		Float buyerdis_down = 0f;
+		if (null != parentid && "1".equals(parentid)) {
+			Public_dis_config disConfig = disConfigDao.get("1");
+			buyerdis_down = disConfig.getBuyerdis_down();
+		}
+		
+		String sql = "select * from public_set_user_standard where parentid=? and userid=? and sizeid=?";
+		List<Object> values = new ArrayList<Object>();
 		for (String string : idArr) {
 			tmp.setId(UUID.randomUUID().toString());
 			tmp.setSizeid(string);
@@ -458,6 +471,22 @@ public class PublicUser2Service implements IPublicUser2Service{
 			if (null == productid || "".equals(productid)) {
 				Public_product_size size = sizeDao.get(string);
 				tmp.setProductid(size.getProductid());
+			}
+			
+			//填入基本的折扣。如果parentid是平台，按最低折扣来填入。如果是代理，获取平台为代理设置的该商品的折扣，不能低于这个折扣
+			if (null != parentid && "1".equals(parentid)) {
+				tmp.setBuyerdis(buyerdis_down);
+			}
+			else {
+				//获取平台给代理设置的该商品折扣
+				values.clear();
+				values.add("1");
+				values.add(parentid);
+				values.add(string);
+				
+				Public_set_user_standard tmpSt = userStandardDao.search(sql, values).get(0);
+				
+				tmp.setBuyerdis(tmpSt.getBuyerdis());
 			}
 			
 			userStandardDao.save(tmp);
@@ -1063,25 +1092,42 @@ public class PublicUser2Service implements IPublicUser2Service{
 	 */
 	@Transactional("txManager")
 	@Override
-	public boolean updateUserSizeStandard(String ids, String updateKey, String updateValue) {
+	public int updateUserSizeStandard(String ids, String updateKey, String updateValue) {
+		
+		int num = 0;
 		String[] idsArr = ids.split(",");
-		List<String> idList = Arrays.asList(idsArr);
-		StringBuffer sb = new StringBuffer();
-		List<Object> values = new ArrayList<Object>();
-		sb.append("update public_set_user_standard set ");
-		sb.append(updateKey).append("=?");
-		
-		values.add(updateValue);
-		sb.append("where id in (");
-		
-		Serializable[] ss=new Serializable[idList.size()];
-		Arrays.fill(ss, "?");
-		sb.append(StringUtils.join(ss,','));
-		sb.append(")");
-		values.addAll(idList);
-		
-		userStandardDao.update(sb.toString(), values);
-		return true;
+		//判断是否是修改折扣，如果是折扣，就每个循环去更改，判断设置的折扣是否低于标准
+		if ("buyerdis".equals(updateKey)) {
+			for (String id : idsArr) {
+				Public_set_user_standard tmp = userStandardDao.get(id);
+				Float tmpV = Float.valueOf(updateValue);
+				if (tmpV > tmp.getBuyerdis()) {
+					tmp.setBuyerdis(tmpV);
+					userStandardDao.update(tmp);
+					num++;
+				}
+			}
+		}
+		else {
+			List<String> idList = Arrays.asList(idsArr);
+			StringBuffer sb = new StringBuffer();
+			List<Object> values = new ArrayList<Object>();
+			sb.append("update public_set_user_standard set ");
+			sb.append(updateKey).append("=?");
+			
+			values.add(updateValue);
+			sb.append("where id in (");
+			
+			Serializable[] ss=new Serializable[idList.size()];
+			Arrays.fill(ss, "?");
+			sb.append(StringUtils.join(ss,','));
+			sb.append(")");
+			values.addAll(idList);
+			
+			userStandardDao.update(sb.toString(), values);
+			num = idsArr.length;
+		}
+		return num;
 	}
 
 	/*

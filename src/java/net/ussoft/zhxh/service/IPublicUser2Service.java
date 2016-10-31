@@ -171,7 +171,7 @@ public interface IPublicUser2Service {
 	 * @param updateValue
 	 * @return
 	 */
-	public boolean updateUserSizeStandard(String ids ,String updateKey,String updateValue);
+	public int updateUserSizeStandard(String ids ,String updateKey,String updateValue);
 	/**
 	 * 保存机构的规格设置标准
 	 * @param objs

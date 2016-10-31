@@ -242,6 +242,37 @@
     			//alert("滑动向上缩小完毕");
     		});
     	}
+    	
+    	function sharepay(orderid) {
+    		var pHeight = $(window.parent).height();
+	   		var pWidth = $(window.parent).width();
+    		layer.open({
+			    type: 2,
+			    title:'订单分配利润',
+			    area: [pWidth - 300 +'px', pHeight - 200 + 'px'],
+			    fix: false, //不固定
+			    maxmin: false,
+			    content: "${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/z/setShare",
+			    btn: ['确 定', '取 消'],
+			    success:function(layero,index){
+			    	var win = window['layui-layer-iframe' + index].window;
+			    	win.setData(orderid);
+			    },
+			  	yes: function(index,layero){
+			  		/* var win = parent.window['layui-layer-iframe' + index].window;
+			  		var data = win.getData();
+			  		if(data.length > 0){
+			  			disposal(data);//处理数据，并加载
+			  			parent.parent.layer.closeAll();	//关闭窗体
+			  		}else{
+			  			parent.parent.layer.msg("您没有选择任何商品",{icon:6});
+			  		} */
+			  	},
+			    end: function(){
+			    	
+			    }
+			});
+    	}
     </script>
 </head>
 <body>

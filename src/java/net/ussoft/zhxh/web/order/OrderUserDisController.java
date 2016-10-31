@@ -269,9 +269,18 @@ public class OrderUserDisController extends BaseConstroller {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		userService.updateUserSizeStandard(ids, updateKey, updateValue);
+		int num = userService.updateUserSizeStandard(ids, updateKey, updateValue);
 		
-		out.print("success");
+		String resultStr = "success";
+		String[] idsArr = ids.split(",");
+		if (num == 0) {
+			resultStr = "error";
+		}
+		else if (num < idsArr.length) {
+			resultStr = "error_num";
+		}
+		
+		out.print(resultStr);
 	}
 	
 	/**

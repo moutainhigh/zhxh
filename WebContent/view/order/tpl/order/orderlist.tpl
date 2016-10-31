@@ -7,6 +7,7 @@
 			<th width="*">商家名称</th>
 			<th width="180">单号</th>
 			<th width="180">下单时间</th>
+			<th width="180">签收时间</th>
 			<th width="100">金额</th>
 			<th width="100">状态</th>
 			<th width="360">操作</th>
@@ -19,6 +20,7 @@
 					<td>{$T.row.p_username}</td>
 					<td>{$T.row.ordernumber}</td>
 					<td>{$T.row.ordertime}</td>
+					<td>{$T.row.signtime}</td>
 					<td style="text-align: right;">￥{$T.row.ordertotal}</td>
 					<td><span class="tag bg-order{$T.row.orderstatus}">{$T.row.orderstatusmemo}</span></td>
 					<td><button class="button button-small border-blue" onclick="orderdetails('{$T.row.id}')">订单详情</button>

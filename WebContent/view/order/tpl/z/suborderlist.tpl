@@ -7,6 +7,7 @@
 			<th width="*">客户名称</th>
 			<th width="180">单号</th>
 			<th width="180">下单时间</th>
+			<th width="180">签收时间</th>
 			<th width="100">金额</th>
 			<th width="100">状态</th>
 			<th width="360">操作</th>
@@ -19,11 +20,15 @@
 					<td>{$T.row.u_username}</td>
 					<td>{$T.row.ordernumber}</td>
 					<td>{$T.row.ordertime}</td>
+					<td>{$T.row.signtime}</td>
 					<td style="text-align: right;">￥{$T.row.ordertotal}</td>
 					<td><span class="tag bg-order{$T.row.orderstatus}">{$T.row.orderstatusmemo}</span></td>
 					<td><button class="button button-small border-blue" onclick="orderdetails('{$T.row.id}')">订单详情</button>
 						{#if $T.row.orderstatus == 1}
 							<button class="button button-small border-green" onclick="sendOut('{$T.row.id}')">确认发货</button>
+						{#/if}
+						{#if $T.row.ordertype == "p" && $T.row.isshare == 1 && $T.row.isshareover != 1 }
+							<button class="button button-small border-red" onclick="sharepay('{$T.row.id}')">分配利润</button>
 						{#/if}
 					</td>
 				</tr>
