@@ -485,6 +485,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 			//1、判断提交机构是否为平台.如果是提交机构是平台，那就啥也不用计算tm的了。
 			if ("1".equals(submitUser.getId())) {
 				HashMap<String,Object> j_shareMap = new HashMap<String,Object>();
+				j_shareMap.put("userid", jUser.getId());
 				j_shareMap.put("identity", jUser.getIdentity());
 				j_shareMap.put("identitymemo", jUser.getIdentitymemo());
 				j_shareMap.put("companyname", jUser.getCompanyname());
@@ -516,6 +517,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 //				int j_sharepay_int = Math.round(j_sharepay);
 //				int a_sharepay_int = Math.round(totalpay) - j_sharepay_int;
 				HashMap<String,Object> j_shareMap = new HashMap<String,Object>();
+				j_shareMap.put("userid", jUser.getId());
 				j_shareMap.put("identity", jUser.getIdentity());
 				j_shareMap.put("identitymemo", jUser.getIdentitymemo());
 				j_shareMap.put("companyname", jUser.getCompanyname());
@@ -531,6 +533,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 				//处理提交机构的
 				HashMap<String,HashMap<String,Object>> sMap = new HashMap<String,HashMap<String,Object>>();
 				HashMap<String,Object> s_shareMap = new HashMap<String,Object>();
+				s_shareMap.put("userid", submitUser.getId());
 				s_shareMap.put("identity", submitUser.getIdentity());
 				s_shareMap.put("identitymemo", submitUser.getIdentitymemo());
 				s_shareMap.put("companyname", submitUser.getCompanyname());
@@ -558,6 +561,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 //					int j_sharepay_int = Math.round(j_sharepay);
 //					int a_sharepay_int = Math.round(totalpay) - j_sharepay_int;
 					HashMap<String,Object> j_shareMap = new HashMap<String,Object>();
+					j_shareMap.put("userid", jUser.getId());
 					j_shareMap.put("identity", jUser.getIdentity());
 					j_shareMap.put("identitymemo", jUser.getIdentitymemo());
 					j_shareMap.put("companyname", jUser.getCompanyname());
@@ -572,6 +576,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					//处理提交机构的
 					HashMap<String,HashMap<String,Object>> sMap = new HashMap<String,HashMap<String,Object>>();
 					HashMap<String,Object> s_shareMap = new HashMap<String,Object>();
+					s_shareMap.put("userid", submitUser.getId());
 					s_shareMap.put("identity", submitUser.getIdentity());
 					s_shareMap.put("identitymemo", submitUser.getIdentitymemo());
 					s_shareMap.put("companyname", submitUser.getCompanyname());
@@ -604,6 +609,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					
 					//写入平台
 					HashMap<String,Object> j_shareMap = new HashMap<String,Object>();
+					j_shareMap.put("userid", jUser.getId());
 					j_shareMap.put("identity", jUser.getIdentity());
 					j_shareMap.put("identitymemo", jUser.getIdentitymemo());
 					j_shareMap.put("companyname", jUser.getCompanyname());
@@ -618,6 +624,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					//处理提交机构的
 					HashMap<String,HashMap<String,Object>> sMap = new HashMap<String,HashMap<String,Object>>();
 					HashMap<String,Object> s_shareMap = new HashMap<String,Object>();
+					s_shareMap.put("userid", submitUser.getId());
 					s_shareMap.put("identity", submitUser.getIdentity());
 					s_shareMap.put("identitymemo", submitUser.getIdentitymemo());
 					s_shareMap.put("companyname", submitUser.getCompanyname());
@@ -634,6 +641,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					Public_user aUser = userDao.get(aStandard.getUserid());
 					HashMap<String,HashMap<String,Object>> aMap = new HashMap<String,HashMap<String,Object>>();
 					HashMap<String,Object> a_shareMap = new HashMap<String,Object>();
+					a_shareMap.put("userid", aUser.getId());
 					a_shareMap.put("identity", aUser.getIdentity());
 					a_shareMap.put("identitymemo", aUser.getIdentitymemo());
 					a_shareMap.put("companyname", aUser.getCompanyname());
@@ -651,6 +659,12 @@ public class PublicUserBankService implements IPublicUserBankService{
 			//将单个利润分配json，存入订单商品
 			String json = JSON.toJSONString(shareList);
 			product.setSharekey(json);
+			
+			String shareValue = "";
+			for (HashMap<String, HashMap<String, Object>> map : shareList) {
+				shareValue += "[" + map.get("companyname") + "] 折扣 [" + map.get("userStandard") + "] 数量 [" + map.get("productnum") + "] 分润 [" + map.get("sharepay") + "].";
+			}
+			product.setSharevalue(shareValue);
 			orderProductDao.update(product);
 			
 		}
@@ -660,7 +674,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 	    if (proList != null && proList.size() > 0) {  
 	        for (int i = 0; i < proList.size(); i++) {  
 	            if (i < proList.size() - 1) {  
-	                sb.append(proList.get(i).getId() + ",");  
+	                sb.append(proList.get(i).getId() + ",");
 	            } else {  
 	                sb.append(proList.get(i).getId());  
 	            }  

@@ -49,7 +49,6 @@
                 	var order = json.order;	//订单
                 	//加载支付
             		$("#orderProductList").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/z/orderShare.tpl");
-                	
                     $("#orderProductList").processTemplate(json);
                 	
                 },
@@ -57,6 +56,15 @@
                     alert(jqXHR.responseText);
                 }
            	});
+    	}
+    	
+    	function inc(json) {
+    		var jsonArr = JSON.parse(json);
+    		var result = "";
+    		for(var i=0;i<jsonArr.length;i++) {
+    			result += "[" + jsonArr[i].companyname + "] 折扣 [" + jsonArr[i].userStandard + "] 数量 [" + jsonArr[i].productnum + "] 分润 [" + jsonArr[i].sharepay + "]."
+    		}
+    		return result;
     	}
     	
     	//

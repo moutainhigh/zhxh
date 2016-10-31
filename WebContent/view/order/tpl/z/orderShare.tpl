@@ -78,8 +78,8 @@
 					<td style="border-top: 0px solid #ddd;" widtd="80">规格</td>
 					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">数量</td>
 					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">单价</td>
-					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">折扣</td>
 					<td style="border-top: 0px solid #ddd;" widtd="100" align="center">小计</td>
+					<td style="border-top: 0px solid #ddd;" widtd="100" align="left">分润明细</td>
 				</tr>
 				{#foreach $T.products as row}
 					<tr class="tr">
@@ -89,8 +89,8 @@
 						<td>{$T.row.productsize}</td>
 						<td align="center">{$T.row.productnum}</td>
 						<td align="center">￥{$T.row.price}</td>
-						<td>{$T.row.buyerdis}</td>
 						<td align="center">￥{$T.row.price*$T.row.productnum}</td>
+						<td align="center">{$T.row.sharevalue}</td>
 					</tr>
 				{#/for}
 			</tbody>
