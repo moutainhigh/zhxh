@@ -90,7 +90,7 @@
 						<td align="center">{$T.row.productnum}</td>
 						<td align="center">￥{$T.row.price}</td>
 						<td>{$T.row.buyerdis}</td>
-						<td style="text-align: right;">￥{$T.row.subtotal_txt}</td>
+						<td align="center">￥{$T.row.price*$T.row.productnum}</td>
 					</tr>
 				{#/for}
 			</tbody>

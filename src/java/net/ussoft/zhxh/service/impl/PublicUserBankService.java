@@ -592,6 +592,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					
 					//2、计算店的。
 					Float sBuyerdis = 1-userStandard.getBuyerdis();
+					sBuyerdis = (float)(Math.round(sBuyerdis*100))/100;//输出小数点2位
 					Float s_sharepay = totalpay*sBuyerdis;
 					
 					//3、剩余就是代理的
@@ -659,9 +660,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 	    if (proList != null && proList.size() > 0) {  
 	        for (int i = 0; i < proList.size(); i++) {  
 	            if (i < proList.size() - 1) {  
-	                sb.append(proList.get(i) + ",");  
+	                sb.append(proList.get(i).getId() + ",");  
 	            } else {  
-	                sb.append(proList.get(i));  
+	                sb.append(proList.get(i).getId());  
 	            }  
 	        }  
 	    }  
