@@ -181,6 +181,76 @@ function loadData_disBillDetail(){
 }
 
 /**
+ * 平台售额-账单列表
+ * */
+function shareBillDetail(uid){
+	$("#_userid").val(uid);
+	
+	initPage();
+	loadData_shareBillDetail();
+}
+
+//加载数据-平台售额-账单列表
+function loadData_shareBillDetail(){
+	var _data = {};
+	_data.userid = $("#_userid").val();
+	_data.pageIndex = pageIndex;
+	_data.pageSize = pageSize;
+	$.ajax({
+		async:false,
+        url: getRootPath_web() + "/orderUserBank/shareBill.htmls",
+        data: _data,
+        type: "post",
+        dataType:"json",
+        success: function (json) {
+        	totalPage = Math.ceil(json.total/pageSize);
+        	$("#billDetail").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/shareBillDetail.tpl");
+        	$("#billDetail").setParam('rowCount', json.total);
+     		$("#billDetail").setParam('pageSize', pageSize);
+     		$("#billDetail").setParam('pageIndex', pageIndex);
+     		$("#billDetail").setParam('totalPage', totalPage);
+     		$("#billDetail").setParam('userid', _data.userid);
+        	$("#billDetail").processTemplate(json.data);
+        	//
+        	pageSel(5);
+            pageEnter(5);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(jqXHR.responseText);
+        }
+   });
+}
+function shareDetails(uid,ids){
+	$.ajax({
+		async:false,
+        url: getRootPath_web() + "/orderUserBank/shareBillDetails.htmls",
+        data: {'orderproductids':ids},
+        type: "post",
+        dataType:"json",
+        success: function (json) {
+        	alert(json.data[0].sharekey);
+        	
+        	layer.open({
+      		  type: 1,
+      		  area: ['680px', ''],
+      		  shade: false,
+      		  title: false, //不显示标题
+      		  content: $('#details'), //捕获的元素
+      		  cancel: function(index){
+      			  layer.closeAll();
+      		    //layer.close(index);
+      		    //this.content.show();
+      		    //layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', {time: 5000, icon:6});
+      		  }
+      		});
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(jqXHR.responseText);
+        }
+   });
+}
+
+/**
  * 分页参数初始化
  * */
 function initPage(){
@@ -244,6 +314,8 @@ function page_loadData(type){
 		loadData_quotaBillDetail();		//配额-账单列表
 	}else if(type == 4){
 		loadData_disBillDetail();		//返利、奖励-账单列表
+	}else if(type == 5){
+		loadData_shareBillDetail();		//平台售额
 	}
 }
 

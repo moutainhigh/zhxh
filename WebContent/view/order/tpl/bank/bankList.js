@@ -249,7 +249,6 @@ function save_ithdrawal_bill() {
             type: "post",
             dataType:"text",
             success: function (text) {
-            	alert(text);
             	if(text == "codeerror"){
             		layer.msg("验证码错误",{icon:6});
             	}else if(text == "3"){

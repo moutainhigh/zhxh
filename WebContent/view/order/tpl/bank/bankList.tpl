@@ -33,7 +33,7 @@
 						<tr>
 							<td align="center">平台售额总计</td>
 							<td>￥{$T.row.sellbank}</td>
-							<td align="right"><a href="javascript:;">查看记录</a></td>
+							<td align="right"><a href="javascript:;" onclick="shareBillDetail('{$T.row.userid}')">查看记录</a></td>
 						</tr>
 					{#elseif $P.identity == "A"}
 						<tr>
@@ -59,7 +59,7 @@
 						<tr>
 							<td align="center">平台售额总计</td>
 							<td>￥{$T.row.sellbank}</td>
-							<td align="right"><a href="javascript:;">查看记录</a></td>
+							<td align="right"><a href="javascript:;" onclick="shareBillDetail('{$T.row.userid}')">查看记录</a></td>
 						</tr>
 						<tr>
 							<td align="center">配额总计</td>
@@ -85,7 +85,7 @@
 						<tr>
 							<td align="center">平台售额总计</td>
 							<td>￥{$T.row.sellbank}</td>
-							<td align="right"><a href="javascript:;">查看记录</a></td>
+							<td align="right"><a href="javascript:;" onclick="shareBillDetail('{$T.row.userid}')">查看记录</a></td>
 						</tr>
 						<tr>
 							<td align="center">平台售额可提现帐户</td>
