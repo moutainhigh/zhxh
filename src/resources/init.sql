@@ -40,6 +40,11 @@ DELETE FROM public_phone_code_log;
 DELETE FROM public_log;
 -- 消息表
 DELETE FROM public_message;
+-- 
+DELETE FROM income_bill;
+DELETE FROM spending_bill;
+DELETE FROM quota_bill;
+DELETE FROM share_bill;
 
 
 
