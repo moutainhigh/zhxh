@@ -409,10 +409,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 		if (null != m) {
 			Float t = (float)m.get("total");
 			if (null != t) {
-				t = t+pay*num;
+				t = t+pay;
 			}
 			else {
-				t = pay*num;
+				t = pay;
 			}
 			m.put("total", t);
 			
@@ -429,7 +429,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 			HashMap<String,Object> m1 = new HashMap<String,Object>();
 			Public_user user = userDao.get(userid);
 			m1.put("username", user.getCompanyname());
-			m1.put("total",pay*num);
+			m1.put("total",pay);
 			m1.put("number", num);
 			m1.put("parentid", parentid);
 			resultMap.put(userid, m1);
