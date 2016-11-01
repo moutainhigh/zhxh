@@ -220,6 +220,7 @@ function loadData_shareBillDetail(){
         }
    });
 }
+//平台售额-详细
 function shareDetails(uid,ids){
 	$.ajax({
 		async:false,
@@ -229,21 +230,35 @@ function shareDetails(uid,ids){
         dataType:"json",
         success: function (json) {
         	var data = json.data;
-        	/*for(i=0;i<data.length;i++){
-        		var m1 = data[i].sharekey;
-        		var ms = JSON.parse(m1);
+        	var mDataArr = [];
+        	for (i=0;i<data.length;i++) {
+        		var m = data[i];
+        		var mData = {};
+        		mData.brandname = m.brandname;
+        		mData.productname = m.productname;
+        		mData.productsize = m.productsize;
+        		mData.price = m.price;
+        		mData.productnum = m.productnum;
+        		var skey = "";
+        		var ms = JSON.parse(m.sharekey);
         		for(var key	 in ms){
         			for(var k in ms[key]){
-        				if(uid == ms[key][k].userid){
-        					alert(ms[key][k].companyname);
+        				if(uid == "1"){ //平台查看所有机构分润情况
+        					skey += "["+ms[key][k].companyname+":"+ms[key][k].sharepay+"]";
+        				}else{
+        					if(uid == ms[key][k].userid){
+            					skey += ms[key][k].sharepay;
+            					break;
+            				}	
         				}
             		}
         		}
-        	}*/
-        
+        		mData.skey = skey;
+        		mDataArr.push(mData);
+        	}
         	
         	$("#share_details").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/shareBillDetails.tpl");
-        	$("#share_details").processTemplate(json.data);
+        	$("#share_details").processTemplate(mDataArr);
         	//alert(json.data[0].sharekey);
         	layer.open({
       		  type: 1,
@@ -255,7 +270,6 @@ function shareDetails(uid,ids){
       			  layer.closeAll();
       		    //layer.close(index);
       		    //this.content.show();
-      		    //layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', {time: 5000, icon:6});
       		  }
       		});
         },
@@ -263,6 +277,25 @@ function shareDetails(uid,ids){
             alert(jqXHR.responseText);
         }
    });
+}
+
+/**
+ * 收入/支出详细
+ * */
+function details(id){
+	layer.open({
+	  type: 1,
+	  area: ['680px', ''],
+	  shade: false,
+	  title: false, //不显示标题
+	  content: $('#'+id), //捕获的元素
+	  cancel: function(index){
+		  layer.closeAll();
+	    //layer.close(index);
+	    //this.content.show();
+	    //layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', {time: 5000, icon:6});
+	  }
+	});
 }
 
 /**

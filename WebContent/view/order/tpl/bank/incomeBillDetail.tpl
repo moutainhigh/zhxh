@@ -49,7 +49,7 @@
 			{#/for}	
 		{#else}
 			<tr class="tr" style="height:150px;">
-				<td align="center" colspan="5">暂无数据...</td>
+				<td align="center" colspan="6">暂无数据...</td>
 			</tr>
 		{#/if}
 		</tbody>

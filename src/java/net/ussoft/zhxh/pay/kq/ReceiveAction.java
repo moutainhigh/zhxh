@@ -148,7 +148,7 @@ public class ReceiveAction {
 	  		//以下是我们快钱设置的show页面，商户需要自己定义该页面。
 	  		rtnUrl="http://139.224.0.109/view/order/bank/show.jsp?msg=error";
 	  	}	
-	
+	  	System.out.println("flag="+flag+",rtnOK="+rtnOK);
 	
 //		out.print("<result>"+rtnOK+"</result> <redirecturl>"+rtnUrl+"</redirecturl>");
 		out.print("<result>"+rtnOK+"</result> <redirecturl></redirecturl>");
