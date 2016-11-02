@@ -166,6 +166,9 @@
 						<div id="billDetail" class="panel-body">
 							<p>暂无数据</p>
 						</div>
+						<div id="share_details" class="panel-body" style="padding: 0px 60px;display: black;">
+							<!-- 分润详情 -->
+						</div>
 					</div>
 				</div>
 			</div>

@@ -18,7 +18,7 @@
 					<td>{$T.row.detailspay}</td>
 					<td>{$T.row.createtime}</td>
 					<td>{$T.row.ordernumber} </td>
-					<td>￥{$T.row.acompanyname}</td>
+					<td>{$T.row.acompanyname}</td>
 				</tr>
 			{#/for}	
 		{#else}

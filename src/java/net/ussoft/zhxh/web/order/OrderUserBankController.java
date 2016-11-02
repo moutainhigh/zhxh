@@ -699,16 +699,11 @@ public class OrderUserBankController extends BaseConstroller {
 		PrintWriter out = response.getWriter();
 
 		List<Public_order_product> list = shareBillService.orderProlist(orderproductids);
-	/*	for(Public_order_product obj : list){
-			String sharekey = obj.getSharekey();
-		}*/
-		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("userid", userid);
 		map.put("data", list);
 		
 		String json = JSON.toJSONString(map);
-		System.out.println(json);
 		out.print(json);
 	}
 }

@@ -108,7 +108,7 @@ public class SendSMS {
 //		System.out.println(result);
 		//18611265720
 		//
-		/*String result = sendMessage("13041237672", "您的验证码为：15010780215");
+		/*String result = sendMessage("18911786955", "您的验证码为：15010780215");
 		System.out.println(result);*/
 	}
 	

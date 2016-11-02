@@ -1,4 +1,4 @@
-﻿<%@page import="net.ussoft.zhxh.pay.rmb.Pkipair"%>
+﻿<%@page import="net.ussoft.zhxh.pay.kq.Pkipair"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
 	//人民币网关账号，该账号为11位人民币网关商户编号+01,该值与提交时相同。
