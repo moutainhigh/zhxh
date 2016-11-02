@@ -23,6 +23,7 @@ import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.dao.QuotaBillDao;
 import net.ussoft.zhxh.dao.ShareBillDao;
 import net.ussoft.zhxh.dao.SpendingBillDao;
+import net.ussoft.zhxh.dao.TransfBuyBankBillDao;
 import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.Public_dis_details;
 import net.ussoft.zhxh.model.Public_log;
@@ -38,6 +39,7 @@ import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Quota_bill;
 import net.ussoft.zhxh.model.Share_bill;
 import net.ussoft.zhxh.model.Spending_bill;
+import net.ussoft.zhxh.model.Transf_buy_bank_bill;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.util.BillNO;
 import net.ussoft.zhxh.util.DateUtil;
@@ -80,6 +82,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 	private PublicSetUserStandardDao standardDao;	//
 	@Resource
 	private ShareBillDao shareBillDao;	//
+	@Resource
+	private TransfBuyBankBillDao transfDao;
 	
 	@Override
 	public Public_user_bank getById(String id) {
@@ -151,7 +155,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		//订单已取消-消息
 		int messagetype = 1;	//业务消息
 		String messagetxt = order.getU_username()+"提交了订单，请及时处理！订单号："+order.getOrdernumber();
-		createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		createMsg(order.getUserid(), order.getU_companyname(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
 		
 		if(bank != null && order !=null && log != null){
 			return 1;
@@ -179,7 +183,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		//订单已取消-消息
 		int messagetype = 1;	//业务消息
 		String messagetxt = order.getU_username()+"取消了订单！订单号："+order.getOrdernumber();
-		createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		createMsg(order.getUserid(), order.getU_companyname(), order.getParentid(), order.getP_companyanme(), messagetype, messagetxt,order.getId());
 		if(bank != null && order !=null && log != null){
 			return 1;
 		}
@@ -240,7 +244,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		//订单已签收-消息
 		int messagetype = 1;	//业务消息
 		String messagetxt = order.getU_username()+"，的订单已签收！订单号："+order.getOrdernumber();
-		createMsg(order.getUserid(), order.getU_username(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		createMsg(order.getUserid(), order.getU_companyname(), order.getParentid(), order.getP_companyanme(), messagetype, messagetxt,order.getId());
 		
 		/*是否接收分成：返利、奖励，查看机构的当前状态*/
 		Public_user user = userDao.get(order.getUserid());
@@ -311,7 +315,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 				//添加返利消息
 				messagetype = 1;	//业务消息
 				messagetxt = order.getU_username()+"的订单已返利！订单号："+order.getOrdernumber();
-				createMsg(order.getParentid(), order.getP_username(),order.getUserid(), order.getU_username(),  messagetype, messagetxt,order.getId());
+				createMsg(order.getParentid(), order.getP_companyanme(),order.getUserid(), order.getU_companyname(),  messagetype, messagetxt,order.getId());
 			}
 			
 			//奖励
@@ -325,7 +329,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					//添加奖励消息
 					messagetype = 1;	//业务消息
 					messagetxt = "尊敬的客户您好，您推荐的"+order.getU_username()+"，已产生了订单给予您"+award_total+"元奖励！";
-					createMsg(order.getParentid(), order.getP_username(),order.getTid(),order.getT_username(), messagetype, messagetxt,order.getId());
+					createMsg(order.getParentid(), order.getP_companyanme(),order.getTid(),order.getT_companyname(), messagetype, messagetxt,order.getId());
 				}
 			}
 			
@@ -968,30 +972,48 @@ public class PublicUserBankService implements IPublicUserBankService{
 		//金额验证
 		if(bank.getBonusestakenbank() > amount){
 			bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);	//冲减奖励可提现账户
+			Transf_buy_bank_bill transf = new Transf_buy_bank_bill();
+			float _amount = amount;
 			//
 			if(ratio != null){
 				if(ratio.getBonuses_ratio() > 0){
-					float _amount = amount * ratio.getBonuses_ratio();
+					_amount = amount * ratio.getBonuses_ratio();
 					bank.setHavebank(bank.getHavebank() + _amount);	//增加可支配账户
+					transf.setRatio(ratio.getBonuses_ratio());	//转货款系数
 				}else{
 					bank.setHavebank(bank.getHavebank() + amount);	//增加可支配账户
 				}
 			}else{
 				bank.setHavebank(bank.getHavebank() + amount);	//增加可支配账户
 			}
-			
 			bank = userBankDao.update(bank);
+			Public_user uuser = userDao.get(userid);
+			Public_user puser = userDao.get(parentid);
+			
+			transf.setId(UUID.randomUUID().toString());
+			transf.setBillno(BillNO.getBillNo());
+			transf.setUserid(userid);
+			transf.setU_companyname(uuser.getCompanyname());
+			transf.setParentid(parentid);
+			transf.setP_companyname(puser.getCompanyname());
+			transf.setAward_amount(amount);
+			
+			transf.setLast_amount(_amount);
+			transf.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+			transfDao.save(transf);
+			
 			//日志
 			Public_log log = saveLog(userid, parentid, "bonuses_ratio", "奖励转贷款", amount,"");
 			//业务消息
-			//还未添加
-			if(bank != null && log != null)
-				return 1;	//成功
+			int messagetype = 1;	//业务消息
+			String messagetxt = ",进行了奖励转货款，奖励金额："+amount+",货款金额："+_amount;
+			createMsg(userid, uuser.getCompanyname(), parentid, puser.getCompanyname(), messagetype, messagetxt,"");
+			
+			return 1;	//成功
 		}else{
 			return -1;	//金额不足
 		}
 		
-		return 0;	//失败
 	}
 
 	@Transactional("txManager")

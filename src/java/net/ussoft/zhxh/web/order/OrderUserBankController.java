@@ -24,6 +24,7 @@ import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Share_bill;
 import net.ussoft.zhxh.model.Spending_bill;
+import net.ussoft.zhxh.model.Transf_buy_bank_bill;
 import net.ussoft.zhxh.pay.kq.ErrorCode;
 import net.ussoft.zhxh.pay.kq.KqConfig;
 import net.ussoft.zhxh.pay.kq.payment._99bill.www.apipay.services.BatchPayWS.BatchPayServiceLocator;
@@ -38,6 +39,7 @@ import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.service.IQuotaBillService;
 import net.ussoft.zhxh.service.IShareBillService;
 import net.ussoft.zhxh.service.ISpendingBillService;
+import net.ussoft.zhxh.service.ITransfBuyBankBillService;
 import net.ussoft.zhxh.util.BillNO;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
@@ -78,6 +80,8 @@ public class OrderUserBankController extends BaseConstroller {
 	private IPublicPhoneCodeLogService codeLogService;
 	@Resource
 	private IShareBillService shareBillService;
+	@Resource
+	private ITransfBuyBankBillService transfService;
 	
 	/**
 	 * 获取机构的资金帐户
@@ -659,11 +663,12 @@ public class OrderUserBankController extends BaseConstroller {
 	/**
 	 * 平台售额分润-账单流水
 	 * @param userid
+	 * @param status
 	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/shareBill",method=RequestMethod.POST)
-	public void shareBill(String userid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void shareBill(String userid,String status,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -676,6 +681,10 @@ public class OrderUserBankController extends BaseConstroller {
 
 		Map<String, Object> values = new LinkedHashMap<String, Object>();
 		values.put("userid= ", userid);
+		if(null != status && !"".equals(status)){
+			values.put("sharestate= ", status);
+		}
+		
 		p = shareBillService.list(values, p);
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -702,6 +711,35 @@ public class OrderUserBankController extends BaseConstroller {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("userid", userid);
 		map.put("data", list);
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 奖励转货款-账单流水
+	 * @param userid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/transfBill",method=RequestMethod.POST)
+	public void transfBill(String userid, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Transf_buy_bank_bill> p = new PageBean<Transf_buy_bank_bill>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		Map<String, Object> values = new LinkedHashMap<String, Object>();
+		values.put("userid= ", userid);
+		p = transfService.list(values, p);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);

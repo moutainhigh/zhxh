@@ -107,7 +107,7 @@ function transfBuyBank(pid,amount){
 		value:amount,
 		formType: 0 //prompt风格，支持0-2
 	}, function(trans_amount){
-		if(trans_amount > amount){
+		if(parseFloat(trans_amount) > parseFloat(amount)){
 			parent.layer.msg("账户余额不足，请重新输入！",{icon:6});
 			return;
 		}else{
@@ -131,7 +131,9 @@ function transfBuyBank(pid,amount){
    	                dataType:"text",
    	                success: function (text) {
    	                	if(text == "success"){
+   	                		_current_uid = pid;
    	                		getUserBank();
+   	                		$('#transf_click').click();
    	                		layer.msg("转货款成功！",{icon:6});
    	                	}else{
    	                		layer.msg("操作失败，请稍后再试！",{icon:6});

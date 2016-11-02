@@ -183,9 +183,9 @@ function loadData_disBillDetail(){
 /**
  * 平台售额-账单列表
  * */
-function shareBillDetail(uid){
+function shareBillDetail(uid,status){
 	$("#_userid").val(uid);
-	
+	$("#_status").val(status);
 	initPage();
 	loadData_shareBillDetail();
 }
@@ -194,6 +194,7 @@ function shareBillDetail(uid){
 function loadData_shareBillDetail(){
 	var _data = {};
 	_data.userid = $("#_userid").val();
+	_data.status = $("#_status").val();
 	_data.pageIndex = pageIndex;
 	_data.pageSize = pageSize;
 	$.ajax({
@@ -298,6 +299,46 @@ function details(id){
 	});
 }
 
+
+/**
+ * 奖励转货款-账单列表
+ * */
+function transfBillDetail(uid){
+	$("#_userid").val(uid);
+	initPage();
+	loadData_transfBillDetail();
+}
+
+//加载数据-奖励转货款-账单列表
+function loadData_transfBillDetail(){
+	var _data = {};
+	_data.userid = $("#_userid").val();
+	_data.pageIndex = pageIndex;
+	_data.pageSize = pageSize;
+	$.ajax({
+		async:false,
+        url: getRootPath_web() + "/orderUserBank/transfBill.htmls",
+        data: _data,
+        type: "post",
+        dataType:"json",
+        success: function (json) {
+        	totalPage = Math.ceil(json.total/pageSize);
+        	$("#billDetail").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/transfBillDetail.tpl");
+        	$("#billDetail").setParam('rowCount', json.total);
+     		$("#billDetail").setParam('pageSize', pageSize);
+     		$("#billDetail").setParam('pageIndex', pageIndex);
+     		$("#billDetail").setParam('totalPage', totalPage);
+        	$("#billDetail").processTemplate(json.data);
+        	//
+        	pageSel(6);
+            pageEnter(6);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(jqXHR.responseText);
+        }
+   });
+}
+
 /**
  * 分页参数初始化
  * */
@@ -351,7 +392,7 @@ function pageSel(type) {
 
 /**
  * 分页切换-加载数据
- * type:1收入，2支出，3配额，4返利/奖励
+ * type:1收入，2支出，3配额，4返利/奖励,5平台售额，6奖励转货款
  * */
 function page_loadData(type){
 	if(type == 1){
@@ -364,6 +405,8 @@ function page_loadData(type){
 		loadData_disBillDetail();		//返利、奖励-账单列表
 	}else if(type == 5){
 		loadData_shareBillDetail();		//平台售额
+	}else if(type == 6){
+		loadData_transfBillDetail();	//奖励转货款
 	}
 }
 

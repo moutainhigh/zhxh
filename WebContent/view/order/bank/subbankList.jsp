@@ -162,6 +162,7 @@
 							<input type="hidden" id="_trantype" />
 							<input type="hidden" id="_identity" />
 							<input type="hidden" id="_detailstype" />
+							<input type="hidden" id="_status" />
 						</div>
 						<div id="billDetail" class="panel-body">
 							<p>暂无数据</p>
