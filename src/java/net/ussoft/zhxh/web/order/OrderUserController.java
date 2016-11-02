@@ -34,6 +34,7 @@ import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.MD5;
+import net.ussoft.zhxh.util.SendSMS;
 
 
 @Controller
@@ -219,7 +220,7 @@ public class OrderUserController extends BaseConstroller {
 				logType = "ORDERUPDATE";
 			}
 		}
-//		SendSMS.sendMessage(phonenumber, send_content);
+		SendSMS.sendMessage(phonenumber, send_content);
 		savePhoneCodeLog(phonenumber, sendCode, logType, request);
 		
 		out.print("success");

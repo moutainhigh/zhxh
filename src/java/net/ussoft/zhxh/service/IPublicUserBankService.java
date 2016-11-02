@@ -103,6 +103,13 @@ public interface IPublicUserBankService {
 	public int rechargeZ(Income_bill bill,String identity);
 	
 	/**
+	 * 进行分配利润
+	 * @param orderid
+	 * @return
+	 */
+	public boolean onOrderShare(String orderid);
+	
+	/**
 	 * 提现
 	 * @param bill	交易流水
 	 * @param identity 身份

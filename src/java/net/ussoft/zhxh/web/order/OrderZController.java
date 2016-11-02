@@ -43,6 +43,8 @@ import net.ussoft.zhxh.service.IPublicUser2Service;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserPathService;
 import net.ussoft.zhxh.service.IPublicUserService;
+import net.ussoft.zhxh.service.IShareBillService;
+import net.ussoft.zhxh.service.impl.ShareBillService;
 import net.ussoft.zhxh.util.BillNO;
 import net.ussoft.zhxh.util.DateUtil;
 
@@ -668,6 +670,33 @@ public class OrderZController extends BaseConstroller {
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
+	
+	/**
+	 * 对订单进行分润
+	 * @param orderid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/onOrderShare",method=RequestMethod.POST)
+	public void onOrderShare(String orderid, HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if(orderid == null || "".equals(orderid)){
+			out.print("error");
+			return;
+		}
+		
+		List<Share_bill> shareBillList = shareBillService.getByOrderid(orderid);
+		
+		for (Share_bill bill : shareBillList) {
+			Public_user_bank uBank = 
+		}
+		
+		out.print("");
+	}
+	
+	
 	
 	//假的。用来演示普通会员订单支付
 	@RequestMapping(value="/orderpay",method=RequestMethod.POST)

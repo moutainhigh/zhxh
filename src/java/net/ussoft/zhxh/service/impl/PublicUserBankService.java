@@ -648,7 +648,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					a_shareMap.put("userStandard", aStandard.getBuyerdis());
 					a_shareMap.put("sharepay", a_sharepay);
 					a_shareMap.put("productnum", product.getProductnum());
-					aMap.put(submitUser.getId(), a_shareMap);
+					aMap.put(aUser.getId(), a_shareMap);
 					
 					shareList.add(aMap);
 					
@@ -695,8 +695,25 @@ public class PublicUserBankService implements IPublicUserBankService{
 		    String number = tmpMap.get("number").toString();
 		    String username = tmpMap.get("username").toString();
 		    
+//		    在第三方回调时要增加
+//			1、平台收入总计、平台售额累计
+//			2、代理售额累计
+//			3、店售额累计
+//			
+//			在分润时，要增加
+//			1、平台可提现帐户
+//			2、代理收入总计、代理可提现帐户
+//			3、店的平台售额可提现帐户
+		    
 		    //获取bank
 		    Public_user_bank bank = getUserBank(userid,parentid);
+		    //判断是否是平台。如果是平台，增加收入总计
+		    if ("1".equals(userid)) {
+		    	Float income = bank.getIncomebank() + Float.valueOf(total);
+		    	income = (float)(Math.round(income*100))/100;//输出小数点2位
+			    //平台售额累计
+			    bank.setIncomebank(income);
+		    }
 		    Float sellbank = bank.getSellbank() + Float.valueOf(total);
 		    sellbank = (float)(Math.round(sellbank*100))/100;//输出小数点2位
 		    //平台售额累计
@@ -744,6 +761,31 @@ public class PublicUserBankService implements IPublicUserBankService{
 		createMsg(submitUser.getId(), submitUser.getCompanyname(),"1",bill.getP_company(), messagetype, messagetxt,order.getId());
 		
 		return 1;
+	}
+	
+	@Override
+	public boolean onOrderShare(String orderid) {
+		String sql = "select * from Share_bill where orderid=?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(orderid);
+		
+		List<Share_bill> shareBillList = shareBillDao.search(sql, values);
+		
+		if (null == shareBillList || shareBillList.size() == 0) {
+			return true;
+		}
+		
+		
+		
+		
+		
+		for (Share_bill bill : shareBillList) {
+			Public_user_bank uBank = userBankDao.get(bill.getBankid());
+			Float sharepay = bill.getSharepay();
+			
+			uBank.
+		}
+		return false;
 	}
 
 	/**

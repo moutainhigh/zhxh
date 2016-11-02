@@ -259,6 +259,36 @@
 			    	win.setData(orderid);
 			    },
 			  	yes: function(index,layero){
+			  		layer.confirm('确定要进行分配利润吗？<br><span style="color:red">注意：请谨慎操作。</span>', {
+			  			btn: ['确认', '取消']
+			  		},
+			  		function()	{
+			  			$.ajax({
+			    			async:false,
+			                url: "${pageContext.request.contextPath}/orderUser/save.htmls",
+			                data: {'objs':json},
+			                type: "post",
+			                dataType:"text",
+			                success: function (text) {
+			                 	if (text == 'success') {
+			                 		layer.msg("保存成功。",{icon:6});
+			                 		radio_click();
+			                 	}
+			                 	else if (text == "codeerror") {
+			                 		layer.msg("手机短信验证码错误，请输入正确，再尝试，或与开发商联系。",{icon:5});
+			                 	}
+			                 	else {
+			                 		layer.msg("保存出现问题，请退出重新登录，再尝试，或与开发商联系。",{icon:5});
+			                 	}
+			                },
+			                error: function (jqXHR, textStatus, errorThrown) {
+			                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+			                }
+			           });
+			  		}, 
+			  		function(){
+			  			
+			  		});
 			  		/* var win = parent.window['layui-layer-iframe' + index].window;
 			  		var data = win.getData();
 			  		if(data.length > 0){

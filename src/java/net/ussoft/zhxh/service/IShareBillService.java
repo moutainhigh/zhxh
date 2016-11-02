@@ -25,7 +25,7 @@ public interface IShareBillService {
 	 * @param id
 	 * @return Share_bill
 	 * */
-	public Share_bill getByOrderid(String id);
+	public List<Share_bill> getByOrderid(String id);
 	
 	/**
 	 * 查询所有

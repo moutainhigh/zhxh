@@ -34,7 +34,7 @@ public class ShareBillService implements IShareBillService{
 	}
 	
 	@Override
-	public Share_bill getByOrderid(String id) {
+	public List<Share_bill> getByOrderid(String id) {
 		String sql = "select * from Share_bill where orderid=?";
 		List<Object> values = new ArrayList<Object>();
 		values.add(id);
@@ -45,7 +45,7 @@ public class ShareBillService implements IShareBillService{
 			return null;
 		}
 		
-		return billList.get(0);
+		return billList;
 	}
 
 	@Override
