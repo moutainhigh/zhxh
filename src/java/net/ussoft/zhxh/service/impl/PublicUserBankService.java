@@ -783,7 +783,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 			Public_user_bank uBank = userBankDao.get(bill.getBankid());
 			Float sharepay = bill.getSharepay();
 			
-			uBank.
+//			uBank.
 		}
 		return false;
 	}
