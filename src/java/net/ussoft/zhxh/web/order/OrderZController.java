@@ -687,13 +687,9 @@ public class OrderZController extends BaseConstroller {
 			return;
 		}
 		
-		List<Share_bill> shareBillList = shareBillService.getByOrderid(orderid);
+		bankService.onOrderShare(orderid);
 		
-		for (Share_bill bill : shareBillList) {
-			Public_user_bank uBank = 
-		}
-		
-		out.print("");
+		out.print("success");
 	}
 	
 	

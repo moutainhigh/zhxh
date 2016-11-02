@@ -699,11 +699,6 @@ public class PublicUserBankService implements IPublicUserBankService{
 //			1、平台收入总计、平台售额累计
 //			2、代理售额累计
 //			3、店售额累计
-//			
-//			在分润时，要增加
-//			1、平台可提现帐户
-//			2、代理收入总计、代理可提现帐户
-//			3、店的平台售额可提现帐户
 		    
 		    //获取bank
 		    Public_user_bank bank = getUserBank(userid,parentid);
@@ -763,6 +758,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		return 1;
 	}
 	
+	@Transactional("txManager")
 	@Override
 	public boolean onOrderShare(String orderid) {
 		String sql = "select * from Share_bill where orderid=?";
@@ -775,17 +771,61 @@ public class PublicUserBankService implements IPublicUserBankService{
 			return true;
 		}
 		
-		
-		
-		
+		//处理订单状态
+		Public_order order = orderDao.get(orderid);
+		Public_user  pUser = userDao.get("1");
+//		在分润时，要增加
+//		1、平台可提现帐户
+//		2、代理收入总计、代理可提现帐户
+//		3、店的平台售额可提现帐户
 		
 		for (Share_bill bill : shareBillList) {
 			Public_user_bank uBank = userBankDao.get(bill.getBankid());
 			Float sharepay = bill.getSharepay();
 			
-//			uBank.
+			//判断，如果是平台，插入可提现帐户
+			//获取帐户
+			Public_user user = userDao.get(uBank.getUserid());
+			if ("A".equals(user.getIdentity()) ) {
+				//如果是是代理.插入到可提现帐户
+				Float takenbank = uBank.getTakenbank() + Float.valueOf(sharepay);
+				takenbank = (float)(Math.round(takenbank*100))/100;//输出小数点2位
+			    //可提现帐户
+		    	uBank.setTakenbank(takenbank);
+				
+			}
+			if ("A".equals(user.getIdentity()) && !"1".equals(user.getId())) {
+				//如果是代理、插入收入总计
+				Float income = uBank.getIncomebank() + Float.valueOf(sharepay);
+		    	income = (float)(Math.round(income*100))/100;//输出小数点2位
+			    //平台售额累计
+		    	uBank.setIncomebank(income);
+			}
+			
+			if ("C".equals(user.getIdentity())) {
+				//如果是店，插入平台售额可提现
+				Float selltakenbank = uBank.getSelltakenbank() + Float.valueOf(sharepay);
+				selltakenbank = (float)(Math.round(selltakenbank*100))/100;//输出小数点2位
+		    	uBank.setSelltakenbank(selltakenbank);
+			}
+			userBankDao.update(uBank);
+			//处理sharebill的到账时间及状态
+			bill.setShareovertime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+			bill.setSharestate(1);
+			shareBillDao.update(bill);
+			
+			//发送消息给
+			//添加消息
+			int messagetype = 1;	//业务消息
+			String messagetxt = "普通会员订单["+order.getOrdernumber()+"]已完成利润分配，您被分配利润金额为："+sharepay;
+			createMsg(pUser.getId(), pUser.getCompanyname(),user.getId(),user.getCompanyname(), messagetype, messagetxt,order.getId());
 		}
-		return false;
+		
+		order.setIsshareover(1);
+		orderDao.update(order);
+
+		
+		return true;
 	}
 
 	/**
