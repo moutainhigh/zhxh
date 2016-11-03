@@ -527,5 +527,23 @@ SET FOREIGN_KEY_CHECKS = 1;
 2、修改public_order_product
 	(1)修改sharekey、sharevalue 为text类型	
 
+2016-11-02
+1.新增表奖励转货款（transf_buy_bank_bill）
+	DROP TABLE IF EXISTS `transf_buy_bank_bill`;
+	CREATE TABLE `transf_buy_bank_bill` (
+	  `id` varchar(40) NOT NULL,
+	  `billno` varchar(40) DEFAULT NULL,
+	  `userid` varchar(40) DEFAULT NULL,
+	  `u_companyname` varchar(200) DEFAULT NULL,
+	  `parentid` varchar(40) DEFAULT NULL,
+	  `p_companyname` varchar(200) DEFAULT NULL,
+	  `award_amount` decimal(11,2) DEFAULT NULL,
+	  `ratio` decimal(11,2) DEFAULT NULL,
+	  `last_amount` decimal(11,2) DEFAULT NULL,
+	  `createtime` varchar(40) DEFAULT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	
+	SET FOREIGN_KEY_CHECKS = 1;
 
 	

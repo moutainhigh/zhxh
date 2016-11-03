@@ -50,6 +50,9 @@
                 type: "post",
                 dataType:"json",
                 success: function (json) {
+                	if(json.data == ""){
+                		return;
+                	}
                 	$("#banks").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/subbankList.tpl");
                 	$("#banks").setParam("path","${pageContext.request.contextPath}/js/pintuer/pintuer.js");
                 	$("#banks").setParam("activeUser",userid);
@@ -151,7 +154,15 @@
 		<div class="admin">
 			<div class="line-big">
 				<div id="banks" class="x5">
-					
+					<div class="collapse">
+						<div class="panel border-sub active">
+							<div class="panel-head">
+								<strong>客户资金帐户</strong>
+							</div>
+							<div class="panel-body"><p>暂无数据</p>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="x7">
 					<div class="panel border-sub">
@@ -162,6 +173,7 @@
 							<input type="hidden" id="_trantype" />
 							<input type="hidden" id="_identity" />
 							<input type="hidden" id="_detailstype" />
+							<input type="hidden" id="_status" />
 						</div>
 						<div id="billDetail" class="panel-body">
 							<p>暂无数据</p>

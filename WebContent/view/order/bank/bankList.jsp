@@ -62,6 +62,7 @@
 							<input type="hidden" id="_trantype" />
 							<input type="hidden" id="_identity" />
 							<input type="hidden" id="_detailstype" />
+							<input type="hidden" id="_status" />
 						</div>
 						<div id="billDetail" class="panel-body">
 							<!-- <div class="float-right"><div class="form-group">

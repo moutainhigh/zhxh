@@ -1,25 +1,23 @@
 <div class="table-responsive-y">
 	<table class="table table-hover">
 		<thead><tr>
-			<th>订单ID</th>
-			<th>下单机构</th>
-			<th>分润金额</th>
-			<th>分润数量</th>
-			<th>记账日期</th>
-			<th>状态</th>
-			<th>操作</th>
+			<th>流水号</th>
+			<th>上级机构</th>
+			<th>金额</th>
+			<th>转货款系数</th>
+			<th>货款金额</th>
+			<th>日期</th>
 		</tr> </thead>
 		<tbody>
 		{#if $P.rowCount > 0}
 			{#foreach $T as row}
 				<tr>
-					<td>{$T.row.ordernumber}</td>
-					<td>{$T.row.submitname}</td>
-					<td>￥{$T.row.sharepay} </td>
-					<td>{$T.row.sharenumber} </td>
-					<td>{$T.row.sharetime}</td>
-					<td>{#if $T.row.sharestate == 0}等待分润{#else}分润完成{#/if}</td>
-					<td><a href="javascript:;" onclick="shareDetails('{$P.userid}','{$T.row.orderproductids}')">详情</a>
+					<td>{$T.row.billno}</td>
+					<td>{$T.row.p_companyname}</td>
+					<td>{$T.row.award_amount} </td>
+					<td>{$T.row.ratio} </td>
+					<td>{$T.row.last_amount}</td>
+					<td>{$T.row.createtime}</td>
 					</td>
 				</tr>
 			{#/for}	
@@ -54,12 +52,12 @@
 						{#if $P.pageIndex == 1}
 							<a href="javascript:void(0);" class="ui-pager-prev">上一页</a>
 						{#else}
-							<a href="javascript:void(0);" class="ui-pager-prev" onclick="pageClick({$P.pageIndex-1},5)">上一页</a>
+							<a href="javascript:void(0);" class="ui-pager-prev" onclick="pageClick({$P.pageIndex-1},6)">上一页</a>
 						{#/if}
 						{#if $P.pageIndex == $P.totalPage || $P.totalPage == 0}
 							<a href="javascript:void(0);" class="ui-pager-next">下一页</a>
 						{#else}
-							<a href="javascript:void(0);" class="ui-pager-next" onclick="pageClick({$P.pageIndex + 1 },5)">下一页</a>
+							<a href="javascript:void(0);" class="ui-pager-next" onclick="pageClick({$P.pageIndex + 1 },6)">下一页</a>
 						{#/if}
 						</div>
 					</div>
