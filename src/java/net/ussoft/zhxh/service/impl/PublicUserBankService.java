@@ -154,8 +154,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 		Public_log log = saveLog(bank.getUserid(), bank.getParentid(), "paymentorder", order.getOrdernumber()+"-已付款", order.getOrdertotal(), order.getId());
 		//订单已取消-消息
 		int messagetype = 1;	//业务消息
-		String messagetxt = order.getU_username()+"提交了订单，请及时处理！订单号："+order.getOrdernumber();
-		createMsg(order.getUserid(), order.getU_companyname(), order.getParentid(), order.getP_username(), messagetype, messagetxt,order.getId());
+		String messagetxt = order.getU_companyname()+",提交了订单，请及时处理！订单号："+order.getOrdernumber();
+		createMsg(order.getUserid(), order.getU_companyname(), order.getParentid(), order.getP_companyanme(), messagetype, messagetxt,order.getId());
 		
 		if(bank != null && order !=null && log != null){
 			return 1;
@@ -182,7 +182,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		Public_log log = saveLog(bank.getUserid(), bank.getParentid(), "cancelorder", order.getOrdernumber()+"-已取消", order.getOrdertotal(), order.getId());
 		//订单已取消-消息
 		int messagetype = 1;	//业务消息
-		String messagetxt = order.getU_username()+"取消了订单！订单号："+order.getOrdernumber();
+		String messagetxt = order.getU_companyname()+",取消了订单！订单号："+order.getOrdernumber();
 		createMsg(order.getUserid(), order.getU_companyname(), order.getParentid(), order.getP_companyanme(), messagetype, messagetxt,order.getId());
 		if(bank != null && order !=null && log != null){
 			return 1;
@@ -243,7 +243,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		saveLog(order.getUserid(), order.getParentid(), "sendorder", order.getOrdernumber()+"-已签收", order.getOrdertotal(), order.getId());
 		//订单已签收-消息
 		int messagetype = 1;	//业务消息
-		String messagetxt = order.getU_username()+"，的订单已签收！订单号："+order.getOrdernumber();
+		String messagetxt = order.getU_companyname()+"，的订单已签收！订单号："+order.getOrdernumber();
 		createMsg(order.getUserid(), order.getU_companyname(), order.getParentid(), order.getP_companyanme(), messagetype, messagetxt,order.getId());
 		
 		/*是否接收分成：返利、奖励，查看机构的当前状态*/
@@ -314,7 +314,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 				userBankDao.update(bank);
 				//添加返利消息
 				messagetype = 1;	//业务消息
-				messagetxt = order.getU_username()+"的订单已返利！订单号："+order.getOrdernumber();
+				messagetxt = order.getU_companyname()+"的订单已返利！订单号："+order.getOrdernumber();
 				createMsg(order.getParentid(), order.getP_companyanme(),order.getUserid(), order.getU_companyname(),  messagetype, messagetxt,order.getId());
 			}
 			
@@ -328,7 +328,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 					userBankDao.update(tbank);
 					//添加奖励消息
 					messagetype = 1;	//业务消息
-					messagetxt = "尊敬的客户您好，您推荐的"+order.getU_username()+"，已产生了订单给予您"+award_total+"元奖励！";
+					messagetxt = "尊敬的客户您好，您推荐的"+order.getU_companyname()+"，已产生了订单给予您"+award_total+"元奖励！";
 					createMsg(order.getParentid(), order.getP_companyanme(),order.getTid(),order.getT_companyname(), messagetype, messagetxt,order.getId());
 				}
 			}
