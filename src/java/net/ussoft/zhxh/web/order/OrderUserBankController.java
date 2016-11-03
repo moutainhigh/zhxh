@@ -225,6 +225,10 @@ public class OrderUserBankController extends BaseConstroller {
 		
 		//获取验证码session
 		HashMap<String,Object> map_session = (HashMap<String,Object>) CommonUtils.getSessionAttribute(request, Constants.CODE_SESSION);
+		if(map_session == null || sendcode == null){
+			out.print("codeerror");
+			return;
+		}
 		if (!sendcode.equals(map_session.get("sendCode").toString())) {
 			out.print("codeerror");
 			return;
@@ -357,51 +361,6 @@ public class OrderUserBankController extends BaseConstroller {
 		bill.setStatus(status);	//（-1，失败，0：提交申请，1：成功）
 		
 		spendingBillService.update(bill);
-	}
-	
-	/**
-	 * 提现
-	 * @param billno
-	 * @param response
-	 * @throws IOException
-	 */
-	@RequestMapping(value="/pay2bank",method=RequestMethod.POST)
-	public void pay2bank(String billno,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		if(null == billno || "".equals(billno)){
-			out.print("error");
-			return;
-		}
-		//Spending_bill bill = spendingBillService.getByBillno(billno);
-		//pay2bank(bill);
-	}
-	
-	/**
-	 * 支出-账单流水 - 作废，放到userBankService——withdrawal()中
-	 * @param bill
-	 * @param user
-	 * @return
-	 * */
-	private Spending_bill inserSpending_bill(Spending_bill bill,Public_user user){
-		bill.setId(UUID.randomUUID().toString());
-		bill.setBillno(BillNO.getBillNo());
-		bill.setUserid(user.getId());
-		bill.setU_username(user.getUsername());
-		bill.setU_company(user.getCompanyname());
-		Public_user p_user = userService.getById(bill.getParentid());
-		bill.setParentid(bill.getParentid());
-		bill.setP_username(p_user.getUsername());
-		bill.setP_company(p_user.getCompanyname());
-		bill.setAmount(bill.getAmount());
-		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
-		bill.setTrantype(bill.getTrantype()); //1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
-		String[] TRANTYPE_TXT = {"","平台可提现账户提现","代理可提现账户提现","店平台售额提现","店奖励可提现账户提现"};
-		bill.setTrantypetxt(TRANTYPE_TXT[bill.getTrantype()]);
-		bill.setStatus(0);	//-1:失败，0：提交申请，1：成功
-		bill = spendingBillService.insert(bill);
-		return bill;
 	}
 	
 	/**

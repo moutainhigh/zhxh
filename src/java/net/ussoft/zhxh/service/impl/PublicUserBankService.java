@@ -893,6 +893,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 		int messagetype = 1;	//业务消息
 		String messagetxt = "【"+bill.getU_company()+"】进行了提现，提现金额为："+amount;
 		createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
+/*		if(true){
+			throw new RuntimeException("pay2bank_error");
+		}*/
 		
 		return 1;
 	}
