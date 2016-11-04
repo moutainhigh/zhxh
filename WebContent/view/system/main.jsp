@@ -91,7 +91,7 @@
 								<ul class="drop-menu">
 									<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/member/userManager">会员管理</a></li>
 									<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/bank/bankManager">资金帐户管理</a></li>
-									<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/member/userManager">订单管理</a></li>
+									<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/order/orderManager">订单管理</a></li>
 									<li><a href="javascript:;" funcode="common/dispatch.htmls?page=/view/system/dis/dismain">利益分配</a></li>
 									<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/main" target="_brank">采购分销系统</a></li>
 									<li><a href="javascript:;" funcode="">子菜单2</a></li>
