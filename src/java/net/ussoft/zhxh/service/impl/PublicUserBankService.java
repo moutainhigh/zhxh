@@ -1,6 +1,8 @@
 package net.ussoft.zhxh.service.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,7 @@ import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.util.BillNO;
 import net.ussoft.zhxh.util.DateUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -708,9 +711,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 		    Public_user_bank bank = getUserBank(userid,parentid);
 		    //判断是否是平台。如果是平台，增加收入总计
 		    if ("1".equals(userid)) {
-		    	Float income = bank.getIncomebank() + Float.valueOf(total);
+		    	Float income = bank.getIncomebank() + Float.valueOf(bill.getAccount_real());
 		    	income = (float)(Math.round(income*100))/100;//输出小数点2位
-			    //平台售额累计
+			    //平台收入总计
 			    bank.setIncomebank(income);
 		    }
 		    Float sellbank = bank.getSellbank() + Float.valueOf(total);
@@ -787,7 +790,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 			Public_user_bank uBank = userBankDao.get(bill.getBankid());
 			Float sharepay = bill.getSharepay();
 			
-			//判断，如果是平台，插入可提现帐户
+			//判断，如果是平台或代理，插入可提现帐户
 			//获取帐户
 			Public_user user = userDao.get(uBank.getUserid());
 			if ("A".equals(user.getIdentity()) ) {
@@ -1251,5 +1254,90 @@ public class PublicUserBankService implements IPublicUserBankService{
 		return list;
 	}
 
+	@Override
+	public List<Map<String, Object>> getUserBankList(String parentid, String userid, String identity,String searchKey) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from public_user_bank where 1=1");
+		
+//		sb.append("select k.*,u.companyname,u.identity from public_user_bank k ,public_user u where 1=1");
+		List<Object> values = new ArrayList<Object>();
+		
+		if(null != userid && !"".equals(userid)){
+			sb.append(" and userid = ?");
+			values.add(userid);
+		}
+		if(null != parentid && !"".equals(parentid)){
+			sb.append(" and parentid = ?");
+			values.add(parentid);
+		}
+		
+		List<Map<String, Object>> list = userBankDao.searchForMap(sb.toString(),values);
+		List<Map<String, Object>> resultList = new ArrayList<Map<String,Object>>();
+		
+		//循环插入更多信息数据
+		for (Map<String, Object> map : list) {
+			Public_user user = userDao.get(map.get("userid").toString());
+			
+			if (null != identity && !"".equals(identity)) {
+				if (!user.getIdentity().equals(identity)) {
+					continue;
+				}
+			}
+			
+			if (null != searchKey && !"".equals(searchKey)) {
+				if (null == user.getCompanyname() || user.getCompanyname().equals("")) {
+					continue;
+				}
+				
+				if (user.getCompanyname().toLowerCase().indexOf(searchKey.toLowerCase()) < 0) {
+					continue;
+				}
+			}
+			
+			
+			map.put("u_companyname", user.getCompanyname());
+			
+			Public_user pUser = userDao.get(map.get("parentid").toString());
+			map.put("p_companyname", pUser.getCompanyname());
+			
+			resultList.add(map);
+			
+		}
+		
+		return resultList;
+	}
 	
+	@Transactional("txManager")
+	@Override
+	public int multiple_update(String ids, String key, String value) {
+		String[] idsArr = ids.split(",");
+		
+		List<String> idsList = Arrays.asList(idsArr);
+		
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		sb.append("update public_user_bank set ");
+		sb.append(key).append("=?");
+		values.add(value);
+		
+		if (key.equals("bankstate")) {
+			sb.append(",bankstatetxt=?");
+			String t = "正常";
+			if ("0".equals(value)) {
+				t = "冻结";
+			}
+			values.add(t);
+		}
+		
+		sb.append(" where id in (");
+		
+		Serializable[] ss=new Serializable[idsList.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(idsList);
+		
+		return userBankDao.update(sb.toString(), values);
+	}
+
 }

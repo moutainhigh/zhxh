@@ -165,4 +165,25 @@ public interface IPublicUserBankService {
 		 * @return
 		 */
 	public List<Map<String,Object>> getUserBankList(String parentid,String userid);
+	
+	/**
+	 * 获取机构的资金帐户列表
+	 * @param parentid
+	 * @param userid
+	 * @param identity
+	 * @return
+	 */
+	public List<Map<String,Object>> getUserBankList(String parentid,String userid,String identity,String searchKey);
+	
+	/**
+	 * 批量修改
+	 * @param ids
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	public int multiple_update(String ids,String key,String value);
+	
+	
+	
 }

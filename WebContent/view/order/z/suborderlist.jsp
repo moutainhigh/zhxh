@@ -187,8 +187,8 @@
                 	$("#address").html(address_str);
                 	
                 	//加载支付
-            		$(".income").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/z/orderincome.tpl");
-                    $(".income").processTemplate(json.income);
+            		$(".income").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/z/orderincomeZ.tpl");
+                    $(".income").processTemplate(json);
                 	
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -351,10 +351,19 @@
 					<div>应付总额：￥<span style="color: red !important" id="total_sum">0.00</span></div>
 				</div>
 			</div>
-			<h4>支付信息</h4>
+			<div class="income"></div>
+			<!-- <h4>支付信息</h4>
 			<hr class="">
 			<div class="table-responsive income" style="margin-bottom: 20px">
 			</div>
+			<h4>参与分配利润机构详细</h4>
+			<hr class="">
+			<div class="table-responsive income" style="margin-bottom: 20px">
+			</div>
+			<h4>订单商品分配利润明细</h4>
+			<hr class="">
+			<div class="table-responsive income" style="margin-bottom: 20px">
+			</div> -->
 			<h4>物流信息</h4>
 			<hr class="">
 			<div class="table-responsive">
