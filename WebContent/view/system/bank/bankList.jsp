@@ -5,6 +5,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title></title>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
+    <script src="${pageContext.request.contextPath}/js/js.validate.js" type="text/javascript"></script>
     <style type="text/css">
 	    html, body{
 	        margin:0;padding:0;border:0;width:100%;height:100%;overflow:hidden;
@@ -22,6 +23,7 @@
 	    var columns_1=[
 					{ type: "checkcolumn",headerAlign:"center",width: 30},
 					{ type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
+					{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
 					{ field: "p_companyname",name:"p_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "上级",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	              { field: "u_companyname",name:"u_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "帐户所有人",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	              { field: "incomebank",name:"incomebank", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "收入总计(元)",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
@@ -33,6 +35,7 @@
 	    var columns_a=[
 					{ type: "checkcolumn",headerAlign:"center",width: 30},
 					{ type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
+					{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
 					{ field: "p_companyname",name:"p_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "上级",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	              { field: "u_companyname",name:"u_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "帐户所有人",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	              { field: "incomebank",name:"incomebank", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "收入总计(元)",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
@@ -47,6 +50,7 @@
 	    var columns_c=[
 					{ type: "checkcolumn",headerAlign:"center",width: 30},
 					{ type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
+					{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
 					{ field: "p_companyname",name:"p_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "上级",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	              { field: "u_companyname",name:"u_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "帐户所有人",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	              { field: "depositbank",name:"depositbank", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "充值总计(元)",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
@@ -64,9 +68,14 @@
 	   		mini.parse();
 	   		
 	   		//隐藏所有按钮
-            var taken_1_btns = mini.getsbyName("taken_1_btn");
-   			for(var i=0;i<taken_1_btns.length;i++) {
-   				taken_1_btns[i].setVisible(false);
+            var j_btns = mini.getsbyName("j_btn");
+   			for(var i=0;i<j_btns.length;i++) {
+   				j_btns[i].setVisible(false);
+   			}
+	   		//隐藏所有按钮
+            var a_btns = mini.getsbyName("a_btn");
+   			for(var i=0;i<a_btns.length;i++) {
+   				a_btns[i].setVisible(false);
    			}
 	   		
 	   		//代理商
@@ -137,15 +146,7 @@
 	    		columns: [
 							{ type: "checkcolumn",headerAlign:"center",width: 30},
 	      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
-	      	                { field: "username",name:"username", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "真实姓名",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-	      	                { field: "phonenumber",name:"phonenumber", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "手机号码",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-	      	              	{ field: "birthday",name:"birthday",dateFormat:"yyyy-MM-dd",width: 100, headerAlign: "center", align:"center",allowSort: false, header: "生日",vtype:"required",editor:{ type: "datepicker"} },
-	      	              	{ field: "sex",name:"sex",type:"comboboxcolumn",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "性别",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"女"},{"id":"1","text":"男"}] } },
-	      	              	{ field: "identitymemo",name:"identitymemo",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "身份" },
-	      	                { field: "belongcode",name:"belongcode",width: 100, headerAlign: "center", align:"center",allowSort: false, header: "所属门店代码"},
-	      	                { field: "wechar",name:"wechar",width: 80, headerAlign: "center", align:"center",allowSort: false, header: "微信号码" ,editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25}},
-	      	                { field: "isopen",name:"isopen",type:"comboboxcolumn",autoEscape:true, width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁用"},{"id":"1","text":"正常"}] } },
-	      	                { field: "sort",name:"sort",autoEscape:true, width: 60, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25 } }
+	      	              	{ field: "u_companyname",name:"u_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "帐户所有人",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
 	      	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -162,6 +163,47 @@
 	    	
 	    	drawcell();
 	    });
+	   	
+	   	function onActionRenderer(e) {
+            var grid = e.sender;
+            var record = e.record;
+            var uid = record._uid;
+            var id = record.id;
+            var u_companyname = record.u_companyname;
+            var rowIndex = e.rowIndex;
+            
+            var s = "";
+            
+            s = '  <a class="Edit_Button" href="javascript:showBill(\'' + id + '\',\'' + u_companyname + '\')" >查看交易流水</a>';
+            
+            return s;
+        }
+	   	
+	   	function showBill(id,username) {
+	   		if(id == 'undefined'){
+        		parent.parent.layer.msg("未获取到id，请退出重新登录，再尝试。",{icon:6});
+				return;
+			}
+			var pHeight = $(window.parent).height();
+	   		var pWidth = $(window.parent).width();
+	   		
+	   		var title = "["+username+"]资金帐户流水";
+        	mini.open({
+                url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/bank/showBill",
+                title: title, width:pWidth-300, height:pHeight-200,
+                allowResize:true,
+                onload: function () {
+                	var iframe = this.getIFrameEl();
+               	 	var data = {bankid:id};
+                    iframe.contentWindow.SetData(data);
+                },
+                ondestroy: function (action) {
+                	if (action == "ok") {
+                		
+                    }
+                }
+            });
+	   	}
 	   	
 	   	
 	   	//绘制表格
@@ -241,9 +283,13 @@
 	      		return;
 	      	}
             //隐藏所有按钮
-            var taken_1_btns = mini.getsbyName("taken_1_btn");
-   			for(var i=0;i<taken_1_btns.length;i++) {
-   				taken_1_btns[i].setVisible(false);
+            var j_btns = mini.getsbyName("j_btn");
+   			for(var i=0;i<j_btns.length;i++) {
+   				j_btns[i].setVisible(false);
+   			}
+            var a_btns = mini.getsbyName("a_btn");
+   			for(var i=0;i<a_btns.length;i++) {
+   				a_btns[i].setVisible(false);
    			}
             
             if (record) {
@@ -254,9 +300,9 @@
             	    });
             		
             		//打开功能按钮
-        	    	var taken_1_btns = mini.getsbyName("taken_1_btn");
-           			for(var i=0;i<taken_1_btns.length;i++) {
-           				taken_1_btns[i].setVisible(true);
+        	    	var j_btns = mini.getsbyName("j_btn");
+           			for(var i=0;i<j_btns.length;i++) {
+           				j_btns[i].setVisible(true);
            			}
             		
             	}
@@ -264,6 +310,11 @@
             		grid_user_a_bank.set({
             	        columns: columns_a
             	    });
+            		
+            		var a_btns = mini.getsbyName("a_btn");
+           			for(var i=0;i<a_btns.length;i++) {
+           				a_btns[i].setVisible(true);
+           			}
             	}
             	
             	grid_user_c_bank.set({
@@ -399,10 +450,101 @@
     	  		}
     		});
 		}
-        //平台充值或提现
-        function takenbank_1(taken_type) {
-        	
+      //获取利益标准
+        function getDisConfig(){
+        	var disConfig;
+            $.ajax({
+        		async:false,
+                url:"${pageContext.request.contextPath}/dis/disConfig.htmls",
+                //data: par,
+                type: "post",
+                dataType:"json",
+                success: function (json) {
+                	disConfig = json;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+                }
+           	});
+        	return disConfig;
         }
+        
+        
+        function setQuota(gridtype){
+        	
+        	var tmpGrid = "";
+			if (gridtype == "grid_user_a_bank") {
+				tmpGrid = grid_user_a_bank;
+			}
+			else if (gridtype == "grid_user_c_bank") {
+				tmpGrid = grid_user_c_bank;
+			}
+      		
+      		var rows = tmpGrid.getSelecteds();
+          	 
+       	 	if (rows.length == 0) {
+       	 		parent.parent.layer.msg("请选择要配额的机构。",{icon:6});
+       		 	return;
+       	 	}
+       	 	
+       	 	if (rows.length > 1) {
+       	 		parent.parent.layer.msg("只能选择一家机构进行配额，请重新选择。",{icon:6});
+       		 	return;
+       	 	}
+       	 	var userid = rows[0].userid;
+       	 	
+       	 	parent.parent.layer.prompt({
+   				title: '请输入配额金额，并确认',
+   				formType: 0 //prompt风格，支持0-2
+   			}, function(amount){
+   				
+   				if (amount == "") {
+   					parent.parent.layer.msg("请输入值。",{icon:5});
+   		   			return false;
+   				}
+   				else if (!isNumber(amount)) {
+   					parent.parent.layer.msg("请输入数字。",{icon:5});
+   		   			return false;
+   				}
+   				
+   				if (amount < 0) {
+   					parent.parent.layer.msg("请输入大约0的数字。",{icon:5});
+   		   			return false;
+   				}
+   				
+   				var config = getDisConfig();
+   				if(config.quota_up > 0){
+   					if(amount > config.quota_up){
+   						parent.parent.layer.msg("您设置的配额超过上限，请重新输入",{icon:6});
+   						return;
+   					}
+   				}
+   				if(config.quota_down > 0){
+   					if(amount < config.quota_down){
+   						parent.parent.layer.msg("您设置的配额低于下限，请重新输入",{icon:6});
+   						return;
+   					}
+   				}
+   				$.ajax({
+   	    			async:false,
+   	                url: "${pageContext.request.contextPath}/userBank/setQuota.htmls",
+   	                data: {userid:userid,amount:amount},
+   	                type: "post",
+   	                dataType:"text",
+   	                success: function (text) {
+   	                	if(text == "success"){
+   	                		parent.parent.layer.msg("配额添加成功",{icon:6});
+   	                		tmpGrid.reload();
+   	                	}else{
+   	                		parent.parent.layer.msg("操作失败，请稍后再试！",{icon:6});
+   	                	}
+   	                },
+   	                error: function (jqXHR, textStatus, errorThrown) {
+   	                    alert(jqXHR.responseText);
+   	                }
+   	           	});
+   			});
+	    }
 		
 		
 		
@@ -950,8 +1092,8 @@
 				                 	<span id="pid" style="padding-left:5px;">代理商资金帐户[代理自身的帐户]</span>
 				                 </td>
 				                 <td style="white-space:nowrap;">
-				                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="takenbank_1('up')" name="taken_1_btn">可提现帐户充值</a>
-				                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="takenbank_1('down')" name="taken_1_btn">提现</a>
+				                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="setQuota('grid_user_a_bank')" name="a_btn">配额</a>
+				                 	<a class="mini-button" iconCls="icon-edit" plain="true" onclick="taken()" name="j_btn">提现</a>
 					                <!-- <span class="separator"></span>
 					                <a class="mini-button" iconCls="icon-reload" plain="true" onclick="initUpdatePass('grid_user_c')">初始化密码</a>
 					                <a class="mini-button" plain="true" iconCls="icon-addnew" onclick="setLink()">关联</a>
@@ -979,14 +1121,15 @@
 				                 	<span id="pid" style="padding-left:5px;">代理商下级资金帐户</span>
 				                 </td>
 				                 <td style="white-space:nowrap;">
-				                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_user_z')" name="">增加</a>
+				                 	<a class="mini-button" iconCls="icon-add" plain="true" onclick="setQuota('grid_user_c_bank')" name="j_btn">配额</a>
+				                 	<!-- <a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow('grid_user_z')" name="">增加</a>
 				                 	<a class="mini-button" iconCls="icon-remove" plain="true" onclick="remove('grid_user_z')">删除</a>
 					                <span class="separator"></span>
 					                <a class="mini-button" iconCls="icon-reload" plain="true" onclick="initUpdatePass('grid_user_z')">初始化密码</a>
 					                <a class="mini-button" plain="true" iconCls="icon-close" onclick="outLink('grid_user_z')">解除关联</a>
 					                <a class="mini-button" iconCls="icon-reload" plain="true" onclick="move('grid_user_z')">移动</a>
 					                <span class="separator"></span>
-					         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_user_z')">保存</a>
+					         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save('grid_user_z')">保存</a> -->
 					         		<span class="separator"></span>
 					         		<a class="mini-menubutton" plain="true" menu="#popupMenu_c">批量</a>
 				                 </td>

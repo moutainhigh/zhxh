@@ -1278,6 +1278,11 @@ public class PublicUserBankService implements IPublicUserBankService{
 		for (Map<String, Object> map : list) {
 			Public_user user = userDao.get(map.get("userid").toString());
 			
+			//判断帐户是否被标记为已删除 
+			if (user.getIsopen() == -1) {
+				continue;
+			}
+			
 			if (null != identity && !"".equals(identity)) {
 				if (!user.getIdentity().equals(identity)) {
 					continue;

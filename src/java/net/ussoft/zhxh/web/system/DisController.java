@@ -20,7 +20,9 @@ import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Public_dis_config;
+import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.service.IPublicDisService;
+import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.util.Constants;
 
 /**
@@ -34,6 +36,9 @@ public class DisController extends BaseConstroller{
 
 	@Resource
 	private IPublicDisService disConfigService;	//公共利益
+	
+	@Resource
+	private IPublicUserBankService userBankService;
 	
 	
 	/**
@@ -301,6 +306,41 @@ public class DisController extends BaseConstroller{
 			return false;
 		}
 		return true;
+	}
+	
+	@RequestMapping(value="/disConfig",method=RequestMethod.POST)
+	public void disConfig(HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		Public_dis_config dis = disConfigService.getById("1");
+		String json = JSON.toJSONString(dis);
+		out.print(json);
+	}
+	
+	/**
+	 * 设置配额
+	 * @param userid
+	 * @param amount
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/setQuota",method=RequestMethod.POST)
+	public void setQuota(String userid,int amount,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if(userid == null || "".equals(userid) || amount <=0){
+			out.print("error");
+			return;
+		}
+		int num = userBankService.setQuota(userid, "1", amount);
+		if(num > 0){
+			out.print("success");
+			return;
+		}
+		out.print("error");
 	}
 	
 }

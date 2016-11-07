@@ -130,6 +130,96 @@ public class UserBankController extends BaseConstroller {
 		out.print("error");
 	}
 	
+	/**
+	 * 设置配额
+	 * @param userid
+	 * @param amount
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/setQuota",method=RequestMethod.POST)
+	public void setQuota(String userid,int amount,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if(userid == null || "".equals(userid) || amount <=0){
+			out.print("error");
+			return;
+		}
+		int num = userBankService.setQuota(userid, "1", amount);
+		if(num > 0){
+			out.print("success");
+			return;
+		}
+		out.print("error");
+	}
+	
+	public HashMap<String,Object> setMap(String bankname,Float bankpay,String bankid,String banktype) {
+		HashMap<String,Object> tmpMap = new HashMap<>();
+		tmpMap.put("bankname",bankname);
+		tmpMap.put("bankpay", bankpay);
+		tmpMap.put("bankid",bankid);
+		tmpMap.put("banktype",banktype);
+		
+		return tmpMap;
+	}
+	
+	/**
+	 * 获取机构的资金帐户
+	 * @param bankid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/showUserBank",method=RequestMethod.POST)
+	public void showUserBank(String bankid,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		Public_user_bank bank = userBankService.getById(bankid);
+		
+		Public_user user = userService.getById(bank.getUserid());
+		
+		List<HashMap<String,Object>> resultList = new ArrayList<HashMap<String,Object>>();
+		//如果是平台自己的资金帐户
+		if ("1".equals(user.getId())) {
+			resultList.add(setMap("收入总计",bank.getIncomebank(),bank.getId(),"incomebank"));
+			resultList.add(setMap("支出总计",bank.getCostbank(),bank.getId(),"costbank"));
+			resultList.add(setMap("可提现帐户",bank.getTakenbank(),bank.getId(),"takenbank"));
+			resultList.add(setMap("平台销售额总计",bank.getSellbank(),bank.getId(),"sellbank"));
+		}
+		else if ("A".equals(user.getIdentity())) {
+			//如果是代理
+			resultList.add(setMap("收入总计",bank.getIncomebank(),bank.getId(),"incomebank"));
+			resultList.add(setMap("支出总计",bank.getCostbank(),bank.getId(),"costbank"));
+			resultList.add(setMap("可提现帐户",bank.getTakenbank(),bank.getId(),"takenbank"));
+			resultList.add(setMap("可支配帐户",bank.getHavebank(),bank.getId(),"havebank"));
+			resultList.add(setMap("平台销售额总计",bank.getSellbank(),bank.getId(),"sellbank"));
+			resultList.add(setMap("配额总计",bank.getQuotabank(),bank.getId(),"quotabank"));
+			resultList.add(setMap("充值总计",bank.getDepositbank(),bank.getId(),"depositbank"));
+		}
+		else if ("C".equals(user.getIdentity())) {
+			//如果是门店
+        	resultList.add(setMap("充值总计",bank.getDepositbank(),bank.getId(),"depositbank"));
+        	resultList.add(setMap("配额总计",bank.getQuotabank(),bank.getId(),"quotabank"));
+        	resultList.add(setMap("平台销售额总计",bank.getSellbank(),bank.getId(),"sellbank"));
+        	resultList.add(setMap("平台销售额可提现",bank.getSelltakenbank(),bank.getId(),"selltakenbank"));
+        	resultList.add(setMap("可支配帐户",bank.getHavebank(),bank.getId(),"havebank"));
+        	resultList.add(setMap("返利帐户",bank.getRebatesbank(),bank.getId(),"rebatesbank"));
+        	resultList.add(setMap("奖励帐户",bank.getBonusesbank(),bank.getId(),"bonusesbank"));
+        	resultList.add(setMap("奖励可提现帐户",bank.getBonusestakenbank(),bank.getId(),"bonusestakenbank"));
+		}
+		
+		map.put("total", resultList.size());
+		map.put("data", resultList);
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	
+	
 	
 	/*---------------以下不确定要---------------*/
 	
@@ -401,31 +491,6 @@ public class UserBankController extends BaseConstroller {
 		codeLog.setSendtype(sendType);	//类型
 		codeLog.setIp(CommonUtils.getRemoteIp(request));
 		codeLogService.insert(codeLog);
-	}
-	
-	/**
-	 * 设置配额
-	 * @param userid
-	 * @param amount
-	 * @param response
-	 * @throws IOException
-	 */
-	@RequestMapping(value="/setQuota",method=RequestMethod.POST)
-	public void setQuota(String userid,int amount,HttpServletResponse response) throws IOException {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		if(userid == null || "".equals(userid) || amount <=0){
-			out.print("error");
-			return;
-		}
-		Public_user user = getSessionUser();
-		int num = userBankService.setQuota(userid, user.getId(), amount);
-		if(num > 0){
-			out.print("success");
-			return;
-		}
-		out.print("error");
 	}
 	
 	/**
