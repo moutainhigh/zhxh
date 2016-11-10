@@ -87,7 +87,8 @@
 				<blockquote class="border-yellow doc-quoteyellow">
 					<strong>提现须知：</strong>
 					1.提交申请后，系统资金账户会直接冲减。<br>
-					2.提交申请后，资金到账时间为T+2。<br>
+					2.提现手续费为每笔1元。<br>
+					3.提交申请后，资金到账时间为T+3，如未到账请联系平台。<br>
 				</blockquote>
 			</div>
 		</div>

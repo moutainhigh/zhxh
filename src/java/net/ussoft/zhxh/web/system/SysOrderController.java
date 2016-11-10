@@ -15,9 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_order;
+import net.ussoft.zhxh.model.Public_order_logistics;
 import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.service.IPublicMessageService;
+import net.ussoft.zhxh.service.IPublicOrderLogisticsService;
 import net.ussoft.zhxh.service.IPublicOrderPathService;
 import net.ussoft.zhxh.service.IPublicOrderProductService;
 import net.ussoft.zhxh.service.IPublicOrderService;
@@ -55,6 +57,8 @@ public class SysOrderController extends BaseConstroller {
 	private IPublicOrderPathService orderPathService;
 	@Resource
 	private IPublicMessageService messageService;
+	@Resource
+	private IPublicOrderLogisticsService logisticsService;
 
 	@RequestMapping(value="/syspomain")
 	public ModelAndView ordermain(ModelMap modelMap,HttpServletRequest request) throws Exception {
@@ -116,18 +120,19 @@ public class SysOrderController extends BaseConstroller {
 	 * @param ordertime
 	 * */
 	@RequestMapping(value="/subpolist",method=RequestMethod.POST)
-	public void subpolist(String orderType, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void subpolist(String orderType,String status, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		PageBean<Public_order> p = new PageBean<Public_order>();
 		p.setPageSize(pageSize);
-		p.setPageNo(pageIndex);
+		p.setPageNo(pageIndex + 1);
 		p.setOrderBy("ordertime");
 		p.setOrderType("desc");
 		
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
+		params.put("orderstatus= ", status);
 		if("a".equals(orderType)){
 			orderType = "o";
 			params.put("parentid != ", "1");
@@ -219,6 +224,27 @@ public class SysOrderController extends BaseConstroller {
 		p = user2Service.listUserStandard(parentid, user.getId(), brandid,"","1",keyword,p);
 		
 		map.put("data",p.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	/**
+	 * 订单物流信息
+	 * */
+	@RequestMapping(value="/logistics",method=RequestMethod.POST)
+	public void orderlogistics(String orderid, HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if(orderid == null || "".equals(orderid)){
+			out.print("error");
+			return;
+		}
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		Public_order order = orderService.getById(orderid);
+		//物流信息
+		List<Public_order_logistics> logisticsList = logisticsService.orderLogistics(order);
+		map.put("data",logisticsList);
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);

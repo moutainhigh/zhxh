@@ -400,11 +400,20 @@
                 	//加载支付
             		$(".income").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/z/orderincome.tpl");
                     $(".income").processTemplate(json.income);
+                  	//物流信息
+                	orderLogistics(json.logisticsList);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert(jqXHR.responseText);
                 }
            	});
+    	}
+    	
+    	//订单物流信息
+    	function orderLogistics(data){
+    		//加载模板数据
+    		$("#orderlogistics").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/z/orderlogistics.tpl");
+            $("#orderlogistics").processTemplate(data);
     	}
     	
     	//处理数据-订单商品
@@ -519,44 +528,7 @@
 			</div>
 			<h4>物流信息</h4>
 			<hr class="">
-			<div class="table-responsive">
-				<table class="table table-hover">
-					<tbody><tr>
-						<th style="text-align: left;" width="180">处理时间</th>
-						<th style="text-align: left;" width="*">处理信息</th>
-						<th width="180">操作人</th>
-					</tr>
-					<tr>
-						<td style="text-align: left;">2016-07-20 12:36:13</td>
-						<td style="text-align: left;">您的订单已经拣货完毕，待出库交付申通快递，运单号为229111673599</td>
-						<td>商家</td>
-					</tr>
-					<tr>
-						<td style="text-align: left;">2016-07-20 19:30:13</td>
-						<td style="text-align: left;">由广东东莞南城西平分部 发往 广东东莞中转部</td>
-						<td>申通快递</td>
-					</tr>
-					<tr>
-						<td style="text-align: left;">2016-07-20 19:30:13</td>
-						<td style="text-align: left;">由广东东莞南城西平分部 发往 广东东莞中转部</td>
-						<td>申通快递</td>
-					</tr>
-					<tr>
-						<td style="text-align: left;">2016-07-20 19:30:13</td>
-						<td style="text-align: left;">由广东东莞南城西平分部 发往 广东东莞中转部</td>
-						<td>申通快递</td>
-					</tr>
-					<tr>
-						<td style="text-align: left;">2016-07-20 19:30:13</td>
-						<td style="text-align: left;">由广东东莞南城西平分部 发往 广东东莞中转部</td>
-						<td>申通快递</td>
-					</tr>
-					<tr>
-						<td style="text-align: left;">2016-07-20 19:30:13</td>
-						<td style="text-align: left;">由广东东莞南城西平分部 发往 广东东莞中转部</td>
-						<td>申通快递</td>
-					</tr>
-				</tbody></table>
+			<div id="orderlogistics" class="table-responsive">
 			</div>
 		</div>
 		<!-- 订单详情  END -->

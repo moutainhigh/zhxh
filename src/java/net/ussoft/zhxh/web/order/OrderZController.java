@@ -27,6 +27,7 @@ import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_order;
+import net.ussoft.zhxh.model.Public_order_logistics;
 import net.ussoft.zhxh.model.Public_order_path;
 import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_product_size;
@@ -36,6 +37,7 @@ import net.ussoft.zhxh.model.Public_user_path;
 import net.ussoft.zhxh.model.Share_bill;
 import net.ussoft.zhxh.service.IIncomeBillService;
 import net.ussoft.zhxh.service.IPublicMessageService;
+import net.ussoft.zhxh.service.IPublicOrderLogisticsService;
 import net.ussoft.zhxh.service.IPublicOrderPathService;
 import net.ussoft.zhxh.service.IPublicOrderProductService;
 import net.ussoft.zhxh.service.IPublicOrderService;
@@ -71,6 +73,8 @@ public class OrderZController extends BaseConstroller {
 	private IPublicMessageService messageService;
 	@Resource
 	private IIncomeBillService incomeBillService;
+	@Resource
+	private IPublicOrderLogisticsService logisticsService;
 	
 	/**
 	 * 新增订货单
@@ -441,12 +445,15 @@ public class OrderZController extends BaseConstroller {
 		//分润流水
 		List<Share_bill> sbList = orderService.getOrderSharebill(orderid);
 		
+		//物流信息
+		List<Public_order_logistics> logisticsList = logisticsService.orderLogistics(order);
+				
 		map.put("order",order);
 		map.put("products", proList);
 		map.put("address", orderPath);
 		map.put("income", bill);
 		map.put("sbList", sbList);
-		
+		map.put("logisticsList", logisticsList);
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}

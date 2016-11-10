@@ -1,4 +1,4 @@
-package net.ussoft.zhxh.util.express.pojo;
+package net.ussoft.zhxh.util.kuaidi100.pojo;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -49,12 +49,12 @@ public class TaskResponse {
 		return (TaskResponse)getXStream().fromXML(sXml);
 	}
 
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 		TaskResponse req = new TaskResponse();
 		req.setMessage("订阅成功");
 		req.setResult(true);
 		req.setReturnCode("200");
 		System.out.print(req.toXml());
-	}
+	}*/
 
 }

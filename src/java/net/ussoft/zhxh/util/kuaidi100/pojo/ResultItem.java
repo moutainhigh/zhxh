@@ -1,4 +1,4 @@
-package net.ussoft.zhxh.util.express.pojo;
+package net.ussoft.zhxh.util.kuaidi100.pojo;
 
 public class ResultItem {
 	String time;

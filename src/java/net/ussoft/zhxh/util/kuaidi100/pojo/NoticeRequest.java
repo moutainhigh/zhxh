@@ -1,6 +1,8 @@
-package net.ussoft.zhxh.util.express.pojo;
+package net.ussoft.zhxh.util.kuaidi100.pojo;
 
-import net.ussoft.zhxh.util.express.JacksonHelper;
+import java.util.ArrayList;
+
+import net.ussoft.zhxh.util.kuaidi100.JacksonHelper;
 
 import com.thoughtworks.xstream.XStream;
 

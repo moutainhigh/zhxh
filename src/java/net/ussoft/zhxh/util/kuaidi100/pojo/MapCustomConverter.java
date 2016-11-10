@@ -1,4 +1,4 @@
-package net.ussoft.zhxh.util.express.pojo;
+package net.ussoft.zhxh.util.kuaidi100.pojo;
 
 import java.util.HashMap;
 import java.util.Iterator;

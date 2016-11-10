@@ -89,7 +89,7 @@
 						<td align="right"></td>
 					</tr>
 					<tr>
-						<td align="center">返利</td>
+						<td align="center">返利(累计)</td>
 						<td>￥{$T.row.rebatesbank}</td>
 						<td align="right"><a href="javascript:;" onclick="disBillDetail('{$T.row.userid}','{$T.row.parentid}',1)">查看记录</a></td>
 					</tr>

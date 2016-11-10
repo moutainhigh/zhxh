@@ -106,14 +106,21 @@ function payment(){
  * */
 function transfBuyBank(pid,amount){
 	layer.prompt({
-		title: '请输入充值金额，并确认',
+		title: '请输入转货款金额，并确认',
 		value:amount,
 		formType: 0 //prompt风格，支持0-2
 	}, function(trans_amount){
-		if(parseFloat(trans_amount) > parseFloat(amount)){
-			parent.layer.msg("账户余额不足，请重新输入！",{icon:6});
+		if(!isInteger(trans_amount)){
+			parent.layer.msg('请输入大于0的正整数', {icon:5});
+			return;
+		}else if(parseFloat(trans_amount) > parseFloat(amount)){
+			parent.layer.msg("账户余额不足，请重新输入！",{icon:5});
 			return;
 		}else{
+			if(trans_amount < 1){
+				parent.layer.msg('请输入大于0的正整数', {icon:5});
+				return;
+			}
 			//获取系数
 			var coef = getTransfCoef(pid);
 			var subtotal = trans_amount;
@@ -138,8 +145,10 @@ function transfBuyBank(pid,amount){
    	                		getUserBank();
    	                		$('#transf_click').click();
    	                		layer.msg("转货款成功！",{icon:6});
+   	                	}else if(text == "amounterror"){
+   	                		layer.msg("请输入大于0的正整数",{icon:5});
    	                	}else{
-   	                		layer.msg("操作失败，请稍后再试！",{icon:6});
+   	                		layer.msg("操作失败，请稍后再试！",{icon:5});
    	                	}
    	                },
    	                error: function (jqXHR, textStatus, errorThrown) {
@@ -256,6 +265,8 @@ function save_ithdrawal_bill() {
             success: function (text) {
             	if(text == "codeerror"){
             		layer.msg("验证码错误",{icon:6});
+            	}else if(text == "amounterror"){
+            		layer.msg("提现金额为2元起",{icon:6});
             	}else if(text == "3"){
             		layer.msg("您的账户余额不足，请重新输入提现金额。",{icon:6});
             	}else if(text == "2"){
