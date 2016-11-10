@@ -1,7 +1,19 @@
 <script src="{$P.path}"></script>
 <div class="collapse">
 	{#foreach $T as row}
-	<div class="panel border-sub {$P.current_uid == $T.row.parentid ? 'active':''}">
+		{#if $P.current_uid == "1"}
+			{#if $T.row$index == 0}
+				<div class="panel border-sub active">
+			{#else}
+				<div class="panel border-sub">
+			{#/if}
+		{#else}
+			{#if $P.current_uid == $T.row.parentid}
+				<div class="panel border-sub active">
+			{#else}
+				<div class="panel border-sub">
+			{#/if}
+		{#/if}
 		<div class="panel-head">
 			<strong>我的帐户[<span style="color:red">{$T.row.companyname}</span>]</strong>
 			<span class="float-right"><strong>状态[<span style="color:{#if $T.row.bankstate == 0}red{#else}blue{#/if}">{$T.row.bankstatetxt}</span>]</strong></span>

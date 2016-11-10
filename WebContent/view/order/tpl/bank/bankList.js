@@ -15,6 +15,9 @@ function getUserBank() {
         type: "post",
         dataType:"json",
         success: function (json) {
+        	if(_current_uid == undefined){
+        		_current_uid = "1";
+        	}
         	$("#banks").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/bankList.tpl");
         	$("#banks").setParam("path",getRootPath_web() + "/js/pintuer/pintuer.js");
         	$("#banks").setParam("identity",json.identity);

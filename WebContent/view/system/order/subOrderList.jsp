@@ -67,7 +67,7 @@
 	      	            	{ field: "productnum",name:"productnum", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "数量"},
 	      	          		{ field: "price",name:"price", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "单价"},
 	      	          		{ field: "buyerdis",name:"buyerdis", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "折扣"},
-	      	          		{ field: "u_companyname",name:"u_companyname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "小计"}
+	      	          		{ field: "subtotal",name:"subtotal", width: 80, headerAlign: "center", align:"right",allowSort: false, header: "小计"}
 	      	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -115,7 +115,9 @@
                 var record = e.record,
 	            field = e.field,
 	            value = e.value;
-                if (field == "orderstatus") {
+                if(field == "ordertotal"){
+                	e.cellHtml = "￥"+formatFloat(value,2);
+                }else if (field == "orderstatus") {
    	        		if (value == "1") {
    	        			e.cellHtml = "待发货";
        	        	}else if(value == "2") {
@@ -123,6 +125,24 @@
    	        		}else if(value == "3") {
    	        			e.cellHtml = "已签收";
    	        		}
+    	        }
+            });
+    		
+    		grid_order_pro.on("drawcell", function (e) {
+                var record = e.record,
+	            field = e.field,
+	            value = e.value;
+                if (field == "subtotal") {
+                	var quantity = record.productnum;
+                	var price = record.price;
+                	var buyerdis = record.buyerdis;
+                	var subtotal = 0;
+                	if(buyerdis > 0){
+                		subtotal = formatFloat(quantity * price * buyerdis,2);
+                	}else{
+                		subtotal = formatFloat(quantity * price,2);
+                	}
+                	e.cellHtml = "￥"+subtotal;
     	        }
             });
         }
@@ -189,10 +209,17 @@
        		 	return;
        	 	}
        	 	var row = grid_order.getSelected();
-       	 	if(row.orderstatus != "1"){
-       	 		var sta = ["","","已发货","已签收"];
-	       	 	parent.parent.layer.msg("该订单"+sta[row.orderstatus],{icon:6});
-	   		 	return;
+       	 	if(row.isshare == "1"){
+       	 		if(row.isshareover == "0"){
+       	 			parent.parent.layer.msg("分润-待完成",{icon:6});
+   		 			return;
+       	 		}else{
+       	 			parent.parent.layer.msg("该订单已完成分润",{icon:6});
+	   		 		return;
+       	 		}
+       	 	}else{
+       	 		parent.parent.layer.msg("该订单目前不能进行分润，分润日期未到。",{icon:6});
+       	 		return;
        	 	}
       	}
     </script>
@@ -209,18 +236,18 @@
 		                 </td>
 		                 <c:if test="${ordertype != 'a' }">
 			                 <td style="white-space:nowrap;">
-				         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="sendOut()">确认发货</a>
+				         		<a class="mini-button" iconCls="icon-node" plain="true" onclick="sendOut()">确认发货</a>
 				         		<span class="separator"></span>
 			                 </td>
 		                 </c:if>
 		                 <c:if test="${ordertype eq 'p' }">
 			                 <td style="white-space:nowrap;">
-				         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="onOrderShare()">分配利润</a>
+				         		<a class="mini-button" iconCls="icon-node" plain="true" onclick="onOrderShare()">分配利润</a>
 				         		<span class="separator"></span>
 			                 </td>
 		                 </c:if>
 		                 <td style="white-space:nowrap;">
-		                    <input id="key_user_a" class="mini-textbox" emptyText="姓名/手机号/机构名称/地址" style="width:250px;" onenter="onKeyEnter"/>
+		                    <input id="key_user_a" class="mini-textbox" emptyText="订单号" style="width:250px;" onenter="onKeyEnter"/>
 		                    <a class="mini-button" iconCls="icon-search" plain="true" onclick="search('grid_order')">查询</a>
 		                </td>
 		             </tr>

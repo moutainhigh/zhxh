@@ -2,7 +2,6 @@ package net.ussoft.zhxh.filter;
 
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -71,7 +70,7 @@ public class SystemFilter implements Filter {
             return;
         }
         
-        String[] strs = {"kaptcha","init","page","login","css","js","image","pcMain","mMain","file","receive"};
+        String[] strs = {"kaptcha","init","page","login","css","js","image","pcMain","mMain","file","receive","kdcall"};
         if (strs != null && strs.length > 0) {  
             for (String str : strs) {
                 if (url.indexOf(str) >= 0) {
