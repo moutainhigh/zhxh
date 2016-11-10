@@ -587,6 +587,26 @@ SET FOREIGN_KEY_CHECKS = 1;
 	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '94', 'disposable_bill', 'type', '5', '货款（订单）');
 	
 	
+2、share_bill	分润流水表
+ （1）增加创建时间 createtime varchar（50）
+ 
+3、可支配账户-账单流水  disposable_bill
+	（1）删除type字段
+	（2）修改type_txt  字段名 为 trantypetxt
+	（3）增加上级id parentid varchar（40）
+	（4）增加用户id userid varchar（40）
+	
+4、数据字典表
+  88-95行
+  
+  insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '88', 'disposable_bill', 'trantype', '1', '配额');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '89', 'disposable_bill', 'trantype', '2', '返利');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '90', 'disposable_bill', 'trantype', '3', '奖励转货款');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '91', 'disposable_bill', 'trantype', '4', '退款（取消订单）');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '92', 'disposable_bill', 'trantype', '5', '货款（订单）');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '93', 'disposable_bill', 'trantype', '6', '平台售额');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '94', 'disposable_bill', 'trantype', '7', '货款（订单）');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '95', 'disposable_bill', 'trantype', '8', '提现');
 	
 
 	

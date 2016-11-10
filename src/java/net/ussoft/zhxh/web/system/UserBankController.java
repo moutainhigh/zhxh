@@ -218,7 +218,90 @@ public class UserBankController extends BaseConstroller {
 		out.print(json);
 	}
 	
+	/*------------------综合平台 资金帐户 交易流水--------------*/
+	/**
+	 * 收入总计-账单流水
+	 * @param parentid
+	 * @param userid
+	 * @param trantype
+	 * @param identity
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/incomeBillDetail",method=RequestMethod.POST)
+	public void incomeBillDetail(String parentid,String userid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		
+		Public_user user = userService.getById(userid);
+		
+		if (user.getId().equals("1")) {
+			p = incomeBillService.list("", "", null,"", p);
+		}
+		else if (user.getIdentity().equals("A")) {
+			p = incomeBillService.list("", userid, null,user.getIdentity(), p);
+		}
+		else if (user.getIdentity().equals("C")) {
+			p = incomeBillService.list(userid, parentid, null,user.getIdentity(), p);
+		}
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
 	
+	/**
+	 * 支出总计-账单流水
+	 * @param parentid
+	 * @param userid
+	 * @param trantype
+	 * @param identity
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/spendingBillDetail",method=RequestMethod.POST)
+	public void spendingBillDetail(String banktype,String parentid,String userid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		
+		Public_user user = userService.getById(userid);
+		
+		if (user.getId().equals("1")) {
+			p = spendingBillService.list("", "", null, p);
+		}
+		else if (user.getIdentity().equals("A")) {
+			p = spendingBillService.list("", userid, null, p);
+		}
+		else if (user.getIdentity().equals("C")) {
+			p = spendingBillService.list(userid, parentid, null, p);
+		}
+					
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/*------------------综合平台 资金帐户 交易流水 end--------------*/
 	
 	
 	/*---------------以下不确定要---------------*/
@@ -539,76 +622,6 @@ public class UserBankController extends BaseConstroller {
 			return;
 		}
 		out.print("error");
-	}
-	
-	/**
-	 * 收入总计-账单流水
-	 * @param parentid
-	 * @param userid
-	 * @param trantype
-	 * @param identity
-	 * @param response
-	 * @throws IOException
-	 */
-	@RequestMapping(value="/incomeBillDetail",method=RequestMethod.POST)
-	public void incomeBillDetail(String parentid,String userid,String trantype,String identity,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
-		p.setPageSize(pageSize);
-		p.setPageNo(pageIndex);
-		p.setOrderBy("createtime");
-		p.setOrderType("desc");
-		List<String> trantypes = new ArrayList<String>();
-		if(null != trantype && !"".equals(trantype)){
-			String[] arr = trantype.split(",");
-			Collections.addAll(trantypes, arr);
-		}
-		p = incomeBillService.list(userid, parentid, trantypes, identity, p);
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("total", p.getRowCount());
-		map.put("data", p.getList());
-		
-		String json = JSON.toJSONString(map);
-		out.print(json);
-	}
-	
-	/**
-	 * 支出总计-账单流水
-	 * @param parentid
-	 * @param userid
-	 * @param trantype
-	 * @param identity
-	 * @param response
-	 * @throws IOException
-	 */
-	@RequestMapping(value="/spendingBillDetail",method=RequestMethod.POST)
-	public void spendingBillDetail(String parentid,String userid,String trantype,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
-		response.setContentType("text/xml;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-		
-		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
-		p.setPageSize(pageSize);
-		p.setPageNo(pageIndex);
-		p.setOrderBy("createtime");
-		p.setOrderType("desc");
-		List<String> trantypes = new ArrayList<String>();
-		if(null != trantype && !"".equals(trantype)){
-			String[] arr = trantype.split(",");
-			Collections.addAll(trantypes, arr);
-		}
-		p = spendingBillService.list(userid, parentid, trantypes, p);
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("total", p.getRowCount());
-		map.put("data", p.getList());
-		
-		String json = JSON.toJSONString(map);
-		out.print(json);
 	}
 	
 	/**

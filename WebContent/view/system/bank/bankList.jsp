@@ -174,16 +174,20 @@
             
             var s = "";
             
-            s = '  <a class="Edit_Button" href="javascript:showBill(\'' + id + '\',\'' + u_companyname + '\')" >查看交易流水</a>';
+            //s = '  <a class="Edit_Button" href="javascript:showBill(\'' + id + '\',\'' + u_companyname + '\')" >查看交易流水</a>';
+            s = '  <a class="Edit_Button" href="javascript:showBill(\'' + id + '\',\'' + record.parentid + '\',\'' + record.userid + '\',\'' + u_companyname + '\')" >查看交易流水</a>';
             
             return s;
         }
 	   	
-	   	function showBill(id,username) {
+	   	function showBill(id,parentid,userid,username) {
 	   		if(id == 'undefined'){
         		parent.parent.layer.msg("未获取到id，请退出重新登录，再尝试。",{icon:6});
 				return;
 			}
+	   		
+	   		//获取parentid 和userid
+	   		
 			var pHeight = $(window.parent).height();
 	   		var pWidth = $(window.parent).width();
 	   		
@@ -194,7 +198,7 @@
                 allowResize:true,
                 onload: function () {
                 	var iframe = this.getIFrameEl();
-               	 	var data = {bankid:id};
+               	 	var data = {bankid:id,parentid:parentid,userid:userid};
                     iframe.contentWindow.SetData(data);
                 },
                 ondestroy: function (action) {

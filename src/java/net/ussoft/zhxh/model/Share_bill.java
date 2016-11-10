@@ -22,6 +22,7 @@ public class Share_bill {
 	private Integer sharestate;		//状态		0：等待分润  1：分润完成
 	private String remarks;			//备注
 	private String submitname;			//下单机构名称
+	private String createtime;			//创建时间
 	
 	
 	
@@ -30,7 +31,7 @@ public class Share_bill {
 	}
 	
 	public Share_bill(String id, String orderid, String ordernumber,String bankid, String userid, String username,String orderproductids, Float sharepay,
-			Integer sharenumber, String sharetime, String shareovertime, Integer sharestate, String remarks,String submitname) {
+			Integer sharenumber, String sharetime, String shareovertime, Integer sharestate, String remarks,String submitname,String createtime) {
 		super();
 		this.id = id;
 		this.orderid = orderid;
@@ -46,6 +47,7 @@ public class Share_bill {
 		this.sharestate = sharestate;
 		this.remarks = remarks;
 		this.submitname = submitname;
+		this.createtime = createtime;
 	}
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -140,6 +142,14 @@ public class Share_bill {
 
 	public void setSubmitname(String submitname) {
 		this.submitname = submitname;
+	}
+
+	public String getCreatetime() {
+		return createtime;
+	}
+
+	public void setCreatetime(String createtime) {
+		this.createtime = createtime;
 	}
 	
 	

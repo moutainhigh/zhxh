@@ -19,8 +19,35 @@
 	    //mini.parse();
 	    
 	    var grid_bank;
-		var grid_product;
-		var grid_product_size;
+	    
+	    
+	    var parentid = "";
+	    var userid = "";
+	    var bankid = "";
+	    
+		var grid_bill;
+		
+		var columns_income=[
+						{ type: "checkcolumn",headerAlign:"center",width: 30},
+						{ type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
+						{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+						{ field: "billno",name:"billno", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "账单流水号",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+		              { field: "createtime",name:"createtime",dateFormat:"yyyy-MM-dd HH:mm:ss", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "日期",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+		              { field: "u_username",name:"u_username", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "客户名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+		              { field: "trantypetxt",name:"trantypetxt", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "摘要",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+		              { field: "account_receivable",name:"account_receivable", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "金额(元)",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
+	     	    ];
+		var columns_spending=[
+						{ type: "checkcolumn",headerAlign:"center",width: 30},
+						{ type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
+						{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+						{ field: "billno",name:"billno", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "账单流水号",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+		              { field: "createtime",name:"createtime",dateFormat:"yyyy-MM-dd HH:mm:ss", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "日期",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+		              { field: "u_username",name:"u_username", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "客户名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+		              { field: "trantypetxt",name:"trantypetxt", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "摘要",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+		              { field: "amount",name:"amount", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "金额(元)",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+		              { field: "status",name:"status", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"-1","text":"失败"},{"id":"0","text":"未接收"},{"id":"1","text":"成功"}] }}
+	     	    ];
 		
 	    $(function(){
 	    	mini.parse();
@@ -39,7 +66,7 @@
 	            allowCellValid:true,
 	            multiSelect:false,
 	            allowUnselect:false,
-	            onselectionchanged:"onselectionchanged",
+	            onselectionchanged:"onSelectionChanged",
 	            showPager:true,
 	            fitColumns:false,
 	            editNextOnEnterKey:true,
@@ -47,16 +74,14 @@
 	            pageSize:2000
 	        });
         	
-			grid_product = mini.get("grid_product");
-			grid_product.set({
-        		url:"${pageContext.request.contextPath}/product/list.htmls",
+	    	grid_bill = mini.get("grid_bill");
+	    	grid_bill.set({
+        		//url:"${pageContext.request.contextPath}/userBank/incomeBillDetail.htmls",
         		columns: [
-						{ type: "checkcolumn",headerAlign:"center",width: 30},
-      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
-      	                { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "createdate",name:"update",dateFormat:"yyyy-MM-dd", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "创建日期",editor: { type: "datepicker", minValue: 0, maxValue: 500, value: 25} },
-      	                { field: "sort",name:"sort", width: 30, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
-      	            ],
+							{ type: "checkcolumn",headerAlign:"center",width: 30},
+	      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
+	      	                { field: "u_companyname",name:"u_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "交易流水",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
+	      	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
 	            allowCellEdit:false,
@@ -64,39 +89,11 @@
 	            multiSelect:false,
 	            allowUnselect:false,
 	            showPager:true,
-	            onselectionchanged:"onSelProductChanged",
+	            //onselectionchanged:"onSelProductChanged",
 	            //fitColumns:false,
 	            editNextOnEnterKey:true,
 	            showPageSize:false,
 	            pageSize:2000
-	        });
-			
-			grid_product_size = mini.get("grid_product_size");
-			grid_product_size.set({
-	    		url:"${pageContext.request.contextPath}/product/list.htmls",
-	            columns: [
-	                  { type: "checkcolumn",headerAlign:"center",width: 30},
-					  { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
-					  { field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片"},
-					  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-					  { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
-					  { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-					  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
-					  { field: "saleprice",name:"saleprice", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "特价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25  } },
-					  { field: "sizesort",name:"sizesort", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: {type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
-					  { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
-					  { field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"下架"},{"id":"1","text":"上架"}] } }
-				],
-	            showFilterRow:false,
-	            allowCellSelect:true,
-	            allowCellEdit:false,
-	            allowCellValid:true,
-	            multiSelect:true,
-	            //onselectionchanged:"onSelectionChanged",
-	            allowUnselect:false,
-	            showPager:true,
-	            showPageSize:false,
-	            pageSize:1000
 	        });
 			
         	drawcell();
@@ -139,39 +136,13 @@
                 }
             });
        		
-	    	grid_product.on("drawcell", function (e) {
+	    	grid_bill.on("drawcell", function (e) {
                 var record = e.record,
 	            column = e.column,
 	            field = e.field,
 	            uid = record._uid,
 	            value = e.value;
                 
-                if (field == "isshow") {
-                	if (value == 0) {
-                		e.cellStyle = "color:red;text-align:center";
-                	}
-                	else {
-                		e.cellStyle = "color:blue;text-align:center";
-                	}
-                }
-            });
-	    	
-	    	grid_product_size.on("drawcell", function (e) {
-                var record = e.record,
-	            column = e.column,
-	            field = e.field,
-	            uid = record._uid,
-	            value = e.value;
-                
-                if (field == "productpic") {
-   	        		if (typeof(value) == "undefined" || value == "") {
-   	        			e.cellStyle = "color:red;text-align:center";
-                		e.cellHtml = '未设置图片';
-       	        	}
-   	        		else {
-   	        			e.cellHtml = '<img src="${pageContext.request.contextPath}/' + value + '" height="30px" />';
-   	        		}
-    	        }
                 if (field == "isshow") {
                 	if (value == 0) {
                 		e.cellStyle = "color:red;text-align:center";
@@ -182,24 +153,38 @@
                 }
             });
         }
+	    
+	    function getBill(banktype,parentid,userid) {
+	    	var url = "";
+	    	if (banktype == 'incomebank' || banktype == "depositbank") {
+	    		url = "${pageContext.request.contextPath}/userBank/incomeBillDetail.htmls";
+	    		grid_bill.set({
+		    		url:url,
+		    		columns: columns_income
+		    	})
+	    	}
+	    	else if (banktype == "costbank") {
+	    		url = "${pageContext.request.contextPath}/userBank/spendingBillDetail.htmls";
+	    		grid_bill.set({
+		    		url:url,
+		    		columns: columns_spending
+		    	})
+	    	}
+	    	
+	    	grid_bill.load({parentid:parentid, userid: userid });
+	    }
 	    
 	    function onSelectionChanged(e) {
             var grid = e.sender;
 	       	//处理角色对应的帐户
             var record = grid.getSelected();
 	      	
-            if (typeof(record.id) == "undefined" || record.id == "") {
-            	grid_product.setData([]);
-            	grid_product.setTotalCount(0);
-	      		return;
-	      	}
-            
             if (record) {
-            	grid_product.load({listtype:'product', parentid: record.id });
+            	getBill(record.banktype,parentid,userid);
             }
         }
 	    
-	    function onSelProductChanged(e) {
+	    function onselectionchanged(e) {
             var grid = e.sender;
 	       	//处理角色对应的帐户
             var record = grid.getSelected();
@@ -218,7 +203,9 @@
 	  	//标准方法接口定义
 		function SetData(data) {
 			//跨页面传递的数据
-			var bankid = data.bankid;
+			bankid = data.bankid;
+			parentid = data.parentid;
+			userid = data.userid;
 			grid_bank.load({ bankid: bankid });
 		}
 	    
@@ -250,7 +237,7 @@
 <body>
 	<div class="mini-fit">
 	 	<div class="mini-splitter" style="width:100%;height:100%;" borderStyle="border:0;">
-	 		<div size="50%" showCollapseButton="false" style="border-width: 1;">
+	 		<div size="30%" showCollapseButton="false" style="border-width: 1;">
 		    	<div class="mini-toolbar" style="padding:0px;border-top:0;border-left:0;border-right:0;">
 			        <table style="width:100%;">
 			            <tbody>

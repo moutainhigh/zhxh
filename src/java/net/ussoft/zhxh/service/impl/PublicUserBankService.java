@@ -735,6 +735,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 			sBill.setSharepay(Float.valueOf(total));
 			sBill.setSharenumber(Integer.valueOf(number));
 			sBill.setSharetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+			sBill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 			sBill.setShareovertime("");
 			sBill.setSharestate(0);
 			sBill.setRemarks("");
