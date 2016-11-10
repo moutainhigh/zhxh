@@ -36,7 +36,7 @@
 	<!--头部-->
 	<%@include file="/view/pc/header.jsp" %>
 	
-	<div class="width-100">
+	<%-- <div class="width-100">
 		<form name="form1" action="${pageContext.request.contextPath}/porder/orderbuy.htmls" method="post">
 		<input type="hidden" name="id" value="${product.id }"/>
 	    <div class="container shop-page clearfix">
@@ -75,7 +75,7 @@
 	        </div>
 	    </div>
 	    </form>
-	</div>
+	</div> --%>
 	<div class="">
 	 <c:choose>
 	 	<c:when test="${pcontent != null }">

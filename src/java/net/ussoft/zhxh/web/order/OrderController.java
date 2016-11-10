@@ -28,6 +28,7 @@ import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_message;
 import net.ussoft.zhxh.model.Public_order;
+import net.ussoft.zhxh.model.Public_order_logistics;
 import net.ussoft.zhxh.model.Public_order_path;
 import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_product_size;
@@ -35,6 +36,7 @@ import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Public_user_path;
 import net.ussoft.zhxh.service.IPublicMessageService;
+import net.ussoft.zhxh.service.IPublicOrderLogisticsService;
 import net.ussoft.zhxh.service.IPublicOrderPathService;
 import net.ussoft.zhxh.service.IPublicOrderProductService;
 import net.ussoft.zhxh.service.IPublicOrderService;
@@ -45,6 +47,9 @@ import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
+import net.ussoft.zhxh.util.kuaidi100.KdQuery;
+import net.ussoft.zhxh.util.kuaidi100.pojo.Result;
+import net.ussoft.zhxh.util.kuaidi100.pojo.ResultItem;
 
 
 @Controller
@@ -67,6 +72,9 @@ public class OrderController extends BaseConstroller {
 	private IPublicOrderPathService orderPathService;
 	@Resource
 	private IPublicMessageService messageService;
+	@Resource
+	private IPublicOrderLogisticsService logisticsService;
+	
 	/**
 	 * 跳转到某个页面。
 	 * @param page		跳转到参数指定的页面
@@ -492,15 +500,48 @@ public class OrderController extends BaseConstroller {
 		List<Public_order_product> proList = orderProServivce.list(op_map);
 		//收货地址
 		Public_order_path orderPath = orderPathService.getByOrderId(orderid);
-		
+		//物流信息
+		List<Public_order_logistics> logisticsList = logisticsService.orderLogistics(order);
 		
 		map.put("order",order);
 		map.put("products", proList);
 		map.put("address", orderPath);
+		map.put("logisticsList", logisticsList);
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
+	
+	/**
+	 * 订单物流信息
+	 * @param order
+	 * @return
+	 * */
+	/*private List<Public_order_logistics> orderLogistics(Public_order order){
+		List<Public_order_logistics> resultList = new ArrayList<Public_order_logistics>();
+		if(null != order.getDeliverynum() && !"".equals(order.getDeliverynum())){
+			List<Public_order_logistics> logisticsList = logisticsService.list(order.getId());
+			if(logisticsList.size() > 0){
+				resultList = logisticsList;
+			}else{
+				Result result = KdQuery.getNoticeResult(order.getDeliverynum());
+				快递单当前签收状态，包括0在途中、1已揽收、2疑难、3已签收、4退签、5同城派送中、6退回、7转单等7个状态，其中4-7需要另外开通才有效 
+				if("3".equals(result.getState())){
+					// 处理快递结果
+					resultList = logisticsService.insert(result.getData(), order.getId());
+				}else{
+					ArrayList<ResultItem> list = result.getData();
+					for(ResultItem item : list){
+						Public_order_logistics obj = new Public_order_logistics();
+						obj.setHandletime(item.getFtime());
+						obj.setHandleresult(item.getContext());
+						resultList.add(obj);
+					}
+				}
+			}
+		}
+		return resultList;
+	}*/
 	
 	/**
 	 * 机构经销的品牌

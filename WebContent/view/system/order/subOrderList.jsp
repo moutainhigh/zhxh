@@ -28,11 +28,11 @@
 	    		columns: [
 							{ type: "checkcolumn",headerAlign:"center",width: 30},
 	      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
-	      	              	{ field: "ordernumber",name:"ordernumber", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "订单号"},
-	      	                { field: "u_companyname",name:"u_companyname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "客户名称"},
+	      	              	{ field: "ordernumber",name:"ordernumber", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "订单号"},
+	      	                { field: "u_companyname",name:"u_companyname", width: '30%', headerAlign: "center", align:"left",allowSort: false, header: "客户名称"},
 	      	              	{ field: "ordertotal",name:"ordertotal", width: 80, headerAlign: "center", align:"right",allowSort: false, header: "订单金额"},
-	      	              	{ field: "ordertime",name:"ordertime",dateFormat:"yyyy-MM-dd HH:mm:ss",width: 100, headerAlign: "center", align:"center",allowSort: false, header: "订单时间"},
-	      	              	{ field: "signtime",name:"signtime",dateFormat:"yyyy-MM-dd HH:mm:ss",width: 100, headerAlign: "center", align:"center",allowSort: false, header: "签收时间"},
+	      	              	{ field: "ordertime",name:"ordertime",dateFormat:"yyyy-MM-dd HH:mm:ss",width: 120, headerAlign: "center", align:"center",allowSort: false, header: "订单时间"},
+	      	              	{ field: "signtime",name:"signtime",dateFormat:"yyyy-MM-dd HH:mm:ss",width: 120, headerAlign: "center", align:"center",allowSort: false, header: "签收时间"},
 	      	              	{ field: "orderstatus",name:"orderstatus",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "状态"}
 	      	              	
 	      	            ],
@@ -50,7 +50,7 @@
 		            //fitColumns:false,
 		            editNextOnEnterKey:true,
 		            showPageSize:false,
-		            pageSize:2000
+		            pageSize:50
 		            
 	        });
 	    	grid_order.load({orderType:ordertype});
@@ -87,12 +87,11 @@
 	    	//物流信息
 	    	grid_order_wl = mini.get("grid_order_wl");
 	    	grid_order_wl.set({
-	    		url:"${pageContext.request.contextPath}/userManager/list.htmls",
+	    		url:"${pageContext.request.contextPath}/syspo/logistics.htmls",
 	    		columns: [
 							{ type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
-	      	              	{ field: "brandname",name:"brandname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "处理时间"},
-	      	                { field: "productname",name:"productname", width: 280, headerAlign: "center", align:"center",allowSort: false, header: "处理信息"},
-	      	              	{ field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作人"}
+	      	              	{ field: "handletime",name:"handletime", width: 120,dateFormat:"yyyy-MM-dd HH:mm:ss", headerAlign: "center", align:"center",allowSort: false, header: "处理时间"},
+	      	              	{ field: "handleresult",name:"handleresult", width: '60%', headerAlign: "center", align:"left",allowSort: false, header: "处理信息"}
 	      	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -151,6 +150,9 @@
         function search(gridtype) {
 			alert(12);
 		}
+		function selStatus(v){
+			grid_order.load({orderType:ordertype,status:v});
+		}
        
       	//查看订单-订单商品
         function onSelectionChanged(e) {
@@ -158,7 +160,7 @@
             var record = grid.getSelected();
             if (record) {
             	grid_order_pro.load({orderid: record.id});
-            	//grid_order_wl.load({parentid: record.id,identity:"Z"});
+            	grid_order_wl.load({orderid: record.id});
             }
         }
       
@@ -246,10 +248,20 @@
 				         		<span class="separator"></span>
 			                 </td>
 		                 </c:if>
-		                 <td style="white-space:nowrap;">
+		                 <td>筛选：</td>
+		                 <td>
+		                 	<select onchange="selStatus(this.value)"><option value="">--全部订单--</option>
+		                 		<option value="0">待支付订单</option>
+		                 		<option value="1">待发货订单</option>
+		                 		<option value="2">已发货订单</option>
+		                 		<option value="3">已签收订单</option>
+		                 		<option value="-1">已取消订单</option>
+		                 	</select>
+		                 </td>
+		                 <!-- <td style="white-space:nowrap;">
 		                    <input id="key_user_a" class="mini-textbox" emptyText="订单号" style="width:250px;" onenter="onKeyEnter"/>
 		                    <a class="mini-button" iconCls="icon-search" plain="true" onclick="search('grid_order')">查询</a>
-		                </td>
+		                </td> -->
 		             </tr>
 		         	</tbody>
 		        </table>

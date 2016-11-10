@@ -1,9 +1,11 @@
 package net.ussoft.zhxh.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Public_order;
 import net.ussoft.zhxh.model.Public_order_logistics;
+import net.ussoft.zhxh.util.kuaidi100.pojo.ResultItem;
 
 /**
  * 订单物流
@@ -26,11 +28,18 @@ public interface IPublicOrderLogisticsService {
 	public List<Public_order_logistics> list();
 	
 	/**
-	 * 查询所有 分页
+	 * 查询所有
 	 * @param pageBean
 	 * @return list
 	 * */
-	public List<Public_order_logistics> list(PageBean<Public_order_logistics> pageBean);
+	public List<Public_order_logistics> list(String orderid);
+	
+	/**
+	 * 订单物流信息
+	 * @param order
+	 * @return
+	 * */
+	public List<Public_order_logistics> orderLogistics(Public_order order);
 	
 	/**
 	 * 添加
@@ -38,6 +47,14 @@ public interface IPublicOrderLogisticsService {
 	 * @return 
 	 * */
 	public Public_order_logistics insert(Public_order_logistics orderLogistics);
+	
+	/**
+	 * 添加
+	 * @param list
+	 * @param orderid
+	 * @return
+	 * */
+	public List<Public_order_logistics> insert(ArrayList<ResultItem> list,String orderid);
 	
 	/**
 	 * 修改

@@ -1,12 +1,15 @@
 package net.ussoft.zhxh.base;
 
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import net.ussoft.zhxh.filter.SessionListener;
 import net.ussoft.zhxh.model.Public_brand;
 import net.ussoft.zhxh.model.Public_content;
 import net.ussoft.zhxh.model.Public_user;
@@ -135,5 +138,28 @@ public class BaseConstroller {
 	public int getCatnum(){
 		int catnum = (int) CommonUtils.getSessionAttribute(request, Constants.CAT_NUM);
 		return catnum;
+	}
+	
+	/**
+	 * 通过用户ID来强行把已经在线的用户的登录信息
+	 * @param uid
+	 * @return
+	 * */
+	public static void forceLogoutUser(String uid) {
+		// 删除单一登录中记录的变量
+		if(SessionListener.sessionMap.get(uid) != null) {
+			Object obj = SessionListener.sessionMap.get(uid);
+			if(obj != null){
+				HttpSession hs = (HttpSession) SessionListener.sessionMap.get(uid);
+				SessionListener.sessionMap.remove(uid);
+				Enumeration e = hs.getAttributeNames();
+				while (e.hasMoreElements()) {
+					String sessionName = (String) e.nextElement();
+					// 清空session
+					hs.removeAttribute(sessionName);
+	           }
+//	           hs.invalidate();
+			}
+		}
 	}
 }

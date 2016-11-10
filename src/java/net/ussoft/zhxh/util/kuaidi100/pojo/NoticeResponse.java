@@ -1,4 +1,4 @@
-package net.ussoft.zhxh.util.express.pojo;
+package net.ussoft.zhxh.util.kuaidi100.pojo;
 
 import com.thoughtworks.xstream.XStream;
 

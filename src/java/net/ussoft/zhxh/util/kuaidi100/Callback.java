@@ -1,4 +1,4 @@
-package net.ussoft.zhxh.util.express;
+package net.ussoft.zhxh.util.kuaidi100;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.ussoft.zhxh.util.express.pojo.NoticeRequest;
-import net.ussoft.zhxh.util.express.pojo.NoticeResponse;
-import net.ussoft.zhxh.util.express.pojo.Result;
-import net.ussoft.zhxh.util.express.pojo.ResultItem;
+import net.ussoft.zhxh.util.kuaidi100.pojo.NoticeRequest;
+import net.ussoft.zhxh.util.kuaidi100.pojo.NoticeResponse;
+import net.ussoft.zhxh.util.kuaidi100.pojo.Result;
+import net.ussoft.zhxh.util.kuaidi100.pojo.ResultItem;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +36,8 @@ public class Callback {
 			Result result = nReq.getLastResult();
 			// 处理快递结果
 			ArrayList<ResultItem> list = result.getData();
+			
+			
 			resp.setMessage("成功");
 			resp.setResult(true);
 			resp.setReturnCode("200");

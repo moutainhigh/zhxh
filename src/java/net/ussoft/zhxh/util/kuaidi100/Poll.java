@@ -1,4 +1,4 @@
-package net.ussoft.zhxh.util.express;
+package net.ussoft.zhxh.util.kuaidi100;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,11 +10,14 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import com.alibaba.fastjson.JSON;
 
 import net.ussoft.zhxh.util.MD5;
-import net.ussoft.zhxh.util.express.pojo.TaskRequest;
+import net.ussoft.zhxh.util.kuaidi100.pojo.TaskRequest;
 
+/**
+ * 推送，订阅
+ * */
 public class Poll {
 
-	public static void main(String[] args) {
+	public static void main2(String[] args) {
 		TaskRequest task = new TaskRequest();
 		task.setKey("cDswUZDo7433");
 		task.setCompany("shunfeng");

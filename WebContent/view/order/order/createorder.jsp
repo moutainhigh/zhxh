@@ -30,6 +30,7 @@
 		var total = 0,total_sum = 0;
 		var comp;//采购商家(用于改变商家时-取消回调)
 		var address;
+		var tips = 0;	//提现信息
     	$(function(){
     		//提示信息
     		layer.tips('请先选择采购商家', '#f_comp', {tips: [2, '#FF9901'],time: 5000,});
@@ -98,6 +99,12 @@
             $("#total").html(formatFloat(total,2));
             $("#total_sum").html(formatFloat(total,2));
             
+            if(tips == 0){
+            	layer.tips('点击购买数量进行编辑', '#p_quantity', {tips: [1, '#FF9901'],time: 5000,end:function(){
+            		layer.tips('点击移除商品', '.icon-minus', {tips: [1, '#FF9901'],time: 5000,});
+            	}});
+            	tips = 1;
+            }
     	}
     	
     	//品牌
@@ -349,7 +356,7 @@
 						<tbody>
 							<tr class="panel-head">
 								<th width="45" align="center"><input type="checkbox" value="1" name="id"></th>
-								<!-- <th width="120"></th> -->
+								<th width="120">品牌</th>
 								<th width="*">商品名称</th>
 								<th width="160">规格</th>
 								<th width="160">数量</th>
@@ -396,11 +403,11 @@
 		<table class="table table-bordered table-hover text-small sel">
 			<tbody>
 				<tr class="panel-head">
-					<th width="45" align="center"></th>
+					<th width="45" align="center" id="p_del"></th>
 					<th width="160">品牌</th>
 					<th width="*">商品名称</th>
 					<th width="160">规格</th>
-					<th width="160">数量</th>
+					<th width="160"><span id="p_quantity">数量</span></th>
 					<th width="100">单价</th>
 					<th width="100">折扣</th>
 					<th width="180">小计</th>

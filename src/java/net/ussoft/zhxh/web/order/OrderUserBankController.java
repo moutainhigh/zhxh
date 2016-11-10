@@ -241,8 +241,13 @@ public class OrderUserBankController extends BaseConstroller {
 		Spending_bill bill = new Spending_bill();
 		BeanUtils.populate(bill, row);
 		
-		if(bill.getParentid() == null || "".equals(bill.getParentid()) || bill.getAmount() <=0){
+		if(bill.getParentid() == null || "".equals(bill.getParentid())){
 			out.print("error");
+			return;
+		}
+		//提现-2块钱起，手续费1块
+		if(bill.getAmount() < 2){
+			out.print("amounterror");
 			return;
 		}
 		
@@ -312,7 +317,7 @@ public class OrderUserBankController extends BaseConstroller {
 		//银行卡号  
 		String bankCardNumber = bill.getBankCardNumber();
 		//交易金额  整数或小数  小数为两位以内  但小数点的最后一位不能为0 如：0.10不行。单位为人民币元  
-		String amount = CommonUtils.subZeroAndDot(String.valueOf(bill.getAmount())); 
+		String amount = CommonUtils.subZeroAndDot(String.valueOf(bill.getAmount()-1));  //扣除1元的手续费
 		//交易备注
 		String description = bill.getRemarks();    
 		//订单号
@@ -476,8 +481,12 @@ public class OrderUserBankController extends BaseConstroller {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		if(parentid == null || "".equals(parentid) || amount <= 0){
+		if(parentid == null || "".equals(parentid)){
 			out.print("error");
+			return;
+		}
+		if(amount < 1){
+			out.print("amounterror");
 			return;
 		}
 		Public_user user = getSessionUser();

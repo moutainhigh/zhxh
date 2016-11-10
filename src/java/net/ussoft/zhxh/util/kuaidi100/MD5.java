@@ -1,4 +1,4 @@
-package net.ussoft.zhxh.util.express;
+package net.ussoft.zhxh.util.kuaidi100;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

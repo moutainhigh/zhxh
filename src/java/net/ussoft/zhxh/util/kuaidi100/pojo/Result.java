@@ -1,8 +1,8 @@
-package net.ussoft.zhxh.util.express.pojo;
+package net.ussoft.zhxh.util.kuaidi100.pojo;
 
 import java.util.ArrayList;
 
-import net.ussoft.zhxh.util.express.JacksonHelper;
+import net.ussoft.zhxh.util.kuaidi100.JacksonHelper;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 

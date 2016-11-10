@@ -10,8 +10,10 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.filter.SessionListener;
 import net.ussoft.zhxh.model.Public_cat;
 import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_user;
@@ -91,6 +93,21 @@ public class PloginController extends BaseConstroller {
 				return;
 			}
 		
+			
+			/*单一登录*/
+			/*HttpSession session = request.getSession();
+			// 1.实现单一登录 踢人效果
+			if ( null != SessionListener.sessionMap.get(res.getId())) {   
+	            //第一次登录的用户session销毁
+				//将第一次登录用户的信息从map中移除
+				forceLogoutUser(res.getId());
+				//本次登录用户添加到map中                                                                    
+				SessionListener.sessionMap.put(res.getId(), session);                                                                               
+			} else{    
+				//以用户id为key键存入map中，以判断下一次登录的人
+				SessionListener.sessionMap.put(res.getId(), session);
+			}*/
+			
 			//用户登录成功，将用户实体存入session
 			CommonUtils.setSessionAttribute(request, Constants.PC_USER_SESSION, res);
 			
@@ -98,6 +115,8 @@ public class PloginController extends BaseConstroller {
 			out.print("输入的帐户名 或密码错误，请重新输入。");
 			return;
 		}
+		Public_user userSession1 = (Public_user) CommonUtils.getSessionAttribute(request, Constants.PC_USER_SESSION);
+		System.out.println(userSession1.getUsername());
 		//初始，购物车商品类数量
 		List<Public_cat> catList = catService.list(res.getId());
 		CommonUtils.setSessionAttribute(request, Constants.CAT_NUM, catList.size());
@@ -419,7 +438,5 @@ public class PloginController extends BaseConstroller {
         }
         return remoteIp;
     }
-	
-	
 	
 }

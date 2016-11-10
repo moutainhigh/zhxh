@@ -1,9 +1,9 @@
-package net.ussoft.zhxh.util.express.pojo;
+package net.ussoft.zhxh.util.kuaidi100.pojo;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import net.ussoft.zhxh.util.express.JacksonHelper;
+import net.ussoft.zhxh.util.kuaidi100.JacksonHelper;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
