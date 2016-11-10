@@ -545,5 +545,48 @@ SET FOREIGN_KEY_CHECKS = 1;
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	
 	SET FOREIGN_KEY_CHECKS = 1;
+	
+2016-11-10
+1、新建  disposable_bill(可支配账户-账单流水)
+	id	id	varchar(40)
+	流水号	billno	varchar(40)
+	订单ID	orderid	varchar(40)
+	订单号	orderno	varchar(40)
+	金额	amount	Decimal (11,2)
+	余额	balance	Decimal (11,2)
+	交易类型	trantype int 1:收入，2：支出
+	类型	type	int	1：配额，2：返利，3：奖励转货款，4：退款（取消订单），5：货款（订单）
+	类型文本	type_txt	varchar(60)
+	日期	createtime	varchar(40)
+	
+	//以下创建表结构sql语句
+	DROP TABLE IF EXISTS `disposable_bill`;
+	CREATE TABLE `disposable_bill` (
+	  `id` varchar(40) NOT NULL,
+	  `billno` varchar(40) DEFAULT NULL,
+	  `orderid` varchar(40) DEFAULT NULL,
+	  `orderno` varchar(40) DEFAULT NULL,
+	  `amount` decimal(11,2) DEFAULT NULL,
+	  `balance` decimal(11,2) DEFAULT NULL,
+	  `trantype` int(11) DEFAULT NULL,
+	  `type` int(11) DEFAULT NULL,
+	  `type_txt` varchar(60) DEFAULT NULL,
+	  `createtime` varchar(40) DEFAULT NULL,
+	  PRIMARY KEY (`id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	
+	SET FOREIGN_KEY_CHECKS = 1;
+	
+	//以下插入数据字典
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '88', 'disposable_bill', 'trantype', '1', '收入');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '89', 'disposable_bill', 'trantype', '2', '支出');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '90', 'disposable_bill', 'type', '1', '配额');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '91', 'disposable_bill', 'type', '2', '返利');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '92', 'disposable_bill', 'type', '3', '奖励转货款');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '93', 'disposable_bill', 'type', '4', '退款（取消订单）');
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '94', 'disposable_bill', 'type', '5', '货款（订单）');
+	
+	
+	
 
 	
