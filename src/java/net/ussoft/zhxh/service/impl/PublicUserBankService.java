@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import net.ussoft.zhxh.dao.DisposableBillDao;
 import net.ussoft.zhxh.dao.IncomeBillDao;
 import net.ussoft.zhxh.dao.PublicDisDetailsDao;
 import net.ussoft.zhxh.dao.PublicLogDao;
@@ -26,6 +27,7 @@ import net.ussoft.zhxh.dao.QuotaBillDao;
 import net.ussoft.zhxh.dao.ShareBillDao;
 import net.ussoft.zhxh.dao.SpendingBillDao;
 import net.ussoft.zhxh.dao.TransfBuyBankBillDao;
+import net.ussoft.zhxh.model.Disposable_bill;
 import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.Public_dis_details;
 import net.ussoft.zhxh.model.Public_log;
@@ -87,6 +89,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 	private ShareBillDao shareBillDao;	//
 	@Resource
 	private TransfBuyBankBillDao transfDao;
+	@Resource
+	private DisposableBillDao disposableBillDao;
 	
 	@Override
 	public Public_user_bank getById(String id) {
@@ -149,6 +153,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 		//扣款
 		bank.setHavebank(bank.getHavebank() - order.getOrdertotal());
 		bank = userBankDao.update(bank);	//
+		//可支配账户变更流水-货款（订单）
+		insertDisposable(bank.getUserid(), bank.getParentid(), order.getOrdertotal(), 5);
+		
 		//改变订单状态
 		order.setOrderstatus(1);	//支付成功-转为 待发货
 		order.setOrderstatusmemo("待发货");
@@ -177,6 +184,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 		//退换订单金额
 		bank.setHavebank(bank.getHavebank() + order.getOrdertotal());
 		bank = userBankDao.update(bank);	//
+		//可支配账户变更流水-退款(取消订单)
+		insertDisposable(bank.getUserid(), bank.getParentid(), order.getOrdertotal(), 4);
+		
 		//改变订单状态
 		order.setOrderstatus(-1);	//取消订单
 		order.setOrderstatusmemo("已取消");
@@ -315,6 +325,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 				bank.setRebatesbank(bank.getRebatesbank() + rebate_total);	//返利累计账户
 				bank.setHavebank(bank.getHavebank() + rebate_total);		//返利金额直接进入到可支配账户中
 				userBankDao.update(bank);
+				//可支配账户变更流水——返利
+				insertDisposable(bank.getUserid(),bank.getParentid(), rebate_total, 2);
+				
 				//添加返利消息
 				messagetype = 1;	//业务消息
 				messagetxt = order.getU_companyname()+"的订单已返利！订单号："+order.getOrdernumber();
@@ -943,6 +956,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 		bank.setHavebank(bank.getHavebank() + amount);		//增加可支配账户
 		bank = userBankDao.update(bank);
 		
+		//可支配账户变更流水	—— 配额
+		insertDisposable(userid,parentid, amount, 1);
+		
 		//添加配额-账单流水
 		Quota_bill bill = new Quota_bill();
 		bill.setId(UUID.randomUUID().toString());
@@ -994,6 +1010,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 				bank.setHavebank(bank.getHavebank() + amount);	//增加可支配账户
 			}
 			bank = userBankDao.update(bank);
+			//可支配账户变更——奖励转货款
+			insertDisposable(userid, parentid, _amount, 3);
+			
 			Public_user uuser = userDao.get(userid);
 			Public_user puser = userDao.get(parentid);
 			
@@ -1225,6 +1244,26 @@ public class PublicUserBankService implements IPublicUserBankService{
 		List<Object> values = new ArrayList<Object>();
 		values.add(orderid);
 		return orderProductDao.search(sql, values);
+	}
+	
+	/**
+	 * 可支配账户变更-流水
+	 * 1：配额，2：返利，3：奖励转货款，4：退款（取消订单），5：货款（订单），6：平台售额，7：充值，8：提现
+	 * */
+	private void insertDisposable(String userid,String parentid,double amount,int type){
+		String[] type_txt = {"","配额","返利","奖励转货款","退款（取消订单）","货款（订单）","平台售额","充值","提现"};
+		Disposable_bill disposable = new Disposable_bill();
+		disposable.setId(UUID.randomUUID().toString());
+		disposable.setBillno(BillNO.getBillNo());
+//		disposable.setOrderid(orderid);
+//		disposable.setOrderno(orderno);
+		disposable.setUserid(userid);
+		disposable.setParentid(parentid);
+		disposable.setAmount(amount);	//金额
+		disposable.setTrantype(type);	//类型	1：配额，2：返利，3：奖励转货款，4：退款（取消订单），5：货款（订单），6：平台售额，7：充值，8：提现
+		disposable.setTrantype_txt(type_txt[type]);
+		disposable.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		disposableBillDao.save(disposable);
 	}
 	
 	//===============
