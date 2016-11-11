@@ -14,16 +14,13 @@ public class Rebate_reward_bill {
 	private String userid;			//用户id
 	private String orderid;			//订单ID
 	private String order_no;		//订单编号
-	private String psizeid;			//商品规格ID
-	private String productname;		//商品规格名称
-	private String discount;		//返利、奖励标准
-	private String quantity;		//返利、奖励数量
-	private String amount;			//返利、奖励金额
+	private double amount;			//返利、奖励金额
 	private String createtime;		//创建时间
-	private String type;			//类型
+	private int type;			//类型
 	private String remarks;			//交易描述
 	
-	
+	private String p_companyname;	//上级机构名称
+	private String u_companyname;	//机构名称
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -63,34 +60,10 @@ public class Rebate_reward_bill {
 	public void setOrder_no(String order_no) {
 		this.order_no = order_no;
 	}
-	public String getPsizeid() {
-		return psizeid;
-	}
-	public void setPsizeid(String psizeid) {
-		this.psizeid = psizeid;
-	}
-	public String getProductname() {
-		return productname;
-	}
-	public void setProductname(String productname) {
-		this.productname = productname;
-	}
-	public String getDiscount() {
-		return discount;
-	}
-	public void setDiscount(String discount) {
-		this.discount = discount;
-	}
-	public String getQuantity() {
-		return quantity;
-	}
-	public void setQuantity(String quantity) {
-		this.quantity = quantity;
-	}
-	public String getAmount() {
+	public double getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 	public String getCreatetime() {
@@ -99,10 +72,10 @@ public class Rebate_reward_bill {
 	public void setCreatetime(String createtime) {
 		this.createtime = createtime;
 	}
-	public String getType() {
+	public int getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 	public String getRemarks() {
@@ -110,6 +83,18 @@ public class Rebate_reward_bill {
 	}
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+	public String getP_companyname() {
+		return p_companyname;
+	}
+	public void setP_companyname(String p_companyname) {
+		this.p_companyname = p_companyname;
+	}
+	public String getU_companyname() {
+		return u_companyname;
+	}
+	public void setU_companyname(String u_companyname) {
+		this.u_companyname = u_companyname;
 	}
 	
 }

@@ -164,7 +164,7 @@ function loadData_disBillDetail(){
         dataType:"json",
         success: function (json) {
         	totalPage = Math.ceil(json.total/pageSize);
-        	$("#billDetail").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/publicDisDetail.tpl");
+        	$("#billDetail").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/rebateRewardBillDetail.tpl");
         	$("#billDetail").setParam('rowCount', json.total);
      		$("#billDetail").setParam('pageSize', pageSize);
      		$("#billDetail").setParam('pageIndex', pageIndex);
@@ -173,6 +173,35 @@ function loadData_disBillDetail(){
         	//
         	pageSel(4);
             pageEnter(4);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(jqXHR.responseText);
+        }
+   });
+}
+//返利、奖励-账单列表-详细
+function rebateRewardBillDetails(billid){
+	$.ajax({
+		async:false,
+        url: getRootPath_web() + "/orderUserBank/rebateRewardBillDetails.htmls",
+        data: {"billid":billid},
+        type: "post",
+        dataType:"json",
+        success: function (json) {
+        	$("#share_details").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/publicDisDetail.tpl");
+        	$("#share_details").processTemplate(json.data);
+        	layer.open({
+      		  type: 1,
+      		  area: ['680px', ''],
+      		  shade: false,
+      		  title: false, //不显示标题
+      		  content: $('#details'), //捕获的元素
+      		  cancel: function(index){
+      			  layer.closeAll();
+      		    //layer.close(index);
+      		    //this.content.show();
+      		  }
+      		});
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert(jqXHR.responseText);
@@ -340,6 +369,48 @@ function loadData_transfBillDetail(){
 }
 
 /**
+ * 可支配账户变更-账单列表
+ * */
+function disposablebillDetail(uid,pid){
+	$("#_userid").val(uid);
+	$("#_parentid").val(pid);
+	
+	initPage();
+	loadData_disposablebillDetail();
+}
+
+//加载数据-可支配账户变更-账单列表
+function loadData_disposablebillDetail(){
+	var _data = {};
+	_data.parentid = $("#_parentid").val();
+	_data.userid = $("#_userid").val();
+	_data.pageIndex = pageIndex;
+	_data.pageSize = pageSize;
+	$.ajax({
+		async:false,
+        url: getRootPath_web() + "/orderUserBank/disposableBill.htmls",
+        data: _data,
+        type: "post",
+        dataType:"json",
+        success: function (json) {
+        	totalPage = Math.ceil(json.total/pageSize);
+        	$("#billDetail").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/disposableBillDetail.tpl");
+        	$("#billDetail").setParam('rowCount', json.total);
+     		$("#billDetail").setParam('pageSize', pageSize);
+     		$("#billDetail").setParam('pageIndex', pageIndex);
+     		$("#billDetail").setParam('totalPage', totalPage);
+        	$("#billDetail").processTemplate(json.data);
+        	//
+        	pageSel(7);
+            pageEnter(7);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert(jqXHR.responseText);
+        }
+   });
+}
+
+/**
  * 分页参数初始化
  * */
 function initPage(){
@@ -392,7 +463,7 @@ function pageSel(type) {
 
 /**
  * 分页切换-加载数据
- * type:1收入，2支出，3配额，4返利/奖励,5平台售额，6奖励转货款
+ * type:1收入，2支出，3配额，4返利/奖励,5平台售额，6奖励转货款，7可支配账户变更
  * */
 function page_loadData(type){
 	if(type == 1){
@@ -407,6 +478,8 @@ function page_loadData(type){
 		loadData_shareBillDetail();		//平台售额
 	}else if(type == 6){
 		loadData_transfBillDetail();	//奖励转货款
+	}else if(type == 7){
+		loadData_disposablebillDetail();	//可支配账户变更
 	}
 }
 

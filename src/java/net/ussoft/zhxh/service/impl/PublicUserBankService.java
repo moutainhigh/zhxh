@@ -24,6 +24,7 @@ import net.ussoft.zhxh.dao.PublicSetUserStandardDao;
 import net.ussoft.zhxh.dao.PublicUserBankDao;
 import net.ussoft.zhxh.dao.PublicUserDao;
 import net.ussoft.zhxh.dao.QuotaBillDao;
+import net.ussoft.zhxh.dao.RebateRewardBillDao;
 import net.ussoft.zhxh.dao.ShareBillDao;
 import net.ussoft.zhxh.dao.SpendingBillDao;
 import net.ussoft.zhxh.dao.TransfBuyBankBillDao;
@@ -41,6 +42,7 @@ import net.ussoft.zhxh.model.Public_set_user_standard;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
 import net.ussoft.zhxh.model.Quota_bill;
+import net.ussoft.zhxh.model.Rebate_reward_bill;
 import net.ussoft.zhxh.model.Share_bill;
 import net.ussoft.zhxh.model.Spending_bill;
 import net.ussoft.zhxh.model.Transf_buy_bank_bill;
@@ -91,6 +93,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 	private TransfBuyBankBillDao transfDao;
 	@Resource
 	private DisposableBillDao disposableBillDao;
+	@Resource
+	RebateRewardBillDao rebateRewardBillDao;
 	
 	@Override
 	public Public_user_bank getById(String id) {
@@ -154,7 +158,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		bank.setHavebank(bank.getHavebank() - order.getOrdertotal());
 		bank = userBankDao.update(bank);	//
 		//可支配账户变更流水-货款（订单）
-		insertDisposable(bank.getUserid(), bank.getParentid(), order.getOrdertotal(), 5);
+		insertDisposable(bank.getUserid(), bank.getParentid(),order.getId(),order.getOrdernumber(), order.getOrdertotal(), 5);
 		
 		//改变订单状态
 		order.setOrderstatus(1);	//支付成功-转为 待发货
@@ -185,7 +189,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		bank.setHavebank(bank.getHavebank() + order.getOrdertotal());
 		bank = userBankDao.update(bank);	//
 		//可支配账户变更流水-退款(取消订单)
-		insertDisposable(bank.getUserid(), bank.getParentid(), order.getOrdertotal(), 4);
+		insertDisposable(bank.getUserid(), bank.getParentid(),order.getId(),order.getOrdernumber(), order.getOrdertotal(), 4);
 		
 		//改变订单状态
 		order.setOrderstatus(-1);	//取消订单
@@ -267,6 +271,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 			float rebate_total = 0;	//本次返利总额
 			float award_total = 0;	//本次奖励总额
 			List<Public_order_product> list = getOrderProducts(order.getId());	//订单商品
+			String rebate_billno = UUID.randomUUID().toString();	//返利流水-ID
+			String reward_billno = UUID.randomUUID().toString();	//奖励流水-ID
 			for(Public_order_product obj:list){
 				//商品返利剩余数量
 				Public_product_size_rebate rebate = getProductSizeRebate(order.getUserid(), order.getParentid(), obj.getProductid());
@@ -289,6 +295,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 						rebate_total += rebate_money;					//返利金额合计
 						//返利奖励明细表
 						Public_dis_details rebate_details = setDisDetails(rebate_num, next_rebate_num, rebate_money, 1);
+						rebate_details.setBillid(rebate_billno);	//返利流水-ID
 						//添加返利记录
 						savePublicDisDetails(rebate_details,order,obj);
 					}
@@ -302,6 +309,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 							float award_money = standard.getBonusesdis() * rebate_num;
 							award_total += award_money;
 							Public_dis_details award_details = setDisDetails(rebate_num, next_rebate_num, award_money, 2);
+							award_details.setBillid(reward_billno);		//奖励流水ID
 							//添加奖励记录
 							savePublicDisDetails(award_details,order,obj);
 						}
@@ -325,8 +333,11 @@ public class PublicUserBankService implements IPublicUserBankService{
 				bank.setRebatesbank(bank.getRebatesbank() + rebate_total);	//返利累计账户
 				bank.setHavebank(bank.getHavebank() + rebate_total);		//返利金额直接进入到可支配账户中
 				userBankDao.update(bank);
+				//返利-流水
+				Rebate_reward_bill rebateBill = insert_rebate_rewardBill(rebate_billno, order, rebate_total, 1);
+				
 				//可支配账户变更流水——返利
-				insertDisposable(bank.getUserid(),bank.getParentid(), rebate_total, 2);
+				insertDisposable(bank.getUserid(),bank.getParentid(),rebateBill.getId(),rebateBill.getBillno() ,rebate_total, 2);
 				
 				//添加返利消息
 				messagetype = 1;	//业务消息
@@ -342,6 +353,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 					tbank.setBonusesbank(tbank.getBonusesbank() + award_total);				//奖励累计
 					tbank.setBonusestakenbank(tbank.getBonusestakenbank() + award_total);	//奖励可提现账户
 					userBankDao.update(tbank);
+					//奖励-流水
+					insert_rebate_rewardBill(reward_billno, order, award_total, 2);
 					//添加奖励消息
 					messagetype = 1;	//业务消息
 					messagetxt = "尊敬的客户您好，您推荐的"+order.getU_companyname()+"，已产生了订单给予您"+award_total+"元奖励！";
@@ -351,6 +364,35 @@ public class PublicUserBankService implements IPublicUserBankService{
 			
 		}
 		return 1;
+	}
+	
+	/**
+	 * 返利、奖励，交易流水
+	 * @param billno
+	 * @param public_order
+	 * @param amount
+	 * @param type 1:返利，2:奖励
+	 * */
+	public Rebate_reward_bill insert_rebate_rewardBill(String billno,Public_order order,double amount,int type){
+		Rebate_reward_bill  retate = new Rebate_reward_bill();
+		retate.setId(billno);
+		retate.setBillno(BillNO.getBillNo());
+		retate.setOrderid(order.getId());
+		retate.setOrder_no(order.getOrdernumber());
+		if(type == 1){
+			retate.setUserid(order.getUserid());
+			retate.setU_companyname(order.getU_companyname());
+		}else if(type == 2){
+			retate.setUserid(order.getTid());
+			retate.setU_companyname(order.getT_companyname());
+		}
+		retate.setParentid(order.getParentid());
+		retate.setP_companyname(order.getP_companyanme());
+		retate.setAmount(amount);
+		retate.setType(type);
+		retate.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		
+		return rebateRewardBillDao.save(retate);
 	}
 	
 	/**
@@ -411,6 +453,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 		bank_PT = userBankDao.update(bank_PT);
 		//当前账户
 		bank = userBankDao.update(bank);
+		//可支配账户变更流水-充值
+		insertDisposable(bank.getUserid(), bank.getParentid(), bill.getId(),bill.getBillno(),amount, 6);
+		
 		//更新流水表状态
 		bill.setStatus(1); //成功
 		bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
@@ -956,9 +1001,6 @@ public class PublicUserBankService implements IPublicUserBankService{
 		bank.setHavebank(bank.getHavebank() + amount);		//增加可支配账户
 		bank = userBankDao.update(bank);
 		
-		//可支配账户变更流水	—— 配额
-		insertDisposable(userid,parentid, amount, 1);
-		
 		//添加配额-账单流水
 		Quota_bill bill = new Quota_bill();
 		bill.setId(UUID.randomUUID().toString());
@@ -975,6 +1017,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 		bill.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 		bill = quotaBillDao.save(bill);
 
+		//可支配账户变更流水	—— 配额
+		insertDisposable(userid,parentid,bill.getId(),bill.getBillno(), amount, 1);
+		
 		//业务消息
 		int messagetype = 1;	//业务消息
 		String messagetxt = "尊敬的客户您好，【"+puser.getCompanyname()+"】给您设置了配额，金额："+amount;
@@ -1010,8 +1055,6 @@ public class PublicUserBankService implements IPublicUserBankService{
 				bank.setHavebank(bank.getHavebank() + amount);	//增加可支配账户
 			}
 			bank = userBankDao.update(bank);
-			//可支配账户变更——奖励转货款
-			insertDisposable(userid, parentid, _amount, 3);
 			
 			Public_user uuser = userDao.get(userid);
 			Public_user puser = userDao.get(parentid);
@@ -1027,6 +1070,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 			transf.setLast_amount(_amount);
 			transf.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 			transfDao.save(transf);
+			
+			//可支配账户变更——奖励转货款
+			insertDisposable(userid, parentid, transf.getId(),transf.getBillno(),_amount, 3);
 			
 			//日志
 			Public_log log = saveLog(userid, parentid, "bonuses_ratio", "奖励转贷款", amount,"");
@@ -1123,6 +1169,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 	private Public_dis_details savePublicDisDetails(Public_dis_details details,Public_order order,Public_order_product product){
 		Public_dis_details dis_details = new Public_dis_details();
 		dis_details.setId(UUID.randomUUID().toString());
+		dis_details.setBillid(details.getBillid());	//返利流水ID
 		dis_details.setDetailsnum(details.getDetailsnum()); 			//本次返利数量
 		dis_details.setNextrebatesnum(details.getNextrebatesnum());	//下次返利数量
 		dis_details.setDetailspay(details.getDetailspay());		//本次返利金额
@@ -1248,19 +1295,24 @@ public class PublicUserBankService implements IPublicUserBankService{
 	
 	/**
 	 * 可支配账户变更-流水
-	 * 1：配额，2：返利，3：奖励转货款，4：退款（取消订单），5：货款（订单），6：平台售额，7：充值，8：提现
+	 * @param userid
+	 * @param parentid
+	 * @param orderid
+	 * @param orderno
+	 * @param amount
+	 * @param type 1：配额，2：返利，3：奖励转货款，4：退款（取消订单），5：货款（订单），6：充值
 	 * */
-	private void insertDisposable(String userid,String parentid,double amount,int type){
-		String[] type_txt = {"","配额","返利","奖励转货款","退款（取消订单）","货款（订单）","平台售额","充值","提现"};
+	private void insertDisposable(String userid,String parentid,String orderid,String orderno,double amount,int type){
+		String[] type_txt = {"","配额","返利","奖励转货款","退款（取消订单）","货款（订单）","充值"};
 		Disposable_bill disposable = new Disposable_bill();
 		disposable.setId(UUID.randomUUID().toString());
 		disposable.setBillno(BillNO.getBillNo());
-//		disposable.setOrderid(orderid);
-//		disposable.setOrderno(orderno);
+		disposable.setOrderid(orderid);
+		disposable.setOrderno(orderno);
 		disposable.setUserid(userid);
 		disposable.setParentid(parentid);
 		disposable.setAmount(amount);	//金额
-		disposable.setTrantype(type);	//类型	1：配额，2：返利，3：奖励转货款，4：退款（取消订单），5：货款（订单），6：平台售额，7：充值，8：提现
+		disposable.setTrantype(type);	//类型	1：配额，2：返利，3：奖励转货款，4：退款（取消订单），5：货款（订单），6：充值
 		disposable.setTrantype_txt(type_txt[type]);
 		disposable.setCreatetime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 		disposableBillDao.save(disposable);

@@ -66,7 +66,7 @@
 						<tr>
 							<td align="center">可支配账户</td>
 							<td>￥{$T.row.havebank}</td>
-							<td align="right"><a href="javascript:;" onclick="recharge('{$T.row.parentid}',2)">充值</a></td>
+							<td align="right"><a href="javascript:;" onclick="recharge('{$T.row.parentid}',2)">充值</a> | <a href="javascript:;" onclick="disposablebillDetail('{$T.row.userid}','{$T.row.parentid}')">查看记录</a></td>
 						</tr>
 						<tr>
 							<td align="center">平台售额总计</td>
@@ -107,7 +107,7 @@
 						<tr>
 							<td align="center">可支配账户</td>
 							<td>￥{$T.row.havebank}</td>
-							<td align="right"><a href="javascript:;" onclick="recharge('{$T.row.parentid}',2)">充值</a></td>
+							<td align="right"><a href="javascript:;" onclick="recharge('{$T.row.parentid}',2)">充值</a> | <a href="javascript:;" onclick="disposablebillDetail('{$T.row.userid}','{$T.row.parentid}')">查看记录</a></td>
 						</tr>
 						<tr>
 							<td align="center">返利(累计)</td>

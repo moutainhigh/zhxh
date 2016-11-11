@@ -16,7 +16,7 @@ public class Disposable_bill {
 	private String parentid;
 	private double amount;	//金额
 	private double balance;	//余额-暂时不用
-	private int trantype;	//交易类型 //类型	1：配额，2：返利，3：奖励转货款，4：退款（取消订单），5：货款（订单），6：平台售额，7：充值，8：提现
+	private int trantype;	//交易类型 //类型	1：配额，2：返利，3：奖励转货款，4：退款（取消订单），5：货款（订单），6：充值
 	private String trantype_txt;	//类型文本
 	private String createtime;	//创建日期
 	

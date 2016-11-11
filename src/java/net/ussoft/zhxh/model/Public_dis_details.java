@@ -28,6 +28,8 @@ public class Public_dis_details {
 	private String productname;
 	private String createtime;
 	
+	private String billid;	//rebate_reward_bill ID
+	
 	public Public_dis_details(String id) {
 		this.setId(id);
 	}
@@ -164,6 +166,13 @@ public class Public_dis_details {
 	public void setProductname(String productname) {
 		this.productname = productname;
 	}
-	
+
+	public String getBillid() {
+		return billid;
+	}
+
+	public void setBillid(String billid) {
+		this.billid = billid;
+	}
 	
 }

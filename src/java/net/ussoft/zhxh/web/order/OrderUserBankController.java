@@ -15,13 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.Disposable_bill;
 import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Public_dis_details;
 import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_set_bonuses_ratio;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Public_user_bank;
+import net.ussoft.zhxh.model.Rebate_reward_bill;
 import net.ussoft.zhxh.model.Share_bill;
 import net.ussoft.zhxh.model.Spending_bill;
 import net.ussoft.zhxh.model.Transf_buy_bank_bill;
@@ -31,12 +34,14 @@ import net.ussoft.zhxh.pay.kq.payment._99bill.www.apipay.services.BatchPayWS.Bat
 import net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.BankRequestBean;
 import net.ussoft.zhxh.pay.kq.payment.bill99.seashell.domain.dto.complatible.BankResponseBean;
 import net.ussoft.zhxh.pay.kq.payment.md5.MD5Util;
+import net.ussoft.zhxh.service.IDisposableBillService;
 import net.ussoft.zhxh.service.IIncomeBillService;
 import net.ussoft.zhxh.service.IPublicDisDetailsService;
 import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.service.IQuotaBillService;
+import net.ussoft.zhxh.service.IRebateRewardBillService;
 import net.ussoft.zhxh.service.IShareBillService;
 import net.ussoft.zhxh.service.ISpendingBillService;
 import net.ussoft.zhxh.service.ITransfBuyBankBillService;
@@ -82,6 +87,11 @@ public class OrderUserBankController extends BaseConstroller {
 	private IShareBillService shareBillService;
 	@Resource
 	private ITransfBuyBankBillService transfService;
+	@Resource
+	private IDisposableBillService disposableBillService;
+	@Resource
+	private IRebateRewardBillService rebateRewardBillService;
+	
 	
 	/**
 	 * 获取机构的资金帐户
@@ -612,16 +622,50 @@ public class OrderUserBankController extends BaseConstroller {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		PageBean<Rebate_reward_bill> p = new PageBean<Rebate_reward_bill>();
 		p.setPageSize(pageSize);
 		p.setPageNo(pageIndex);
 		p.setOrderBy("createtime");
 		p.setOrderType("desc");
 
-		p = disDetailsService.list(userid, parentid, detailstype, p);
+		Map<String, Object> values = new LinkedHashMap<String, Object>();
+		values.put("parentid= ", parentid);
+		values.put("userid= ", userid);
+		values.put("type= ", detailstype);
+		p = rebateRewardBillService.list(values, p);
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 返利、奖励-账单流水-明细
+	 * @param parentid
+	 * @param userid
+	 * @param detailstype 1:返利,2:奖励
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/rebateRewardBillDetails",method=RequestMethod.POST)
+	public void rebateRewardBillDetails(String billid,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Public_dis_details> p = new PageBean<Public_dis_details>();
+		p.setIsPage(false);
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		
+		Map<String, Object> values = new LinkedHashMap<String, Object>();
+		values.put("billid= ", billid);
+		p = disDetailsService.list(values, p);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("data", p.getList());
 		
 		String json = JSON.toJSONString(map);
@@ -704,6 +748,36 @@ public class OrderUserBankController extends BaseConstroller {
 		Map<String, Object> values = new LinkedHashMap<String, Object>();
 		values.put("userid= ", userid);
 		p = transfService.list(values, p);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("total", p.getRowCount());
+		map.put("data", p.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 可支配账户变更-账单流水
+	 * @param userid
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/disposableBill",method=RequestMethod.POST)
+	public void disposableBill(String userid, String parentid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		PageBean<Disposable_bill> p = new PageBean<Disposable_bill>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("createtime");
+		p.setOrderType("desc");
+		Map<String, Object> values = new LinkedHashMap<String, Object>();
+		values.put("userid= ", userid);
+		values.put("parentid= ", parentid);
+		p = disposableBillService.list(values, p);
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("total", p.getRowCount());

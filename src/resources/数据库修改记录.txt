@@ -607,6 +607,21 @@ SET FOREIGN_KEY_CHECKS = 1;
 	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '93', 'disposable_bill', 'trantype', '6', '平台售额');
 	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '94', 'disposable_bill', 'trantype', '7', '货款（订单）');
 	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '95', 'disposable_bill', 'trantype', '8', '提现');
-	
+
+2016-11-11
+1、数据字典
+	删除：93-95
+	insert into `zhxh`.`sys_data_dic` ( `id`, `tablename`, `field`, `dic_key`, `dic_value`) values ( '93', 'disposable_bill', 'trantype', '6', '充值');
+2、返利奖励明细（public_dis_details） 增加字段
+	1.billid 返利、奖励流水(rebate_reward_bill) ID
+3、返利、奖励流水(rebate_reward_bill)
+	3.1、删除字段
+	psizeid	商品规格ID	varchar	40	
+	productname	商品规格名称	varchar	40	
+	discount	返利、奖励标准	decimal	11,2	
+	quantity	返利、奖励数量	int
+	3.2、增加字段
+	p_companyname; varchar(100)	//上级机构名称
+	u_companyname; varchar(100)	//机构名称
 
 	
