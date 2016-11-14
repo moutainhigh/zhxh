@@ -59,17 +59,19 @@
                 	$("#banks").setParam("identity",json.identity);
                 	$("#banks").setParam("current_uid",current_uid);
                 	$("#banks").processTemplate(json.data);
-                	if (userid == "1") {
-                		//提示信息
-                		layer.tips('点击可更改资金账户的状态', '#status1', {tips: [1, '#FF9901'],time: 5000,});
-                	}
+               		//提示信息
+               		layer.tips('点击可更改资金账户的状态', '#status1', {tips: [1, '#FF9901'],time: 5000,});
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                 	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
                 }
            });
     	}
-	    function setQuota(userid){
+	    function setQuota(userid,bankstate){
+	    	if(bankstate != 1){
+	    		parent.layer.msg("账户已被冻结，请开启账户进行设置",{icon:5});
+	    		return;
+	    	}
 	    	layer.prompt({
    				title: '请输入配额金额，并确认',
    				formType: 0 //prompt风格，支持0-2

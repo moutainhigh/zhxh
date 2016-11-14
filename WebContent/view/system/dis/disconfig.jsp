@@ -172,9 +172,9 @@
 				</tr>
 				<tr>
 					<td>配额下限</td>
-					<td><input name="quota_down" class="mini-textbox" style="width:100%;" vtype="int;range:0,500000" emptyText="请输入0-500000数字" /></td>
+					<td><input name="quota_down" class="mini-textbox" style="width:100%;" vtype="int;range:0,2000000" emptyText="请输入0-2000000数字" /></td>
 					<td>配额上限</td>
-					<td><input name="quota_up" class="mini-textbox" style="width:100%;" vtype="int;range:0,500000" emptyText="请输入0-500000数字" /></td>
+					<td><input name="quota_up" class="mini-textbox" style="width:100%;" vtype="int;range:0,2000000" emptyText="请输入0-2000000数字" /></td>
 				</tr>
 				<tr>
 					<td>充值下限</td>

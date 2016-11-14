@@ -92,22 +92,6 @@ public class PloginController extends BaseConstroller {
 				out.print("您的帐户已被禁用，请与管理员联系。");
 				return;
 			}
-		
-			
-			/*单一登录*/
-			/*HttpSession session = request.getSession();
-			// 1.实现单一登录 踢人效果
-			if ( null != SessionListener.sessionMap.get(res.getId())) {   
-	            //第一次登录的用户session销毁
-				//将第一次登录用户的信息从map中移除
-				forceLogoutUser(res.getId());
-				//本次登录用户添加到map中                                                                    
-				SessionListener.sessionMap.put(res.getId(), session);                                                                               
-			} else{    
-				//以用户id为key键存入map中，以判断下一次登录的人
-				SessionListener.sessionMap.put(res.getId(), session);
-			}*/
-			
 			//用户登录成功，将用户实体存入session
 			CommonUtils.setSessionAttribute(request, Constants.PC_USER_SESSION, res);
 			
@@ -116,7 +100,6 @@ public class PloginController extends BaseConstroller {
 			return;
 		}
 		Public_user userSession1 = (Public_user) CommonUtils.getSessionAttribute(request, Constants.PC_USER_SESSION);
-		System.out.println(userSession1.getUsername());
 		//初始，购物车商品类数量
 		List<Public_cat> catList = catService.list(res.getId());
 		CommonUtils.setSessionAttribute(request, Constants.CAT_NUM, catList.size());

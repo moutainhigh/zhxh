@@ -23,6 +23,10 @@
         <listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
     </listener>
     
+	<listener>
+		<listener-class>net.ussoft.zhxh.filter.SessionListener</listener-class>
+	</listener>
+  
 	<!-- 编码过滤器 -->
 	<filter>
 		<filter-name>CharacterEncodingFilter</filter-name>
