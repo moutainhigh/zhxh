@@ -1038,7 +1038,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		
 		Public_user_bank bank = getUserBank(userid, parentid);
 		//金额验证
-		if(bank.getBonusestakenbank() > amount){
+		if(bank.getBonusestakenbank() >= amount){
 			bank.setBonusestakenbank(bank.getBonusestakenbank() - amount);	//冲减奖励可提现账户
 			Transf_buy_bank_bill transf = new Transf_buy_bank_bill();
 			float _amount = amount;

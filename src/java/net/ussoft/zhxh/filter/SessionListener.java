@@ -1,40 +1,75 @@
 package net.ussoft.zhxh.filter;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
+import javax.servlet.http.HttpSessionAttributeListener;
+import javax.servlet.http.HttpSessionBindingEvent;
 
+import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Sys_account;
 import net.ussoft.zhxh.util.Constants;
 
-public class SessionListener implements HttpSessionListener{
 
-	public static HashMap sessionMap = new HashMap();
-	
-	@Override
-	public void sessionCreated(HttpSessionEvent https) {
-		System.out.println("s1");
-		HttpSession session = https.getSession();
+/**
+ * 登录session监听类-处理同一时间只允许账号，单地点登录
+ * @author guodh
+ * @date 2016-11-14
+ */
+public class SessionListener implements HttpSessionAttributeListener {
+	/**
+	 * 用于存放账号和session对应关系的map
+	 */
+	private Map<String, HttpSession> map = new HashMap<String, HttpSession>();
+
+	/**
+	 * 当向session中放入数据触发
+	 */
+	public void attributeAdded(HttpSessionBindingEvent event) {
+		String name = event.getName();
+		if (name.equals(Constants.PC_USER_SESSION)) {
+			Public_user user = (Public_user) event.getValue();
+			if (map.get(user.getId()) != null) {
+				HttpSession session = map.get(user.getId());
+				session.removeAttribute(Constants.PC_USER_SESSION);
+//				session.invalidate();
+			}
+			map.put(user.getId(), event.getSession());
+		}else if(name.equals(Constants.user_in_session)){
+			Sys_account account = (Sys_account) event.getValue();
+			if (map.get(account.getId()) != null) {
+				HttpSession session = map.get(account.getId());
+				session.removeAttribute(Constants.user_in_session);
+//				session.invalidate();
+			}
+			map.put(account.getId(), event.getSession());
+		}
+
 	}
-
-	@Override
-	public void sessionDestroyed(HttpSessionEvent https) {
-		System.out.println("s2");
-		HttpSession session = https.getSession();
-		this.DelSession(session);
-	}
-
-	public static synchronized void DelSession(HttpSession session) {
-		System.out.println("s3");
-		if (session != null) {
-			// 删除单一登录中记录的变量
-	        if(session.getAttribute( Constants.user_in_session)!=null){
-	        	Sys_account account =  (Sys_account)session.getAttribute(Constants.user_in_session);
-	        	SessionListener.sessionMap.remove(account.getId());     
-	        }
+	/**
+	 * 当向session中移除数据触发
+	 */
+	public void attributeRemoved(HttpSessionBindingEvent event) {
+		String name = event.getName();
+		if (name.equals(Constants.PC_USER_SESSION)) {
+			Public_user user = (Public_user) event.getValue();
+			map.remove(user.getId());
+		}else if(name.equals(Constants.user_in_session)){
+			Sys_account account = (Sys_account) event.getValue();
+			map.remove(account.getId());
 		}
 	}
-	
+
+	public void attributeReplaced(HttpSessionBindingEvent event) {
+
+	}
+
+	public Map<String, HttpSession> getMap() {
+		return map;
+	}
+
+	public void setMap(Map<String, HttpSession> map) {
+		this.map = map;
+	}
 }

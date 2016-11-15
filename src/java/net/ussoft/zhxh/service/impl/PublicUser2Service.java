@@ -96,7 +96,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 		
 		StringBuffer sb = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
-		sb.append("select * from public_user where identity=? and id in (");
+		sb.append("select * from public_user where isopen <> -1 and identity=? and id in (");
 		
 		values.add(identity);
 		

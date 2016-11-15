@@ -18,7 +18,7 @@
 					<td>{$T.row.createtime}</td>
 					<td>{$T.row.u_username} </td>
 					<td>{$T.row.trantypetxt} </td>
-					<td>￥{$T.row.amount}</td>
+					<td>￥{$P.formatAmount($T.row.amount)}</td>
 					<td>{#if $T.row.status == -1}失败{#elseif $T.row.status == 0}未接收{#elseif $T.row.status == 1}成功{#/if}</td>
 					<td><a href="javascript:;" onclick="details('{$T.row.billno}')">详情</a>
 						<div id="{$T.row.billno}"style="display:none;">
@@ -37,7 +37,8 @@
 										<th>收款人</th>
 										<th>银行卡号</th>
 										<th>金额</th>
-										<th>快钱手续费</th>
+										<th>手续费</th>
+										<th>实收额</th>
 										<th>备注</th>
 									</tr>
 									<tr>
@@ -46,8 +47,9 @@
 										<td>{$T.row.kaihuhang}</td>
 										<td>{$T.row.creditName}</td>
 										<td>{$T.row.bankCardNumber}</td>
-										<td>{$T.row.amount}</td>
-										<td>{$T.row.dealCharge}</td>
+										<td style="text-align: right;">￥{$P.formatAmount($T.row.amount)}</td>
+										<td style="text-align: right;">￥{$P.formatAmount(1)}</td>
+										<td style="text-align: right;">￥{$P.formatAmount($T.row.amount - 1)}</td>
 										<td>{$T.row.remarks}</td>
 									</tr>
 								</tbody></table>
@@ -56,7 +58,8 @@
 								<blockquote class="border-yellow doc-quoteyellow">
 									<strong>提现须知：</strong>
 									1.提交申请后，系统资金账户会直接冲减。<br>
-									2.提交申请后，资金到账时间为T+2。<br>
+									2.提现手续费为每笔1元。<br>
+									3.提交申请后，资金到账时间为T+3，如未到账请联系平台。<br>
 								</blockquote>
 							</div>
 						</div>

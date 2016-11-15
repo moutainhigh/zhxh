@@ -299,8 +299,9 @@ function getSendCode() {
     	type:"post",
     	dataType:"text",
         success: function (text) {
-        	opentime();
-        	alert(text);
+        	if(text == "success"){
+        		opentime();
+        	}
         },
         error: function () {
             layer.msg("失败");

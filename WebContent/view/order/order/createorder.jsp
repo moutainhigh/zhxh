@@ -355,14 +355,14 @@
 					<table class="table table-bordered table-hover text-small">
 						<tbody>
 							<tr class="panel-head">
-								<th width="45" align="center"><input type="checkbox" value="1" name="id"></th>
-								<th width="120">品牌</th>
+								<th width="45" align="center" id="p_del"></th>
+								<th width="9%">品牌</th>
 								<th width="*">商品名称</th>
-								<th width="160">规格</th>
-								<th width="160">数量</th>
-								<th width="100">单价</th>
-								<th width="100">折扣</th>
-								<th width="180">小计</th>
+								<th width="9%">规格</th>
+								<th width="9%"><span id="p_quantity">数量</span></th>
+								<th width="9%">单价</th>
+								<th width="6%">折扣</th>
+								<th width="10%">小计</th>
 							</tr>
 						</tbody>
 					</table>
@@ -404,13 +404,13 @@
 			<tbody>
 				<tr class="panel-head">
 					<th width="45" align="center" id="p_del"></th>
-					<th width="160">品牌</th>
+					<th width="10%">品牌</th>
 					<th width="*">商品名称</th>
-					<th width="160">规格</th>
-					<th width="160"><span id="p_quantity">数量</span></th>
-					<th width="100">单价</th>
-					<th width="100">折扣</th>
-					<th width="180">小计</th>
+					<th width="9%">规格</th>
+					<th width="9%"><span id="p_quantity">数量</span></th>
+					<th width="9%">单价</th>
+					<th width="6%">折扣</th>
+					<th width="10%">小计</th>
 				</tr>
 				{#foreach $T as row}
 				<tr class="tr" id="{$T.row.id}">

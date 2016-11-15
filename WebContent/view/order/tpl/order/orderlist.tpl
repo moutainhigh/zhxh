@@ -2,22 +2,22 @@
 <table class="table table-bordered table-hover text-small update">
 	<tbody>
 		<tr class="panel-head item">
-			<th width="45" align="center"><input type="checkbox" value="1" name="id"></th>
-			<th width="45">序号</th>
+			<!-- th width="30" align="center"><input type="checkbox" value="1" name="id"></th -->
+			<th width="4%">序号</th>
 			<th width="*">商家名称</th>
-			<th width="180">单号</th>
-			<th width="180">下单时间</th>
-			<th width="180">签收时间</th>
-			<th width="100">金额</th>
-			<th width="100">状态</th>
-			<th width="360">操作</th>
+			<th width="10%">单号</th>
+			<th width="10%">下单时间</th>
+			<th width="10%">签收时间</th>
+			<th width="9%">金额</th>
+			<th width="8%">状态</th>
+			<th width="20%">操作</th>
 		</tr>
 		{#if $P.rowCount > 0}
 			{#foreach $T as row}
 				<tr class="tr">
-					<td align="center"><input type="checkbox" value="1" name="id"></td>
+					<!-- td align="center"><input type="checkbox" value="1" name="id"></td -->
 					<td>{$T.row$index+1}</td>
-					<td>{$T.row.p_username}</td>
+					<td style="text-align:left">{$T.row.p_username}</td>
 					<td>{$T.row.ordernumber}</td>
 					<td>{$T.row.ordertime}</td>
 					<td>{$T.row.signtime}</td>
@@ -26,6 +26,7 @@
 					<td><button class="button button-small border-blue" onclick="orderdetails('{$T.row.id}')">订单详情</button>
 						{#if $T.row.orderstatus == 0}
 							<button class="button button-small border-green" onclick="topayment('{$T.row.id}')">立即支付</button>
+							<button class="button button-small border-red" onclick="delorder('{$T.row.id}')">删除</button>
 						{#elseif $T.row.orderstatus == 1}
 							<button class="button button-small border-red" onclick="cancleorder('{$T.row.id}')">取消订单</button>
 						{#elseif $T.row.orderstatus == 2}

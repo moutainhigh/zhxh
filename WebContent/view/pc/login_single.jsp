@@ -127,40 +127,7 @@
 </head>
 <body>
     <div class="header-three">
-	  	<div class="header header-width clearfix">
-	    		<h1 class="logo fl"><a href="${pageContext.request.contextPath}/pcMain/pcindex.htmls"><img src="${pageContext.request.contextPath}/images/logo.png" /></a></h1>
-	    		<ul class="user-header fr">
-	    			<c:choose>
-	    				<c:when test="${sessionScope.pc_user_sessiion != null }">
-	    					<li class="name1"><a href="javascript:;">${sessionScope.pc_user_sessiion.phonenumber}</a></li>
-	    				</c:when>
-	    				<c:otherwise>
-	    					<li class="name"><a href="javascript:;"></a></li>
-	    				</c:otherwise>
-	    			</c:choose>
-	    			 <li class="shop-cart"><a href="javascript:cat('${sessionScope.pc_user_sessiion.id}')"></a></li>
-	    			 <li class="search" id="search"><a href="javascript:;"></a></li>
-	    		</ul>
-	        <a href="javascript:;" class="header-pic fr"><img src="${pageContext.request.contextPath}/images/header-pic.png" style="width:22px;height:22px;" title="品牌故事"/></a>
-	        <div class="nav">
-            <c:forEach var="brand" items="${brandList }">
-		    	<a id="${brand.id }" href="${pageContext.request.contextPath}/pcMain/zh.htmls?id=${brand.id}" >${brand.brandname }</a>
-		    </c:forEach>
-		    <c:forEach var="subject" items="${subjectList }">
-		    	<a id="${subject.id }" href="${pageContext.request.contextPath}/pcMain/subject.htmls?id=${subject.id}">${subject.title }</a>
-		    </c:forEach>
-	        </div>
-	  	</div>
-	  	<!--搜索框-->
-	  	<div class="search-box">
-	    		<div class="search-box-con">
-	      			<div class="search clearfix">
-	      			    <input type="text" class="txt" value="请输入一个关键词" />
-	      			    <input type="button" class="but" />
-	      		  </div>
-	      			<div class="keywords">人气搜索关键词：<a href="javascript:;">摩漾</a><a href="javascript:;">摩漾</a><a href="javascript:;">摩漾</a><a href="javascript:;">摩漾</a></div>
-	    		</div>
-	  	</div>	
+	  	
 	</div>
 	
 	<div class="login-tan2 denglu" style="display: block;">
@@ -170,18 +137,10 @@
 	            <div><input type="text" id="uname" value="" class="txt name" placeholder="手机"/></div>
 	            <div><input type="password" id="pwd" value="" class="txt mima" placeholder="密码" /></div>
 	            <div class="clearfix wjmima">
-	                <a href="忘记密码.html" class="fr">忘记密码？</a>
+	                <a href="javascript:;" class="fr" onclick="javascript:location.href='${pageContext.request.contextPath}/plogin_reset.htmls'" target="_blank">忘记密码？</a>
 	                <!-- <em class="fr">没有账号 <b class="zhuce">立即注册</b></em> -->
 	            </div>
 	            <div class="but"><input type="button" onclick="login()" value="登 录" class="login-but"></div>
-	            <div class="other-login">
-	                <h3></h3>
-	                <span>第三方登录</span>
-	                <div class="login-bottom">
-	                    <%-- <a href="javascript:;"><img src="${pageContext.request.contextPath}/images/qq.jpg" /></a>
-	                    <a href="javascript:;"><img src="${pageContext.request.contextPath}/images/weixin.jpg" /></a> --%>
-	                </div>
-	            </div>    
 	        </div>
 	    </div>
 	</div>

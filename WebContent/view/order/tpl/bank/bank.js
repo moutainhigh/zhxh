@@ -83,6 +83,8 @@ function loadData_spendingBillDetail(){
      		$("#billDetail").setParam('pageSize', pageSize);
      		$("#billDetail").setParam('pageIndex', pageIndex);
      		$("#billDetail").setParam('totalPage', totalPage);
+     		$("#billDetail").setParam('formatAmount', formatAmount);
+     		
         	$("#billDetail").processTemplate(json.data);
         	//
         	pageSel(2);
@@ -94,6 +96,12 @@ function loadData_spendingBillDetail(){
    });
 }
 
+/**
+ * 格式化金额
+ * */
+function formatAmount(e){
+	return formatFloat(e);
+}
 
 /**
  * 配额-账单列表

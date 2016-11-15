@@ -7,13 +7,9 @@
 		<strong>客户资金帐户[<span style="color:red">{$T.row.companyname}</span>]</strong>
 		<span class="float-right">
 			<strong>状态[
-				{#if $P.activeUser == 1}
 				<a id="status{$T.row$index+1}" href="javascript:;" onclick="setAccountStatus('{$T.row.userid}','{$T.row.parentid}','{$T.row.bankstate}')">
 					<span id="_state" style="color:{#if $T.row.bankstate == 0}red{#else}blue{#/if}">{$T.row.bankstatetxt}</span>
 				</a>
-				{#else}
-					<span id="_state" style="color:{#if $T.row.bankstate == 0}red{#else}blue{#/if}">{$T.row.bankstatetxt}</span>
-				{#/if}
 				]
 			</strong>
 		</span>
@@ -55,7 +51,7 @@
 					<tr>
 						<td align="center">配额总计</td>
 						<td>￥{$T.row.quotabank}</td>
-						<td align="right"><a href="javascript:;" onclick="setQuota('{$T.row.userid}')">设置配额</a> | <a href="javascript:;" onclick="quotaBillDetail('{$T.row.userid}','{$T.row.parentid}')">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="setQuota('{$T.row.userid}','{$T.row.bankstate}')">设置配额</a> | <a href="javascript:;" onclick="quotaBillDetail('{$T.row.userid}','{$T.row.parentid}')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">充值总计</td>
@@ -71,7 +67,7 @@
 					<tr>
 						<td align="center">配额总计</td>
 						<td>￥{$T.row.quotabank}</td>
-						<td align="right"><a href="javascript:;" onclick="setQuota('{$T.row.userid}')">设置配额</a> | <a href="javascript:;" onclick="quotaBillDetail('{$T.row.userid}','{$T.row.parentid}')">查看记录</a></td>
+						<td align="right"><a href="javascript:;" onclick="setQuota('{$T.row.userid}','{$T.row.bankstate}')">设置配额</a> | <a href="javascript:;" onclick="quotaBillDetail('{$T.row.userid}','{$T.row.parentid}')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">平台售额总计</td>

@@ -81,7 +81,7 @@
 			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'isopen')">批量禁用</a> | 
 			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'setreturn')">批量接收分成</a> | 
 			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'setreturn')">批量禁用接收分成</a> | 
-			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="delbatch()">批量删除</a> | 
+			<!-- <a class="batch-op batchInactivate" href="javascript:void(0)" onclick="delbatch()">批量删除</a> | -->
 			{#/if}
 			{#if $P.radio_value == 'C'}
 			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'tuijianman')">批量清空推荐人</a> | 

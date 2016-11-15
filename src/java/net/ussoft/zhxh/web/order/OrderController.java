@@ -13,16 +13,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSON;
-
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Public_brand;
@@ -47,9 +37,16 @@ import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
-import net.ussoft.zhxh.util.kuaidi100.KdQuery;
-import net.ussoft.zhxh.util.kuaidi100.pojo.Result;
-import net.ussoft.zhxh.util.kuaidi100.pojo.ResultItem;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSON;
 
 
 @Controller
@@ -819,4 +816,29 @@ public class OrderController extends BaseConstroller {
 		}
 		return;
 	}
+	
+	/**
+	 * 删除订单
+	 * @param orderid
+	 * */
+	@RequestMapping(value="/delorder",method=RequestMethod.POST)
+	public void delorder(String orderid,HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		
+		int num = orderService.delete(orderid);
+		if(num >0){
+			out.print("1");	//成功
+		}else{
+			out.print("0");	//失败
+		}
+		return;
+	}
+	
+	
 }
