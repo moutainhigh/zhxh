@@ -171,7 +171,7 @@
 		    	})
 	    	}
 	    	
-	    	grid_bill.load({parentid:parentid, userid: userid });
+	    	grid_bill.load({banktype:banktype,parentid:parentid, userid: userid });
 	    }
 	    
 	    function onSelectionChanged(e) {

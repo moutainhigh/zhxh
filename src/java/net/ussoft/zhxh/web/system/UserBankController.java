@@ -229,7 +229,7 @@ public class UserBankController extends BaseConstroller {
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/incomeBillDetail",method=RequestMethod.POST)
-	public void incomeBillDetail(String parentid,String userid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void incomeBillDetail(String banktype,String parentid,String userid,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -239,6 +239,8 @@ public class UserBankController extends BaseConstroller {
 		p.setPageNo(pageIndex);
 		p.setOrderBy("createtime");
 		p.setOrderType("desc");
+		
+		//banktype : incomebank （收入总计）
 		
 		Public_user user = userService.getById(userid);
 		
