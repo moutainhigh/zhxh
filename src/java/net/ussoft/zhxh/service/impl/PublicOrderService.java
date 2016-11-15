@@ -188,7 +188,17 @@ public class PublicOrderService implements IPublicOrderService{
 	@Transactional("txManager")
 	@Override
 	public int delete(String id) {
-		return orderDao.del(id);
+		//订单
+		orderDao.del(id);
+		//订单商品
+		List<Public_order_product> list = getOrderProducts(id);
+		for(Public_order_product obj : list){
+			orderProDao.del(obj.getId());
+		}
+		//订单-收货地址
+		Public_order_path opath = getByOrderId(id);
+		orderPathDao.del(opath.getId());
+		return 1;
 	}
 
 	@Transactional("txManager")
@@ -280,6 +290,30 @@ public class PublicOrderService implements IPublicOrderService{
 		orderPath.setUserpath(userPath.getUserpath());
 		orderPath.setUserphone(userPath.getUserphone());
 		orderPathDao.save(orderPath);
+	}
+	
+	/**
+	 * 订单-收货地址
+	 * @param orderid
+	 * @return
+	 * */
+	private Public_order_path getByOrderId(String orderid) {
+		String sql = "SELECT * FROM public_order_path WHERE orderid = ?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(orderid);
+		List<Public_order_path> opList =  orderPathDao.search(sql, values);
+		return opList.size() > 0 ? opList.get(0):new Public_order_path();
+	}
+	/**
+	 * 获取订单商品列表
+	 * @param orderid
+	 * @return
+	 * */
+	private List<Public_order_product> getOrderProducts(String orderid){
+		String sql = "SELECT * FROM public_order_product WHERE orderid= ?";
+		List<Object> values = new ArrayList<Object>();
+		values.add(orderid);
+		return orderProDao.search(sql, values);
 	}
 	
 	/*------------------------------------------采购---------------------------------------------*/

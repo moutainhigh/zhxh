@@ -7,10 +7,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import net.ussoft.zhxh.base.BaseConstroller;
-import net.ussoft.zhxh.filter.SessionListener;
 import net.ussoft.zhxh.model.Sys_account;
 import net.ussoft.zhxh.service.IAccountService;
 import net.ussoft.zhxh.util.CommonUtils;
@@ -82,20 +80,6 @@ public class LoginController extends BaseConstroller {
 		
 			//用户登录成功，将用户实体存入session
 			CommonUtils.setSessionAttribute(request, Constants.user_in_session, res);
-			
-			/*单一登录*/
-		/*	HttpSession session = request.getSession();
-			// 1.实现单一登录 踢人效果
-			if ( null != SessionListener.sessionMap.get(res.getId())) {   
-	            //第一次登录的用户session销毁
-				//将第一次登录用户的信息从map中移除
-				forceLogoutUser(res.getId());
-				//本次登录用户添加到map中                                                                    
-				SessionListener.sessionMap.put(res.getId(), session);                                                                               
-			} else{    
-				//以用户id为key键存入map中，以判断下一次登录的人
-				SessionListener.sessionMap.put(res.getId(), session);
-			}*/
 			
 			return new ModelAndView("/view/system/main", modelMap);
 		}else {

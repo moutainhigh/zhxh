@@ -816,4 +816,29 @@ public class OrderController extends BaseConstroller {
 		}
 		return;
 	}
+	
+	/**
+	 * 删除订单
+	 * @param orderid
+	 * */
+	@RequestMapping(value="/delorder",method=RequestMethod.POST)
+	public void delorder(String orderid,HttpServletResponse response) throws Exception {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		if ("".equals(orderid) || orderid == null) {
+			out.print("error");
+			return;
+		}
+		
+		int num = orderService.delete(orderid);
+		if(num >0){
+			out.print("1");	//成功
+		}else{
+			out.print("0");	//失败
+		}
+		return;
+	}
+	
+	
 }

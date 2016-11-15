@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 
 import net.ussoft.zhxh.model.Public_user;
+import net.ussoft.zhxh.model.Sys_account;
 import net.ussoft.zhxh.util.Constants;
 
 
@@ -27,7 +28,6 @@ public class SessionListener implements HttpSessionAttributeListener {
 	 */
 	public void attributeAdded(HttpSessionBindingEvent event) {
 		String name = event.getName();
-//		System.out.println("当向session中放入数据");
 		if (name.equals(Constants.PC_USER_SESSION)) {
 			Public_user user = (Public_user) event.getValue();
 			if (map.get(user.getId()) != null) {
@@ -36,6 +36,14 @@ public class SessionListener implements HttpSessionAttributeListener {
 //				session.invalidate();
 			}
 			map.put(user.getId(), event.getSession());
+		}else if(name.equals(Constants.user_in_session)){
+			Sys_account account = (Sys_account) event.getValue();
+			if (map.get(account.getId()) != null) {
+				HttpSession session = map.get(account.getId());
+				session.removeAttribute(Constants.user_in_session);
+//				session.invalidate();
+			}
+			map.put(account.getId(), event.getSession());
 		}
 
 	}
@@ -44,11 +52,12 @@ public class SessionListener implements HttpSessionAttributeListener {
 	 */
 	public void attributeRemoved(HttpSessionBindingEvent event) {
 		String name = event.getName();
-//		System.out.println("当向session中移除数据");
 		if (name.equals(Constants.PC_USER_SESSION)) {
 			Public_user user = (Public_user) event.getValue();
 			map.remove(user.getId());
-
+		}else if(name.equals(Constants.user_in_session)){
+			Sys_account account = (Sys_account) event.getValue();
+			map.remove(account.getId());
 		}
 	}
 
