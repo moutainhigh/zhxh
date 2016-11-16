@@ -922,6 +922,11 @@
        						layer.msg("设置的奖励低于下限，请重新输入。",{icon:5});
        						return false;
        					}
+       					
+       					if (!isInteger(num)) {
+       						layer.msg("设置的奖励必须是整数，请重新输入。",{icon:5});
+       						return false;
+       					}
 		    		}
 		    		else if (key == "state") {
 		    			if (v == '1') {

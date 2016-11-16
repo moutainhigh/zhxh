@@ -160,9 +160,9 @@
 				</tr>
 				<tr>
 					<td>奖励下限</td>
-					<td><input name="bonuses_down" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
+					<td><input name="bonuses_down" class="mini-textbox" style="width:100%;" vtype="int" emptyText="请输入数字" /></td>
 					<td>奖励上限</td>
-					<td><input name="bonuses_up" class="mini-textbox" style="width:100%;" vtype="float" emptyText="请输入数字" /></td>
+					<td><input name="bonuses_up" class="mini-textbox" style="width:100%;" vtype="int" emptyText="请输入数字" /></td>
 				</tr>
 				<tr>
 					<td>店提现日期</td>

@@ -251,7 +251,7 @@
 	      	              { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称"},
 	      	              { field: "buyerdis",name:"buyerdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "采购折扣" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "rebatesdis",name:"rebatesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "返利标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-	      	              { field: "bonusesdis",name:"bonusesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "奖励标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+	      	              { field: "bonusesdis",name:"bonusesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "奖励标准" ,vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "state",name:"state",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁止采购"},{"id":"1","text":"可采购"}] } },
 	      	              { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准"},
 						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "单价" },
