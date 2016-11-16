@@ -49,6 +49,7 @@ function insertUser() {
              	if (text == 'success') {
              		layer.msg("保存成功。",{icon:6});
              		radio_click();
+             		resetUserlist();
              		return false;
              	}
              	else if (text == "codeerror") {
