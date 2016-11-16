@@ -194,6 +194,13 @@
                 dataType:"json",
                 success: function (json) {
                 	var order = json.order;	//订单
+                	if (order.orderstatus == 1) {
+                		//如果订单状态大于2，隐藏确定发货按钮
+                		$("#sdBtn").show();
+                	}
+                	else {
+                		$("#sdBtn").hide();
+                	}
                 	$("#ordernum_d").html(order.ordernumber);
                 	$("#ordertime").html(order.ordertime);
                 	$("#ostatus").html(order.orderstatusmemo);
@@ -303,7 +310,7 @@
 			<div class="media-body">
 				<div class="padding float-left"><h4>订单详情</h4></div>
 				<div class="padding float-right">
-					<button class="button button-small border-blue" onclick="sendOut_details()">确认发货</button>
+					<button id="sdBtn" class="button button-small border-blue" onclick="sendOut_details()">确认发货</button>
 					<button onclick="goback()" class="button button bg-blue icon-reply"> 返回</button>
 				</div>
 			</div>
