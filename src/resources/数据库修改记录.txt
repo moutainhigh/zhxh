@@ -592,7 +592,7 @@ SET FOREIGN_KEY_CHECKS = 1;
  
 3、可支配账户-账单流水  disposable_bill
 	（1）删除type字段
-	（2）修改type_txt  字段名 为 trantypetxt
+	（2）修改type_txt  字段名 为 trantype_txt
 	（3）增加上级id parentid varchar（40）
 	（4）增加用户id userid varchar（40）
 	

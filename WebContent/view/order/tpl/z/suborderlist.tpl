@@ -25,7 +25,7 @@
 					<td><span class="tag bg-order{$T.row.orderstatus}">{$T.row.orderstatusmemo}</span></td>
 					<td><button class="button button-small border-blue" onclick="orderdetails('{$T.row.id}')">订单详情</button>
 						{#if $T.row.orderstatus == 1}
-							<button class="button button-small border-green" onclick="sendOut('{$T.row.id}')">确认发货</button>
+							<button class="button button-small border-green" onclick="sendOut('{$T.row.id}',false)">确认发货</button>
 						{#/if}
 						{#if $T.row.ordertype == "p" && $T.row.isshare == 1 && $T.row.isshareover != 1 }
 							<button class="button button-small border-red" onclick="sharepay('{$T.row.id}')">分配利润</button>

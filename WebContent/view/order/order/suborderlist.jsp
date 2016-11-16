@@ -39,6 +39,9 @@
     	var pageIndex = 1;
 		var pageSize = 10;
 		var totalPage = 0;
+		
+		var sel_orderid = "";
+		
     	$(function(){
     		//加载数据-订单列表
     		loadData_orderlist();
@@ -129,17 +132,19 @@
     	//订单详情
     	function orderdetails(id){
     		$("#admin_order").slideToggle(800,function(){
+    			sel_orderid = "";
     			//alert("滑动向上缩小完毕");
     			
     		});
     		$("#admin_details").slideToggle(800,function(){
+    			sel_orderid = id;
     			//alert("滑动向上缩小完毕");
     			loadData_orderdetails(id);
     		});
     	}
     	
     	//发货
-    	function sendOut(id){
+    	function sendOut(id,isDetails){
     		layer.prompt({
    				title: '请输入运单号，并确认',
    				formType: 0 //prompt风格，支持0-2
@@ -153,6 +158,9 @@
    	                success: function (text) {
    	                	if(text == "1"){
    	                		loadData_orderlist();
+   	                		if (isDetails) {
+   	                			loadData_orderdetails(id);
+   	                		}
    	                		layer.msg("操作成功",{icon:6});
    	                	}else{
    	                		layer.msg("操作失败，请稍后再试！",{icon:6});
@@ -163,6 +171,14 @@
    	                }
    	           	});
    			});
+    	}
+    	
+    	function sendOut_details() {
+    		if (sel_orderid == "") {
+    			layer.msg("未获取到订单ID，请重新登录再尝试操作。");
+    			return;
+    		}
+    		sendOut(sel_orderid,true);
     	}
     	
     	/*---------订单详情---------*/
@@ -243,6 +259,7 @@
     	//
     	function goback(){
     		$(".admin").slideToggle(800,function(){
+    			sel_orderid = "";
     			//alert("滑动向上缩小完毕");
     		});
     	}
@@ -285,7 +302,10 @@
 		<div id="admin_details" class="admin" style="padding: 0px 60px;display: none;">
 			<div class="media-body">
 				<div class="padding float-left"><h4>订单详情</h4></div>
-				<div class="padding float-right"><button onclick="goback()" class="button button bg-blue icon-reply"> 返回</button></div>
+				<div class="padding float-right">
+					<button class="button button-small border-blue" onclick="sendOut_details()">确认发货</button>
+					<button onclick="goback()" class="button button bg-blue icon-reply"> 返回</button>
+				</div>
 			</div>
 			<div style="padding-bottom: 20px;">
 				<ul class="list-group">

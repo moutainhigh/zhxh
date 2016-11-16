@@ -34,12 +34,12 @@
     	var totalPage = 0;
     	//品牌分页
     	var pageIndex_brand = 1;
-    	var pageSize_brand = 1;
+    	var pageSize_brand = 10;
     	var totalPage_brand = 0;
     	
     	//采购标准设置翻页
     	var pageIndex_dis = 1;
-    	var pageSize_dis = 1;
+    	var pageSize_dis = 10;
     	var totalPage_dis = 0;
     	
     	var rows = [];
