@@ -1325,7 +1325,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Override
 	public List<Map<String, Object>> getUserBankList(String parentid, String userid) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select k.*,u.companyname,u.identity from public_user_bank k ,public_user u where 1=1");
+		sb.append("select k.*,u.companyname,u.identity from public_user_bank k ,public_user u where u.isopen <> -1");
 		List<Object> values = new ArrayList<Object>();
 		
 		if(null != userid && !"".equals(userid)){
