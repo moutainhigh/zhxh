@@ -897,7 +897,9 @@ public class PublicUser2Service implements IPublicUser2Service{
         }
         userid.clear();
         for (Public_user user : tmpUserList) {
-        	userid.add(user.getId());
+        	if (user.getIsopen() != -1) {
+        		userid.add(user.getId());
+        	}
 		}
         
 		sb.setLength(0);
