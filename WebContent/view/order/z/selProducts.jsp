@@ -127,7 +127,7 @@
 					<th width="80">品牌</th>
 					<th width="*">商品名称</th>
 					<th width="100">规格</th>
-					<th width="80">售价</th>
+					<th width="80">单价</th>
 					<th width="60">折扣价</th>
 				</tr>
 				{#foreach $T as row}

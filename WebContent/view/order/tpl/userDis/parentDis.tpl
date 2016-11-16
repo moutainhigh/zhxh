@@ -7,7 +7,7 @@
 			<th width="100">品牌</th>
 			<th width="*">商品名称</th>
 			<th width="60">规格</th>
-			<th width="60">售价</th>
+			<th width="60">单价</th>
 			<th width="60">折扣</th>
 			{#if $P.radio_value == 'C'}
 			<th width="60">返利</th>

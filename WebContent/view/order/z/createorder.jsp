@@ -166,7 +166,7 @@
     		obj.brandname = data.brandname;
 			obj.productname = data.productname;
 			obj.productsize = data.productsize;
-			obj.price = data.price;		//售价
+			obj.price = data.price;		//单价
 			obj.price_txt = formatFloat(data.price,2);
 			obj.saleprice = data.saleprice;	//折扣
 			obj.saleprice_txt = formatFloat(data.saleprice,2);
@@ -345,7 +345,7 @@
 					<th width="*">商品名称</th>
 					<th width="160">规格</th>
 					<th width="160">数量</th>
-					<th width="100">售价</th>
+					<th width="100">单价</th>
 					<th width="100">折扣价</th>
 					<th width="180">小计</th>
 				</tr>

@@ -7,7 +7,7 @@
 			<th width="50">图片</th>
 			<th width="350">商品名称</th>
 			<th width="100">规格标准</th>
-			<th width="100">售价</th>
+			<th width="100">单价</th>
 			<th width="100">排序</th>
 		</tr>
 		{#if $P.rowCount > 0}

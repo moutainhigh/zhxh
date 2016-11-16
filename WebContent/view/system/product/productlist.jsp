@@ -102,7 +102,7 @@
 					  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 					  { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
 					  { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-					  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
+					  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "单价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
 					  { field: "saleprice",name:"saleprice", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "特价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25  } },
 					  { field: "sizesort",name:"sizesort", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: {type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
 					  { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
@@ -142,7 +142,7 @@
                 var showtype = record.showtype;
                 
                 var s = ' <a class="Edit_Button" href="javascript:editRated(\'' + id + '\',\'' + productname + '\')" >评价</a>';
-                //s += '  <a class="Edit_Button" href="javascript:editSize(\'' + id + '\',\'' + productname + '\')" >售价</a> | ';
+                //s += '  <a class="Edit_Button" href="javascript:editSize(\'' + id + '\',\'' + productname + '\')" >单价</a> | ';
                 //s += '  <a class="Edit_Button" href="javascript:edit(\'' + id + '\',\'' + showtype + '\')" >详细</a>';
                 //s += '  <a class="Edit_Button" href="javascript:getUrl(\'' + id + '\')" >获取地址</a>';
             }
@@ -394,7 +394,7 @@
         
         function editSize(id,productname) {
         	
-        	var title = "商品售价";
+        	var title = "商品单价";
         	mini.open({
                 url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/product/editSize",
                 title: title, width: 800, height:600,

@@ -131,7 +131,7 @@
 	      	              //{ field: "bonusesdis",name:"bonusesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "奖励标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "state",name:"state",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁止采购"},{"id":"1","text":"可采购"}] } },
 	      	              { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准"},
-						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价" },
+						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "单价" },
 	      	              { field: "parentname",name:"parentname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "设置者" },
     	                  { field: "username",name:"username", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "被设置者" },
     	                  { field: "companyname",name:"companyname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "机构名称" },
@@ -254,7 +254,7 @@
 	      	              { field: "bonusesdis",name:"bonusesdis", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "奖励标准" ,vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	      	              { field: "state",name:"state",type:"comboboxcolumn", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"禁止采购"},{"id":"1","text":"可采购"}] } },
 	      	              { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准"},
-						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "售价" },
+						  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "单价" },
 	      	              { field: "parentname",name:"parentname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "设置者" },
     	                  { field: "username",name:"username", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "被设置者" },
     	                  { field: "companyname",name:"companyname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "机构名称" }

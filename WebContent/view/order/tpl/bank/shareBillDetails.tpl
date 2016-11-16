@@ -10,7 +10,7 @@
 				<th>品牌</th>
 				<th>商品</th>
 				<th>规格</th>
-				<th>售价</th>
+				<th>单价</th>
 				<th>数量</th>
 				<th>分润金额</th>
 			</tr> </thead>
