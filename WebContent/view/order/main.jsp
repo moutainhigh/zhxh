@@ -123,9 +123,13 @@
 	                }
 	           });
 			}
-			
 			//====================
 		}
+		
+		function refreshMessage() { 
+			resetFunc("message");
+		} 
+		setInterval(refreshMessage,15000);
 	</script>
 </head>
 

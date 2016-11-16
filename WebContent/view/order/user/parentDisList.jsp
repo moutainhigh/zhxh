@@ -34,11 +34,12 @@
     	var totalPage = 0;
     	//品牌分页
     	var pageIndex_brand = 1;
-    	var pageSize_brand = 10;
+    	var pageSize_brand = 1;
+    	var totalPage_brand = 0;
     	
     	//采购标准设置翻页
     	var pageIndex_dis = 1;
-    	var pageSize_dis = 10;
+    	var pageSize_dis = 1;
     	var totalPage_dis = 0;
     	
     	var rows = [];
@@ -113,7 +114,7 @@
     		if (type == "brand") {
         		$('#pageBrandSel').change(function(){ 
         			var p1=$(this).children('option:selected').val();//这就是selected的值
-        			pageIndex = 1;
+        			pageIndex_brand = 1;
        				pageSize_brand = p1;
               		getUserBrand(set_parentid);
         		}) 
@@ -121,7 +122,7 @@
     		if (type == "dis") {
         		$('#pageDisSel').change(function(){ 
         			var p1=$(this).children('option:selected').val();//这就是selected的值
-        			pageIndex = 1;
+        			pageIndex_dis = 1;
         			pageSize_dis = p1;
         			getUserDis(sel_brandid);
         		}) 
@@ -142,7 +143,7 @@
                     		}
                 		}
                 		if (type == "brand") {
-                			if ($(this).val() > totalPage || $(this).val() < 1 || $(this).val() == pageIndex) {
+                			if ($(this).val() > totalPage_brand || $(this).val() < 1 || $(this).val() == pageIndex_brand) {
                     			return false;
                     		}
                     		else {
@@ -252,6 +253,12 @@
                 }
            });
     	}
+    	
+    	function showSizeDis(brandid) {
+    		pageIndex_dis = 1;
+			getUserDis(brandid);
+    	}
+    	
     	function getUserDis(brandid) {
     		sel_brandid = brandid;
     		if (brandid == "") {

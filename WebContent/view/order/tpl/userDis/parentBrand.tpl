@@ -16,7 +16,7 @@
 					<td style="line-height: 30px;">{($T.row$index+1)+($P.pageIndex * $P.pageSize - $P.pageSize)}</td>
 					<td>{#if $T.row.brandlogo != ""}<img src="{$P.path}/{$T.row.brandlogo}" height="30px">{#/if}</td>
 					<td style="line-height: 30px;">{$T.row.brandname}</td>
-					<td><a href="javascript:;" onclick="getUserDis('{$T.row.id}')" class="button border-blue button-small">查看商品</a></td>
+					<td><a href="javascript:;" onclick="showSizeDis('{$T.row.id}')" class="button border-blue button-small">查看商品</a></td>
 				</tr>
 			{#/for}
 		{#else}
