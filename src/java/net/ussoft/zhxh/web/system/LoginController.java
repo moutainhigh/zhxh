@@ -1,6 +1,7 @@
 package net.ussoft.zhxh.web.system;
 
 import java.awt.image.BufferedImage;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -9,10 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
+import net.ussoft.zhxh.model.Public_log;
 import net.ussoft.zhxh.model.Sys_account;
 import net.ussoft.zhxh.service.IAccountService;
+import net.ussoft.zhxh.service.IPublicLogService;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
+import net.ussoft.zhxh.util.DateUtil;
 import net.ussoft.zhxh.util.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,8 @@ public class LoginController extends BaseConstroller {
 	
 	@Resource
 	private IAccountService accountService;
+	@Resource
+	private IPublicLogService logService;
 	
 	@Autowired
 	private Producer captchaProducer = null;
@@ -80,7 +86,7 @@ public class LoginController extends BaseConstroller {
 		
 			//用户登录成功，将用户实体存入session
 			CommonUtils.setSessionAttribute(request, Constants.user_in_session, res);
-			
+			saveLog(res.getId());
 			return new ModelAndView("/view/system/main", modelMap);
 		}else {
 			modelMap.put("result", "输入的帐户名 或密码错误，请重新输入。");
@@ -116,6 +122,28 @@ public class LoginController extends BaseConstroller {
 			}finally{
 				out.close();
 			}
+	}
+	
+	/**
+	 * 添加日志
+	 * @param userid
+	 * @param parentid
+	 * @param logtype 操作类型
+	 * @param logmemo 日志内容描述
+	 * @param amount 金额
+	 * @param lognum 
+	 * @return
+	 * */
+	private Public_log saveLog(String userid){
+		Public_log log = new Public_log();
+		log.setId(UUID.randomUUID().toString());
+		log.setUserid(userid);	//主操作人
+//		log.setTouserid(parentid);			//被操作人
+		log.setLogtype("logoin");	//操作类型
+		log.setLogmemo("登录日志");
+		log.setLogtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		
+		return logService.insert(log);
 	}
 	
 }

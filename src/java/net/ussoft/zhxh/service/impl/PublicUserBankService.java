@@ -291,7 +291,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 					//接收分成
 					if(user.getSetreturn() == 1){
 						//计算本次返利额 = 商品折扣价后 X 返利比例 X 数量
-						float rebate_money = obj.getPrice() * obj.getBuyerdis() * obj.getRebatesdis() * rebate_num;
+//						float rebate_money = obj.getPrice() * obj.getBuyerdis() * obj.getRebatesdis() * rebate_num;
+						//2016-11-16,业务逻辑修改，商品折扣价改为商品零售价
+						//计算本次返利额 = 商品零售价 X 返利比例 X 数量
+						float rebate_money = obj.getPrice() * obj.getRebatesdis() * rebate_num;
 						rebate_total += rebate_money;					//返利金额合计
 						//返利奖励明细表
 						Public_dis_details rebate_details = setDisDetails(rebate_num, next_rebate_num, rebate_money, 1);

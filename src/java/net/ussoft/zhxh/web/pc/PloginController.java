@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Public_cat;
+import net.ussoft.zhxh.model.Public_log;
 import net.ussoft.zhxh.model.Public_phone_code_log;
 import net.ussoft.zhxh.model.Public_user;
 import net.ussoft.zhxh.model.Sys_public;
 import net.ussoft.zhxh.service.IPublicCatService;
+import net.ussoft.zhxh.service.IPublicLogService;
 import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUserService;
 import net.ussoft.zhxh.service.ISysPublicService;
@@ -46,7 +48,8 @@ public class PloginController extends BaseConstroller {
 	private IPublicCatService catService;
 	@Resource
 	private IPublicPhoneCodeLogService codeLogService;
-	
+	@Resource
+	private IPublicLogService logService;
 	@Resource
 	ISysPublicService publicService;	//LOGO
 	
@@ -92,12 +95,12 @@ public class PloginController extends BaseConstroller {
 			}
 			//用户登录成功，将用户实体存入session
 			CommonUtils.setSessionAttribute(request, Constants.PC_USER_SESSION, res);
-			
+			saveLog(res.getId());
 		}else {
 			out.print("输入的帐户名 或密码错误，请重新输入。");
 			return;
 		}
-		Public_user userSession1 = (Public_user) CommonUtils.getSessionAttribute(request, Constants.PC_USER_SESSION);
+//		Public_user userSession1 = (Public_user) CommonUtils.getSessionAttribute(request, Constants.PC_USER_SESSION);
 		//初始，购物车商品类数量
 		List<Public_cat> catList = catService.list(res.getId());
 		CommonUtils.setSessionAttribute(request, Constants.CAT_NUM, catList.size());
@@ -420,4 +423,25 @@ public class PloginController extends BaseConstroller {
         return remoteIp;
     }
 	
+	/**
+	 * 添加日志
+	 * @param userid
+	 * @param parentid
+	 * @param logtype 操作类型
+	 * @param logmemo 日志内容描述
+	 * @param amount 金额
+	 * @param lognum 
+	 * @return
+	 * */
+	private Public_log saveLog(String userid){
+		Public_log log = new Public_log();
+		log.setId(UUID.randomUUID().toString());
+		log.setUserid(userid);	//主操作人
+//		log.setTouserid(parentid);			//被操作人
+		log.setLogtype("logoin");	//操作类型
+		log.setLogmemo("登录日志");
+		log.setLogtime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
+		
+		return logService.insert(log);
+	}
 }
