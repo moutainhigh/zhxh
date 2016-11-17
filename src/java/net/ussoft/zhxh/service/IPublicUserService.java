@@ -42,6 +42,13 @@ public interface IPublicUserService {
 	 * @return
 	 */
 	public PageBean<Public_user> list(String parentid,String identity,Map<String, Object> map,int showtype,PageBean<Public_user> pageBean);
+	/**
+	 * 获取推荐客户列表
+	 * @param parentid
+	 * @param pageBean
+	 * @return
+	 */
+	public PageBean<Public_user> tuijianList(String parentid,PageBean<Public_user> pageBean);
 	
 	/**
 	 * 获取机构的上级列表

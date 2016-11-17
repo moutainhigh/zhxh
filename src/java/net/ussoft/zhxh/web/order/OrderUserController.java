@@ -77,6 +77,27 @@ public class OrderUserController extends BaseConstroller {
 		out.print(json);
 	}
 	
+	@RequestMapping(value="/tuijianList",method=RequestMethod.POST)
+	public void tuijianList(String parentid,int pageIndex,
+			int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		//分页
+		PageBean<Public_user> pageBean = new PageBean<Public_user>();
+		pageBean.setPageSize(pageSize);
+		pageBean.setPageNo(pageIndex + 1);
+		
+		pageBean = userService.tuijianList(parentid, pageBean);
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("total", pageBean.getRowCount());
+		map.put("data", pageBean.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
 	@RequestMapping(value="/getParentlist",method=RequestMethod.POST)
 	public void getParentlist(String userid,String mapObj,int pageIndex,
 			int pageSize,@RequestParam(value="isPage", defaultValue="false") boolean isPage,HttpServletResponse response) throws IOException {

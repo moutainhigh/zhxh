@@ -158,6 +158,52 @@ public class PublicUserService implements IPublicUserService{
 	}
 	
 	@Override
+	public PageBean<Public_user> tuijianList(String parentid, PageBean<Public_user> pageBean) {
+		StringBuffer sb = new StringBuffer();
+		List<Object> values = new ArrayList<Object>();
+		
+		//1获取关联的帐户。如果没有，直接返回
+		sb.append("select * from public_user_link where tuijianid = ?");
+		values.add(parentid);
+		List<Public_user_link> userLinkList = linkDao.search(sb.toString(), values);
+		
+		if (null == userLinkList || userLinkList.size() == 0) {
+			return pageBean;
+		}
+		
+		List<String> userid = new ArrayList<String>();
+		for (Public_user_link userLink : userLinkList) {
+			userid.add(userLink.getUserid());
+		}
+				
+		//2.如果有检索。
+		List<Public_user> tmpUserList = new ArrayList<Public_user>();
+		sb.setLength(0);
+		values.clear();
+		sb.append("select * from public_user where 1=1");
+		sb.append(" and isopen <> -1 and id in (");
+        Serializable[] ss=new Serializable[userid.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(userid);
+		
+        pageBean = userDao.search(sb.toString(), values,pageBean);
+        
+        if (pageBean.getList().size() > 0) {
+        	Public_user pUser = userDao.get(parentid);
+        	List<Public_user> tmpList = pageBean.getList();
+        	for (Public_user user : tmpList) {
+				user.setTuijianid(parentid);
+				user.setTuijianman(pUser.getCompanyname());
+			}
+        	pageBean.setList(tmpList);
+        }
+        
+        return pageBean;
+	}
+	
+	@Override
 	public PageBean<Public_user> getParentlist(String userid, Map<String, Object> map, PageBean<Public_user> pageBean) {
 		StringBuffer sb = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
@@ -691,6 +737,5 @@ public class PublicUserService implements IPublicUserService{
 		
 		return userDao.search(sql, values, pageBean);
 	}
-
 
 }

@@ -200,6 +200,11 @@
 										<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LIST">
 											<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/userList">客户列表</a>
 										</li>
+										<c:if test="${sessionScope.pc_user_sessiion.identity == 'C'}">
+											<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
+												<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/tuijianList">我的推荐</a>
+											</li>
+										</c:if>
 										<c:if test="${sessionScope.pc_user_sessiion.id != '1'}">
 											<li class="sec-nav-li menu2" code="WBM_CUSTOMER_LEVEL">
 												<a class="sec-nav-a new-con" href="javascript:;" curInd="1" funcode="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/user/parentDisList">我的采购利益</a>
