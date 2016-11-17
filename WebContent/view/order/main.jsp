@@ -129,7 +129,7 @@
 		function refreshMessage() { 
 			resetFunc("message");
 		} 
-		setInterval(refreshMessage,15000);
+		//setInterval(refreshMessage,15000); //消息15秒刷新
 	</script>
 </head>
 

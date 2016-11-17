@@ -924,7 +924,8 @@ public class PublicUserBankService implements IPublicUserBankService{
 			Public_user_bank bank = getUserBank(bill.getUserid(), bill.getParentid());
 			if("A".equals(user.getIdentity())){
 				//可提现账户-提现
-				bank.setTakenbank(bank.getTakenbank() - amount);		//冲减可提现账户 - 当前操作账户
+				bank.setCostbank(bank.getCostbank() + amount);		//代理提现增加代理支出总和，2016-11-16业务处理修改-老安
+				bank.setTakenbank(bank.getTakenbank() - amount);	//冲减可提现账户 - 当前操作账户
 			}else if("C".equals(user.getIdentity())){
 				//trantype——1：平台可提现账户提现，2：代理可提现账户提现，3：店平台售额提现，4：店奖励可提现账户提现
 				if(bill.getTrantype() == 4){

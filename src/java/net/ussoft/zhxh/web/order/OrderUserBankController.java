@@ -49,6 +49,7 @@ import net.ussoft.zhxh.util.BillNO;
 import net.ussoft.zhxh.util.CommonUtils;
 import net.ussoft.zhxh.util.Constants;
 import net.ussoft.zhxh.util.DateUtil;
+import net.ussoft.zhxh.util.SendSMS;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -393,10 +394,10 @@ public class OrderUserBankController extends BaseConstroller {
 		String sendCode = CommonUtils.getSix();
 		String send_content = "验证码" + sendCode + "用于资金账户提现，请勿提供给任何人，以免造成账户资金损失。";
 		String logType = "PAY2BANK";
-//		SendSMS.sendMessage(user.getPhonenumber(), send_content);
+		SendSMS.sendMessage(user.getPhonenumber(), send_content);
 		savePhoneCodeLog(user.getPhonenumber(), sendCode, logType, request);
 		
-		out.print(sendCode);
+		out.print("success");
 	}
 	
 	/**

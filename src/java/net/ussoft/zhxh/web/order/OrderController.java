@@ -575,7 +575,7 @@ public class OrderController extends BaseConstroller {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		Public_user user = getSessionUser();
 		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
-		
+		p.setIsPage(false);
 		p = user2Service.listUserStandard(parentid, user.getId(), brandid,"","1",keyword,p);
 		
 		map.put("data",p.getList());

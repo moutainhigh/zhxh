@@ -68,6 +68,11 @@ public class SpendingBillService implements ISpendingBillService{
 		if(null != userid && !"".equals(userid)){
 			sb.append(" AND userid= ?");
 			values.add(userid);
+		}else{
+			if(null != parentid && !"".equals(parentid)){
+				sb.append(" OR userid= ?");
+				values.add(parentid);
+			}
 		}
 		if(null != parentid && !"".equals(parentid)){
 			sb.append(" AND parentid= ?");

@@ -49,15 +49,6 @@
 	     	    ];
 		
 	    $(function(){
-	    	//资金账户
-	    	columns= [
-						{ type: "checkcolumn",headerAlign:"center",width: 50},
-     	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-     	               	{ field: "bankname",name:"bankname", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "帐户名称" },
-   	                	{ field: "bankpay",name:"bankpay", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "金额",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-     	              	{ field: "action", width: 160, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"}
-     	            ];
-	    	
 	    	mini.parse();
 	    	grid_bank = mini.get("grid_bank");
 	    	grid_bank.set({
