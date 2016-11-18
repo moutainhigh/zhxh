@@ -24,13 +24,13 @@
 	    	grid_bill_details.set({
         		//url:"${pageContext.request.contextPath}/userBank/showUserBank.htmls",
         		columns: [
-	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
-	                { field: "brandname",name:"brandname", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "品牌" },
-	        	    { field: "productname",name:"productname", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品"},
-	        	    { field: "productsize",name:"productsize", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "规格"},
-	        	    { field: "price",name:"price", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "单价"},
-	        	    { field: "productnum",name:"productnum", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "数量"},
-	        	    { field: "skey",name:"skey", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "分润金额"}
+	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
+	                { field: "brandname",name:"brandname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "品牌" },
+	        	    { field: "productname",name:"productname", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "商品"},
+	        	    { field: "productsize",name:"productsize", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "规格"},
+	        	    { field: "price",name:"price", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "单价"},
+	        	    { field: "productnum",name:"productnum", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "数量"},
+	        	    { field: "skey",name:"skey", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "分润金额"}
 	        	    ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -40,7 +40,7 @@
 	            allowUnselect:false,
 	            //onselectionchanged:"onSelectionChanged",
 	            showPager:true,
-	            fitColumns:false,
+	            fitColumns:true,
 	            editNextOnEnterKey:true,
 	            showPageSize:false,
 	            pageSize:2000

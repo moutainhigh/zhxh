@@ -74,16 +74,12 @@
                 var record = e.record,
 	            column = e.column,
 	            field = e.field,
-	            uid = record._uid,
 	            value = e.value;
-                
-                if (field == "isshow") {
-                	if (value == 0) {
-                		e.cellStyle = "color:red;text-align:center";
-                	}
-                	else {
-                		e.cellStyle = "color:blue;text-align:center";
-                	}
+                if (field == "fee_amount") {	//提现手续费
+                	e.cellHtml = "1";
+                }else if(field == "real_amount"){	//提现实收额
+                	var amount = record.amount - 1;	
+                	e.cellHtml = amount;
                 }
             });
         }
