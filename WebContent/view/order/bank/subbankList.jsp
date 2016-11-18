@@ -18,7 +18,7 @@
 	<!-- 引入 vintage 主题 -->
 	<script src="${pageContext.request.contextPath}/js/echarts/theme/shine.js"></script>
     <script src="${pageContext.request.contextPath}/js/layer2.4/layer.js" type="text/javascript"></script>
-    
+    <script src="${pageContext.request.contextPath}/js/js.validate.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/js/util.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/view/order/tpl/bank/bank.js" type="text/javascript"></script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/view/order/tpl/bank/page.css">
@@ -76,6 +76,10 @@
    				title: '请输入配额金额，并确认',
    				formType: 0 //prompt风格，支持0-2
    			}, function(amount){
+   				if(!isInteger(amount)){
+   					parent.layer.msg('请输入大于0的正整数', {icon:5});
+   					return;
+   				}
    				var config = getDisConfig();
    				if(config.quota_up > 0){
    					if(amount > config.quota_up){

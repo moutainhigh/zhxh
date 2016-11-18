@@ -1,6 +1,7 @@
 <table class="table table-bordered table-hover text-small">
 	<tbody>
 		<tr class="panel-head">
+			<th width="35">序号</th>
 			<th width="160">品牌</th>
 			<th width="*">商品名称</th>
 			<th width="160">规格</th>
@@ -11,6 +12,7 @@
 		</tr>
 		{#foreach $T as row}
 		<tr class="tr" id="{$T.row.id}">
+			<td>{$T.row$index+1}</td>
 			<td>{$T.row.brandname}</td>
 			<td style="text-align: left;">{$T.row.productname}</td>
 			<td>{$T.row.productsize}</td>

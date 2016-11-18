@@ -39,7 +39,7 @@
 	            multiSelect:false,
 	            allowUnselect:false,
 	            //onselectionchanged:"onSelectionChanged",
-	            showPager:true,
+	            showPager:false,
 	            fitColumns:true,
 	            editNextOnEnterKey:true,
 	            showPageSize:false,
