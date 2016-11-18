@@ -74,7 +74,7 @@ ul.header-user li.del a{ width:16px ; height:16px ; background: url(../../images
 
 
 /*其他头部*/
-.header-width h1.logo{ margin-top:15px; width: 62px; height: 62px;}
+.header-width h1.logo{ margin-top:15px; width: 62px;} /* height: 62px;*/
 .nav{  text-align: center;}
 .nav a{display: inline-block; line-height: 25px; font-size: 16px; color: #fff; margin: 18px 22px 0 22px;}
 .nav a.cur,.nav a:hover{ border-bottom: solid 4px #fff;}

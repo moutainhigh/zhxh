@@ -37,7 +37,8 @@
 		</a>		
 	</div>		
 	<!--轮播图-->
-	<div id="fsD1" class="focus">  
+	<c:if test="${brandlistPic.size() > 0}">
+	<div id="fsD1" class="focus"> 
 	    <div id="D1pic1" class="fPic">
 	    <c:forEach var="item" items="${brandlistPic }">
 	    	<div class="fcon" style="display: none;">
@@ -76,6 +77,7 @@
 	    }) 
 	  })  
 	</script>
+	</c:if>
 	<!--视频-->
 	<div class="shop-IMG" align="center" >
 	<c:forEach var="item" items="${videoList }">

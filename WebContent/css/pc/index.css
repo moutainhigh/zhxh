@@ -86,7 +86,7 @@
 .norms-div .norms{ float: left; font-size: 18px; color: #111; cursor: pointer;background: url(../../images/norms.png) left center no-repeat; padding-left: 20px; margin-right: 20px; }
 .norms-div .cur{ background: url(../../images/norms-cur.png) left center no-repeat; }
 /*定制研发*/
-.dzyf h3{ text-align: center; font-weight: normal; font-size: 30px; color: #0c0307; margin-top: 100px;}
+.dzyf h3{ text-align: center; font-weight: normal; font-size: 30px; color: #0c0307; margin-top: 30px;}
 .dzyf-IMG{ height: 500px; background: url(../../images/bg.jpg) no-repeat; margin-top: 40px;}
 .dzyf-IMG .dzyfimg-l{width: 500px;}
 .dzyf-IMG .dzyfimg-l span{ font-size: 36px; color: #fff; display: block; text-indent: 60px;}
@@ -101,7 +101,7 @@
 .dzyf-text p{ line-height: 24px;}
 
 /*品牌故事*/
-.Brand-story h3{ text-align: center; font-weight: normal; font-size: 30px; color: #0c0307; margin-top: 100px;}
+.Brand-story h3{ text-align: center; font-weight: normal; font-size: 30px; color: #0c0307; margin-top: 50px;}
 .Brand-story-IMG img{ width:1200px ; height: 300px; margin-top: 50px; display: block;}
 .Brand-story-1{ margin-top: 100px;}
 .story1{ margin-top: 50px;}
