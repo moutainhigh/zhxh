@@ -14,50 +14,11 @@
     </style>
     
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/boot.js"></script>
-    
+    <script type="text/javascript" src="${pageContext.request.contextPath}/view/system/bank/bankbill.js"></script>
     <script type="text/javascript">
 	    //mini.parse();
 	    
-	    var grid_bank;		//资金账户
-	    var parentid = "";
-	    var userid = "";
-	    var bankid = "";
-		var grid_bill;		//资金账户流水
-		
-		//收入/充值
-		var columns_income=[
-						{ type: "checkcolumn",headerAlign:"center",width: 30},
-						{ type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
-						{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
-						{ field: "billno",name:"billno", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "账单流水号",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-		              { field: "createtime",name:"createtime",dateFormat:"yyyy-MM-dd HH:mm:ss", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "日期",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-		              { field: "u_username",name:"u_username", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "客户名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-		              { field: "trantypetxt",name:"trantypetxt", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "摘要",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-		              { field: "account_receivable",name:"account_receivable", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "金额(元)",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
-	     	    ];
-		//支出/提现
-		var columns_spending=[
-						{ type: "checkcolumn",headerAlign:"center",width: 30},
-						{ type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
-						{ field: "action", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
-						{ field: "billno",name:"billno", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "账单流水号",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-		              { field: "createtime",name:"createtime",dateFormat:"yyyy-MM-dd HH:mm:ss", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "日期",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-		              { field: "u_username",name:"u_username", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "客户名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-		              { field: "trantypetxt",name:"trantypetxt", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "摘要",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-		              { field: "amount",name:"amount", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "金额(元)",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-		              { field: "status",name:"status", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "状态",vtype:"required",editor: { type: "combobox", data: [{"id":"-1","text":"失败"},{"id":"0","text":"未接收"},{"id":"1","text":"成功"}] }}
-	     	    ];
-		
 	    $(function(){
-	    	//资金账户
-	    	columns= [
-						{ type: "checkcolumn",headerAlign:"center",width: 50},
-     	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:50},
-     	               	{ field: "bankname",name:"bankname", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "帐户名称" },
-   	                	{ field: "bankpay",name:"bankpay", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "金额",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-     	              	{ field: "action", width: 160, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"}
-     	            ];
-	    	
 	    	mini.parse();
 	    	grid_bank = mini.get("grid_bank");
 	    	grid_bank.set({
@@ -66,7 +27,8 @@
   						{ type: "checkcolumn",headerAlign:"center",width: 30},
         	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
         	                { field: "bankname",name:"bankname", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "帐户名称" },
-        	                { field: "bankpay",name:"bankpay", width: 200, headerAlign: "center", align:"center",allowSort: false, header: "金额",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} }
+        	                { field: "bankpay",name:"bankpay", width: 100, headerAlign: "center", align:"right",allowSort: false, header: "金额",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
+        	                { field: "action", width: 160, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onBankActionRenderer",cellStyle:"padding:0;"}
         	            ],
 	            showFilterRow:false,
 	            allowCellSelect:true,
@@ -74,7 +36,7 @@
 	            allowCellValid:true,
 	            multiSelect:false,
 	            allowUnselect:false,
-	            onselectionchanged:"onSelectionChanged",
+	            //onselectionchanged:"onSelectionChanged",
 	            showPager:true,
 	            fitColumns:false,
 	            editNextOnEnterKey:true,
@@ -126,35 +88,60 @@
             });
         }
 	    
-	    //资金账户-点击查看账户流水
-	    function onSelectionChanged(e) {
+	    //表格渲染
+	    function onBankActionRenderer(e) {
             var grid = e.sender;
-	       	//处理角色对应的帐户
-            var record = grid.getSelected();
-            if (record) {
-            	getBill(record.banktype,parentid,userid);
-            }
+            var record = e.record;
+           	var id = record.id;
+           	var banktype = record.banktype;
+        	var s = "";
+        	if(identity == "A1"){
+        		if(banktype == "incomebank"){	//收入总计
+               		s = "<a class='Edit_Button' href=\"javascript:incomeBillDetail('','','1,2,3,4','')\" >收入流水</a>";
+               	}else if(banktype == "costbank"){	//支出总计
+               		s = "<a class='Edit_Button' href=\"javascript:spendingBillDetail('','','1,2,3,4')\" >支出流水</a>";
+               	}else if(banktype == "takenbank"){	//可提现账户
+               		s = "<a class='Edit_Button' href=\"javascript:spendingBillDetail('"+userid+"','"+parentid+"','1')\" >提现记录</a>";
+               	}else if(banktype == "sellbank"){	//平台售额总计
+               		s = "<a class='Edit_Button' href=\"javascript:shareBillDetail('"+userid+"','')\" >分润明细</a>";
+               	}
+        	}else if(identity == "A"){
+        		if(banktype == "incomebank"){	//收入总计
+               		s = "<a class='Edit_Button' href=\"javascript:incomeBillDetail('','"+userid+"','1,2','A')\" >充值记录</a> | ";
+               		s += "<a class='Edit_Button' href=\"javascript:shareBillDetail('"+userid+"','1')\" >平台售额</a>";
+               	}else if(banktype == "costbank"){	//支出总计
+               		s = "<a class='Edit_Button' href=\"javascript:spendingBillDetail('','"+userid+"','1,2,3,4')\" >支出流水</a>";
+               	}else if(banktype == "takenbank"){	//可提现账户
+               		s = "<a class='Edit_Button' href=\"javascript:spendingBillDetail('"+userid+"','"+parentid+"','2')\" >提现记录</a>";
+               	}else if(banktype == "havebank"){	//可支配账户
+               		s = "<a class='Edit_Button' href=\"javascript:disposablebillDetail('"+userid+"','"+parentid+"')\" >交易流水</a>";
+               	}else if(banktype == "sellbank"){	//平台售额总计
+               		s = "<a class='Edit_Button' href=\"javascript:shareBillDetail('"+userid+"','')\" >分润明细</a>";
+               	}else if(banktype == "quotabank"){	//配额总计
+               		s = "<a class='Edit_Button' href=\"javascript:quotaBillDetail('"+userid+"','"+parentid+"')\" >配额明细</a>";
+               	}else if(banktype == "depositbank"){//充值总计
+               		s = "<a class='Edit_Button' href=\"javascript:incomeBillDetail('"+userid+"','"+parentid+"','1,2','A')\" >充值明细</a>";
+               	}
+        	}else if(identity == "C"){
+        		if(banktype == "depositbank"){//充值总计
+               		s = "<a class='Edit_Button' href=\"javascript:incomeBillDetail('"+userid+"','"+parentid+"','2','C')\" >充值明细</a>";
+               	}else if(banktype == "quotabank"){	//配额总计
+               		s = "<a class='Edit_Button' href=\"javascript:quotaBillDetail('"+userid+"','"+parentid+"')\" >配额明细</a>";
+               	}else if(banktype == "sellbank"){	//平台售额总计
+               		s = "<a class='Edit_Button' href=\"javascript:shareBillDetail('"+userid+"','')\" >分润明细</a>";
+               	}else if(banktype == "selltakenbank"){	//可提现账户
+               		s = "<a class='Edit_Button' href=\"javascript:spendingBillDetail('"+userid+"','"+parentid+"','3')\" >提现记录</a>";
+               	}else if(banktype == "rebatesbank"){	//返利累计
+               		s = "<a class='Edit_Button' href=\"javascript:disBillDetail('"+userid+"','"+parentid+"',1)\" >返利明细</a>";
+               	}else if(banktype == "bonusesbank"){	//奖励累计
+               		s = "<a class='Edit_Button' href=\"javascript:disBillDetail('"+userid+"','"+parentid+"',2)\" >奖励明细</a>";
+               	}else if(banktype == "bonusestakenbank"){	//奖励可提现账户
+               		s = "<a class='Edit_Button' href=\"javascript:spendingBillDetail('"+userid+"','"+parentid+"','4')\" >奖励明细</a>";
+               	}
+        	}
+           
+            return s;
         }
-	    //资金账户-账户流水
-	    function getBill(banktype,parentid,userid) {
-	    	var url = "";
-	    	if (banktype == 'incomebank' || banktype == "depositbank") {
-	    		url = "${pageContext.request.contextPath}/userBank/incomeBillDetail.htmls";
-	    		grid_bill.set({
-		    		url:url,
-		    		columns: columns_income
-		    	})
-	    	}
-	    	else if (banktype == "costbank") {
-	    		url = "${pageContext.request.contextPath}/userBank/spendingBillDetail.htmls";
-	    		grid_bill.set({
-		    		url:url,
-		    		columns: columns_spending
-		    	})
-	    	}
-	    	
-	    	grid_bill.load({banktype:banktype,parentid:parentid, userid: userid });
-	    }
 	    
 	  	//标准方法接口定义
 		function SetData(data) {
@@ -162,6 +149,7 @@
 			bankid = data.bankid;
 			parentid = data.parentid;
 			userid = data.userid;
+			identity = data.identity;
 			grid_bank.load({ bankid: bankid });
 		}
 	  	

@@ -35,7 +35,7 @@
 	    var columns_a=[
 					{ type: "checkcolumn",headerAlign:"center",width: 30},
 					{ type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
-					{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+					{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer_a",cellStyle:"padding:0;"},
 					{ field: "p_companyname",name:"p_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "上级",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	              { field: "u_companyname",name:"u_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "帐户所有人",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	              { field: "incomebank",name:"incomebank", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "收入总计(元)",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
@@ -50,7 +50,7 @@
 	    var columns_c=[
 					{ type: "checkcolumn",headerAlign:"center",width: 30},
 					{ type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
-					{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer",cellStyle:"padding:0;"},
+					{ field: "action", width: 120, headerAlign: "center", align:"center",allowSort: false, header: "操作",renderer:"onActionRenderer_c",cellStyle:"padding:0;"},
 					{ field: "p_companyname",name:"p_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "上级",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	              { field: "u_companyname",name:"u_companyname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "帐户所有人",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
 	              { field: "depositbank",name:"depositbank", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "充值总计(元)",vtype:"required;int",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
@@ -165,22 +165,34 @@
 	    });
 	   	
 	   	function onActionRenderer(e) {
-            var grid = e.sender;
+	   		//alert(e.sender.id);
             var record = e.record;
-            var uid = record._uid;
             var id = record.id;
             var u_companyname = record.u_companyname;
-            var rowIndex = e.rowIndex;
-            
             var s = "";
-            
-            //s = '  <a class="Edit_Button" href="javascript:showBill(\'' + id + '\',\'' + u_companyname + '\')" >查看交易流水</a>';
-            s = '  <a class="Edit_Button" href="javascript:showBill(\'' + id + '\',\'' + record.parentid + '\',\'' + record.userid + '\',\'' + u_companyname + '\')" >查看交易流水</a>';
-            
+            s = '  <a class="Edit_Button" href="javascript:showBill(\'' + id + '\',\'' + record.parentid + '\',\'' + record.userid + '\',\'' + u_companyname + '\',\'A1\')" >查看交易流水</a>';
+            return s;
+        }
+	   	function onActionRenderer_a(e) {
+	   		//alert(e.sender.id);
+            var record = e.record;
+            var id = record.id;
+            var u_companyname = record.u_companyname;
+            var s = "";
+            s = '  <a class="Edit_Button" href="javascript:showBill(\'' + id + '\',\'' + record.parentid + '\',\'' + record.userid + '\',\'' + u_companyname + '\',\'A\')" >查看交易流水</a>';
+            return s;
+        }
+	   	function onActionRenderer_c(e) {
+	   		//alert(e.sender.id);
+            var record = e.record;
+            var id = record.id;
+            var u_companyname = record.u_companyname;
+            var s = "";
+            s = '  <a class="Edit_Button" href="javascript:showBill(\'' + id + '\',\'' + record.parentid + '\',\'' + record.userid + '\',\'' + u_companyname + '\',\'C\')" >查看交易流水</a>';
             return s;
         }
 	   	
-	   	function showBill(id,parentid,userid,username) {
+	   	function showBill(id,parentid,userid,username,identity) {
 	   		if(id == 'undefined'){
         		parent.parent.layer.msg("未获取到id，请退出重新登录，再尝试。",{icon:6});
 				return;
@@ -198,7 +210,7 @@
                 allowResize:true,
                 onload: function () {
                 	var iframe = this.getIFrameEl();
-               	 	var data = {bankid:id,parentid:parentid,userid:userid};
+               	 	var data = {bankid:id,parentid:parentid,userid:userid,identity:identity};
                     iframe.contentWindow.SetData(data);
                 },
                 ondestroy: function (action) {
@@ -218,19 +230,6 @@
 	            field = e.field,
 	            uid = record._uid,
 	            value = e.value;
-                
-                if (field == "password") {
-   	        		if (value == "") {
-   	        			e.cellhtml = "";
-       	        	}else {
-   	        			e.cellStyle = "color:red;text-align:center";
-   	        			e.cellHtml = "********";
-   	        		}
-    	        }else if(field == "tuijianid"){
-    	        	if(value != "" && value != undefined){
-    	        		e.cellHtml = "<a href='javascript:referrer("+uid+")'>查看推荐人</a>";
-    	        	}
-    	        }
                 
                 if (field == "isopen") {
                 	if (value == 0) {
@@ -549,507 +548,6 @@
    	           	});
    			});
 	    }
-		
-		
-		
-	   	
-	   	/*----------------以下不确定要--------------*/
-	   	
-	   	
-	   	
-	   	
-	   	
-	   	
-	   	
-	    function onButtonEdit(e) {
-            var buttonEdit = e.sender;
-        	var record = grid_user_c.getEditorOwnerRow(buttonEdit);
-        	
-        	var rows = grid_user_a.getSelecteds();
-			var parentid = "";
-       	 	if (rows.length == 0) {
-       	 		parent.parent.layer.msg("请选择代理.",{icon:6});
-       		 	return;
-       	 	}
-       	 	parentid = rows[0].id;
-       	 	
-            mini.open({
-            	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectUser",
-                title: "选择推荐人", width: 800, height: 500,
-                onload: function () {
-                    var iframe = this.getIFrameEl();
-                    var data = {parentid:parentid,identity: "C",multiSelect:false};
-                    iframe.contentWindow.SetData(data);
-                },
-                ondestroy: function (action) {
-                	if (action == "ok") {
-                        var iframe = this.getIFrameEl();
-                        var rows = iframe.contentWindow.GetData();
-                        
-                        if (rows != null && rows.length == 1) {
-                        	if (record.id == rows[0].id) {
-                        		parent.parent.layer.msg("不允许自己推荐自己，如有疑问请与开发商联系。",{icon:6});
-                        		return;
-                        	}
-                        	var tuijianid = rows[0].id;
-                        	var tuijianman = rows[0].companyname;
-                        	grid_user_c.updateRow(record, { tuijianid: tuijianid,tuijianman:tuijianman});
-                        	grid_user_c.cancelEdit();
-                        }
-                    }
-                }
-            });
-        }
-	   	
-	    function addRow(grid_type) {
-			var tmpGrid;
-			var newRow = {};
-			newRow.username = "";
-			newRow.phonenumber = "";
-			newRow.setreturn = "0";
-			newRow.isopen = "0";
-			newRow.password = "123456";
-			newRow.sex = "0";
-			newRow.birthday = "1980-01-01";
-			newRow.companyname = "";
-			newRow.companypath = "";
-			newRow.wechar = "";
-			newRow.rank = "";
-			newRow.sort = 1;
-			newRow.repaystate = 0;
-			
-			if (grid_type == "grid_user_a") {
-				tmpGrid = grid_user_a;
-				newRow.identity = "A";
-				newRow.identitymemo = "代理";
-				newRow.companycode = "";
-				newRow.parentid = "1";
-			}
-			else if (grid_type == "grid_user_c") {
-				tmpGrid = grid_user_c;
-				
-				var rows = grid_user_a.getSelecteds();
-				var parentid = "";
-	       	 	if (rows.length == 0) {
-	       	 		parent.parent.layer.msg("请选择要添加门店的所属代理.",{icon:6});
-	       		 	return;
-	       	 	}
-	       	 	else {
-	       	 		if (typeof(rows[0].id) == "undefined" || rows[0].id == "") {
-	       	 			parent.parent.layer.msg("当前代理还没有保存。请先保存后再创建.",{icon:6});
-	       	 			return;
-	       	 		}
-	       	 		else {
-	       	 			parentid = rows[0].id;
-	       	 		}
-	       	 	}
-	       	 	newRow.identity = "C";
-				newRow.identitymemo = "门店";
-				newRow.companycode = "";
-				newRow.parentid = parentid;
-				newRow.setreturn = 0;
-	       	 	
-			}
-			else if (grid_type == "grid_user_z") {
-				tmpGrid = grid_user_z;
-				
-				var rows = grid_user_a.getSelecteds();
-				var companycode = "";
-	       	 	if (rows.length == 0) {
-	       	 		parent.parent.layer.msg("请选择要添加普通会员的所属代理.",{icon:6});
-	       		 	return;
-	       	 	}
-	       	 	else {
-	       	 		if (typeof(rows[0].id) == "undefined" || rows[0].id == "") {
-	       	 			parent.parent.layer.msg("当前代理还没有保存。请先保存后再创建.",{icon:6});
-	       	 			return;
-	       	 		}
-	       	 		else {
-	       	 		companycode = rows[0].companycode;
-	       	 		}
-	       	 	}
-	       	 	newRow.identity = "Z";
-				newRow.identitymemo = "普通会员";
-				newRow.belongcode = companycode;
-				
-			}
-			
-            tmpGrid.addRow(newRow, 0);
-            tmpGrid.beginEditCell(newRow, "username");
-        }
-	    
-	    function trim(str){
-			//删除字符串2端空格
-			return str.replace(/(^\s*)|(\s*$)/g, "");
-		}
-	    
-	    function validatemobile(mobile) {
-			if (trim(mobile) == "") {
-		        return false; 
-		    }     
-		    if(mobile.length!=11) {
-		    	return false; 
-		    } 
-		    var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
-		    if(!myreg.test(mobile)) {
-		        return false; 
-		    }
-		    return true;
-		}
-	    
-	    function onCellValidation(e) {
-	    	var record = e.record;
-            if (e.field == "phonenumber") {
-            	if (!validatemobile(e.value) ) {
-        			e.isValid = false;
-        			e.errorText = "请正确输入手机号码";
-        		}
-            	else {
-            		var checkType = "";
-            		var userid = "";
-            		if (record.id == undefined) {
-            			checkType = "insert";
-            		}
-            		else {
-            			userid = record.id;
-            		}
-            		var url = "${pageContext.request.contextPath}/userManager/checkPhoneNum.htmls";
-            		$.ajax({
-        	        	async:false,
-        	            url: url,
-        	            data: {'userid':userid,'phoneNum':e.value,'checkType':checkType},
-        	            type: "get",
-        	            dataType:"text",
-        	            success: function (text) {
-       	            		if (text != "success") {
-           	            		e.isValid = false;
-           	        			e.errorText = "手机号码已存在，不能重复，请正确填写。";
-           	            	}
-        	            },
-        	            error: function (jqXHR, textStatus, errorThrown) {
-        	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
-        	            }
-        	        });
-            	}
-            }
-        }
-	    
-		function save(grid_type) {
-			
-			var tmpGrid;
-			var url = "${pageContext.request.contextPath}/userManager/save.htmls";
-			
-			var cf1 = "确定要保存数据吗？<br><p style='font-size:12px; color:red'>注意：如果有修改了手机号码，如果该机构下包含普通会员，将同时修改普通会员的门店代码，请谨慎操作.</p>";
-			if (grid_type == "grid_user_a") {
-				tmpGrid = grid_user_a;
-			}
-			else if (grid_type == "grid_user_c") {
-				tmpGrid = grid_user_c;
-			}
-			else if (grid_type == "grid_user_z") {
-				tmpGrid = grid_user_z;
-				cf1 = "确定要保存数据吗？";
-			}
-			tmpGrid.validate();
-	        if (tmpGrid.isValid() == false) {
-	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
-	        		  icon: 5,
-	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
-	        		}, function(){
-	        			var error = tmpGrid.getCellErrors()[0];
-	            		tmpGrid.beginEditCell(error.record, error.column);
-	        		}
-	        	);
-	            return;
-	        }
-	    	
-	        var objs = tmpGrid.getChanges();
-	        var json = mini.encode(objs,"yyyy-MM-dd");
-	        if (json.length == 2) {
-	        	parent.parent.layer.msg("没有发现修改的内容，请直接修改，然后再保存。",{icon:3});
-	        	return;
-	        }
-			
-        	parent.parent.layer.msg(cf1, {
-	 	 		icon:3
-	 	 		,time: 0 //不自动关闭
-	 	  		,btn: ['确认', '取消']
-	 	  		,yes: function(index){
-	 	  			tmpGrid.loading("保存中，请稍后......");
-	 		        
-	 		        $.ajax({
-	 		        	async:false,
-	 		            url: url,
-	 		            data: {'objs':json},
-	 		            type: "post",
-	 		            dataType:"text",
-	 		            success: function (text) {
-	 		            	parent.parent.layer.msg("保存完毕。",{icon:6});
-	 		            	tmpGrid.reload();
-	 		            },
-	 		            error: function (jqXHR, textStatus, errorThrown) {
-	 		            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
-	 		            }
-	 		        });
-                    
-                    parent.parent.layer.close(index);
-	 	  		}
-	 		});
-	        
-	    }
-		
-      	//删除
-        function remove(gridtype) {
-      		
-      		var tmpGrid;
-      		if (gridtype == "grid_user_a") {
-      			tmpGrid = grid_user_a;
-      		}
-      		else if (gridtype == "grid_user_c") {
-      			tmpGrid = grid_user_c;
-      		}
-      		else if (gridtype == "grid_user_z") {
-      			tmpGrid = grid_user_z;
-      		}
-      		else {
-      			parent.parent.layer.msg("不确定你点击了什么。",{icon:5});
-      			return;
-      		}
-      		var rows = tmpGrid.getSelecteds();
-            if (rows.length > 0) {
-            	if (gridtype == "grid_user_a") {
-            		if (rows[0].id == "1") {
-            			parent.parent.layer.msg("亲，你要删除自己吗？我不允许删除。",{icon:6,time:3000});
-            			return;
-            		}
-            	}
-            	
-            	var cf1 = "确定要删除选中的数据吗？<br><p style='font-size:12px; color:red'>注意：删除的机构如果有下级，系统将移除关联，并将下级设置为[待关联机构]，请谨慎操作.</p>";
-            	parent.parent.layer.msg(cf1, {
-    	 	 		icon:3
-    	 	 		,time: 0 //不自动关闭
-    	 	  		,btn: ['确认删除', '取消']
-    	 	  		,yes: function(index){
-    	 	    		var ids = [];
-                        for (var i = 0, l = rows.length; i < l; i++) {
-                            var r = rows[i];
-                            if(r.id != "1"){ //平台账户不允许删除
-                            	ids.push(r.id);
-                            }
-                        }
-                        var id = ids.join(',');
-                        tmpGrid.loading("操作中，请稍后......");
-                        
-                        $.ajax({
-            	        	async:false,
-            	        	url: "${pageContext.request.contextPath}/userManager/delete.htmls",
-            	            data: {'id':id},
-            	            type: "post",
-            	            dataType:"text",
-            	            success: function (text) {
-            	            	if (text == "success") {
-            	            		tmpGrid.reload();
-            	            		parent.parent.layer.msg("保存完毕。",{icon:6});
-            	            	}
-            	            	else {
-            	            		parent.parent.layer.msg("失败。请重新登录再尝试或与开发人员联系。",{icon:5});
-            	            	}
-            	            },
-            	            error: function (jqXHR, textStatus, errorThrown) {
-            	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
-            	            }
-            	        });
-                        
-                        parent.parent.layer.close(index);
-    	 	  		}
-    	 		});
-            } else {
-            	parent.parent.layer.msg("请选中一条记录",{icon:6});
-            }
-        }
-      	
-        
-        
-      	//给代理添加店,建立关联关系和账户
-        function setLink(){
-        	//var row = grid_user_a.getSelected();		//所选行 单行
-        	var rows_a = grid_user_a.getSelecteds();	//所选行数 多行
-            if (rows_a.length == 1) {
-                mini.open({
-                	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectUser",
-                    title: "将已存在的门店关联到新的代理下[同时不解除门店与原代理的关系]", width: 800, height: 500,
-                    onload: function () {
-                        var iframe = this.getIFrameEl();
-                        var data = { identity: "C",multiSelect:true};
-                        iframe.contentWindow.SetData(data);
-                    },
-                    ondestroy: function (action) {
-                    	if (action == "ok") {
-                            var iframe = this.getIFrameEl();
-                            var rows = iframe.contentWindow.GetData();
-                            
-                            var ids = getSelectGridid(rows);
-                            
-    						if (ids != "") {
-    							$.ajax({
-    				                url: "${pageContext.request.contextPath}/userManager/createlink.htmls",
-    				                data: {'userids':ids,'parentid':rows_a[0].id},
-    				                type: "post",
-    				                dataType:"text",
-    				                success: function (text) {
-	    				               	if(text != 'error'){
-	    				               		if(text == "1"){
-	    				               			parent.parent.layer.msg("操作成功",{icon:6});
-	    				               			grid_user_c.reload();
-	    				               		}else if(text == "0"){
-	    				               			parent.parent.layer.msg("操作失败，请重新操作",{icon:6});
-	    				               		}else{
-	    				               			parent.parent.layer.msg("已存在关联关系",{icon:6});
-	    				               		}
-	    				               	}else{
-	    				               		parent.parent.layer.msg("操作失败！",{icon:6});
-	    				               	}
-    				                },
-    				                error: function (jqXHR, textStatus, errorThrown) {
-    				                	parent.parent.layer.msg(jqXHR.responseText);
-    				                }
-    				            }); 
-                            }
-                        }
-                    }
-                });
-                
-            } else {
-                parent.parent.layer.msg("请选中一条记录",{icon:6});
-            }
-        }
-      	//解除关联关系
-      	function outLink(gridtype) {
-      		
-			var tmpGrid;
-			var cf1 = "确定要解除店与代理的关系吗？<br><p style='font-size:12px; color:red'>注意：解除关系后，如果店没有与任何其他代理有关联，将进入[待关联机构]查看，请谨慎操作.</p>";
-      		if (gridtype == "grid_user_a") {
-      			tmpGrid = grid_user_a;
-      		}
-      		else if (gridtype == "grid_user_c") {
-      			tmpGrid = grid_user_c;
-      		}
-      		else if (gridtype == "grid_user_z") {
-      			tmpGrid = grid_user_z;
-      			cf1 = "确定要解除普通会员与代理的关系吗？<br><p style='font-size:12px; color:red'>注意：解除关系后，普通会员将进入[待关联机构]查看，请谨慎操作.</p>";
-      		}
-      		
-      		var rows = tmpGrid.getSelecteds();
-          	 
-       	 	if (rows.length == 0) {
-       	 		parent.parent.layer.msg("请选择要解除关系的机构。",{icon:6});
-       		 	return;
-       	 	}
-       	 	
-       	 	var rows_a = grid_user_a.getSelecteds();
-       	 	var ids = getSelectGridid(rows);
-       	 	parent.parent.layer.msg(cf1, {
-    	 		icon:3
-    	 		,time: 0 //不自动关闭
-    	  		,btn: ['确认', '取消']
-    	  		,yes: function(index){
-    	  			//tmpGrid.loading("初始化密码中，请稍后......");
-        	        
-        	        $.ajax({
-        	        	async:false,
-        	            url: "${pageContext.request.contextPath}/userManager/outLink.htmls",
-        	            data: {'parentid':rows_a[0].id,'userids':ids},
-        	            type: "post",
-        	            dataType:"text",
-        	            success: function (text) {
-        	            	if (text == "success") {
-        	            		parent.parent.layer.msg("保存完毕。",{icon:6});
-        	            		tmpGrid.reload();
-        	            	}
-        	            	else {
-        	            		parent.parent.layer.msg("失败。请重新登录再尝试或与开发人员联系。",{icon:5});
-        	            	}
-        	            	
-        	            },
-        	            error: function (jqXHR, textStatus, errorThrown) {
-        	            	parent.parent.layer.msg(jqXHR.responseText,{icon:5});
-        	            }
-        	        });
-    	  		}
-    		});
-      	}
-      	
-      	function move(gridtype){
-      		var tmpGrid;
-      		var identity = "";
-      		if (gridtype == "grid_user_c") {
-      			tmpGrid = grid_user_c;
-      			identity = "A";
-      		}
-      		else if (gridtype == "grid_user_z") {
-      			tmpGrid = grid_user_z;
-      			identity = "A,C";
-      		}
-      		
-      		var rows = tmpGrid.getSelecteds();
-       	 	if (rows.length == 0) {
-       	 		parent.parent.layer.msg("请选择要移动的机构。",{icon:6});
-       		 	return;
-       	 	}
-       	 	
-        	var rows_a = grid_user_a.getSelecteds();	//所选行数 多行
-            if (rows_a.length == 1) {
-            	var oldParentid = rows_a[0].id;
-            	var newParentid = "";
-                mini.open({
-                	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectUser",
-                    title: "将选择的机构移动到新的上级机构下[同时解除与原机构的关系]", width: 800, height: 500,
-                    onload: function () {
-                        var iframe = this.getIFrameEl();
-                        var data = { identity: identity,multiSelect:false};
-                        iframe.contentWindow.SetData(data);
-                    },
-                    ondestroy: function (action) {
-                    	if (action == "ok") {
-                            var iframe = this.getIFrameEl();
-                            var newParentRows = iframe.contentWindow.GetData();
-                            
-                            if (newParentRows.length != 1) {
-                            	return;
-                            }
-                            
-                            newParentid = newParentRows[0].id;
-                            
-                            var ids = getSelectGridid(rows);
-                            
-    						if (ids != "") {
-    							$.ajax({
-    		                         url: "${pageContext.request.contextPath}/userManager/userMove.htmls",
-    		                         data: {'userids':ids,'oldParentid':oldParentid,'newParentid':newParentid},
-    		                         type: "post",
-    		                         dataType:"text",
-    		                         success: function (text) {
-    		                        	 if(text == 'success'){
-    		                        		 parent.parent.layer.msg("操作成功",{icon:6});
-    		                        		 tmpGrid.reload();
-    		                        	 }else{
-    		                        		 parent.parent.layer.msg("操作失败,请重新操作或联系管理员",{icon:2});
-    		                        	 }
-    		                         },
-    		                         error: function (jqXHR, textStatus, errorThrown) {
-    		                             alert(jqXHR.responseText);
-    		                         }
-    		                    });
-                            }
-                        }
-                    }
-                });
-                
-            } else {
-                parent.parent.layer.msg("请选中代理",{icon:6});
-            }
-        }
-		
 		
 	 	
     </script>

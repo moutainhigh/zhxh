@@ -456,8 +456,10 @@ public class PublicUserBankService implements IPublicUserBankService{
 		bank_PT = userBankDao.update(bank_PT);
 		//当前账户
 		bank = userBankDao.update(bank);
-		//可支配账户变更流水-充值
-		insertDisposable(bank.getUserid(), bank.getParentid(), bill.getId(),bill.getBillno(),amount, 6);
+		//可支配账户变更流水-充值,排除现金充值
+		if(bill.getTrantype() != 1){
+			insertDisposable(bank.getUserid(), bank.getParentid(), bill.getId(),bill.getBillno(),amount, 6);
+		}
 		
 		//更新流水表状态
 		bill.setStatus(1); //成功

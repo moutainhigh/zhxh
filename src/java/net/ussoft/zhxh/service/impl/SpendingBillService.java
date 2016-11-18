@@ -65,18 +65,17 @@ public class SpendingBillService implements ISpendingBillService{
 			sb.append(")");
 			values.addAll(trantype);
 		}
-		if(null != userid && !"".equals(userid)){
+		if(null != userid && !"".equals(userid) && null != parentid && !"".equals(parentid)){
 			sb.append(" AND userid= ?");
 			values.add(userid);
-		}else{
-			if(null != parentid && !"".equals(parentid)){
-				sb.append(" OR userid= ?");
-				values.add(parentid);
-			}
-		}
-		if(null != parentid && !"".equals(parentid)){
 			sb.append(" AND parentid= ?");
 			values.add(parentid);
+		}else{
+			if(null != parentid && !"".equals(parentid)){
+				sb.append(" AND (userid= ? OR parentid=?) ");
+				values.add(parentid);
+				values.add(parentid);
+			}
 		}
 		return spendingBillDao.searchForMap(sb.toString(), values, pageBean);
 	}
