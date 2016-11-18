@@ -175,6 +175,22 @@ public class PublicOrderService implements IPublicOrderService{
 		return orderDao.search(sql, values, pageBean);
 	}
 
+	public PageBean<Public_order> list(String status,String search, PageBean<Public_order> pageBean) {
+		String sql = "SELECT o.*,u.companyname,p.companyname FROM public_order o "
+				+ "LEFT JOIN public_user u ON o.userid = u.id"
+				+ "LEFT JOIN public_user p ON o.parentid = p.id"
+				+ "WHERE 1=1 ";
+		if(null != status && !"".equals(status)){
+			sql += " AND o.orderstatus = ?";
+		}
+		if(null != search && !"".equals(search)){
+			sql += " AND u.companyname LIKE '%B%'";
+		}
+		List<Object> values = new ArrayList<Object>();
+		
+		return orderDao.search(sql, values, pageBean);
+	}
+	
 	@Transactional("txManager")
 	@Override
 	public int update(Public_order order) {
