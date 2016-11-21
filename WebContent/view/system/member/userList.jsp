@@ -238,12 +238,14 @@
        	 	}
        	 	parentid = rows[0].id;
        	 	
+       	 	var userid = record.id;
+       	 	
             mini.open({
-            	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/selectUser",
+            	url: "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/member/tuijianSelectUser",
                 title: "选择推荐人", width: 800, height: 500,
                 onload: function () {
                     var iframe = this.getIFrameEl();
-                    var data = {parentid:parentid,identity: "C",multiSelect:false};
+                    var data = {parentid:parentid,userid:userid,identity: "C",multiSelect:false};
                     iframe.contentWindow.SetData(data);
                 },
                 ondestroy: function (action) {

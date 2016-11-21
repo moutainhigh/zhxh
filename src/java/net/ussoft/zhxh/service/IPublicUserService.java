@@ -35,6 +35,7 @@ public interface IPublicUserService {
 	/**
 	 * 获取个人中心数据。
 	 * @param parentid			上级id
+	 * @param userid			为谁设置推荐人 ，要排除掉这个人的id
 	 * @param identity			级别代码
 	 * @param map				查询条件
 	 * @param showtype			显示结果类型。1，正常的。0：待关联的
@@ -42,6 +43,16 @@ public interface IPublicUserService {
 	 * @return
 	 */
 	public PageBean<Public_user> list(String parentid,String identity,Map<String, Object> map,int showtype,PageBean<Public_user> pageBean);
+	
+	/**
+	 * 获取设置推荐人列表
+	 * @param parentid
+	 * @param identity
+	 * @param map
+	 * @param pageBean
+	 * @return
+	 */
+	public PageBean<Public_user> setTuijianList(String parentid,String userid,String identity,Map<String, Object> map,PageBean<Public_user> pageBean);
 	/**
 	 * 获取推荐客户列表
 	 * @param parentid

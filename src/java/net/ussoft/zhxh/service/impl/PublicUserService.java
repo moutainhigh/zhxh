@@ -158,6 +158,64 @@ public class PublicUserService implements IPublicUserService{
 	}
 	
 	@Override
+	public PageBean<Public_user> setTuijianList(String parentid, String userid,String identity, Map<String, Object> map,
+			PageBean<Public_user> pageBean) {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from public_user_link where parentid=? and userid <> ? and tuijianid <> ?");
+		List<Object> values = new ArrayList<Object>();
+		values.add(parentid);
+		values.add(userid);
+		values.add(userid);
+		
+		//获取parentid下的机构ids
+		List<Public_user_link> userLinkList = linkDao.search(sb.toString(), values);
+		
+		if (null == userLinkList || userLinkList.size() == 0) {
+			return pageBean;
+		}
+		
+		//获取id集合
+		List<String> idsList = new ArrayList<String>();
+		
+		for (Public_user_link tmp : userLinkList) {
+			idsList.add(tmp.getUserid());
+		}
+		
+		//生成sql语句
+		sb.setLength(0);
+		values.clear();
+		sb.append("select * from public_user where 1=1");
+		
+		//如果有查询
+		if (null != map && map.size() > 0) {
+			Set<Entry<String, Object>> set=map.entrySet();
+	        Iterator iterator=set.iterator();
+	        sb.append(" and (");
+	        for (int i = 0; i < set.size(); i++) {
+	            Map.Entry mapEntry=(Entry) iterator.next();
+	            if (null != mapEntry.getValue() && !"".equals(mapEntry.getValue().toString())) {
+	            	sb.append(mapEntry.getKey()+" like '%"+mapEntry.getValue()+"%' or ");
+	            }
+	        }
+	        sb.delete(sb.length()-3, sb.length());
+	        sb.append(")");
+		}
+		
+		sb.append(" and isopen <> -1 and id in (");
+        Serializable[] ss=new Serializable[idsList.size()];
+		Arrays.fill(ss, "?");
+		sb.append(StringUtils.join(ss,','));
+		sb.append(")");
+		values.addAll(idsList);
+		
+        pageBean = userDao.search(sb.toString(), values,pageBean);
+		
+		
+		return pageBean;
+	}
+	
+	@Override
 	public PageBean<Public_user> tuijianList(String parentid, PageBean<Public_user> pageBean) {
 		StringBuffer sb = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();

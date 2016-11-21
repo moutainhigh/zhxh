@@ -24,6 +24,8 @@ public class Public_dis_config {
 	private Integer balance_date;
 	private Float buyerdis_down;
 	private Float buyerdis_up;
+	private Float taken_down;
+	private Float taken_up;
 	
 	
 	
@@ -214,6 +216,18 @@ public class Public_dis_config {
 	public void setBuyerdis_up(Float buyerdis_up) {
 		this.buyerdis_up = buyerdis_up;
 	}
+	public Float getTaken_down() {
+		return taken_down;
+	}
+	public void setTaken_down(Float taken_down) {
+		this.taken_down = taken_down;
+	}
+	public Float getTaken_up() {
+		return taken_up;
+	}
+	public void setTaken_up(Float taken_up) {
+		this.taken_up = taken_up;
+	}
 	public Public_dis_config() {
 		this.setRebates_down(0f);
 		this.setRebates_up(0f);
@@ -230,6 +244,8 @@ public class Public_dis_config {
 		this.setBalance_date(0);
 		this.setBuyerdis_down(0f);
 		this.setBonuses_up(0f);
+		this.setTaken_down(0f);
+		this.setTaken_up(0f);
 	}
 	
 	

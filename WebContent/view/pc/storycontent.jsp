@@ -15,6 +15,12 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/js/videojs_5.10.4/video-js.css">
 <script src="${pageContext.request.contextPath}/js/videojs_5.10.4/video.js"></script>
 <script src="${pageContext.request.contextPath}/js/videojs_5.10.4/videojs-mux.js"></script>
+
+<style type="text/css">
+	.new-content p {
+		line-height: 25px;
+	}
+</style>
 </head>
 <body>
 	<div class="bg"></div> <!--弹框外的透明背景 搜索和页脚用到-->

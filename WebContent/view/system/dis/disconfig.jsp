@@ -165,6 +165,12 @@
 					<td><input name="bonuses_up" class="mini-textbox" style="width:100%;" vtype="int" emptyText="请输入数字" /></td>
 				</tr>
 				<tr>
+					<td>提现下限</td>
+					<td><input name="taken_down" class="mini-textbox" style="width:100%;" vtype="int;range:100,100000" emptyText="请输入100~100000数字" /></td>
+					<td>提现上限</td>
+					<td><input name="taken_up" class="mini-textbox" style="width:100%;" vtype="int;range:100,100000" emptyText="请输入100~100000数字" /></td>
+				</tr>
+				<tr>
 					<td>店提现日期</td>
 					<td><input name="taken_dian" class="mini-textbox" style="width:100%;" vtype="int;rangeChar:1,1;range:0,5" emptyText="请输入1-5,1位数字" /></td>
 					<td>代理的提现日期</td>

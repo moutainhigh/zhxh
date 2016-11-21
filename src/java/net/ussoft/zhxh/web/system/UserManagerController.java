@@ -95,6 +95,33 @@ public class UserManagerController extends BaseConstroller{
 		out.print(json);
 	}
 	
+	@RequestMapping(value="/setTuijianList",method=RequestMethod.POST)
+	public void setTuijianList(String parentid,String userid,String identity,String mapObj,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		//分页
+		PageBean<Public_user> pageBean = new PageBean<Public_user>();
+		pageBean.setPageSize(pageSize);
+		pageBean.setPageNo(pageIndex + 1);
+		
+		Map<String, Object> searchMap = new HashMap<String,Object>();
+		
+		if (null != mapObj && !"".equals(mapObj)) {
+			searchMap = (Map<String, Object>) JSON.parse(mapObj);
+		}
+		
+		pageBean = userService.setTuijianList(parentid, userid, identity, searchMap, pageBean);
+		//
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("total", pageBean.getRowCount());
+		map.put("data", pageBean.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
 	@RequestMapping(value="/save",method=RequestMethod.POST)
 	public void save(String objs,HttpServletResponse response) throws IOException, IllegalAccessException, InvocationTargetException {
 		
