@@ -44,7 +44,7 @@
 	    t2.pid = "right";
 	    t2.text = "全部订单";
 	    t2.iconCls = "member";
-	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/order/subOrderList&param={ordertype:'a'}";
+	    t2.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/order/orderList&param={ordertype:''}";
 	    t2.iconPosition = "top";
 	    dataList.push(t2);
 	    
@@ -53,7 +53,7 @@
 	    t3.pid = "right";
 	    t3.text = "采购订单";
 	    t3.iconCls = "member";
-	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/order/subOrderList&param={ordertype:'o'}";
+	    t3.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/order/orderList&param={ordertype:'sub'}";
 	    t3.iconPosition = "top";
 	    dataList.push(t3);
     
@@ -62,7 +62,7 @@
 	    t4.pid = "right";
 	    t4.text = "普通会员订单";
 	    t4.iconCls = "member";
-	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/order/subOrderList&param={ordertype:'p'}";
+	    t4.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/order/customerOrderList";
 	    t4.iconPosition = "top";
 	    dataList.push(t4);
 	    
