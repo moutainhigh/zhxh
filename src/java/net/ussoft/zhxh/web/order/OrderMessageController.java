@@ -160,6 +160,7 @@ public class OrderMessageController extends BaseConstroller {
 		PrintWriter out = response.getWriter();
 		
 		mService.delete(ids);
+		
 		out.print("success");
 	}
 	
