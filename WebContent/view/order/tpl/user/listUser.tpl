@@ -77,8 +77,8 @@
 		<td align="center"><input type="checkbox" value="0" name="checkall"></td>
 		<td colspan="6" class="tr pr10" style="text-align:left" >
 			{#if $P.parentid == "1"}
-			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'isopen')">批量开通</a> | 
-			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'isopen')">批量禁用</a> | 
+			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'isopen')">批量状态正常</a> | 
+			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'isopen')">批量状态禁用</a> | 
 			<a class="batch-op batchActivate" href="javascript:void(0)" onclick="updatebatch(1,'setreturn')">批量接收分成</a> | 
 			<a class="batch-op batchInactivate" href="javascript:void(0)" onclick="updatebatch(0,'setreturn')">批量禁用接收分成</a> | 
 			<!-- <a class="batch-op batchInactivate" href="javascript:void(0)" onclick="delbatch()">批量删除</a> | -->

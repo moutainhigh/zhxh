@@ -269,7 +269,8 @@ public class OrderUserDisController extends BaseConstroller {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
-		int num = userService.updateUserSizeStandard(ids, updateKey, updateValue);
+		Public_user user = this.getSessionUser();
+		int num = userService.updateUserSizeStandardM(user.getId(),ids, updateKey, updateValue);
 		
 		String resultStr = "success";
 		String[] idsArr = ids.split(",");

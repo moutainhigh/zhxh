@@ -65,7 +65,7 @@
 </div>
 
 <div class="wjmm-footer">
-    <p>Copyright © 众恒信合化妆品有限公司　 京ICP备12345678号-1　 版权所有众恒信合化妆品有限公司</p>
+	<p>Copyright © 集丽（北京）科技有限公司 备案号：京ICP备16003113号-1</p>
 </div>	
 <script type="text/javascript">
 

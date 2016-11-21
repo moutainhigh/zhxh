@@ -92,10 +92,8 @@ public class PublicMessageService implements IPublicMessageService{
 	public boolean delete(String id) {
 		String[] ids = id.split(",");
 		
-		StringBuffer sb = new StringBuffer();
-		List<Object> values = new ArrayList<Object>();
 		for(int i=0;i<ids.length;i++){
-			mDao.del(id);
+			mDao.del(ids[i]);
 		}
 		return true;
 	}

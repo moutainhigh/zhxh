@@ -333,6 +333,7 @@
     		$("#proList").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/order/orderdetails.tpl");
             $("#proList").processTemplate(objArr);
             //
+            $("#total_num").html(objArr.length);
             $("#total").html(formatFloat(total,2));
             $("#total_sum").html(formatFloat(total,2));
     	}
@@ -436,7 +437,7 @@
 				<div id="proList" class="admin-panel">
 				</div>
 				<div class="text-right panel" style="padding: 30px 50px;">
-					<div>合计：￥<span id="total">0.00</span></div>
+					<div>共[<span id="total_num" style="color:red">0</span>]件商品。 合计：￥<span id="total" style="color:red">0.00</span></div>
 					<br/>
 					<div>应付总额：￥<span style="color: red !important" id="total_sum">0.00</span></div>
 				</div>

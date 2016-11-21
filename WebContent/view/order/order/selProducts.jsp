@@ -77,7 +77,7 @@
        	        	id = element.value;
        	        	var tr = $('#'+id);
        	        	var tds = $(tr).find("td");
-       	        	var i = 1;
+       	        	var i = 2;
        	        	var _obj = {};
        	        	_obj.id = id;
        	        	_obj.brandname = $.trim($(tds[i++]).text());
@@ -124,6 +124,7 @@
 			<tbody>
 				<tr class="panel-head">
 					<th width="45" align="center"><input type="checkbox" name="checkall"></th>
+					<th width="50">序号</th>
 					<th width="80">品牌</th>
 					<th width="*">商品名称</th>
 					<th width="100">规格</th>
@@ -133,6 +134,7 @@
 				{#foreach $T as row}
 				<tr class="tr" id="{$T.row.sizeid}">
 					<td align="center"><input type="checkbox" value="{$T.row.sizeid}" name="id"></td>
+					<td align="center">{$T.row$index+1}</td>
 					<td align="center">{$T.row.brandname}</td>
 					<td>{$T.row.productname}</td>
 					<td align="center">{$T.row.productsize}</td>

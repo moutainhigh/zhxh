@@ -587,6 +587,11 @@
 			  			layer.msg("不允许自己推荐自己，如有疑问请与开发商联系。",{icon:6});
 			  			return;
 			  		}
+			  		
+			  		if (updateRow.id == sel_rows[0].tuijianid) {
+			  			layer.msg("不允许互相推荐，如有疑问请与开发商联系。",{icon:6});
+			  			return;
+			  		}
 			  		//询问框
 			  		layer.confirm('确定要修改客户的推荐人信息吗？', {
 			  			btn: ['确认', '取消']

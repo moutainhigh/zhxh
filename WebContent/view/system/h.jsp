@@ -19,6 +19,26 @@
     
     <script type="text/javascript">
     	$(function(){
+    		
+    		//获取首页信息。
+    		$.ajax({
+    			async:false,
+                url: "${pageContext.request.contextPath}/main/getUserInfo.htmls",
+                data: "",
+                type: "post",
+                dataType:"json",
+                success: function (json) {
+                	$("#num_a").html(json.num_a);
+                	$("#num_c").html(json.num_c);
+                	$("#num_z").html(json.num_z);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                	layer.msg("提交出现错误，请退出重新登录，再尝试操作。错误代码："+jqXHR.responseText,{icon:6});
+                }
+           });
+    		
+    		
+    		
     		// 第二个参数可以指定前面引入的主题
     		var myChart = echarts.init(document.getElementById('main'), 'shine');
     		
@@ -72,7 +92,7 @@
     		    4:[6969.52,3905.64,10012.11,4230.53,3905.03,8047.26,3620.27,5513.7,9247.66,18598.69,13417.68,5350.17,6554.69,4056.76,18366.87,10587.42,6590.19,6596.1,22557.37,3984.1,918.75,3467.72,7385.1,2005.42,3462.73,248.8,3933.72,1933.98,543.32,612.61,2604.19],
     		    3:[6033.21,3110.97,8477.63,3571.37,3041.07,6672,3122.01,4750.6,8072.83,15003.6,11648.7,4759.3,5763.35,3456.7,15021.84,8553.79,5633.24,5641.94,18864.62,3433.5,819.66,3034.58,6379.63,1677.8,3081.91,220.34,3175.58,1688.49,466.1,537.11,2209.09],
     		    2:[5007.21,2578.03,6921.29,2855.23,2388.38,6002.54,2662.08,4057.4,6694.23,12442.87,9705.02,3923.11,4983.67,2807.41,12078.15,6867.7,4757.45,4659.99,15844.64,2821.11,713.96,2555.72,5333.09,1426.34,2556.02,185.09,2587.72,1399.83,390.2,445.36,1886.35],
-    		    1:[4315,2150.76,6018.28,2324.8,1940.94,5458.22,2348.54,3637.2,5741.03,10606.85,8003.67,3519.72,4467.55,2450.48,10275.5,6035.48,4212.82,4151.54,13502.42,2523.73,642.73,2232.86,4725.01,1243.43,2312.82,162.04,2253.39,1232.03,340.65,377.16,1612.6]
+    		    1:[4315,2150.76,6018.28,2324.8,1940.94,5458.22,2348.54,3637.2,5741.03,10606.85,8003.67,3519.72,4467.55,2450.48,10275.5,6035.48,4212.82,4151.54,13502.42,2523.73,642.73,2232.86,4725.01,1243.43,2312.82,11162.04,2253.39,1232.03,340.65,377.16,1612.6]
     		});
     		dataMap.dataXM = dataFormatter({
     		    //max : 60000,
@@ -456,10 +476,11 @@
 				<div class="panel">
 					<div class="panel-head"><strong>站点统计</strong></div>
 					<ul class="list-group">
-						<li><span class="float-right badge bg-red">88</span><span class="icon-user-p"></span> 注册会员</li>
-						<li><span class="float-right badge bg-red">88</span><span class="icon-user-p"></span> 仅关注人员</li>
-						<li><span class="float-right badge bg-main">828</span><span class="icon-male"></span> 男性用户</li>
-						<li><span class="float-right badge bg-main">828</span><span class="icon-female"></span> 女性用户</li>
+						<li><span id="num_a" class="float-right badge bg-red">88</span><span class="icon-briefcase"></span> 代理数量</li>
+						<li><span id="num_c" class="float-right badge bg-red">88</span><span class="icon-briefcase"></span> 店数量</li>
+						<li><span id="num_z" class="float-right badge bg-red">88</span><span class="icon-briefcase"></span> 普通会员数量</li>
+						<!-- <li><span class="float-right badge bg-main">828</span><span class="icon-male"></span> 男性用户</li>
+						<li><span class="float-right badge bg-main">828</span><span class="icon-female"></span> 女性用户</li> -->
 						<li><span class="float-right badge bg-main">828</span><span class="icon-shopping-cart"></span> 订单总数</li>
 						<li><span class="float-right badge bg-main">828</span><span class="icon-shopping-cart"></span> 未结束订单总数</li>
 						<li><span class="float-right badge bg-main">828</span><span class="icon-file-text"></span> 品牌总数</li>

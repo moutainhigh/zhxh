@@ -13,7 +13,7 @@
 	            <br/>
 	            <div class="clearfix wjmima">
 	                <a href="javascript:;" onclick="javascript:location.href='${pageContext.request.contextPath}/plogin_reset.htmls'" target="_blank">忘记密码？</a>
-	                <em class="fr">没有账号 <b class="zhuce">立即注册</b></em>
+	                <!-- <em class="fr">没有账号 <b class="zhuce">立即注册</b></em> -->
 	            </div>
 	            <div class="but"><input type="button" onclick="login()" value="登 录" class="login-but"></div>
 	            <%-- <div class="other-login">
@@ -42,7 +42,7 @@
 	            	<!-- <a href="javascript:;" class="huoqu" onclick="getCode()">获取验证码</a> -->
 	            </div>
 	            <div class="clearfix wjmima">
-	                <em class="fr">已有账号 <b class="lidenglu">立即登录</b></em>
+	                <!-- <em class="fr">已有账号 <b class="lidenglu">立即登录</b></em> -->
 	            </div>
 	            <div class="but"><input type="button" value="注 册" class="login-but" onclick="reg()"></div>
 	        </div>

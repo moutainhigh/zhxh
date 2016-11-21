@@ -155,7 +155,7 @@
 	            <div><input type="text" value="密码" class="txt" /></div>
 	            <div><input type="text" value="验证码" class="yzm" /><a href="javascript:;" class="huoqu">获取验证码</a></div>
 	            <div class="clearfix wjmima">
-	                <em class="fr">已有账号 <b class="lidenglu">立即登录</b></em>
+	                <!-- <em class="fr">已有账号 <b class="lidenglu">立即登录</b></em> -->
 	            </div>
 	            <div class="but"><input type="button" value="注 册" class="login-but"></div>
 	        </div>

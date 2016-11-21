@@ -64,10 +64,10 @@ public class PublicUserService implements IPublicUserService{
 		}
 		else if (identity.equals("C")) {
 			if (null != parentid && !"".equals(parentid)) {
-				sb.append("select DISTINCT(u.id),u.*,l.parentid as parentid,l.tuijianman as tuijianman from public_user u,public_user_link l where 1=1");
+				sb.append("select DISTINCT(u.id),u.*,l.parentid as parentid,l.tuijianid as tuijianid,l.tuijianman as tuijianman from public_user u,public_user_link l where 1=1");
 			}
 			else {
-				sb.append("select DISTINCT(u.id),u.*,l.tuijianman as tuijianman from public_user u,public_user_link l where 1=1 and l.userid =u.id ");
+				sb.append("select DISTINCT(u.id),u.*,l.tuijianid as tuijianid,l.tuijianman as tuijianman from public_user u,public_user_link l where 1=1 and l.userid =u.id ");
 			}
 		}
 		else {

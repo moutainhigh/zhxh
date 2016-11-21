@@ -1094,16 +1094,31 @@ public class PublicUser2Service implements IPublicUser2Service{
 	 */
 	@Transactional("txManager")
 	@Override
-	public int updateUserSizeStandard(String ids, String updateKey, String updateValue) {
+	public int updateUserSizeStandardM(String sessionid,String ids, String updateKey, String updateValue) {
 		
 		int num = 0;
 		String[] idsArr = ids.split(",");
+		
+		String sql = "";
+		List<Object> values = new ArrayList<Object>();
 		//判断是否是修改折扣，如果是折扣，就每个循环去更改，判断设置的折扣是否低于标准
 		if ("buyerdis".equals(updateKey)) {
 			for (String id : idsArr) {
+				//获取要修改的折扣数据
 				Public_set_user_standard tmp = userStandardDao.get(id);
+				
+				sql = "select * from public_set_user_standard where userid = ? and sizeid=?";
+				values.clear();
+				values.add(sessionid);
+				values.add(tmp.getSizeid());
+				List<Public_set_user_standard> pUSList = userStandardDao.search(sql, values);
+				
+				if (null == pUSList || pUSList.size() == 0) {
+					continue;
+				}
+				
 				Float tmpV = Float.valueOf(updateValue);
-				if (tmpV > tmp.getBuyerdis()) {
+				if (tmpV >= pUSList.get(0).getBuyerdis()) {
 					tmp.setBuyerdis(tmpV);
 					userStandardDao.update(tmp);
 					num++;
@@ -1113,7 +1128,7 @@ public class PublicUser2Service implements IPublicUser2Service{
 		else {
 			List<String> idList = Arrays.asList(idsArr);
 			StringBuffer sb = new StringBuffer();
-			List<Object> values = new ArrayList<Object>();
+			values.clear();
 			sb.append("update public_set_user_standard set ");
 			sb.append(updateKey).append("=?");
 			

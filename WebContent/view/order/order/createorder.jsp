@@ -96,6 +96,7 @@
             $("#proList").processTemplate(objArr);
             bindTdClick();	//td绑定
             //
+            $("#total_num").html(objArr.length);
             $("#total").html(formatFloat(total,2));
             $("#total_sum").html(formatFloat(total,2));
             
@@ -224,7 +225,9 @@
     			var e = $(this);
     			var html = $(this).html();
     			if (html.indexOf("input") == -1) {
-    				$(this).html("<input type='text' class='input quant' value='"+html+"'/>");
+    				//$(this).html("<input type='text' class='input quant' value='"+html+"'/>");
+    				//$(this).html("<input type='text' class='input quant' value='"+html+"'/>");
+    				$(this).html("<input class='input quant' value='"+html+"' onkeyup='if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,\"\");this.value=this.value.replace(\".\",\"\");}else{this.value=this.value.replace(/\D/g,\"\");this.value=this.value.replace(\".\",\"\");}' onafterpaste='if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,\"\");this.value=this.value.replace(\".\",\"\");}else{this.value=this.value.replace(/\D/g,\"\");this.value=this.value.replace(\".\",\"\");}'>");
     				$(".quant").focus();
     				$(".quant").select();
     				$(".quant").blur(function(){
@@ -368,7 +371,7 @@
 					</table>
 				</div>
 				<div class="text-right panel" style="padding: 30px 50px;border-top: solid 0">
-					<div>合计：￥<span id="total">0.00</span></div>
+					<div>共[<span id="total_num" style="color:red">0</span>]件商品。 合计：￥<span id="total" style="color:red">0.00</span></div>
 					<br/>
 					<div>应付总额：￥<span style="color: red !important" id="total_sum">0.00</span></div>
 				</div>
@@ -385,6 +388,7 @@
 				</div>
 				<div class="padding-top">
 					<button id="submit_btn" class="button bg-blue float-right">提交订单</button>
+					<input type="text" name="exchangeamount" id="exchangeamount" value="0" size="5" style="ime-mode:disabled" onKeyUp="this.value=this.value.replace(/[^1-9]/g,'');this.value=this.value.replace('.','');" />
 				</div>
 			</div>		
 		</div>
@@ -404,6 +408,7 @@
 			<tbody>
 				<tr class="panel-head">
 					<th width="45" align="center" id="p_del"></th>
+					<th width="50">序号</th>
 					<th width="10%">品牌</th>
 					<th width="*">商品名称</th>
 					<th width="9%">规格</th>
@@ -415,6 +420,7 @@
 				{#foreach $T as row}
 				<tr class="tr" id="{$T.row.id}">
 					<td align="center"><a href="javascript:;" class="button-little icon-minus" onclick="delRow('{$T.row.id}')"> </a></td>
+					<td align="center">{$T.row$index+1}</td>
 					<td>{$T.row.brandname}</td>
 					<td style="text-align: left;">{$T.row.productname}</td>
 					<td>{$T.row.productsize}</td>
