@@ -113,14 +113,69 @@ public class SysOrderController extends BaseConstroller {
 	}
 
 	/**
+	 * 采购订单列表
+	 * @param type
+	 * @param status
+	 * @param search
+	 * @param ordertime
+	 * */
+	@RequestMapping(value="/polist",method=RequestMethod.POST)
+	public void allpolist(String type,String status,String search, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex + 1);
+		p.setOrderBy("ordertime");
+		p.setOrderType("desc");
+		if(null != type && !"".equals(type)){
+			p = orderService.orderlist(type, "1", status, search, p);
+		}else{
+			p = orderService.orderlist("", "", status, search, p);
+		}
+		map.put("data", p.getList());
+		map.put("total", p.getRowCount());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
+	 * 普通会员订单列表
+	 * @param type
+	 * @param status
+	 * @param search
+	 * @param ordertime
+	 * */
+	@RequestMapping(value="/customerpolist",method=RequestMethod.POST)
+	public void customerpolist(String status,String search, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex + 1);
+		p.setOrderBy("ordertime");
+		p.setOrderType("desc");
+		p = orderService.customerorderlist(status, search, p);
+		map.put("data", p.getList());
+		map.put("total", p.getRowCount());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
+	/**
 	 * 订单列表
 	 * @param orderType
 	 * @param ordernum
 	 * @param parentid
 	 * @param ordertime
 	 * */
-	@RequestMapping(value="/subpolist",method=RequestMethod.POST)
-	public void subpolist(String orderType,String status, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	/*public void subpolist(String orderType,String status, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -154,7 +209,7 @@ public class SysOrderController extends BaseConstroller {
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}
-	
+	*/
 	
 	/**
 	 * 给订单中的userid，parentid 赋username

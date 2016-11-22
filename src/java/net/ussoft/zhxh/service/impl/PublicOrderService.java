@@ -174,21 +174,52 @@ public class PublicOrderService implements IPublicOrderService{
 		List<Object> values = (List<Object>) resultMap.get("values");
 		return orderDao.search(sql, values, pageBean);
 	}
-
-	public PageBean<Public_order> list(String status,String search, PageBean<Public_order> pageBean) {
-		String sql = "SELECT o.*,u.companyname,p.companyname FROM public_order o "
-				+ "LEFT JOIN public_user u ON o.userid = u.id"
-				+ "LEFT JOIN public_user p ON o.parentid = p.id"
-				+ "WHERE 1=1 ";
+	
+	@Override
+	public PageBean<Map<String,Object>> orderlist(String type,String userid,String status,String search, PageBean<Map<String,Object>> pageBean) {
+		String sql = "SELECT o.*,u.companyname as u_compname,p.companyname as p_compname FROM public_order o "
+				+ "LEFT JOIN public_user u ON o.userid = u.id "
+				+ "LEFT JOIN public_user p ON o.parentid = p.id "
+				+ "WHERE o.ordertype='o' ";
+		List<Object> values = new ArrayList<Object>();
+		if(null != type && !"".equals(type)){
+			if("my".equals(type)){
+				sql += "AND o.userid = ? ";
+			}else if("sub".equals(type)){
+				sql += "AND o.parentid = ? ";
+			}
+			values.add(userid);
+		}
 		if(null != status && !"".equals(status)){
-			sql += " AND o.orderstatus = ?";
+			sql += "AND o.orderstatus = ? ";
+			values.add(status);
 		}
 		if(null != search && !"".equals(search)){
-			sql += " AND u.companyname LIKE '%B%'";
+			sql += "AND ( o.ordernumber LIKE '%"+search+"%' ";
+			sql += "OR u.phonenumber LIKE '%"+search+"%' ";
+			sql += "OR u.companyname LIKE '%"+search+"%' )";
 		}
+		return orderDao.searchForMap(sql, values, pageBean);
+	}
+	
+	@Override
+	public PageBean<Map<String,Object>> customerorderlist(String status,String search, PageBean<Map<String,Object>> pageBean) {
+		String sql = "SELECT o.*,u.username as u_compname,p.companyname as p_compname,s.companyname as s_compname FROM public_order o "
+				+ "LEFT JOIN public_user u ON o.userid = u.id "
+				+ "LEFT JOIN public_user p ON o.parentid = p.id "
+				+ "LEFT JOIN public_user s ON o.submitid = s.id "
+				+ "WHERE o.ordertype='p' ";
 		List<Object> values = new ArrayList<Object>();
-		
-		return orderDao.search(sql, values, pageBean);
+		if(null != status && !"".equals(status)){
+			sql += "AND o.orderstatus = ? ";
+			values.add(status);
+		}
+		if(null != search && !"".equals(search)){
+			sql += "AND ( o.ordernumber LIKE '%"+search+"%' ";
+			sql += "OR u.phonenumber LIKE '%"+search+"%' ";
+			sql += "OR u.companyname LIKE '%"+search+"%' )";
+		}
+		return orderDao.searchForMap(sql, values, pageBean);
 	}
 	
 	@Transactional("txManager")

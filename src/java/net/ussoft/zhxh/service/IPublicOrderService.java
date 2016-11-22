@@ -73,6 +73,26 @@ public interface IPublicOrderService {
 	public PageBean<Public_order> list(Map<String, Object> map, PageBean<Public_order> pageBean);
 	
 	/**
+	 * 查询所有采购订单
+	 * @param type
+	 * @param userid
+	 * @param status 状态
+	 * @param search 查询内容
+	 * @param pageBean
+	 * @return
+	 * */
+	public PageBean<Map<String,Object>> orderlist(String type,String userid,String status,String search, PageBean<Map<String,Object>> pageBean);
+	
+	/**
+	 * 顾客采购订单
+	 * @param status 状态
+	 * @param search 查询内容
+	 * @param pageBean
+	 * @return
+	 * */
+	public PageBean<Map<String,Object>> customerorderlist(String status,String search, PageBean<Map<String,Object>> pageBean);
+	
+	/**
 	 * 添加
 	 * @param Public_order
 	 * @return 
