@@ -444,6 +444,29 @@ public class PcMainController extends BaseConstroller {
 	}
 	
 	/**
+	 * 新的网站地图
+	 * @param id 商品列表ID
+	 * */
+	@RequestMapping(value="/newMap")
+	public ModelAndView newMap(ModelMap modelMap) throws Exception {
+		//初始品牌、专题
+		init(modelMap);
+		return new ModelAndView("/view/pc/newMap", modelMap);
+	}
+	
+	/**
+	 * 新的网站地图
+	 * @param id 商品列表ID
+	 * */
+	@RequestMapping(value="/showVideo")
+	public ModelAndView showVideo(String id,ModelMap modelMap) throws Exception {
+		
+		Filesdown filesdown = filesdownService.getById(id);
+		modelMap.put("fileurl", filesdown.getFile_path());
+		return new ModelAndView("/view/pc/showVideo", modelMap);
+	}
+	
+	/**
 	 * 商品详情
 	 * @param id 商品ID
 	 * */

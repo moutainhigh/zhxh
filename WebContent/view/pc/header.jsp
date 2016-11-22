@@ -57,6 +57,7 @@
             <c:forEach var="brand" items="${brandList }">
 		    	<a id="${brand.id }" href="${pageContext.request.contextPath}/pcMain/zh.htmls?id=${brand.id}" >${brand.brandname }</a>
 		    </c:forEach>
+		    <a href="${pageContext.request.contextPath}/pcMain/newMap.htmls" >网站地图</a>
 		    <c:forEach var="subject" items="${subjectList }">
 		    	<a id="${subject.id }" href="${pageContext.request.contextPath}/pcMain/subject.htmls?id=${subject.id}">${subject.title }</a>
 		    </c:forEach>

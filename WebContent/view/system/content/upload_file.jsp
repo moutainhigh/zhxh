@@ -43,7 +43,7 @@
 	    		filters : {
 	    			max_file_size : '500mb',
 	    			mime_types: [
-	    				{title : "文件", extensions : "doc,docx,pdf,jpg,png,xlsx,xls,pptx,ppt,zip,rar"}
+	    				{title : "文件", extensions : "doc,docx,pdf,jpg,png,xlsx,xls,pptx,ppt,zip,rar,mp4"}
 	    			]
 	    		},
 
