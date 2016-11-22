@@ -39,6 +39,7 @@ function loadData_incomeBillDetail(){
      		$("#billDetail").setParam('pageSize', pageSize);
      		$("#billDetail").setParam('pageIndex', pageIndex);
      		$("#billDetail").setParam('totalPage', totalPage);
+     		$("#billDetail").setParam('formatAmount', formatAmount);	//格式化金额-util.js
         	$("#billDetail").processTemplate(json.data);
         	//
         	pageSel(1);
@@ -83,7 +84,7 @@ function loadData_spendingBillDetail(){
      		$("#billDetail").setParam('pageSize', pageSize);
      		$("#billDetail").setParam('pageIndex', pageIndex);
      		$("#billDetail").setParam('totalPage', totalPage);
-     		$("#billDetail").setParam('formatAmount', formatAmount);
+     		$("#billDetail").setParam('formatAmount', formatAmount);	//格式化金额-util.js
      		
         	$("#billDetail").processTemplate(json.data);
         	//
@@ -94,13 +95,6 @@ function loadData_spendingBillDetail(){
             alert(jqXHR.responseText);
         }
    });
-}
-
-/**
- * 格式化金额
- * */
-function formatAmount(e){
-	return formatFloat(e);
 }
 
 /**
@@ -134,6 +128,7 @@ function loadData_quotaBillDetail(){
      		$("#billDetail").setParam('pageSize', pageSize);
      		$("#billDetail").setParam('pageIndex', pageIndex);
      		$("#billDetail").setParam('totalPage', totalPage);
+     		$("#billDetail").setParam('formatAmount', formatAmount);	//格式化金额-util.js
         	$("#billDetail").processTemplate(json.data);
         	//
         	pageSel(3);
@@ -177,6 +172,7 @@ function loadData_disBillDetail(){
      		$("#billDetail").setParam('pageSize', pageSize);
      		$("#billDetail").setParam('pageIndex', pageIndex);
      		$("#billDetail").setParam('totalPage', totalPage);
+     		$("#billDetail").setParam('formatAmount', formatAmount);	//格式化金额-util.js
         	$("#billDetail").processTemplate(json.data);
         	//
         	pageSel(4);
@@ -197,10 +193,11 @@ function rebateRewardBillDetails(billid){
         dataType:"json",
         success: function (json) {
         	$("#share_details").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/publicDisDetail.tpl");
+        	$("#share_details").setParam('formatAmount', formatAmount);	//格式化金额-util.js
         	$("#share_details").processTemplate(json.data);
         	layer.open({
       		  type: 1,
-      		  area: ['680px', ''],
+      		  area: ['780px', ''],
       		  shade: false,
       		  title: false, //不显示标题
       		  content: $('#details'), //捕获的元素
@@ -248,6 +245,7 @@ function loadData_shareBillDetail(){
      		$("#billDetail").setParam('pageIndex', pageIndex);
      		$("#billDetail").setParam('totalPage', totalPage);
      		$("#billDetail").setParam('userid', _data.userid);
+     		$("#billDetail").setParam('formatAmount', formatAmount);	//格式化金额-util.js
         	$("#billDetail").processTemplate(json.data);
         	//
         	pageSel(5);
@@ -296,6 +294,7 @@ function shareDetails(uid,ids){
         	}
         	
         	$("#share_details").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/shareBillDetails.tpl");
+        	$("#share_details").setParam('formatAmount', formatAmount);	//格式化金额-util.js
         	$("#share_details").processTemplate(mDataArr);
         	//alert(json.data[0].sharekey);
         	layer.open({
@@ -365,6 +364,7 @@ function loadData_transfBillDetail(){
      		$("#billDetail").setParam('pageSize', pageSize);
      		$("#billDetail").setParam('pageIndex', pageIndex);
      		$("#billDetail").setParam('totalPage', totalPage);
+     		$("#billDetail").setParam('formatAmount', formatAmount);	//格式化金额-util.js
         	$("#billDetail").processTemplate(json.data);
         	//
         	pageSel(6);
@@ -407,6 +407,7 @@ function loadData_disposablebillDetail(){
      		$("#billDetail").setParam('pageSize', pageSize);
      		$("#billDetail").setParam('pageIndex', pageIndex);
      		$("#billDetail").setParam('totalPage', totalPage);
+     		$("#billDetail").setParam('formatAmount', formatAmount);	//格式化金额-util.js
         	$("#billDetail").processTemplate(json.data);
         	//
         	pageSel(7);

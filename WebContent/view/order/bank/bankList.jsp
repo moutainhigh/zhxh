@@ -38,6 +38,10 @@
 	        getUserBank();
 	    })
 	    
+	    //
+	    function fanliHelp(){
+	    	layer.tips('返利金额将直接进入可支配账户中', '#fanliHelp', {tips: [1, '#FF9901'],time: 5000,});
+	    }
     </script>
 </head>
 <body>

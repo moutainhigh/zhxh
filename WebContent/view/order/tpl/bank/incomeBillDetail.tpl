@@ -16,7 +16,7 @@
 					<td>{$T.row.createtime}</td>
 					<td>{$T.row.u_username} </td>
 					<td>{$T.row.trantypetxt} </td>
-					<td>￥{$T.row.account_receivable}</td>
+					<td>￥{$P.formatAmount($T.row.account_receivable)}</td>
 					<td><a href="javascript:;" onclick="details('{$T.row.billno}')">详情</a>
 						<div id="{$T.row.billno}"style="display:none;">
 							<div class="panel-head">
@@ -38,8 +38,8 @@
 										<td>{$T.row.dealId}</td>
 										<td>{$T.row.bankDealId}</td>
 										<td>{$T.row.dealTime}</td>
-										<td>{$T.row.payAmount}</td>
-										<td>{$T.row.fee}</td>
+										<td>￥{$P.formatAmount($T.row.payAmount)}</td>
+										<td>￥{$P.formatAmount($T.row.fee)}</td>
 									</tr>
 								</tbody></table>
 							</div>

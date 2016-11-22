@@ -941,9 +941,15 @@ public class PublicUserBankService implements IPublicUserBankService{
 						//代理账户变更
 						bank_A = userBankDao.update(bank_A);
 					}
+					int messagetype = 1;	//业务消息-店提现-同时要给平台发送消息
+					String messagetxt = "【"+bill.getU_company()+"】进行了奖励账户提现，提现金额为："+amount;
+					createMsg(bill.getUserid(), bill.getU_company(),"1","平台", messagetype, messagetxt,bill.getId());
 				}else if(bill.getTrantype() == 3){
 					//平台售额-提现
 					bank.setSelltakenbank(bank.getSelltakenbank() - amount);		//冲减店平台售额可提现账户
+					int messagetype = 1;	//业务消息
+					String messagetxt = "【"+bill.getU_company()+"】进行了平台售额提现，提现金额为："+amount;
+					createMsg(bill.getUserid(), bill.getU_company(),"1","平台", messagetype, messagetxt,bill.getId());
 				}
 			}
 			//当前账户
@@ -957,10 +963,12 @@ public class PublicUserBankService implements IPublicUserBankService{
 			bill.setBanktime(DateUtil.getNowTime("yyyy-MM-dd HH:mm:ss"));
 			bill = spendingBillDao.update(bill);
 */			
-		//添加提现消息
-		int messagetype = 1;	//业务消息
-		String messagetxt = "【"+bill.getU_company()+"】进行了提现，提现金额为："+amount;
-		createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
+		//添加提现消息-非店的平台售额可提现（店的平台售额提现-只给平台发送消息）
+		if(bill.getTrantype() != 3){
+			int messagetype = 1;	//业务消息
+			String messagetxt = "【"+bill.getU_company()+"】进行了提现，提现金额为："+amount;
+			createMsg(bill.getUserid(), bill.getU_company(),bill.getParentid(),bill.getP_company(), messagetype, messagetxt,bill.getId());
+		}
 /*		if(true){
 			throw new RuntimeException("pay2bank_error");
 		}*/
@@ -1328,6 +1336,26 @@ public class PublicUserBankService implements IPublicUserBankService{
 	@Override
 	public List<Map<String, Object>> getUserBankList(String parentid, String userid) {
 		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT b.*,u.companyname,u.identity,p.companyname as p_compname FROM public_user_bank b ");
+		sb.append("INNER JOIN public_user u ON b.userid = u.id AND u.identity != 'Z' AND u.isopen <> -1 ");	//排除普通会员
+		sb.append("LEFT JOIN public_user p ON b.parentid = p.id ");	//用于资金账户对应的机构名称
+		sb.append("INNER JOIN public_user_link l ON b.userid = l.userid AND b.parentid = l.parentid WHERE 1=1 ");
+		List<Object> values = new ArrayList<Object>();
+		if(null != userid && !"".equals(userid)){
+			sb.append(" AND b.userid = ?");
+			values.add(userid);
+		}
+		if(null != parentid && !"".equals(parentid)){
+			sb.append(" AND b.userid != '1' ");	//当平台查询下级账户的时候排除自己
+			sb.append(" AND b.parentid = ?");
+			values.add(parentid);
+		}
+		
+		List<Map<String, Object>> list = userBankDao.searchForMap(sb.toString(),values);
+		return list;
+	}
+	/*public List<Map<String, Object>> getUserBankList(String parentid, String userid) {
+		StringBuffer sb = new StringBuffer();
 		sb.append("select k.*,u.companyname,u.identity from public_user_bank k ,public_user u where u.isopen <> -1");
 		List<Object> values = new ArrayList<Object>();
 		
@@ -1350,10 +1378,45 @@ public class PublicUserBankService implements IPublicUserBankService{
 		
 		List<Map<String, Object>> list = userBankDao.searchForMap(sb.toString(),values);
 		return list;
-	}
+	}*/
 
 	@Override
-	public List<Map<String, Object>> getUserBankList(String parentid, String userid, String identity,String searchKey) {
+	public List<Map<String, Object>> getUserBankList(String parentid, String userid,String searchKey) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT b.*,u.companyname as u_companyname,u.identity,p.companyname as p_companyname FROM public_user_bank b ");
+		sb.append("INNER JOIN public_user u ON b.userid = u.id AND u.identity != 'Z' AND u.isopen <> -1 ");	//排除普通会员
+		sb.append("LEFT JOIN public_user p ON b.parentid = p.id ");	//用于资金账户对应的机构名称
+		sb.append("INNER JOIN public_user_link l ON b.userid = l.userid AND b.parentid = l.parentid WHERE 1=1 ");
+		
+		List<Object> values = new ArrayList<Object>();
+		if(null != userid && !"".equals(userid)){
+			sb.append(" AND b.userid = ?");
+			values.add(userid);
+		}
+		if(null != parentid && !"".equals(parentid)){
+			sb.append(" AND b.userid != '1' ");
+			sb.append(" AND b.parentid = ? ");
+			values.add(parentid);
+		}
+		
+		List<Map<String, Object>> list = userBankDao.searchForMap(sb.toString(),values);
+		List<Map<String, Object>> resultList = new ArrayList<Map<String,Object>>();
+		if (null != searchKey && !"".equals(searchKey)) {
+			//循环,检索
+			for (Map<String, Object> map : list) {
+				String compname = (String) map.get("companyname"); //账户所有人
+				if (compname.toLowerCase().indexOf(searchKey.toLowerCase()) < 0) {
+					continue;
+				}
+				resultList.add(map);
+			}
+			return resultList;
+		}else{
+			return list;
+		}
+	}
+	
+	/*public List<Map<String, Object>> getUserBankList(String parentid, String userid, String identity,String searchKey) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from public_user_bank where 1=1");
 		
@@ -1408,8 +1471,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		}
 		
 		return resultList;
-	}
-	
+	}*/
 	@Transactional("txManager")
 	@Override
 	public int multiple_update(String ids, String key, String value) {

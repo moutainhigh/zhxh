@@ -13,9 +13,9 @@
 				<tr>
 					<td>{$T.row.billno}</td>
 					<td>{$T.row.orderno}</td>
-					<td>{$T.row.amount} </td>
+					<td>￥{$P.formatAmount($T.row.amount)} </td>
 					<td>{$T.row.trantype_txt} </td>
-					<td>￥{$T.row.createtime}</td>
+					<td>{$T.row.createtime}</td>
 				</tr>
 			{#/for}	
 		{#else}

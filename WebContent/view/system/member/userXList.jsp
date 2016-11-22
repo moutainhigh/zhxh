@@ -21,7 +21,7 @@
 	    	//店
 	    	grid_user_c = mini.get("grid_user_c");
 	    	grid_user_c.set({
-	    		url:"${pageContext.request.contextPath}/userManager/list.htmls",
+	    		url:"${pageContext.request.contextPath}/userManager/noParentList.htmls",
 	    		columns: [
 							{ type: "checkcolumn",headerAlign:"center",width: 30},
 	      	                { type: "indexcolumn",headerAlign:"center",header:"序号",width:40},
@@ -56,7 +56,7 @@
 	            pageSize:2000
 	        });
 	    	
-	    	grid_user_c.load({identity:'C',showtype:0});
+	    	grid_user_c.load();
 	    	
 	    	//会员
 	    	grid_user_z = mini.get("grid_user_z");

@@ -15,7 +15,7 @@
 				<tr>
 					<td>{$T.row.ordernumber}</td>
 					<td>{$T.row.submitname}</td>
-					<td>￥{$T.row.sharepay} </td>
+					<td>￥{$P.formatAmount($T.row.sharepay)} </td>
 					<td>{$T.row.sharenumber} </td>
 					<td>{$T.row.sharetime}</td>
 					<td>{#if $T.row.sharestate == 0}等待分润{#else}分润完成{#/if}</td>

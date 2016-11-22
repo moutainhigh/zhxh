@@ -65,11 +65,8 @@
     	//加载数据-订单列表
     	function loadData_orderlist(){
     		var _data = {};
-    		_data.orderType = "sub";
-    		_data.ordernum = $("#ordernum").val();
-    		_data.parentid = $("#parentid").val();;
-    		_data.ordertime = $("#ordertime").val();
-    		_data.orderstatus = $("#orderstatus").val();
+    		_data.type = "sub";
+    		_data.status = $("#orderstatus").val();
     		_data.pageIndex = pageIndex;
     		_data.pageSize = pageSize;
     		$.ajax({
@@ -85,6 +82,7 @@
 	         		$("#orderList").setParam('pageSize', pageSize);
 	         		$("#orderList").setParam('pageIndex', pageIndex);
 	         		$("#orderList").setParam('totalPage', totalPage);
+	         		$("#orderList").setParam('formatAmount', formatAmount);	//格式化金额-util.js
                 	$("#orderList").processTemplate(json.data);
                 	//
                 	pageSel();

@@ -78,6 +78,19 @@ public interface IPublicOrderService {
 	 * @param userid
 	 * @param status 状态
 	 * @param search 查询内容
+	 * @param startDate
+	 * @param endDate
+	 * @param pageBean
+	 * @return
+	 * */
+	public PageBean<Map<String,Object>> list(String type,String userid,String status,String search,String startDate,String endDate, PageBean<Map<String,Object>> pageBean);
+	
+	/**
+	 * 查询所有采购订单
+	 * @param type
+	 * @param userid
+	 * @param status 状态
+	 * @param search 查询内容
 	 * @param pageBean
 	 * @return
 	 * */

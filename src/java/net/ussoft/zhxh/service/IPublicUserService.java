@@ -45,6 +45,13 @@ public interface IPublicUserService {
 	public PageBean<Public_user> list(String parentid,String identity,Map<String, Object> map,int showtype,PageBean<Public_user> pageBean);
 	
 	/**
+	 * 待关联机构
+	 * @param pageBean
+	 * @return
+	 * */
+	public PageBean<Public_user> noParentList(PageBean<Public_user> pageBean);
+	
+	/**
 	 * 获取设置推荐人列表
 	 * @param parentid
 	 * @param identity

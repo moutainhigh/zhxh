@@ -95,6 +95,31 @@ public class UserManagerController extends BaseConstroller{
 		out.print(json);
 	}
 	
+	/**
+	 * 代管理机构
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/noParentList",method=RequestMethod.POST)
+	public void noParentList(int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		//分页
+		PageBean<Public_user> pageBean = new PageBean<Public_user>();
+		pageBean.setPageSize(pageSize);
+		pageBean.setPageNo(pageIndex + 1);
+		
+		pageBean = userService.noParentList(pageBean);
+		//
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("total", pageBean.getRowCount());
+		map.put("data", pageBean.getList());
+		
+		String json = JSON.toJSONString(map);
+		out.print(json);
+	}
+	
 	@RequestMapping(value="/setTuijianList",method=RequestMethod.POST)
 	public void setTuijianList(String parentid,String userid,String identity,String mapObj,int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");

@@ -13,7 +13,7 @@
 				<tr>
 					<td>{$T.row.billno}</td>
 					<td>{$T.row.order_no}</td>
-					<td>￥{$T.row.amount} </td>
+					<td>￥{$P.formatAmount($T.row.amount)} </td>
 					<td>{$T.row.createtime} </td>
 					<td><a href="javascript:;" onclick="rebateRewardBillDetails('{$T.row.id}')">详情</a>
 					</td>

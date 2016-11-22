@@ -72,15 +72,15 @@
 	    		parent.layer.msg("账户已被冻结，请开启账户进行设置",{icon:5});
 	    		return;
 	    	}
+	    	var config = getDisConfig();	//配额范围
 	    	layer.prompt({
-   				title: '请输入配额金额，并确认',
+   				title: '请输入配额【'+config.quota_down+'-'+config.quota_up+'】',
    				formType: 0 //prompt风格，支持0-2
    			}, function(amount){
    				if(!isInteger(amount)){
    					parent.layer.msg('请输入大于0的正整数', {icon:5});
    					return;
    				}
-   				var config = getDisConfig();
    				if(config.quota_up > 0){
    					if(amount > config.quota_up){
    						parent.layer.msg("您设置的配额超过上限，请重新输入",{icon:6});

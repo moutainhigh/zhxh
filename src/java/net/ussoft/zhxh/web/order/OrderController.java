@@ -399,13 +399,34 @@ public class OrderController extends BaseConstroller {
 	
 	/**
 	 * 订单列表
-	 * @param orderType
-	 * @param ordernum
-	 * @param parentid
-	 * @param ordertime
+	 * @param type
+	 * @param status
+	 * @param search
+	 * @param startDate
+	 * @param endDate
 	 * */
 	@RequestMapping(value="/orderlist",method=RequestMethod.POST)
-	public void orderlist(String orderType,String ordernum,String parentid,String ordertime,String orderstatus, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+	public void orderlist(String type,String status,String search,String startDate,String endDate, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
+		p.setPageSize(pageSize);
+		p.setPageNo(pageIndex);
+		p.setOrderBy("ordertime");
+		p.setOrderType("desc");
+		Public_user user = getSessionUser();
+		p = orderService.list(type, user.getId(), status, search, startDate, endDate, p);
+		
+		map.put("data", p.getList());
+		map.put("total", p.getRowCount());
+		String json = JSON.toJSONString(map);
+		
+		out.print(json);
+	}
+	
+	/*public void orderlist(String orderType,String ordernum,String parentid,String ordertime,String orderstatus, int pageIndex,int pageSize,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -439,7 +460,8 @@ public class OrderController extends BaseConstroller {
 		
 		String json = JSON.toJSONString(map);
 		out.print(json);
-	}
+	}*/
+	
 	/**
 	 * 给订单中的userid，parentid 赋username
 	 * */

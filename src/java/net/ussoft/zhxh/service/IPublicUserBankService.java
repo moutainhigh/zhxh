@@ -170,10 +170,10 @@ public interface IPublicUserBankService {
 	 * 获取机构的资金帐户列表
 	 * @param parentid
 	 * @param userid
-	 * @param identity
+	 * @param searchKey
 	 * @return
 	 */
-	public List<Map<String,Object>> getUserBankList(String parentid,String userid,String identity,String searchKey);
+	public List<Map<String,Object>> getUserBankList(String parentid,String userid,String searchKey);
 	
 	/**
 	 * 批量修改

@@ -77,17 +77,18 @@ public class UserBankController extends BaseConstroller {
 	 * 获取机构的资金帐户
 	 * @param parentid
 	 * @param userid
+	 * @param searchKey
 	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/listUserBank",method=RequestMethod.POST)
-	public void listUserBank(String parentid,String userid,String identity,String searchKey,HttpServletResponse response) throws IOException {
+	public void listUserBank(String parentid,String userid,String searchKey,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
-		List<Map<String,Object>> resultList = userBankService.getUserBankList(parentid,userid,identity,searchKey);
+		List<Map<String,Object>> resultList = userBankService.getUserBankList(parentid,userid,searchKey);
 		map.put("total", resultList.size());
 		map.put("data", resultList);
 		String json = JSON.toJSONString(map);

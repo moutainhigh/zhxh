@@ -325,7 +325,7 @@
         	    });
             	
             	grid_user_a_bank.load({userid: record.id});
-            	grid_user_c_bank.load({parentid: record.id,identity:"C"});
+            	grid_user_c_bank.load({parentid: record.id});
             }
         }
         function onKeyEnter(e) {

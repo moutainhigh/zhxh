@@ -35,12 +35,12 @@
 					</tr>
 					<tr>
 						<td align="center">可提现帐户</td>
-						<td>￥{$T.row.takenbank}</td>
+						<td style="color:red">￥{$T.row.takenbank}</td>
 						<td align="right"><a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','2','A')">提现记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">可支配账户</td>
-						<td>￥{$T.row.havebank}</td>
+						<td style="color:blue">￥{$T.row.havebank}</td>
 						<td align="right"></td>
 					</tr>
 					<tr>
@@ -76,12 +76,12 @@
 					</tr>
 					<tr>
 						<td align="center">平台售额可提现帐户</td>
-						<td>￥{$T.row.selltakenbank}</td>
+						<td style="color:red">￥{$T.row.selltakenbank}</td>
 						<td align="right"><a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','3','C')">查看记录</a></td>
 					</tr>
 					<tr>
 						<td align="center">可支配账户</td>
-						<td>￥{$T.row.havebank}</td>
+						<td style="color:blue">￥{$T.row.havebank}</td>
 						<td align="right"></td>
 					</tr>
 					<tr>
@@ -96,7 +96,7 @@
 					</tr>
 					<tr>
 						<td align="center">奖励可提现账户</td>
-						<td>￥{$T.row.bonusestakenbank}</td>
+						<td style="color:red">￥{$T.row.bonusestakenbank}</td>
 						<td align="right"><a href="javascript:;" onclick="spendingBillDetail('{$T.row.userid}','{$T.row.parentid}','4','C')">查看记录</a></td>
 					</tr>
 				{#/if}

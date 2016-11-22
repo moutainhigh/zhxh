@@ -20,9 +20,9 @@
 					<td>{$T.row.brandname}</td>
 					<td>{$T.row.productname}</td>
 					<td>{$T.row.productsize} </td>
-					<td>￥{$T.row.price}</td>
+					<td>￥{$P.formatAmount($T.row.price)}</td>
 					<td>{$T.row.productnum}</td>
-					<td>{$T.row.skey}</td>
+					<td>￥{$P.formatAmount($T.row.skey)}</td>
 				</tr>
 			{#/for}	
 			</tbody>

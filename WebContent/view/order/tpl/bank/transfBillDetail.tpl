@@ -14,9 +14,9 @@
 				<tr>
 					<td>{$T.row.billno}</td>
 					<td>{$T.row.p_companyname}</td>
-					<td>{$T.row.award_amount} </td>
+					<td>￥{$P.formatAmount($T.row.award_amount)} </td>
 					<td>{$T.row.ratio} </td>
-					<td>{$T.row.last_amount}</td>
+					<td>￥{$P.formatAmount($T.row.last_amount)}</td>
 					<td>{$T.row.createtime}</td>
 					</td>
 				</tr>

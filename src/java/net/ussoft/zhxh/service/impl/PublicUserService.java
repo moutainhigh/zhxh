@@ -158,6 +158,14 @@ public class PublicUserService implements IPublicUserService{
 	}
 	
 	@Override
+	public PageBean<Public_user> noParentList(PageBean<Public_user> pageBean) {
+		String sql = "SELECT * FROM public_user p WHERE p.id NOT IN(SELECT DISTINCT(userid) AS uid FROM public_user_link) AND p.identity = ? AND p.isopen <> -1";
+		List<Object> values = new ArrayList<Object>();
+		values.add("C");
+		return userDao.search(sql, values, pageBean);
+	}
+	
+	@Override
 	public PageBean<Public_user> setTuijianList(String parentid, String userid,String identity, Map<String, Object> map,
 			PageBean<Public_user> pageBean) {
 		

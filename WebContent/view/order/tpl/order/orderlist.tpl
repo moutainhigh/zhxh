@@ -4,7 +4,7 @@
 		<tr class="panel-head item">
 			<!-- th width="30" align="center"><input type="checkbox" value="1" name="id"></th -->
 			<th width="4%">序号</th>
-			<th width="*">商家名称</th>
+			<th width="*">上级机构</th>
 			<th width="10%">单号</th>
 			<th width="10%">下单时间</th>
 			<th width="10%">签收时间</th>
@@ -17,11 +17,11 @@
 				<tr class="tr">
 					<!-- td align="center"><input type="checkbox" value="1" name="id"></td -->
 					<td>{$T.row$index+1}</td>
-					<td style="text-align:left">{$T.row.p_username}</td>
+					<td style="text-align:left">{$T.row.p_compname}</td>
 					<td>{$T.row.ordernumber}</td>
 					<td>{$T.row.ordertime}</td>
 					<td>{$T.row.signtime}</td>
-					<td style="text-align: right;">￥{$T.row.ordertotal}</td>
+					<td style="text-align: right;">￥{$P.formatAmount($T.row.ordertotal)}</td>
 					<td><span class="tag bg-order{$T.row.orderstatus}">{$T.row.orderstatusmemo}</span></td>
 					<td><button class="button button-small border-blue" onclick="orderdetails('{$T.row.id}')">订单详情</button>
 						{#if $T.row.orderstatus == 0}

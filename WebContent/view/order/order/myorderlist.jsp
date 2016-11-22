@@ -46,31 +46,52 @@
     		$("#newOrder").click(function(){
     			location.href = "${pageContext.request.contextPath}/order/newOrder.htmls";
     		});
-    		//订单号-查询
+    		//查询
     		$(".icon-search").click(function(){
     			loadData_orderlist();
     		});
-    		//
+    		//状态查询
     		$(".drop-menu li a").click(function(){
     			$("#orderstatus").val($(this).attr("status"));
     			loadData_orderlist();
     		});
     		
     		//日期控件
-    		/* laydate({
- 				elem: '#ordertime', //'
-   				event: 'focus' //响应事件。如果没有传入event，则按照默认的click
-   			}); */
+    		var start = {
+				elem: '#startDate',
+				format: 'YYYY-MM-DD',
+				//min: laydate.now(), //设定最小日期为当前日期
+				max: '2099-06-16 23:59:59', //最大日期
+				istime: true,
+				istoday: false,
+				choose: function(datas){
+				   end.min = datas; //开始日选好后，重置结束日的最小日期
+				   end.start = datas //将结束日的初始值设定为开始日
+				}
+			};
+			var end = {
+				elem: '#endDate',
+				format: 'YYYY-MM-DD',
+				//min: laydate.now(),
+				max: '2099-06-16 23:59:59',
+				istime: true,
+				istoday: false,
+				choose: function(datas){
+				  start.max = datas; //结束日选好后，重置开始日的最大日期
+				}
+			};
+			laydate(start);
+			laydate(end);
+			
     	});
     	
     	//加载数据-订单列表
     	function loadData_orderlist(){
     		var _data = {};
-    		_data.orderType = "my";
-    		_data.ordernum = $("#ordernum").val();
-    		_data.parentid = $("#parentid").val();;
-    		_data.ordertime = $("#ordertime").val();
-    		_data.orderstatus = $("#orderstatus").val();
+    		_data.type = "my";
+    		_data.status = $("#orderstatus").val();
+    		_data.startDate = $("#startDate").val();
+    		_data.endDate = $("#endDate").val();
     		_data.pageIndex = pageIndex;
     		_data.pageSize = pageSize;
     		$.ajax({
@@ -86,6 +107,7 @@
 	         		$("#orderList").setParam('pageSize', pageSize);
 	         		$("#orderList").setParam('pageIndex', pageIndex);
 	         		$("#orderList").setParam('totalPage', totalPage);
+	         		$("#orderList").setParam('formatAmount', formatAmount);	//格式化金额-util.js
                 	$("#orderList").processTemplate(json.data);
                 	//
                 	pageSel();
@@ -307,7 +329,9 @@
                 	var address_str = "收货人："+address.username+"，联系电话："+address.userphone+"，收货地址："+address.userpath;
                 	$("#address").html(address_str);
                 	//物流信息
-                	orderLogistics(json.logisticsList);
+                	if(json.logisticsList != ""){
+                		orderLogistics(json.logisticsList);
+                	}
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert(jqXHR.responseText);
@@ -397,19 +421,20 @@
 							</li>
 						</ul>
 					</div>
-					<!-- <div class="form-group">
+					<div class="form-group">
 						<div class="field">
 							<input type="text" placeholder="请输入订单号" size="30" name="ordernum" id="ordernum" class="input">
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="field">
-							<input type="text" placeholder="请输入下单日期" size="30" id="ordertime" class="input">
+						<div class="field">下单时间：
+							<input type="text" placeholder="起始日期" size="12" id="startDate" class="input">至
+							<input type="text" placeholder="截止日期" size="12" id="endDate" class="input">
 						</div>
 					</div>
 					<div class="form-button">
 						<button type="submit" class="button icon-search"> 搜 索</button>
-					</div> -->
+					</div>
 				</form>
 			</div>
 			<div class="padding float-right">
@@ -445,6 +470,15 @@
 			<h4>物流信息</h4>
 			<hr class="">
 			<div id="orderlogistics" class="table-responsive">
+				<table class="table table-hover">
+				<tbody><tr>
+					<th style="text-align: left;" width="180">处理时间</th>
+					<th style="text-align: left;" width="*">处理信息</th>
+				</tr>
+					<tr>
+						<td colspan="2">暂无动态……</td>
+					</tr>
+				</tbody></table>
 			</div>
 		</div>
 		<!-- 订单详情  END -->

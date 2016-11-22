@@ -209,6 +209,13 @@ $.fn.serializeObject = function()
 })(jQuery);
 
 
+/**
+ * 格式化金额
+ * */
+function formatAmount(e){
+	return formatFloat(e,2);
+}
+
 //金额格式化  
 function formatFloat(src, pos){  
     var num = parseFloat(src).toFixed(pos);  

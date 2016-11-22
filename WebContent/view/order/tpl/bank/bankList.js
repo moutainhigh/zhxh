@@ -22,6 +22,7 @@ function getUserBank() {
         	$("#banks").setParam("path",getRootPath_web() + "/js/pintuer/pintuer.js");
         	$("#banks").setParam("identity",json.identity);
         	$("#banks").setParam("current_uid",_current_uid);
+        	$("#banks").setParam('formatAmount', formatAmount);
         	
         	$("#banks").processTemplate(json.data);
         },
