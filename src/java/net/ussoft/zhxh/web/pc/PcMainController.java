@@ -328,7 +328,7 @@ public class PcMainController extends BaseConstroller {
 	 * */
 	@RequestMapping(value="/spec")
 	public ModelAndView spec (String ptype,@RequestParam(value="page",defaultValue="1")int page,ModelMap modelMap) throws Exception {
-		int pageSize = 10;
+		int pageSize = 12;
 		
 		PageBean<Filesdown> p = new PageBean<Filesdown>();
 		p.setPageSize(pageSize);

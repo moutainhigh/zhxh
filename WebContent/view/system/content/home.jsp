@@ -205,7 +205,7 @@
         var t16 = {};
 	    t16.id = "spec";
 	    t16.pid = "right";
-	    t16.text = "说明书";
+	    t16.text = "下载专区";
 	    t16.iconCls = "spec";
 	    t16.url = "${pageContext.request.contextPath}/common/dispatch.htmls?page=/view/system/content/specList";
 	    t16.iconPosition = "top";

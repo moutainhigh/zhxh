@@ -87,7 +87,7 @@
 	            	</a>
 	            </dt>
 	            <dd class="fl" style="padding: 0px 20px 0px 15px">
-	                <span>说明书</span>
+	                <span>下载专区</span>
 	                <a href="${pageContext.request.contextPath}/pcMain/spec.htmls" >查看详情</a>
 	            </dd>
 	        </dl>

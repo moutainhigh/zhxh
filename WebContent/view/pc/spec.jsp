@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>说明书</title>
+<title>下载专区</title>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/common.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pc/index.css" />
@@ -81,7 +81,7 @@
 	<%@include file="/view/pc/header.jsp" %>
 	
 	<div class="HTML-con download">  
-	    <h3>说明书</h3>
+	    <h3>下载专区</h3>
 	    <div class="download-a clearfix">
 	    <ul>
 	    <c:forEach var="item" items="${specList }">
