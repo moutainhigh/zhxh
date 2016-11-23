@@ -417,8 +417,12 @@ public class OrderController extends BaseConstroller {
 		p.setOrderBy("ordertime");
 		p.setOrderType("desc");
 		Public_user user = getSessionUser();
-		p = orderService.list(type, user.getId(), status, search, startDate, endDate, p);
-		
+		int count = orderService.orderlistCount(type, user.getId(), status, search, startDate, endDate);
+		if(count > 0){
+			p.setIsCount(1);	//外面查询count
+			p.setRowCount(count);
+			p = orderService.orderlist(type, user.getId(), status, search, startDate, endDate, p);
+		}
 		map.put("data", p.getList());
 		map.put("total", p.getRowCount());
 		String json = JSON.toJSONString(map);

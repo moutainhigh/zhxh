@@ -45,21 +45,36 @@
     	$(function(){
     		//加载数据-订单列表
     		loadData_orderlist();
-    		//订单号-查询
+    		//查询
     		$(".icon-search").click(function(){
     			loadData_orderlist();
     		});
-    		//
-    		$(".drop-menu li a").click(function(){
-    			$("#orderstatus").val($(this).attr("status"));
-    			loadData_orderlist();
-    		});
-    		
     		//日期控件
-    		/* laydate({
- 				elem: '#ordertime', //'
-   				event: 'focus' //响应事件。如果没有传入event，则按照默认的click
-   			}); */
+    		var start = {
+				elem: '#startDate',
+				format: 'YYYY-MM-DD',
+				//min: laydate.now(), //设定最小日期为当前日期
+				max: '2099-06-16 23:59:59', //最大日期
+				istime: true,
+				istoday: false,
+				choose: function(datas){
+				   end.min = datas; //开始日选好后，重置结束日的最小日期
+				   end.start = datas //将结束日的初始值设定为开始日
+				}
+			};
+			var end = {
+				elem: '#endDate',
+				format: 'YYYY-MM-DD',
+				//min: laydate.now(),
+				max: '2099-06-16 23:59:59',
+				istime: true,
+				istoday: false,
+				choose: function(datas){
+				  start.max = datas; //结束日选好后，重置开始日的最大日期
+				}
+			};
+			laydate(start);
+			laydate(end);
     	});
     	
     	//加载数据-订单列表
@@ -67,6 +82,9 @@
     		var _data = {};
     		_data.type = "sub";
     		_data.status = $("#orderstatus").val();
+    		_data.startDate = $("#startDate").val();
+    		_data.endDate = $("#endDate").val();
+    		_data.search = $("#keyword").val();
     		_data.pageIndex = pageIndex;
     		_data.pageSize = pageSize;
     		$.ajax({
@@ -281,21 +299,30 @@
 		<div id="admin_order" class="admin" style="padding: 10px 60px;">
 			<div class="padding float-left" style="padding-left: 0px;">
 				<form onsubmit="return false;" class="form-inline" method="post">
-					<input type="hidden" id="orderstatus" name=""/>
 					<div class="button-group">筛选：</div>
 					<div class="button-group">
-						<ul class="nav nav-menu nav-inline nav-navicon" id="nav-link3">
-							<li class="active"><a href="javascript:;" style="padding: 5px 5px;">全部订单<span class="arrow"></span></a>
-								<ul class="drop-menu">
-									<li><a href="javascript:;" status="">全部订单</a> </li>
-									<li><a href="javascript:;" status="0">待支付订单</a> </li>
-									<li><a href="javascript:;" status="1">待发货订单</a> </li>
-									<li><a href="javascript:;" status="2">已发货订单</a> </li>
-									<li><a href="javascript:;" status="3">已签收订单</a> </li>
-									<li><a href="javascript:;" status="-1">已取消订单</a> </li>
-								</ul>
-							</li>
-						</ul>
+						<select id="orderstatus" class="input">
+							<option value="">全部订单</option>
+							<option value="0">待支付订单</option>
+							<option value="1">待发货订单</option>
+							<option value="2">已发货订单</option>
+							<option value="3">已签收订单</option>
+							<option value="-1">已取消订单</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<div class="field">下单时间：
+							<input type="text" placeholder="起始日期" size="12" id="startDate" class="input">至
+							<input type="text" placeholder="截止日期" size="12" id="endDate" class="input">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="field">
+							<input type="text" placeholder="订单号/机构" size="30" name="ordernum" id="keyword" class="input">
+						</div>
+					</div>
+					<div class="form-button">
+						<button type="submit" class="button icon-search"> 搜 索</button>
 					</div>
 				</form>
 			</div>

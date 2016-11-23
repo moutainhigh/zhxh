@@ -176,7 +176,7 @@ public class PublicOrderService implements IPublicOrderService{
 	}
 	
 	@Override
-	public PageBean<Map<String,Object>> list(String type,String userid,String status,String search,String startDate,String endDate, PageBean<Map<String,Object>> pageBean) {
+	public PageBean<Map<String,Object>> orderlist(String type,String userid,String status,String search,String startDate,String endDate, PageBean<Map<String,Object>> pageBean) {
 		String sql = "SELECT o.*,u.companyname as u_compname,p.companyname as p_compname FROM public_order o "
 				+ "LEFT JOIN public_user u ON o.userid = u.id "
 				+ "LEFT JOIN public_user p ON o.parentid = p.id "
@@ -195,19 +195,60 @@ public class PublicOrderService implements IPublicOrderService{
 			values.add(status);
 		}
 		if(null != startDate && !"".equals(startDate)){
-			sql += "AND o.ordertime >= ? ";
+			sql += "AND STR_TO_DATE(o.ordertime,'%Y-%m-%d') >= ? ";
 			values.add(startDate);
 		}
 		if(null != endDate && !"".equals(endDate)){
-			sql += "AND o.ordertime <= ? ";
+			sql += "AND STR_TO_DATE(o.ordertime,'%Y-%m-%d') <= ? ";
 			values.add(endDate);
 		}
 		if(null != search && !"".equals(search)){
 			sql += "AND ( o.ordernumber LIKE '%"+search+"%' ";
-			sql += "OR u.phonenumber LIKE '%"+search+"%' ";
-			sql += "OR u.companyname LIKE '%"+search+"%' )";
+			if("my".equals(type))
+				sql += "OR p.companyname LIKE '%"+search+"%' ";
+			else
+				sql += "OR u.companyname LIKE '%"+search+"%' ";
+			sql += "OR u.phonenumber LIKE '%"+search+"%' )";
 		}
 		return orderDao.searchForMap(sql, values, pageBean);
+	}
+	
+	@Override
+	public int orderlistCount(String type,String userid,String status,String search,String startDate,String endDate) {
+		String sql = "SELECT COUNT(0) FROM public_order o "
+				+ "LEFT JOIN public_user u ON o.userid = u.id "
+				+ "LEFT JOIN public_user p ON o.parentid = p.id "
+				+ "WHERE o.ordertype='o' ";
+		List<Object> values = new ArrayList<Object>();
+		if(null != type && !"".equals(type)){
+			if("my".equals(type)){
+				sql += "AND o.userid = ? ";
+			}else if("sub".equals(type)){
+				sql += "AND o.parentid = ? ";
+			}
+			values.add(userid);
+		}
+		if(null != status && !"".equals(status)){
+			sql += "AND o.orderstatus = ? ";
+			values.add(status);
+		}
+		if(null != startDate && !"".equals(startDate)){
+			sql += "AND STR_TO_DATE(o.ordertime,'%Y-%m-%d') >= ? ";
+			values.add(startDate);
+		}
+		if(null != endDate && !"".equals(endDate)){
+			sql += "AND STR_TO_DATE(o.ordertime,'%Y-%m-%d') <= ? ";
+			values.add(endDate);
+		}
+		if(null != search && !"".equals(search)){
+			sql += "AND ( o.ordernumber LIKE '%"+search+"%' ";
+			if("my".equals(type))
+				sql += "OR p.companyname LIKE '%"+search+"%' ";
+			else
+				sql += "OR u.companyname LIKE '%"+search+"%' ";
+			sql += "OR u.phonenumber LIKE '%"+search+"%' )";
+		}
+		return orderDao.getInt(sql, values);
 	}
 	
 	@Override

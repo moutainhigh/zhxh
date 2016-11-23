@@ -50,11 +50,6 @@
     		$(".icon-search").click(function(){
     			loadData_orderlist();
     		});
-    		//状态查询
-    		$(".drop-menu li a").click(function(){
-    			$("#orderstatus").val($(this).attr("status"));
-    			loadData_orderlist();
-    		});
     		
     		//日期控件
     		var start = {
@@ -92,6 +87,7 @@
     		_data.status = $("#orderstatus").val();
     		_data.startDate = $("#startDate").val();
     		_data.endDate = $("#endDate").val();
+    		_data.search = $("#keyword").val();
     		_data.pageIndex = pageIndex;
     		_data.pageSize = pageSize;
     		$.ajax({
@@ -405,31 +401,26 @@
 		<div id="admin_order" class="admin" style="padding: 10px 60px;">
 			<div class="padding float-left" style="padding-left: 0px;">
 				<form onsubmit="return false;" class="form-inline" method="post">
-					<input type="hidden" id="orderstatus" name=""/>
 					<div class="button-group">筛选：</div>
 					<div class="button-group">
-						<ul class="nav nav-menu nav-inline nav-navicon" id="nav-link3">
-							<li class="active"><a href="javascript:;" style="padding: 5px 5px;">全部订单<span class="arrow"></span></a>
-								<ul class="drop-menu">
-									<li><a href="javascript:;" status="">全部订单</a> </li>
-									<li><a href="javascript:;" status="0">待支付订单</a> </li>
-									<li><a href="javascript:;" status="1">待发货订单</a> </li>
-									<li><a href="javascript:;" status="2">已发货订单</a> </li>
-									<li><a href="javascript:;" status="3">已签收订单</a> </li>
-									<li><a href="javascript:;" status="-1">已取消订单</a> </li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-					<div class="form-group">
-						<div class="field">
-							<input type="text" placeholder="请输入订单号" size="30" name="ordernum" id="ordernum" class="input">
-						</div>
+						<select id="orderstatus" class="input">
+							<option value="">全部订单</option>
+							<option value="0">待支付订单</option>
+							<option value="1">待发货订单</option>
+							<option value="2">已发货订单</option>
+							<option value="3">已签收订单</option>
+							<option value="-1">已取消订单</option>
+						</select>
 					</div>
 					<div class="form-group">
 						<div class="field">下单时间：
 							<input type="text" placeholder="起始日期" size="12" id="startDate" class="input">至
 							<input type="text" placeholder="截止日期" size="12" id="endDate" class="input">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="field">
+							<input type="text" placeholder="订单号/机构" size="30" name="ordernum" id="keyword" class="input">
 						</div>
 					</div>
 					<div class="form-button">

@@ -83,7 +83,9 @@ public interface IPublicOrderService {
 	 * @param pageBean
 	 * @return
 	 * */
-	public PageBean<Map<String,Object>> list(String type,String userid,String status,String search,String startDate,String endDate, PageBean<Map<String,Object>> pageBean);
+	public PageBean<Map<String,Object>> orderlist(String type,String userid,String status,String search,String startDate,String endDate, PageBean<Map<String,Object>> pageBean);
+	
+	public int orderlistCount(String type,String userid,String status,String search,String startDate,String endDate);
 	
 	/**
 	 * 查询所有采购订单

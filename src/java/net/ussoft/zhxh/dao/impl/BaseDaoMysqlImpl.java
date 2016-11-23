@@ -849,9 +849,14 @@ public abstract class BaseDaoMysqlImpl<T,ID> extends JdbcDaoSupport implements B
 			sb.append(" group by ");
 			sb.append(pageBean.getGroupby());
 		}
+		//此处处理sql截取count出错，改用外部查询count
+		if(pageBean.getIsCount() == 0){
+			int count=this.getCount(sb.toString(), values);
+			pageBean.setRowCount(count);
+		}
 		
-		int count=this.getCount(sb.toString(), values);
-		pageBean.setRowCount(count);
+		/*int count=this.getCount(sb.toString(), values);
+		pageBean.setRowCount(count);*/
 		
 		if(!StringUtils.isEmpty(pageBean.getOrderBy())){
 			sb.append(" order by ");

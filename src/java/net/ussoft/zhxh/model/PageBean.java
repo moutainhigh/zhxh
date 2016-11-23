@@ -19,6 +19,7 @@ public class PageBean<T> implements Serializable {
 	private int pageListSize = 10;
 	private List<T> list;
 	private String groupby;
+	private int isCount;	//0：内部count查询,1:外面count查询
 	//是否分页。
 	private Boolean isPage = true;
 
@@ -27,6 +28,7 @@ public class PageBean<T> implements Serializable {
 		pageNo = 1;
 		startRow = 0;
 		rowCount = 0;
+		isCount = 0;
 	}
 	
 	public void setIsPage(Boolean isPage) {
@@ -188,6 +190,14 @@ public class PageBean<T> implements Serializable {
 
 	public void setGroupby(String groupby) {
 		this.groupby = groupby;
+	}
+
+	public int getIsCount() {
+		return isCount;
+	}
+
+	public void setIsCount(int isCount) {
+		this.isCount = isCount;
 	}
 
 	@Override
