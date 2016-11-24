@@ -35,12 +35,36 @@
 		/* .icon-save:before, .icon-floppy-o:before {
 		    content: "";
 		} */
+		
+		.mini-checkboxlist td {
+			border-left: 0px solid #ddd;
+			padding: 0px;
+		}
+		
+		.mini-checkboxlist-td {
+			padding: 0px;
+		}
+		
 	</style>
     
 	<script type="text/javascript">
 	
 		var form;
 		var formstate = "label";
+		
+		var taken_dian = [
+		     { "id": "1", "text": "星期一" },
+		     { "id": "2", "text": "星期二" },
+		     { "id": "3", "text": "星期三" },
+		     { "id": "4", "text": "星期四" },
+		     { "id": "5", "text": "星期五" },
+		     { "id": "6", "text": "星期六" },
+		 	 { "id": "7", "text": "星期日" }
+		 ]
+		
+		var data_obj;
+		
+		
 		$(function() {
 			mini.parse();
 			form = new mini.Form("#form1");
@@ -53,6 +77,7 @@
 				type : "post",
 				dataType : "json",
 				success : function(obj) {
+					data_obj = obj;
 					form.setData(obj, false);
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
@@ -61,6 +86,8 @@
 			})
 			labelModel();
 			//form.setData(obj, false);
+			
+			$(".mini-checkboxlist-td").css("padding","0px");
 		})
 		
 		function labelModel() {
@@ -72,13 +99,17 @@
                 if (c.addCls) c.addCls("asLabel");          //增加asLabel外观
             }
         }
-		function inputModel() {
+		function inputModel(type) {
         	var editBtn = mini.get("editBtn");
         	
         	if (formstate == "input") {
         		labelModel();
         		formstate = "label";
         		editBtn.setText("编辑");
+        		if (type != "save") {
+        			form.setData(data_obj, false);
+        		}
+        		
         		return;
         	}
         	
@@ -102,7 +133,7 @@
             //提交数据
             var data = form.getData();      
             var json = mini.encode(data);
-			
+            
 			$.ajax({
 				async : false,
 				url : "${pageContext.request.contextPath}/dis/saveDisConfig.htmls",
@@ -113,7 +144,7 @@
 				dataType : "text",
 				success : function(text) {
 					parent.parent.layer.msg("保存完毕。",{icon:6});
-					inputModel();
+					inputModel("save");
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
 					mini.alert(jqXHR.responseText);
@@ -131,7 +162,7 @@
                  	<span id="pid" style="padding-left:5px;">平台利益分配参数设置[如果某些参数如果不设置或设置为0，将不限制]</span>
                  </td>
                  <td style="white-space:nowrap;">
-	         		<a id="editBtn" class="mini-button" iconCls="icon-edit" plain="true" onclick="inputModel()">编辑</a>
+	         		<a id="editBtn" class="mini-button" iconCls="icon-edit" plain="true" onclick="inputModel('edit')">编辑</a>
 	         		<a class="mini-button" iconCls="icon-save" plain="true" onclick="save()">保存</a>
                  </td>
              </tr>
@@ -172,9 +203,19 @@
 				</tr>
 				<tr>
 					<td>店提现日期</td>
-					<td><input name="taken_dian" class="mini-textbox" style="width:100%;" vtype="int;rangeChar:1,1;range:0,5" emptyText="请输入1-5,1位数字" /></td>
+					<!-- <td><input name="taken_dian" class="mini-textbox" style="width:100%;" vtype="int;rangeChar:1,1;range:0,5" emptyText="请输入1-5,1位数字" /></td> -->
+					<td colspan="3"><div name="taken_dian" class="mini-checkboxlist" repeatItems="7" repeatLayout="table"
+					        textField="text" valueField="id" value="" data="taken_dian">
+					    </div>
+				    </td>
+				</tr>
+				<tr>
 					<td>代理的提现日期</td>
-					<td><input name="taken_daili" class="mini-textbox" style="width:100%;" vtype="int;rangeChar:1,1;range:0,5" emptyText="请输入1-5,1位数字" /></td>
+					<td colspan="3"><div name="taken_daili" class="mini-checkboxlist" repeatItems="7" repeatLayout="table"
+					        textField="text" valueField="id" value="" data="taken_dian">
+					    </div>
+					</td>
+<!-- 					<td><input name="taken_daili" class="mini-textbox" style="width:100%;" vtype="int;rangeChar:1,1;range:0,5" emptyText="请输入1-5,1位数字" /></td> -->
 				</tr>
 				<tr>
 					<td>配额下限</td>
@@ -203,10 +244,10 @@
 					<td colspan="3" style="color:#FF8C00">
 						(1)返利:输入返利的百分比。例如0.3表示30%<br>
 						(2)奖励:输入整数。例如50表示50元<br>
-						(3)提现日期:限制每周提现的日期。输入整数。例如2表示每周二。<br>
+						(3)提现日期:限制每周提现的日期。选中的周几可以提现，系统内各种提现功能都适用这一标准。<br>
 						(4)配额、充值:输入整数。例如500表示500元。<br>
 						(5)奖励转货款:输入奖励转为货款的倍数。例如1.3表示奖励将乘以1.3倍，计入货款。<br>
-						(6)平台分成天数:设置普通会员购买后，平台分成给代理和店，进入可提现账户的金额的天数。例如7表示7天后。
+						(6)平台分成天数:设置普通会员购买后，平台分成给代理和店，进入可提现账户的金额的天数。例如7表示7天后。注意：目前这个分成天数是固定的15日。这里设置没有用。
 					</td>
 				</tr>
 			</tbody>

@@ -281,6 +281,17 @@
 						</div>
 					</div>
 					<br>
+					<div class="panel border-sub">
+						<div class="panel-head"><strong>系统信息</strong></div>
+						<table class="table">
+							<tbody>
+								<tr>
+									<td width="110" align="right">支持浏览器：</td>
+									<td colspan="3">QQ浏览器、360浏览器、Firefox、Google等现代浏览器。请不要使用IE浏览器访问本系统。</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -13,8 +13,8 @@ public class Public_dis_config {
 	private Float rebates_up;
 	private Float bonuses_down;
 	private Float bonuses_up;
-	private Integer taken_dian;
-	private Integer taken_daili;
+	private String taken_dian;
+	private String taken_daili;
 	private Integer quota_down;
 	private Integer quota_up;
 	private Integer deposit_down;
@@ -97,28 +97,28 @@ public class Public_dis_config {
 	 * 设置店提现日期。整数，2代表每周2
 	 * @return
 	 */
-	public Integer getTaken_dian() {
+	public String getTaken_dian() {
 		return taken_dian;
 	}
 	/**
 	 * 设置店提现日期。整数，2代表每周2
 	 * @param taken_dian
 	 */
-	public void setTaken_dian(Integer taken_dian) {
+	public void setTaken_dian(String taken_dian) {
 		this.taken_dian = taken_dian;
 	}
 	/**
 	 * 设置代理的提现日期。整数，2代表每周2
 	 * @return
 	 */
-	public Integer getTaken_daili() {
+	public String getTaken_daili() {
 		return taken_daili;
 	}
 	/**
 	 * 设置代理的提现日期。整数，2代表每周2
 	 * @param taken_daili
 	 */
-	public void setTaken_daili(Integer taken_daili) {
+	public void setTaken_daili(String taken_daili) {
 		this.taken_daili = taken_daili;
 	}
 	/**
@@ -233,8 +233,8 @@ public class Public_dis_config {
 		this.setRebates_up(0f);
 		this.setBonuses_down(0f);
 		this.setBonuses_up(0f);
-		this.setTaken_dian(0);
-		this.setTaken_daili(0);
+		this.setTaken_dian("");
+		this.setTaken_daili("");
 		this.setQuota_down(0);
 		this.setQuota_up(0);
 		this.setDeposit_down(0);
