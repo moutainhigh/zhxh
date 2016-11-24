@@ -60,6 +60,13 @@ public interface ILabelListService {
 	 * @return
 	 */
 	public boolean saveLableList(String objids,String labelid,String tablename);
+	/**
+	 * 保存label_list 排序
+	 * @param id
+	 * @param sort
+	 * @return
+	 */
+	public boolean saveLableListSort(String id,int sort);
 	
 	/**
 	 * 移除对应关系。

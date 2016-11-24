@@ -148,11 +148,14 @@ public class ProductController extends BaseConstroller {
 //		}
 		else if (listtype.equals(Constants.LABEL_PLIST)) {
 			//获取列表页对应的商品规格信息
-			PageBean<Public_product_size> p = new PageBean<Public_product_size>();
+//			PageBean<Public_product_size> p = new PageBean<Public_product_size>();
+			PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
 			p.setPageSize(pageSize);
 			p.setPageNo(pageIndex + 1);
-			p.setOrderBy("sizesort");
-			p = pListService.listLableProduct(p, parentid,-1);
+//			p.setOrderBy("sizesort");
+			//20161123 wf 修改品牌列表页，按列表自己的排序。
+//			p = pListService.listLableProduct(p, parentid,-1);
+			p = pListService.listLableProductForMap(p, parentid, -1);
 			map.put("total", p.getRowCount());
 			map.put("data", p.getList());
 		}

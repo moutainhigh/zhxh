@@ -629,5 +629,9 @@ SET FOREIGN_KEY_CHECKS = 1;
 1、修改 公共利益设置表  public_dis_config
 	（1）增加 taken_down	decimal(11,2)		提现下限
 	（2）增加 taken_up	decimal(11,2)		提现上限
+	
+2016-11-23
+1、修改label_list (标签与列表关联表)
+	(1)增加 sort	 int 排序   增加完，要初始化这个sort都为1.要不会报错
 
 	

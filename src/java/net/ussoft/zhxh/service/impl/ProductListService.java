@@ -3,7 +3,9 @@ package net.ussoft.zhxh.service.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -122,6 +124,26 @@ public class ProductListService implements IProductListService{
 //		values.add(productListid);
 		
 		pageBean = productSizeDao.search(sb.toString(), values, pageBean);
+		
+		return pageBean;
+	}
+
+	@Override
+	public PageBean<Map<String, Object>> listLableProductForMap(PageBean<Map<String, Object>> pageBean,
+			String productListid, int isshow) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select l.id as id_l, l.sort as sort_l ,s.* from label_list l,public_product_size s");
+		sb.append(" where l.labelid=? and l.listid=s.id");
+		
+		if (isshow == 0 || isshow == 1) {
+			sb.append(" and s.isshow=?");
+		}
+		sb.append(" order by l.sort");
+		
+		List<Object> values = new ArrayList<Object>();
+		values.add(productListid);
+		
+		pageBean = productSizeDao.searchForMap(sb.toString(), values, pageBean);
 		
 		return pageBean;
 	}

@@ -12,6 +12,7 @@ public class Label_list {
 	private String labelid;
 	private String listid;
 	private String listtable;
+	private Integer sort;
 	
 	
 	
@@ -40,6 +41,12 @@ public class Label_list {
 	}
 	public void setListtable(String listtable) {
 		this.listtable = listtable;
+	}
+	public Integer getSort() {
+		return sort;
+	}
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 	
 	

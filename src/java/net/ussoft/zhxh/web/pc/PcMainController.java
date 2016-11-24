@@ -419,11 +419,13 @@ public class PcMainController extends BaseConstroller {
 		Product_list pro_list = productlistService.getById(id);
 		int pageSize = 10;
 		
-		PageBean<Public_product_size> p = new PageBean<Public_product_size>();
+//		PageBean<Public_product_size> p = new PageBean<Public_product_size>();
+		PageBean<Map<String,Object>> p = new PageBean<Map<String,Object>>();
 		p.setPageSize(pageSize);
 		p.setPageNo(page);
-		p.setOrderBy("sizesort");
-		p = productlistService.listLableProduct(p, id,1);	//列表下的商品
+//		p.setOrderBy("sizesort");
+//		p = productlistService.listLableProduct(p, id,1);	//列表下的商品
+		p = productlistService.listLableProductForMap(p,id, -1);
 		
 		//品牌
 		Public_brand brand = brandService.getById(pro_list.getParentid());

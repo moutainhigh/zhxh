@@ -1,10 +1,10 @@
 package net.ussoft.zhxh.service;
 
 import java.util.List;
+import java.util.Map;
 
 import net.ussoft.zhxh.model.PageBean;
 import net.ussoft.zhxh.model.Product_list;
-import net.ussoft.zhxh.model.Public_product;
 import net.ussoft.zhxh.model.Public_product_size;
 
 /**
@@ -63,4 +63,12 @@ public interface IProductListService {
 	 * @return
 	 */
 	public PageBean<Public_product_size> listLableProduct(PageBean<Public_product_size> pageBean,String productListid,int isshow);
+	/**
+	 * 根据商品列表的id，获取列表对应的商品。因为客户要列表里的商品排序。所以在列表对应表lable_list增加了sort。
+	 * @param pageBean
+	 * @param productListid
+	 * @param isshow 0:隐藏，1:显示，-1查询所有
+	 * @return
+	 */
+	public PageBean<Map<String,Object>> listLableProductForMap(PageBean<Map<String,Object>> pageBean,String productListid,int isshow);
 }

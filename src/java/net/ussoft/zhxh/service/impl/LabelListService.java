@@ -74,8 +74,9 @@ public class LabelListService implements ILabelListService{
 		List<Label_list> lists = listDao.search(sql, values);
 		
 		boolean isBe = false;
-		
+		int sort_l = lists.size();
 		for (String id : objs) {
+			isBe = false;
 			for (Label_list label_list : lists) {
 				if (id.equals(label_list.getListid())) {
 					isBe = true;
@@ -83,11 +84,13 @@ public class LabelListService implements ILabelListService{
 				}
 			}
 			if (!isBe) {
+				sort_l++;
 				Label_list l = new Label_list();
 				l.setId(UUID.randomUUID().toString());
 				l.setLabelid(labelid);
 				l.setListid(id);
 				l.setListtable(tablename);
+				l.setSort(sort_l);
 				listDao.save(l);
 			}
 		}
@@ -115,6 +118,17 @@ public class LabelListService implements ILabelListService{
 		values.addAll(idsList);
 		
 		return listDao.del(sb.toString(), values);
+	}
+
+	@Transactional("txManager")
+	@Override
+	public boolean saveLableListSort(String id, int sort) {
+		Label_list l = listDao.get(id);
+		
+		l.setSort(sort);
+		listDao.update(l);
+		
+		return true;
 	}
 
 }

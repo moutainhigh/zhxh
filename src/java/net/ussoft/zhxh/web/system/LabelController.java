@@ -192,6 +192,25 @@ public class LabelController extends BaseConstroller {
 		out.print("success");
 	}
 	
+	/**
+	 * 保存label_list 表排序
+	 * @param id_l
+	 * @param sort_l
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/saveLabelSort",method=RequestMethod.POST)
+	public void saveLabelSort(String id_l,int sort_l,HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		
+		labelListService.saveLableListSort(id_l, sort_l);
+		
+		out.print("success");
+	}
+	
 	
 	
 	

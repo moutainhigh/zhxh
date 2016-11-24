@@ -87,25 +87,26 @@
     	                  { type: "checkcolumn",headerAlign:"center",width: 30},
     					  { type: "indexcolumn",headerAlign:"center",header:"序号",width:30},
     					  { field: "productpic",name:"productpic", width: 100, headerAlign: "center", align:"center",allowSort: false, header: "商品主图片"},
-    					  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-    					  { field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型",vtype:"required",editor: { type: "combobox", data: [{"id":"1","text":"富文本"},{"id":"2","text":"仅图片"}] } },
-    					  { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准",vtype:"required",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25} },
-    					  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "单价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
-    					  { field: "saleprice",name:"saleprice", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "特价",vtype:"required;float",editor: { type: "textbox", minValue: 0, maxValue: 500, value: 25  } },
-    					  { field: "sizesort",name:"sizesort", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: {type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
-    					  { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介",editor: { type: "textarea",minWidth:"200",minHeight:"100", minValue: 0, maxValue: 500, value: 25} },
-    					  { field: "isshow",name:"isshow",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架",vtype:"required",editor: { type: "combobox", data: [{"id":"0","text":"下架"},{"id":"1","text":"上架"}] } }
+    					  { field: "productname",name:"productname", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品名称"},
+    					  //{ field: "showtype",name:"showtype",type:"comboboxcolumn", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "商品显示类型" },
+    					  { field: "productsize",name:"productsize", width: 80, headerAlign: "center", align:"center",allowSort: false, header: "规格标准" },
+    					  { field: "price",name:"price",width: 60, headerAlign: "center", align:"center",allowSort: false, header: "单价"},
+    					  { field: "saleprice",name:"saleprice", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "特价"},
+    					  { field: "sort_l",name:"sort_l", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "排序",vtype:"required;int",editor: {type: "textbox", minValue: 0, maxValue: 500, value: 25 } },
+    					  { field: "productmemo",name:"productmemo", width: 150, headerAlign: "center", align:"center",allowSort: false, header: "商品简介"},
+    					  { field: "isshow",name:"isshow", width: 60, headerAlign: "center", align:"center",allowSort: false, header: "是否上架"}
     				],
 	            showFilterRow:false,
 	            allowCellSelect:true,
-	            allowCellEdit:false,
+	            allowCellEdit:true,
 	            allowCellValid:true,
 	            multiSelect:true,
 	            allowUnselect:false,
 	            showPager:true,
 	            //onselectionchanged:"onSelectionChanged",
-	            //oncellbeginedit:"OnCellBeginEdit",
+	            //oncellbeginedit:"onCellCommitEdit",
 	            //oncellcommitedit:"onCellCommitEdit",
+	            oncellendedit:"oncellendedit",
 	            //fitColumns:false,
 	            editNextOnEnterKey:true,
 	            showPageSize:false,
@@ -192,10 +193,16 @@
                 if (field == "isshow") {
                 	if (value == 0) {
                 		e.cellStyle = "color:red;text-align:center";
+                		e.cellHtml = '下架';
                 	}
                 	else {
                 		e.cellStyle = "color:blue;text-align:center";
+                		e.cellHtml = '上架';
                 	}
+                }
+                
+                if (field != "sort_l") {
+                    e.cellStyle = "background:#ecedef";
                 }
             });
        		
@@ -230,6 +237,46 @@
             		grid_product_size.load({listtype:'label_plist', parentid: record.id });
             	}
             }
+        }
+       	
+       	function oncellendedit(e) {
+            var grid = e.sender;
+            var record = e.record;
+            var field = e.field, value = e.value;
+            
+            if (field == "sort_l") {
+            	grid.validate();
+    	        if (grid.isValid() == false) {
+    	        	parent.parent.layer.msg('输入有误，请校验输入单元格内容', {
+    	        		  icon: 5,
+    	        		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+    	        		}, function(){
+    	        			var error = grid.getCellErrors()[0];
+    	        			grid.beginEditCell(error.record, error.column);
+    	        		}
+    	        	);  
+    	            return;
+    	        }
+    	        var pams = {};
+    	        pams.id_l = record.id_l;
+    	        pams.sort_l = value;
+    	        grid.loading("保存中，请稍后......");
+    	        var url = "${pageContext.request.contextPath}/label/saveLabelSort.htmls";
+    	        $.ajax({
+    	        	async:false,
+    	            url: url,
+    	            data: pams,
+    	            type: "post",
+    	            dataType:"text",
+    	            success: function (text) {
+    	            	grid.reload();
+    	            },
+    	            error: function (jqXHR, textStatus, errorThrown) {
+    	            	parent.parent.layer.msg("保存出现错误，错误信息："+jqXHR.responseText,{icon:5});
+    	            }
+    	        });
+            }
+            
         }
        	
 		function addRow() {
@@ -431,6 +478,7 @@
 					    dataType:"text",
 					    success: function (text) {
 					    	grid_product_size.reload();
+					    	parent.parent.layer.close(index);
 					    },
 					    error: function (jqXHR, textStatus, errorThrown) {
 					    	parent.parent.layer.msg(jqXHR.responseText,{icon:2});
@@ -500,7 +548,7 @@
 				        </table>
 				    </div>
 				    <div class="mini-fit">
-				        <div id="grid_plist" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div> 
+				        <div id="grid_plist" class="mini-datagrid" style="width:100%;height:100%;" borderStyle="border:0;"></div>
 				    </div>
 				</div>
 				<div showCollapseButton="true">
