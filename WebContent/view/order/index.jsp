@@ -221,7 +221,7 @@
 <body>
 	<%@ include file="/view/order/header.jsp" %>
 	<!--内容-->
-	<div class="layout" style="margin-bottom: 50px">
+	<div class="layout" style="margin-bottom: 260px">
 		<ul class="bread bg">
 			<li><a href="#" class="icon-home">首页</a> </li>
 			<li></li>
