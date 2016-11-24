@@ -38,11 +38,24 @@
 	    $(function(){
 	    	current_uid = "";
 	        getUserBank();
+	        
+	        /* $("input[name=radio_user]").click(function(){
+	        	getUserBank();
+  			}); */
 	    })
-	    
+    	
+    	//检索
+	    function searchbank(){
+	    	 getUserBank();
+    	}
+    	
+    	//资金账户
 	    function getUserBank() {
+	    	radio_value = $("input[name='radio_user']:checked").val();
     		var par = {};
     		par.parentid = userid;
+    		par.identity = radio_value;
+    		par.search = $("#keyword").val();
     		$.ajax({
     			async:false,
                 url: "${pageContext.request.contextPath}/orderUserBank/listUserBank.htmls",
@@ -51,6 +64,7 @@
                 dataType:"json",
                 success: function (json) {
                 	if(json.data == ""){
+                		layer.msg("未找到匹配的账户",{icon:6});
                 		return;
                 	}
                 	$("#banks").setTemplateURL("${pageContext.request.contextPath}/view/order/tpl/bank/subbankList.tpl");
@@ -151,7 +165,7 @@
 <body>
 	<%@ include file="/view/order/header.jsp" %>
 	<!--内容-->
-	<div class="layout" style="margin-bottom: 50px">
+	<div class="layout" style="margin-bottom: 260px">
 		<ul class="bread bg">
 			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
 			<li><a href="javascript:;" >资金管理</a></li>
@@ -159,8 +173,17 @@
 		</ul>
 		<div class="admin">
 			<div class="line-big">
-				<div id="banks" class="x5">
-					<div class="collapse">
+				<div class="x5">
+					<div class="form-group">筛选：
+						<c:if test="${sessionScope.pc_user_sessiion.id eq '1'}">
+						<input name="radio_user" type="radio" value="" checked="checked"/> 全部
+						<input name="radio_user" type="radio" value="A"/> 代理
+    					<input name="radio_user" type="radio" value="C"/> 门店
+    					</c:if>
+						<input type="text" id="keyword" class="input input-auto" style="width:120px;">
+						<a id="searchBtn" href="javascript:;" class="button bg-main button-small" onclick="searchbank()">检索</a>
+					</div>
+					<div  id="banks" class="collapse">
 						<div class="panel border-sub active">
 							<div class="panel-head">
 								<strong>客户资金帐户</strong>

@@ -18,7 +18,7 @@ public class DateUtil {
 	* @param args
 	*/
 	public static void main(String[] args) {
-		DateUtil tt = new DateUtil();
+		/*DateUtil tt = new DateUtil();
 		System.out.println("获取当天年月:"+tt.getNowTime("yyyy-MM-dd"));
 		System.out.println("获取前天年月:"+tt.getAfterDate("2016-01-01",-1));
 		System.out.println("得到12个月后的日期:" + tt.getAfterMonth("2015-05-24",12));
@@ -48,7 +48,9 @@ public class DateUtil {
 		System.out.println("获取本季度第一天到最后一天:"+tt.getThisSeasonTime(11));
 		System.out.println("获取两个日期之间间隔天数2008-12-1~2008-9.29:"+DateUtil.getTwoDay("2008-12-1","2008-9-29"));
 		System.out.println("获取两个日期之间间隔天数aaaa2008-12-1~2008-9.29:"+DateUtil.getTwoDay("2012-1-2","2012-1-1"));
-		System.out.println("获取两个日期之间间隔月份2012-10-1~2012-11.1:"+DateUtil.getTwoMonth("2012-10-5","2013-10-1"));
+		System.out.println("获取两个日期之间间隔月份2012-10-1~2012-11.1:"+DateUtil.getTwoMonth("2012-10-5","2013-10-1"));*/
+		
+		System.out.println(dayForWeek(new Date()));
 	}
 
 	/**
@@ -569,5 +571,20 @@ public class DateUtil {
 		return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 	}
 	
-	
+	/**
+	 * 获取日期是周几
+	 * @param date
+	 * @return
+	 * */
+	public static int dayForWeek(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int dayForWeek = 0;
+		if(c.get(Calendar.DAY_OF_WEEK) == 1){
+			dayForWeek = 7;
+		}else{
+			dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+		}
+		return dayForWeek;
+	}
 }

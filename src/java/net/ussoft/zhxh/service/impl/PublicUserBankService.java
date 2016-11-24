@@ -1334,9 +1334,9 @@ public class PublicUserBankService implements IPublicUserBankService{
 	
 	//===============
 	@Override
-	public List<Map<String, Object>> getUserBankList(String parentid, String userid) {
+	public List<Map<String, Object>> getUserBankList(String parentid, String userid,String identity,String searchKey) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT b.*,u.companyname,u.identity,p.companyname as p_compname FROM public_user_bank b ");
+		sb.append("SELECT b.*,u.username as u_username,u.companyname as u_companyname,u.identity,p.companyname as p_companyname FROM public_user_bank b ");
 		sb.append("INNER JOIN public_user u ON b.userid = u.id AND u.identity != 'Z' AND u.isopen <> -1 ");	//排除普通会员
 		sb.append("LEFT JOIN public_user p ON b.parentid = p.id ");	//用于资金账户对应的机构名称
 		sb.append("INNER JOIN public_user_link l ON b.userid = l.userid AND b.parentid = l.parentid WHERE 1=1 ");
@@ -1350,35 +1350,19 @@ public class PublicUserBankService implements IPublicUserBankService{
 			sb.append(" AND b.parentid = ?");
 			values.add(parentid);
 		}
+		if(null != identity && !"".equals(identity)){
+			sb.append(" AND u.identity = ?");
+			values.add(identity);
+		}
+		if(null != searchKey && !"".equals(searchKey)){
+			sb.append(" AND (u.username LIKE '%"+searchKey+"%'");
+			sb.append(" OR u.companyname LIKE '%"+searchKey+"%')");
+		}
 		
 		List<Map<String, Object>> list = userBankDao.searchForMap(sb.toString(),values);
+		
 		return list;
 	}
-	/*public List<Map<String, Object>> getUserBankList(String parentid, String userid) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("select k.*,u.companyname,u.identity from public_user_bank k ,public_user u where u.isopen <> -1");
-		List<Object> values = new ArrayList<Object>();
-		
-		if(null != userid && !"".equals(userid)){
-			sb.append(" and k.userid = ?");
-			values.add(userid);
-			sb.append(" and k.parentid = u.id");
-		}
-		if(null != parentid && !"".equals(parentid)){
-			sb.append(" and k.parentid = ?");
-			values.add(parentid);
-			sb.append(" and k.userid = u.id");
-			//排除普通会员
-			sb.append(" and u.identity != ?");
-			values.add("Z");
-			//排除平台
-			sb.append(" and u.id != ?");
-			values.add("1");
-		}
-		
-		List<Map<String, Object>> list = userBankDao.searchForMap(sb.toString(),values);
-		return list;
-	}*/
 
 	@Override
 	public List<Map<String, Object>> getUserBankList(String parentid, String userid,String searchKey) {
@@ -1404,7 +1388,7 @@ public class PublicUserBankService implements IPublicUserBankService{
 		if (null != searchKey && !"".equals(searchKey)) {
 			//循环,检索
 			for (Map<String, Object> map : list) {
-				String compname = (String) map.get("companyname"); //账户所有人
+				String compname = (String) map.get("u_companyname"); //账户所有人
 				if (compname.toLowerCase().indexOf(searchKey.toLowerCase()) < 0) {
 					continue;
 				}

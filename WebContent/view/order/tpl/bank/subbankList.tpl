@@ -1,10 +1,10 @@
 <script src="{$P.path}"></script>
-<div class="collapse">
+
 {#foreach $T as row}
 {#if $T.row.userid != "1"}
 <div class="panel border-sub {$P.current_uid == $T.row.userid ? 'active':''}">
 	<div class="panel-head">
-		<strong>客户资金帐户[<span style="color:red">{$T.row.companyname}</span>]</strong>
+		<strong>客户资金帐户[<span style="color:red">{$T.row.u_companyname}</span>]</strong>
 		<span class="float-right">
 			<strong>状态[
 				<a id="status{$T.row$index+1}" href="javascript:;" onclick="setAccountStatus('{$T.row.userid}','{$T.row.parentid}','{$T.row.bankstate}')">
@@ -106,4 +106,3 @@
 </div>
 {#/if}
 {#/for}
-</div>

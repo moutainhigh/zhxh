@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import net.ussoft.zhxh.base.BaseConstroller;
 import net.ussoft.zhxh.model.Disposable_bill;
 import net.ussoft.zhxh.model.Income_bill;
 import net.ussoft.zhxh.model.PageBean;
+import net.ussoft.zhxh.model.Public_dis_config;
 import net.ussoft.zhxh.model.Public_dis_details;
 import net.ussoft.zhxh.model.Public_order_product;
 import net.ussoft.zhxh.model.Public_phone_code_log;
@@ -37,6 +39,7 @@ import net.ussoft.zhxh.pay.kq.payment.md5.MD5Util;
 import net.ussoft.zhxh.service.IDisposableBillService;
 import net.ussoft.zhxh.service.IIncomeBillService;
 import net.ussoft.zhxh.service.IPublicDisDetailsService;
+import net.ussoft.zhxh.service.IPublicDisService;
 import net.ussoft.zhxh.service.IPublicPhoneCodeLogService;
 import net.ussoft.zhxh.service.IPublicUserBankService;
 import net.ussoft.zhxh.service.IPublicUserService;
@@ -92,31 +95,49 @@ public class OrderUserBankController extends BaseConstroller {
 	private IDisposableBillService disposableBillService;
 	@Resource
 	private IRebateRewardBillService rebateRewardBillService;
-	
+	@Resource
+	private IPublicDisService disService;
 	
 	/**
 	 * 获取机构的资金帐户
 	 * @param parentid
 	 * @param userid
+	 * @param identity
+	 * @param serach
 	 * @param response
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/listUserBank",method=RequestMethod.POST)
-	public void listUserBrand(String parentid,String userid,HttpServletResponse response) throws IOException {
+	public void listUserBrand(String parentid,String userid,String identity,String search,HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
-		List<Map<String,Object>> resultList = userBankService.getUserBankList(parentid,userid);
+		List<Map<String,Object>> resultList = userBankService.getUserBankList(parentid,userid,identity,search);
 		Public_user user = getSessionUser();
 		map.put("total", resultList.size());
 		map.put("data", resultList);
+		int isTX = 0;	//是否可提现 0否，1是
 		if(user.getId().equals("1")){
 			map.put("identity", "1");	//查看我的账户的时候用于身份判断
+			isTX = 1;	//平台不受限制
 		}else{
 			map.put("identity", user.getIdentity());	//查看我的账户的时候用于身份判断
+			//利益分配-提现规则
+			Public_dis_config dis = disService.getById("1");
+			int week = DateUtil.dayForWeek(new Date());
+			if("A".equals(user.getIdentity())){	//代理
+				if(dis.getTaken_daili().indexOf(String.valueOf(week)) > -1){
+					isTX = 1;
+				}
+			}else if("C".equals(user.getIdentity())){	//店
+				if(dis.getTaken_dian().indexOf(String.valueOf(week)) > -1){
+					isTX = 1;
+				}
+			}
 		}
+		map.put("isTX", isTX);
 		String json = JSON.toJSONString(map);
 		out.print(json);
 	}

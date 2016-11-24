@@ -158,13 +158,15 @@ public interface IPublicUserBankService {
 	public int platformSale();
 	
 	//=============
-		/**
-		 * 获取机构的帐户列表。
-		 * @param parentid
-		 * @param userid
-		 * @return
-		 */
-	public List<Map<String,Object>> getUserBankList(String parentid,String userid);
+	/**
+	 * 获取机构的帐户列表。
+	 * @param parentid
+	 * @param userid
+	 * @param identity
+	 * @param searchKey
+	 * @return
+	 */
+	public List<Map<String, Object>> getUserBankList(String parentid, String userid,String identity,String searchKey);
 	
 	/**
 	 * 获取机构的资金帐户列表

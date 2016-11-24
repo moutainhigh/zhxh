@@ -47,7 +47,7 @@
 <body>
 	<%@ include file="/view/order/header.jsp" %>
 	<!--内容-->
-	<div class="layout" style="margin-bottom: 50px">
+	<div class="layout" style="margin-bottom: 260px">
 		<ul class="bread bg">
 			<li><a href="${pageContext.request.contextPath}/order/dispatch.htmls?page=/view/order/index" class="icon-home">首页</a> </li>
 			<li><a href="javascript:;">资金帐户</a></li>

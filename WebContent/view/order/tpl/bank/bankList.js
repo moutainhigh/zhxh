@@ -2,6 +2,7 @@
 var userid;	//当前sessioin账户
 var _trantype;
 var _current_uid;
+var isTX = 0;	//是否允许提现
 /**
  * 资金账户
  * */
@@ -18,6 +19,7 @@ function getUserBank() {
         	if(_current_uid == undefined){
         		_current_uid = "1";
         	}
+        	isTX = json.isTX; 	//是否允许提现
         	$("#banks").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/bankList.tpl");
         	$("#banks").setParam("path",getRootPath_web() + "/js/pintuer/pintuer.js");
         	$("#banks").setParam("identity",json.identity);
@@ -190,46 +192,14 @@ function getTransfCoef(pid){
 	return coef;
 }
 
-//提现
-function withdrawal(pid,amount,trantype){
-	layer.prompt({
-		title: '请输入提现金额，并确认',
-		value:amount,
-		formType: 0 //prompt风格，支持0-2
-	}, function(withdraw_amount){
-		if(withdraw_amount > amount){
-			parent.layer.msg("账户余额不足，请重新输入！",{icon:6});
-			return;
-		}else{
-			//提交服务器
-			$.ajax({
-    			async:false,
-                url: getRootPath_web() + "/orderUserBank/withdrawal.htmls",
-                data: {parentid:pid,amount:withdraw_amount,trantype:trantype},
-                type: "post",
-                dataType:"text",
-                success: function (text) {
-                	if(text == "success"){
-                		
-                	}else if(text == "0"){
-                		layer.msg("您的账户已被冻结，不能进行提现！",{icon:6});
-                	}else{
-                		layer.msg("操作失败，请稍后再试！",{icon:6});
-                	}
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert(jqXHR.responseText);
-                }
-           	});
-		}
-	});
-}
-
-
 /**
  * 提现-填写表单
  * */
 function apply_withdrawal(pid,amount,trantype){
+	if(isTX == 0){
+		layer.msg("请在规定时间内进行提现！",{icon:6});
+		return;
+	}
 	_current_uid = pid;
 	_trantype = trantype;
 	$("#billDetail").setTemplateURL(getRootPath_web() + "/view/order/tpl/bank/pay2bank.tpl");
@@ -256,6 +226,19 @@ function save_ithdrawal_bill() {
 	if (row == false) {
 		return false;
 	}else {
+		var withdraw_amount = row.amount;
+		var config = getDisConfig();	//配额范围
+		var fw = config.taken_down + "-" + config.taken_up;
+		if(withdraw_amount > config.taken_up){
+			//上下限
+			layer.msg("提现金额超过上限，范围【"+fw+"】",{icon:6});
+			return;
+		}
+		if(withdraw_amount < config.taken_down){
+			layer.msg("提现金额低于下限，范围【"+fw+"】",{icon:6});
+			return;
+		}
+		
 		var json = JSON.stringify(row);
 		$.ajax({
 			async:false,

@@ -15,7 +15,7 @@
 			{#/if}
 		{#/if}
 		<div class="panel-head">
-			<strong>我的帐户[<span style="color:red">{$T.row.p_compname}</span>]</strong>
+			<strong>我的帐户[<span style="color:red">{$T.row.p_companyname}</span>]</strong>
 			<span class="float-right"><strong>状态[<span style="color:{#if $T.row.bankstate == 0}red{#else}blue{#/if}">{$T.row.bankstatetxt}</span>]</strong></span>
 		</div>
 		<div class="panel-body" id="{$T.row.id}">
