@@ -7,15 +7,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
-import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.queryparser.xml.builders.UserInputQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -1104,24 +1103,30 @@ public class PublicUser2Service implements IPublicUser2Service{
 		//判断是否是修改折扣，如果是折扣，就每个循环去更改，判断设置的折扣是否低于标准
 		if ("buyerdis".equals(updateKey)) {
 			for (String id : idsArr) {
+				
 				//获取要修改的折扣数据
 				Public_set_user_standard tmp = userStandardDao.get(id);
-				
-				sql = "select * from public_set_user_standard where userid = ? and sizeid=?";
-				values.clear();
-				values.add(sessionid);
-				values.add(tmp.getSizeid());
-				List<Public_set_user_standard> pUSList = userStandardDao.search(sql, values);
-				
-				if (null == pUSList || pUSList.size() == 0) {
-					continue;
-				}
-				
 				Float tmpV = Float.valueOf(updateValue);
-				if (tmpV >= pUSList.get(0).getBuyerdis()) {
+				if ("1".equals(sessionid)) {
 					tmp.setBuyerdis(tmpV);
 					userStandardDao.update(tmp);
 					num++;
+				}
+				else {
+					sql = "select * from public_set_user_standard where userid = ? and sizeid=?";
+					values.clear();
+					values.add(sessionid);
+					values.add(tmp.getSizeid());
+					List<Public_set_user_standard> pUSList = userStandardDao.search(sql, values);
+					
+					if (null == pUSList || pUSList.size() == 0) {
+						continue;
+					}
+					if (tmpV >= pUSList.get(0).getBuyerdis()) {
+						tmp.setBuyerdis(tmpV);
+						userStandardDao.update(tmp);
+						num++;
+					}
 				}
 			}
 		}
